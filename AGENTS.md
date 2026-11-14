@@ -58,10 +58,12 @@
 - 선택 목록은 현재 페이지를 유지하는 왼쪽426px 사이드바로 제공한다. 카테고리→음색 탐색, 긴 목록 페이지 이동, 선택 후 닫힘, X/바깥 터치 닫힘을 기기에서 검증한다. MPC 공통 상단 프리셋 UI는 호스트 소유다. 문서화된 MenuOverlay라도 현재 고정 SDK/기기에서 항목 글자가 비어 있었으므로 확인 없이 native 목록 성공으로 보고하지 않는다.
 - PAD LEARN은 첫 물리 입력을 등록용으로 무음 소비하고 다음 입력부터 코드 연주한다. 등록 직후 같은 화면에서 MIDI Note·완료 문구·LEARN 해제를 확인한다. 엔진 내부 변경의 호스트 알림을 process()에서 보내지 않는다. 값 조회에서 알림을 배출할 때 렌더 스레드 호출을 제외하는 검사를 유지한다.
 
-- MAIN 최신 그룹 순서는 화면 읽기 순서 A(좌상) Sound/Play, B(우상) Amp Envelope, C(좌하) Filter/LFO, D(우하) FX/Tremolo다. 각각 OSC Pair/Body/Drift/Glide, Attack/Decay/Sustain/Release, Filter Cutoff/Resonance/LFO Rate/LFO Depth, Drive/Space/Tremolo Rate/Tremolo Depth다. Screen/Program 매핑을 함께 맞추며 CHORD 매핑은 별도 보존한다. 숫자 LCD는24px 글자와 양쪽 내부 여백을 유지해 값·단위가 테두리에 꽉 차지 않게 한다.
+- MAIN 최신 그룹 순서는 화면 읽기 순서 A(좌상) Sound/Play, B(우상) Amp Envelope, C(좌하) Filter/LFO, D(우하) FX/Tremolo다. 각각 OSC Pair/Osc Mix/Body/Drift, Attack/Decay/Sustain/Release, Filter Cutoff/Resonance/LFO Rate/LFO Depth, Drive/Glide/Tremolo Rate/Tremolo Depth다. Screen/Program 매핑을 함께 맞추며 CHORD 매핑은 별도 보존한다. 숫자 LCD는24px 글자와 양쪽 내부 여백을 유지해 값·단위가 테두리에 꽉 차지 않게 한다.
 
 - 코드 슬롯은 기본4개, 최대16개이며 CHORD의+/-로4개 단위 활성화한다. MAIN은222×70 패드4개와 페이지 넘김을 유지한다. 물리 MIDI/LEARN 매핑은 화면 페이지와 독립적이다. 슬롯 축소는 설정을 삭제하지 않는다. 페이지 이동 시 사라진 화면 hold는 해제하되 물리 MIDI 음은 유지한다. 활성 개수만큼 편집 화면 안의 묶음 버튼을 표시하고 MAIN과 페이지를 공유한다. 기존91개 파라미터의ID/순서는 유지하고 새슬롯/개수/페이지/명령/활동 값은 끝에 추가한다.
 
 - 코드 프리셋은 MAIN에 보이는4슬롯의Root/Type만 변경하고 다른12슬롯 및 보이싱/옥타브/패드 매핑을 보존한다. 네뱅크 프리셋 선택은 독립 저장한다. MOD의 PRESET 1–4는 기존고정 Q-Link가 제어하는 첫뱅크 전용이며 동적값으로 위장하지 않는다. 단일step의가시성 조건에 RangedEnabling/N/N을 쓰지 말고 IndexedEnabling/N을 쓴다.
 
 - 슬롯 페이지 때문에 MAIN 키를 여러 번 누르게 하지 않는다. MAIN↔CHORD 두 서브탭만 유지하고 CHORD 안에서 묶음을 선택한다. Q-Link는16개 고정 편집 중계 파라미터에 연결하고 선택한 실제 슬롯을 읽고 쓴다. 실제192개 파라미터 중 중계16개는automation 대상이 아니다. 상태 복원 중 중계값으로 실제 코드를 덮어쓰지 않도록 보호한다. 오디오 스레드의 중계 readback은 별도 스레드 토큰+인덱스로 구분해 UI 동시 쓰기를 무시하지 않는다.
+
+- 최신1.0.1 전면/Q-Link는 A=OSC Pair/Osc Mix/Body/Drift, D=Drive/Glide/Tremolo Rate/Tremolo Depth다. Space는 FX 상세에 유지하고 전면에서 제외한다. Glide는 AMP 상세에도 유지한다. B/C와 CHORD 매핑은 유지한다.

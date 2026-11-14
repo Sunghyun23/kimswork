@@ -463,3 +463,11 @@ MAIN은222×70 패드4개와현재범위/전체개수·좌우 이동을 유지�
 - 192 stable parameters; old91 migrate; sixteen editor proxies are nonautomatable. Touch/learn/command transient state is cleared on save to prevent replay on restore.
 
 - Final device sweep: OSC, FILTER, AMP, MOD, FX and CHORD guides visually inspected. Sound sidebars hide background guides and restore on close.16→4→16 restores bank13 Fm9/+1oct and clamps to valid bank on shrink.16 screen gestures recorded at44.1kHz stereo, peak0.632FS (no clipping); recording ended during the last effect tail, so this recording alone is not a post-release silence test.
+
+
+## 1.0.1 — oscillator balance performance mapping
+User requested A=OSC Pair/Osc Mix/Body/Drift and D=Drive/Glide/Tremolo Rate/Tremolo Depth. Space remains on FX; AMP retains Glide. MAIN and Program Q-Link maps use existing stable parameters (no added IDs, no DSP changes). Native/ARM32/ARM64 and SDK validators pass; engine/UBSan/host bridge/host simulator19 and skin regression checks pass. New geometry checks verify A order, Glide position and retained FX Space. Device verification is recorded separately below when performed.
+
+Device check (MPC Live III / OS3.10.1.12): installed with official mpc_remote.py and restarted with user's discard approval. Fresh instance opens MAIN. New A/D layout renders without overlap. MAIN Osc Mix drag0→71.4% is mirrored on OSC; MAIN Glide0→238ms is mirrored on AMP. Screen/Program serialized Q-Link bindings match exactly; physical knob rotation matrix was not repeated remotely. No DSP behavior changed; neutral-Body oscillator endpoint isolation also passes engine/UBSan tests.
+
+- Actual device audio: two1.2s chord holds before/after OSC Mix20→67.6%,44.1kHz stereo20.56s recording. Two separated audible regions, peak0.574FS, final3s peak0.0. FX Space0→33.3% leaves MAIN/AMP Glide238ms unchanged. Fresh preset loading and CHORD4→16 bank13–16 navigation also pass. Four1.0.1 screenshots exported from the device replace the website images; no synthetic UI render is labelled as a device screenshot.

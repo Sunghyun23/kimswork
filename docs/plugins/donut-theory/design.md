@@ -206,7 +206,7 @@ PAD LEARN은 첫 물리 입력으로 등록(무음), 다음 입력부터 코드 
 
 ### 0.1.19 — 연주 빈도에 따른 그룹 순서와 값 표시
 
-사용자 확정 순서는 A SOUND / PLAY(좌상), B AMP ENVELOPE(우상), C FILTER / LFO(좌하), D FX / TREMOLO(우하)다. A는 OSC Pair/Body/Drift/Glide, B는 Attack/Decay/Sustain/Release, C는 Filter Cutoff/Resonance/LFO Rate/LFO Depth, D는 Drive/Space/Tremolo Rate/Tremolo Depth다. MAIN Screen과 Program Q-Link도 이 순서를 사용한다. CHORD 매핑과 영구 파라미터 ID/순서는 유지한다. 기존 프로젝트의 저장된 호스트 사용자 매핑은 새 인스턴스와 별도 비교한다.
+사용자 확정 순서는 A SOUND / PLAY(좌상), B AMP ENVELOPE(우상), C FILTER / LFO(좌하), D FX / TREMOLO(우하)다. A는 OSC Pair/Osc Mix/Body/Drift, B는 Attack/Decay/Sustain/Release, C는 Filter Cutoff/Resonance/LFO Rate/LFO Depth, D는 Drive/Glide/Tremolo Rate/Tremolo Depth다. MAIN Screen과 Program Q-Link도 이 순서를 사용한다. CHORD 매핑과 영구 파라미터 ID/순서는 유지한다. 기존 프로젝트의 저장된 호스트 사용자 매핑은 새 인스턴스와 별도 비교한다.
 
 필터 종류는 C 왼쪽, LFO Shape/Target은 C 오른쪽 두 노브 위에 둔다. Drive 종류는 D 첫 노브 위, Tremolo 자유 속도 안내는 D 오른쪽에 둔다. LCD 값은29→24px, 선택값22px, 보조 숫자22px로 줄이고 기본 값 라벨은122px 폭으로 가운데 배치해138px 플레이트 안에 여백을 준다. 터치 영역은 유지한다. 실제 검증 결과는 implementation.md를 따른다.
 
@@ -217,3 +217,7 @@ PAD LEARN은 첫 물리 입력으로 등록(무음), 다음 입력부터 코드 
 최신 사용자 변경에 따라 MAIN↔CHORD 두 서브탭만 사용한다. MAIN을 한 번 눌러 편집 화면으로 가고 그 안의1–4/5–8/9–12/13–16 버튼으로 묶음을 선택한다. 메인과 편집 페이지를 공유하며 활성 범위만 선택 가능하다. SDK의 Q-Link는16개 편집 중계 파라미터에 고정하고, 플러그인에서 선택한 실제 슬롯에 값을 전달한다. 새 handler나 팝업 매핑 API를 만들지 않는다. 실제 슬롯 파라미터는 automation/저장 대상이며 편집 중계는automation을 비활성화한다. 안내 팝업은 만들지 않는다.
 
 프리셋 선택은 현재 MAIN의4슬롯에만 루트/종류를 적용한다. 다른 묶음의 코드와 모든 보이싱/옥타브/패드 매핑은 유지한다. 네 묶음의 프리셋 선택은 독립 저장하며 MOD의 PRESET 1–4는 고정 첫뱅크 전용이다.16코드 진행32개를 새로 작곡한 것은 아니다. 동시 발음16보이스는 유지한다. 기존91개 파라미터의ID/순서를 보존하고 총192개로 append한다. 실제 검증 상태는 implementation.md를 따른다. B 헤더 위 native Q-Link 선은 사용자가 그대로 두라고 하여 변경하지 않는다.
+
+
+### 1.0.1 — Main oscillator mix / glide placement
+User-approved MAIN and Screen/Program Q-Link order: A = OSC Pair, OSC Mix, Body, Drift; D = Drive, Glide, Tremolo Rate, Tremolo Depth. B/C are unchanged. Space remains on FX, outside the MAIN sixteen controls; Glide also remains on AMP. Existing parameter IDs and DSP behavior are unchanged. OSC Mix is the existing balance parameter; Body still contributes its established mix/sub shaping.

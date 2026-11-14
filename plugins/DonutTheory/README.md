@@ -1,6 +1,6 @@
 # Donut Theory
 
-**kim · v1.0.0 · UID `Krql`**
+**kim · v1.0.1 · UID `Krql`**
 
 MPC standalone용 소울·힙합 신디사이저입니다. 베이스, 리드, 합성 키보드, 코드와 패드를 한 엔진에서 연주합니다. MPC Live III / OS 3.10.1.12에서 프리셋·메뉴·16슬롯 편집·표시 수정을 직접 검증한 배포 버전입니다. 검증 범위는 아래 기록을 참고하세요.
 
@@ -27,10 +27,10 @@ MPC standalone용 소울·힙합 신디사이저입니다. 베이스, 리드, �
 
 | 뱅크 | 1 | 2 | 3 | 4 |
 |---|---|---|---|---|
-| A SOUND / PLAY | OSC Pair | Body | Drift | Glide |
+| A SOUND / PLAY | OSC Pair | OSC Mix | Body | Drift |
 | B AMP ENVELOPE | Attack | Decay | Sustain | Release |
 | C FILTER / LFO | Filter Cutoff | Resonance | LFO Rate | LFO Depth |
-| D FX / TREMOLO | Drive | Space | Tremolo Rate | Tremolo Depth |
+| D FX / TREMOLO | Drive | Glide | Tremolo Rate | Tremolo Depth |
 
 DRIVE 종류는 DRIVE 위에 있습니다. OSC Pair는 두 파형을 함께 고릅니다. 필터 종류와 LFO Shape/Target은 별도 터치 메뉴입니다. 각 값과 단위를 표시하며 아래 코드 선택기는 **CHORD PRESET**으로 명시합니다. Q-Link는 Column 방식으로 A=(13,9,5,1), B=(14,10,6,2), C=(15,11,7,3), D=(16,12,8,4)에 연결합니다. 각 뱅크의 물리 노브 위→아래가 화면의 왼쪽→오른쪽입니다. Screen/Program 모드에 같은 열 순서를 사용하며 물리 회전 검증은 별도입니다.
 
@@ -199,7 +199,7 @@ Native/ARM 빌드, SDK validator, 엔진/UBSan/bridge, host_sim19항목과 UI �
 
 ### 0.1.19 — 연주 빈도에 따른 그룹 순서와 값 표시
 
-사용자 확정 순서는 A SOUND / PLAY(좌상), B AMP ENVELOPE(우상), C FILTER / LFO(좌하), D FX / TREMOLO(우하)다. A는 OSC Pair/Body/Drift/Glide, B는 Attack/Decay/Sustain/Release, C는 Filter Cutoff/Resonance/LFO Rate/LFO Depth, D는 Drive/Space/Tremolo Rate/Tremolo Depth다. MAIN Screen과 Program Q-Link도 이 순서를 사용한다. CHORD 매핑과 영구 파라미터 ID/순서는 유지한다. 기존 프로젝트의 저장된 호스트 사용자 매핑은 새 인스턴스와 별도 비교한다.
+사용자 확정 순서는 A SOUND / PLAY(좌상), B AMP ENVELOPE(우상), C FILTER / LFO(좌하), D FX / TREMOLO(우하)다. A는 OSC Pair/Osc Mix/Body/Drift, B는 Attack/Decay/Sustain/Release, C는 Filter Cutoff/Resonance/LFO Rate/LFO Depth, D는 Drive/Glide/Tremolo Rate/Tremolo Depth다. MAIN Screen과 Program Q-Link도 이 순서를 사용한다. CHORD 매핑과 영구 파라미터 ID/순서는 유지한다. 기존 프로젝트의 저장된 호스트 사용자 매핑은 새 인스턴스와 별도 비교한다.
 
 필터 종류는 C 왼쪽, LFO Shape/Target은 C 오른쪽 두 노브 위에 둔다. Drive 종류는 D 첫 노브 위, Tremolo 자유 속도 안내는 D 오른쪽에 둔다. LCD 값은29→24px, 선택값22px, 보조 숫자22px로 줄이고 기본 값 라벨은122px 폭으로 가운데 배치해138px 플레이트 안에 여백을 준다. 터치 영역은 유지한다. 실제 검증 결과는 implementation.md를 따른다.
 

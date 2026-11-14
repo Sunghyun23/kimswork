@@ -23,6 +23,14 @@ struct Rig {
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
+ // Osc Mix endpoints isolate the other oscillator at neutral Body shaping.
+ {for(float mix:{0.f,100.f}){Rig a,b;
+   for(auto* m:{&a,&b}){m->p->setProgram(0);m->p->set(kBody,40);m->p->set(kMix,mix);m->p->set(kWave1,0);m->p->set(kWave2,2);m->p->set(kAmpAttack,1);m->p->set(kAmpSustain,100);m->p->set(kCutoff,18000);m->p->reset();}
+   b.p->set(mix==0?kWave2:kWave1,1);a.block();b.block();
+   a.block({mpc::MidiEvent::noteOn(0,60,100)});b.block({mpc::MidiEvent::noteOn(0,60,100)});
+   for(int block=0;block<120;++block){a.block();b.block();for(int i=0;i<128;++i)assert(std::abs(a.l[i]-b.l[i])<1e-6f);}
+  }}
+ std::cout<<"PASS: OSC Mix endpoints isolate OSC1/OSC2 at neutral Body, with finite stable output\n";
  // Sixteen slots, view-independent MIDI, count/page safety and old-state migration.
  {Rig m;m.p->set(kSlotCount,3);m.p->set(kInputMode,1);m.p->set(kPadMap,1);m.p->set(kAmpRelease,1);
   for(int slot=0;slot<16;++slot)m.p->set(kChordPadNotes[slot],80+slot);m.block();

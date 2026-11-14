@@ -9,12 +9,12 @@ export const plugins: Plugin[] = [{
  tagline: 'A little worn. Endlessly warm.',
  summary: 'Vintage-inspired bass, keys, leads and pads—with up to sixteen playable chord slots.',
  description: 'Shape rounded bass, soulful keys, analog-style leads and soft pads inside your MPC. Add a little pitch drift, tape-like drive and independent tremolo, then play your own chord changes.',
- developmentVersion: '1.0.0', image: 'donut-theory-main-1.0.0.webp', release: {version:'1.0.0',tag:'donut-theory/v1.0.0',asset:'donut-theory-1.0.0-mpc.zip'},
+ developmentVersion: '1.0.1', image: 'donut-theory-main-1.0.1.webp', release: {version:'1.0.1',tag:'donut-theory/v1.0.1',asset:'donut-theory-1.0.1-mpc.zip'},
  imageAlt: 'Donut Theory running on MPC Live III, showing its four performance control groups and large chord pads',
  manual: 'plugins/donut-theory/manual/',
  intro: 'Sixteen oscillator pairs, hands-on envelopes and four Q-Link banks keep the sound close. Start with one of 64 sound presets, or build a chord arrangement across four banks of four slots.',
  verifiedDevice: 'MPC Live III / OS 3.10.1.12',
- mapping: [ ['A · Sound / Play','OSC Pair','Body','Drift','Glide'], ['B · Amp Envelope','Attack','Decay','Sustain','Release'], ['C · Filter / LFO','Filter Cutoff','Resonance','LFO Rate','LFO Depth'], ['D · FX / Tremolo','Drive','Space','Tremolo Rate','Tremolo Depth'] ],
+ mapping: [ ['A · Sound / Play','OSC Pair','OSC Mix','Body','Drift'], ['B · Amp Envelope','Attack','Decay','Sustain','Release'], ['C · Filter / LFO','Filter Cutoff','Resonance','LFO Rate','LFO Depth'], ['D · FX / Tremolo','Drive','Glide','Tremolo Rate','Tremolo Depth'] ],
  limitations: [
   'Sixteen chord slots share a sixteen-voice engine; overlapping chords can steal older voices.',
   'Screen chord pads audition the instrument; they do not send MIDI notes to the MPC sequencer.',
@@ -23,10 +23,10 @@ export const plugins: Plugin[] = [{
   'Testing on other MPC models, simultaneous finger multi-touch and a complete physical Q-Link rotation matrix are not certified.'
  ],
  screenshots: [
-  {image:'donut-theory-main-1.0.0.webp',alt:'Donut Theory main performance screen on MPC',caption:'MAIN · Sound, amp envelope, filter/LFO and FX/tremolo.'},
-  {image:'donut-theory-chords-1.0.0.webp',alt:'Donut Theory chord editor showing bank selection and sixteen available slots',caption:'CHORD · Select a bank inside one editor. Edit root, type, voicing and octave.'},
-  {image:'donut-theory-presets-1.0.0.webp',alt:'Donut Theory sound preset browser with Init, Bass, Keys, Synth, Lead and Pad categories',caption:'SOUND PRESET · Choose a category before a sound.'},
-  {image:'donut-theory-fx-1.0.0.webp',alt:'Donut Theory FX detail page with drive, chorus, delay, tremolo and low-cut controls',caption:'FX · Character effects, independent tremolo and low-end cleanup.'}
+  {image:'donut-theory-main-1.0.1.webp',alt:'Donut Theory main performance screen on MPC',caption:'MAIN · Sound, amp envelope, filter/LFO and FX/tremolo.'},
+  {image:'donut-theory-chords-1.0.1.webp',alt:'Donut Theory chord editor showing bank selection and sixteen available slots',caption:'CHORD · Select a bank inside one editor. Edit root, type, voicing and octave.'},
+  {image:'donut-theory-presets-1.0.1.webp',alt:'Donut Theory sound preset browser with Init, Bass, Keys, Synth, Lead and Pad categories',caption:'SOUND PRESET · Choose a category before a sound.'},
+  {image:'donut-theory-fx-1.0.1.webp',alt:'Donut Theory FX detail page with drive, chorus, delay, tremolo and low-cut controls',caption:'FX · Character effects, independent tremolo and low-end cleanup.'}
  ],
  features: [
   { title: '64 starting points. Six familiar categories.', text: 'Browse Init, Bass, Keys, Synth, Lead and Pad. Per-sound low-cut and output trim help place the sound in a mix, while Init starts dry.' },
@@ -38,7 +38,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/mpc-plugins';
-export const navigationVersion = 'donut-theory-1-0-0';
+export const navigationVersion = 'donut-theory-1-0-1';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

@@ -89,20 +89,22 @@ The gray MPC **PRESET** selector is different. With the current host/SDK integra
 
 ## MAIN and Q-Link controls
 
-![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.0.0.webp)
+![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.0.1.webp)
 
 MAIN arranges four groups in reading order: A upper left, B upper right, C lower left and D lower right. Each group has four Q-Link controls.
 
 | Group | Control 1 | Control 2 | Control 3 | Control 4 |
 |---|---|---|---|---|
-| **A · SOUND / PLAY** | OSC Pair | Body | Drift | Glide |
+| **A · SOUND / PLAY** | OSC Pair | OSC Mix | Body | Drift |
 | **B · AMP ENVELOPE** | Attack | Decay | Sustain | Release |
 | **C · FILTER / LFO** | Filter Cutoff | Resonance | LFO Rate | LFO Depth |
-| **D · FX / TREMOLO** | Drive | Space | Tremolo Rate | Tremolo Depth |
+| **D · FX / TREMOLO** | Drive | Glide | Tremolo Rate | Tremolo Depth |
 
 With the supplied column mapping, the four physical controls read top to bottom in the same order as each group reads left to right. The host's 16-control positions are A = 13/9/5/1, B = 14/10/6/2, C = 15/11/7/3 and D = 16/12/8/4.
 
 **Q-LINK SCREEN** follows the current plugin view. On CHORD it becomes the chord editor mapping described below. Program/Track mappings retain the synth controls; they do not become chord editing controls simply because the editor is visible.
+
+OSC Mix is immediately beside OSC Pair on MAIN. Glide is in group D and also available on AMP. Space remains on FX. Body retains its existing influence on oscillator balance and sub level; the Osc Mix value is the base balance before this shaping.
 
 The filter type, LFO Shape/Target and drive type have touch selectors near their controls. Drive type sits above Drive. Vibrato and Expression remain available as separate touch controls; they do not occupy the main 16 Q-Link positions.
 
@@ -206,7 +208,7 @@ In **CHORD → ADVANCED**, **Individual** pad mapping uses each slot's assignmen
 
 ## Chord editor
 
-![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.0.0.webp)
+![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.0.1.webp)
 
 ### Four to sixteen slots
 

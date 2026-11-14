@@ -32,11 +32,11 @@ third_party/mpc-plugin-builder-sdk/ 공유 SDK, 커밋 고정
 
 | 이름 | 소스 경로 계획 | 상태 |
 |---|---|---|
-| Donut Theory | `plugins/DonutTheory/` | [v1.0.0 정식 릴리스](https://github.com/Sunghyun23/mpc-plugins/releases/tag/donut-theory/v1.0.0): 64음색·최대16코드 슬롯·뱅크별 진행·통합 편집; 검증 범위는 매뉴얼 참고 |
+| Donut Theory | `plugins/DonutTheory/` | [v1.0.1 정식 릴리스](https://github.com/Sunghyun23/mpc-plugins/releases/tag/donut-theory/v1.0.1): 64음색·최대16코드 슬롯·뱅크별 진행·통합 편집; 검증 범위는 매뉴얼 참고 |
 
 ## 현재 상태
 
-공유 SDK를 고정 커밋으로 설치하고 Donut Theory 1.0.0을 구현했습니다. native·ARM32·ARM64 빌드, host simulator 19항목 및 엔진·UBSan·스킨 회귀 검사를 통과했습니다. MPC Live III / OS 3.10.1.12에서 실제 UI를 검증했습니다. [제품 소개](https://kimswork.app/plugins/donut-theory/)와 [상세 매뉴얼](https://kimswork.app/plugins/donut-theory/manual/)에서 설치 조건과 알려진 제한을 확인하세요.
+공유 SDK를 고정 커밋으로 설치하고 Donut Theory 1.0.1을 구현했습니다. native·ARM32·ARM64 빌드, host simulator 19항목 및 엔진·UBSan·스킨 회귀 검사를 통과했습니다. MPC Live III / OS 3.10.1.12에서 실제 UI를 검증했습니다. [제품 소개](https://kimswork.app/plugins/donut-theory/)와 [상세 매뉴얼](https://kimswork.app/plugins/donut-theory/manual/)에서 설치 조건과 알려진 제한을 확인하세요.
 
 빌드: `python3 scripts/build_plugin.py DonutTheory --target all`
 

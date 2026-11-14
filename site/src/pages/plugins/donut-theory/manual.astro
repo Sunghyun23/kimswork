@@ -7,6 +7,6 @@ const release=releaseLinks(plugin);
 const headings=manual.getHeadings().filter(h=>h.depth===2 && h.text!=='Contents');
 ---
 <Base title="Donut Theory — User Manual | Kim’s Work" description="The complete Donut Theory manual: MPC installation, 16 chord slots, Q-Link banks, presets, synthesis, effects and troubleshooting.">
-<section class="wrap manual-intro"><a class="back" href={url('plugins/donut-theory/')}>← Donut Theory</a><p class="eyebrow">USER MANUAL · VERSION 1.0.0</p><div class="manual-actions">{release && <a class="button" href={release.asset}>Download v1.0.0 ↓</a>}<a href={url('install/')}>Installation quick guide →</a></div></section>
+<section class="wrap manual-intro"><a class="back" href={url('plugins/donut-theory/')}>← Donut Theory</a><p class="eyebrow">USER MANUAL · VERSION 1.0.1</p><div class="manual-actions">{release && <a class="button" href={release.asset}>Download v{plugin.release?.version} ↓</a>}<a href={url('install/')}>Installation quick guide →</a></div></section>
 <div class="wrap manual-layout"><aside class="manual-toc"><details open><summary>In this manual</summary><nav aria-label="Manual contents"><ol>{headings.map(h=><li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol></nav></details></aside><article class="manual-body"><manual.Content/></article></div>
 </Base>

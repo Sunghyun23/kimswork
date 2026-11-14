@@ -16,15 +16,15 @@
           "overlay": "menu"
         },
         {
+          "param": "Osc Mix",
+          "widget": "knob"
+        },
+        {
           "param": "Body",
           "widget": "knob"
         },
         {
           "param": "Drift",
-          "widget": "knob"
-        },
-        {
-          "param": "Glide",
           "widget": "knob"
         },
         {
