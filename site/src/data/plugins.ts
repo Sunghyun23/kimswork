@@ -9,7 +9,7 @@ export const plugins: Plugin[] = [{
  tagline: 'A little worn. Endlessly warm.',
  summary: 'Vintage-inspired bass, keys, leads and pads—with up to sixteen playable chord slots.',
  description: 'Shape rounded bass, soulful keys, analog-style leads and soft pads inside your MPC. Add a little pitch drift, tape-like drive and independent tremolo, then play your own chord changes.',
- developmentVersion: '1.0.0', image: 'donut-theory-main-1.0.0.webp', release: null,
+ developmentVersion: '1.0.0', image: 'donut-theory-main-1.0.0.webp', release: {version:'1.0.0',tag:'donut-theory/v1.0.0',asset:'donut-theory-1.0.0-mpc.zip'},
  imageAlt: 'Donut Theory running on MPC Live III, showing its four performance control groups and large chord pads',
  manual: 'plugins/donut-theory/manual/',
  intro: 'Sixteen oscillator pairs, hands-on envelopes and four Q-Link banks keep the sound close. Start with one of 64 sound presets, or build a chord arrangement across four banks of four slots.',

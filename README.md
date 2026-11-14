@@ -32,7 +32,7 @@ third_party/mpc-plugin-builder-sdk/ 공유 SDK, 커밋 고정
 
 | 이름 | 소스 경로 계획 | 상태 |
 |---|---|---|
-| Donut Theory | `plugins/DonutTheory/` | v1.0.0: 64음색·최대16코드 슬롯·뱅크별 진행·통합 편집; 검증 범위는 매뉴얼 참고 |
+| Donut Theory | `plugins/DonutTheory/` | [v1.0.0 정식 릴리스](https://github.com/Sunghyun23/mpc-plugins/releases/tag/donut-theory/v1.0.0): 64음색·최대16코드 슬롯·뱅크별 진행·통합 편집; 검증 범위는 매뉴얼 참고 |
 
 ## 현재 상태
 
