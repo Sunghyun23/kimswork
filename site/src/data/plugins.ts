@@ -1,11 +1,12 @@
 export interface Plugin {
- slug: string; name: string; category: string; tagline: string; description: string;
+ slug: string; name: string; category: string; tagline: string; description: string; summary: string;
  developmentVersion: string; image: string; imageAlt: string; intro: string; mapping: string[][]; limitations: string[]; verifiedDevice: string; features: {title: string; text: string}[];
  release: null | { version: string; tag: string; asset: string };
 }
 export const plugins: Plugin[] = [{
  slug: 'donut-theory', name: 'Donut Theory', category: 'POLYPHONIC SYNTHESIZER',
  tagline: 'A little worn. Endlessly warm.',
+ summary: 'A synthesizer for warm bass, analog-style leads, and lush pads.',
  description: 'Rounded bass, vintage analog leads, and soft, enveloping pads. Soulful sounds, made inside your MPC.',
  developmentVersion: '0.1.5', image: 'donut-theory.webp', release: null,
  imageAlt: 'Donut Theory design concept with donut knobs and ADSR faders',
@@ -23,7 +24,7 @@ export const plugins: Plugin[] = [{
 export const repo = 'https://github.com/Sunghyun23/mpc-plugins';
 // Version page navigation independently of hashed assets, so a cached HTML
 // document from an older release cannot reintroduce the previous theme.
-export const navigationVersion = 'dark-2';
+export const navigationVersion = 'clarity-3';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);
