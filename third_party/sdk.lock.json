@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/inmusic-software/mpc-plugin-builder-sdk.git",
+  "commit": "febd2ca5bd9eb16c4a412837196e145566bc981b",
+  "path": "third_party/mpc-plugin-builder-sdk",
+  "license": "MIT"
+}

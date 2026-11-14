@@ -2,9 +2,9 @@ name: Deploy plugin catalog
 on:
   push:
     branches: [main]
-    paths: ['site/**', '.github/workflows/pages.yml']
+    paths: ['site/**', 'docs/plugins/donut-theory/manual.md', '.github/workflows/pages.yml']
   pull_request:
-    paths: ['site/**', '.github/workflows/pages.yml']
+    paths: ['site/**', 'docs/plugins/donut-theory/manual.md', '.github/workflows/pages.yml']
   workflow_dispatch:
 permissions:
   contents: read

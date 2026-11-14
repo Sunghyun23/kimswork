@@ -13,7 +13,7 @@
 - 공식 `inmusic-software/mpc-plugin-builder-sdk` 한 벌을 공유하고 도입 시 커밋을 고정한다. 출처와 라이선스를 기록한다.
 - SDK를 프로젝트마다 복제하거나 임의 수정하지 않는다. 필요한 변경은 이유와 패치로 기록한다.
 - 실제 공유 수요가 생길 때만 `shared/`로 코드를 추출한다.
-- SDK 도입 후 해당 SDK의 AGENTS.md와 작업별 스킬을 읽는다. 제조사/vendor는 미정이며 실제 스캐폴딩 전에 사용자에게 확인한다.
+- SDK 도입 후 해당 SDK의 AGENTS.md와 작업별 스킬을 읽는다. Donut Theory의 제조사/vendor는 사용자 확정값 `kim`, UID는 `Krql`이다. 다른 플러그인은 실제 스캐폴딩 전에 제조사명을 확인한다.
 
 ## UI·사양 보존
 
@@ -23,6 +23,9 @@
 - 기본 매핑 밖의 기능과 상세 페이지로 이동하는 기능은 명세에 명시한다.
 - 승인된 이미지의 미술 방향을 보존한다. 도넛을 단순 CSS 원·그라데이션으로 대체하지 않는다.
 - 콘셉트 이미지는 작동하는 스킨이 아니다. SDK 영역과 실제 터치 크기에 맞춰 구현한다.
+- 배포 스킨에는 TUI에서 참조하는 런타임 이미지만 포함한다. assets/의 고해상도 제작 원본·거절된 시안은 보존하되 설치 패키지에서는 제외한다. 서로 다른 위젯 정의가 수정 가능한 children 리스트를 공유하지 않도록 한다.
+- 코드 hold 패드는 일반 Button+ResetOnGestureEnd를 사용하지 않는다. MPC 3.10.1.12에서 즉시 ON/OFF되는 것을 계측했다. Mouse Down의 raw Touch Toggle Switch와 캡션 위의 투명 연속 Slider ResetOnGestureEnd 조합을 유지한다. Button은 상태 그림만 담당하며 추가 Button hit 표면으로 덮지 않는다.
+- MPC Live III 3.10.1.12에서는 보이는 Label이 아래 Button의 터치를 차단했다. 버튼 캡션 중앙을 직접 눌러 검증하고, 투명 Button 터치 표면은 캡션 위에 둔다. 이미지의 자동 축소도 가정하지 않는다.
 
 ## 오디오·호환성
 
@@ -39,3 +42,26 @@
 - 공개 페이지와 릴리스에는 실제 검증 상태를 표시한다. 태그·링크 정책은 repository-policy.md를 따른다.
 - 다른 플러그인의 릴리스로 연결될 수 있는 저장소 공통 releases/latest 링크를 사용하지 않는다.
 - 사용자 요청 범위 밖에서 자동 push, Release 발행, Pages 공개를 하지 않는다. 규칙 문서 작성과 실제 배포를 구분한다.
+
+- 물리 코드 패드 연결은 MPC Pad Perform 설정 변경을 요구하지 않는다. 플러그인의 개별 Pad Note/LEARN으로 맞춘다. MAIN에는 높이70px 코드 패드 네 개를 둔다. 코드 편집은 첫 번째 하단 탭을 다시 눌러 CHORD로 이동하며 한 화면에서4개 코드·보이싱을 편집하고 총16슬롯까지 제공한다. SDK에 없는 탭 이동을 안내 팝업으로 대체하지 않는다.
+
+- 공장 음색은 Init/Bass/Keys/Synth/Lead/Pad, 카테고리→음색 탐색을 따른다. Init은 Low-cut/효과Off. 기존 뱅크는 사용자 지시로 전면 교체했으며 현재 기준은 docs/plugins/donut-theory/presets.md다. Low-cut과 음색용 Low-pass를 혼동하지 않는다. 사용자 확인값은 저역 정리용Low-cut이다. 카탈로그 생성기가 버전을 임의로 덮어쓰지 않도록 한다.
+
+- 코드 편집은 첫 함수 키의 단일 CHORD 편집 서브탭에서 Q-LINK SCREEN으로 사용한다. A–D=각 화면의 네 슬롯, 순서는 Root/Type/Voicing/Octave다. MIDI Note는 Q-Link와 가이드 범위에서 제외하고 읽기용 값+더블탭 수동 지정/LEARN으로 제공한다. 팝업만 띄워 신스 Q-Link가 남는 구성을 반복하지 않는다. Screen Tab1/SubTab2와 MAIN Tab1/SubTab1을 구분하고 Program/Track의 신스 기본 매핑은 유지한다. SDK에 없는 탭 이동/동적 팝업 매핑 handler를 발명하지 않는다.
+
+- 플러그인 초기 화면은 MAIN이다. 시작 도움말·탭 이동 안내 팝업을 띄우지 않는다. 모든 탭과 선택/설정 팝업에서 Q-Link 가이드 위치를 실제 기기로 확인한다. 팝업은 version4/hideQLinkBounds로 뒤쪽 탭의 가이드를 숨기고 닫으면 복원한다. 투명 전체화면 하위 패널은 ignoreMousePresses로 카테고리/DONE 등 형제 버튼 터치를 가로채지 않도록 한다.
+
+- Voice Mode는 NOTES와 SPLIT의 일반 멜로디에 모두 적용한다. 코드 MIDI/터치 발음은 별도 다성 소유자로 처리하며, 모노 멜로디 전용 voice0을 코드가 빼앗지 않게 한다. fallback은 코드 트리거를 제외하고 note-off/CC64/CC121이 각 소유 음을 정상 해제하도록 검사한다. Legato는 실제로 음을 겹쳐 누를 때만 엔벌로프를 이어간다.
+- MAIN의 C·FILTER / LFO는 정적 제목이다. 중복 LFO SETTINGS 팝업을 재도입하지 않는다. Shape/Target은 MAIN, Sync/Division은 MOD에서 조절한다.
+- 코드 Voicing의 기존 저장값0=Root/1=First/2=Open을 유지한다.2·3·4전위는3·4·5로 추가했고 실제 구성음 수에 맞는 항목만 표시한다. ChordOctave1–4는 인덱스87–90에 append했으며 -2..+2oct, 저장 인덱스2가0oct다. CHORD의16 Q-Link는 Root/Type/Voicing/Octave다. OCT는 도넛 노브+값 터치 목록으로 제공하고 MIDI Note 도넛은 표시하지 않는다.
+
+- 선택 목록은 현재 페이지를 유지하는 왼쪽426px 사이드바로 제공한다. 카테고리→음색 탐색, 긴 목록 페이지 이동, 선택 후 닫힘, X/바깥 터치 닫힘을 기기에서 검증한다. MPC 공통 상단 프리셋 UI는 호스트 소유다. 문서화된 MenuOverlay라도 현재 고정 SDK/기기에서 항목 글자가 비어 있었으므로 확인 없이 native 목록 성공으로 보고하지 않는다.
+- PAD LEARN은 첫 물리 입력을 등록용으로 무음 소비하고 다음 입력부터 코드 연주한다. 등록 직후 같은 화면에서 MIDI Note·완료 문구·LEARN 해제를 확인한다. 엔진 내부 변경의 호스트 알림을 process()에서 보내지 않는다. 값 조회에서 알림을 배출할 때 렌더 스레드 호출을 제외하는 검사를 유지한다.
+
+- MAIN 최신 그룹 순서는 화면 읽기 순서 A(좌상) Sound/Play, B(우상) Amp Envelope, C(좌하) Filter/LFO, D(우하) FX/Tremolo다. 각각 OSC Pair/Body/Drift/Glide, Attack/Decay/Sustain/Release, Filter Cutoff/Resonance/LFO Rate/LFO Depth, Drive/Space/Tremolo Rate/Tremolo Depth다. Screen/Program 매핑을 함께 맞추며 CHORD 매핑은 별도 보존한다. 숫자 LCD는24px 글자와 양쪽 내부 여백을 유지해 값·단위가 테두리에 꽉 차지 않게 한다.
+
+- 코드 슬롯은 기본4개, 최대16개이며 CHORD의+/-로4개 단위 활성화한다. MAIN은222×70 패드4개와 페이지 넘김을 유지한다. 물리 MIDI/LEARN 매핑은 화면 페이지와 독립적이다. 슬롯 축소는 설정을 삭제하지 않는다. 페이지 이동 시 사라진 화면 hold는 해제하되 물리 MIDI 음은 유지한다. 활성 개수만큼 편집 화면 안의 묶음 버튼을 표시하고 MAIN과 페이지를 공유한다. 기존91개 파라미터의ID/순서는 유지하고 새슬롯/개수/페이지/명령/활동 값은 끝에 추가한다.
+
+- 코드 프리셋은 MAIN에 보이는4슬롯의Root/Type만 변경하고 다른12슬롯 및 보이싱/옥타브/패드 매핑을 보존한다. 네뱅크 프리셋 선택은 독립 저장한다. MOD의 PRESET 1–4는 기존고정 Q-Link가 제어하는 첫뱅크 전용이며 동적값으로 위장하지 않는다. 단일step의가시성 조건에 RangedEnabling/N/N을 쓰지 말고 IndexedEnabling/N을 쓴다.
+
+- 슬롯 페이지 때문에 MAIN 키를 여러 번 누르게 하지 않는다. MAIN↔CHORD 두 서브탭만 유지하고 CHORD 안에서 묶음을 선택한다. Q-Link는16개 고정 편집 중계 파라미터에 연결하고 선택한 실제 슬롯을 읽고 쓴다. 실제192개 파라미터 중 중계16개는automation 대상이 아니다. 상태 복원 중 중계값으로 실제 코드를 덮어쓰지 않도록 보호한다. 오디오 스레드의 중계 readback은 별도 스레드 토큰+인덱스로 구분해 UI 동시 쓰기를 무시하지 않는다.

@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 .venv/
 plugins/*/build/
+third_party/mpc-plugin-builder-sdk/
+.sdk-tools/
 
 # Static catalog
 site/node_modules/

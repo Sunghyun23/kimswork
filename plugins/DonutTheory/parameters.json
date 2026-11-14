@@ -1,0 +1,2318 @@
+[
+  {
+    "key": "Volume",
+    "name": "Volume",
+    "min": -60,
+    "max": 0,
+    "default": -8,
+    "unit": "dB",
+    "log": false
+  },
+  {
+    "key": "Tone",
+    "name": "Tone",
+    "min": 0,
+    "max": 100,
+    "default": 45,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Body",
+    "name": "Body",
+    "min": 0,
+    "max": 100,
+    "default": 40,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Motion",
+    "name": "Motion",
+    "min": 0,
+    "max": 100,
+    "default": 15,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Space",
+    "name": "Space",
+    "min": 0,
+    "max": 100,
+    "default": 20,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Drive",
+    "name": "Drive",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Glide",
+    "name": "Glide",
+    "min": 0,
+    "max": 500,
+    "default": 0,
+    "unit": "ms",
+    "log": false
+  },
+  {
+    "key": "Vibrato",
+    "name": "Vibrato",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Expression",
+    "name": "Expression",
+    "min": 0,
+    "max": 100,
+    "default": 70,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Mix",
+    "name": "Osc Mix",
+    "min": 0,
+    "max": 100,
+    "default": 40,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Detune",
+    "name": "Detune",
+    "min": -25,
+    "max": 25,
+    "default": 6,
+    "unit": "ct",
+    "log": false
+  },
+  {
+    "key": "Cutoff",
+    "name": "Filter Cutoff",
+    "min": 20,
+    "max": 18000,
+    "default": 2800,
+    "unit": "Hz",
+    "log": true
+  },
+  {
+    "key": "Resonance",
+    "name": "Resonance",
+    "min": 0,
+    "max": 100,
+    "default": 18,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Shape",
+    "name": "LFO Shape",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Square",
+      "S&H"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Rate",
+    "name": "LFO Rate",
+    "min": 0.05,
+    "max": 20,
+    "default": 1.2,
+    "unit": "Hz",
+    "log": true
+  },
+  {
+    "key": "Depth",
+    "name": "LFO Depth",
+    "min": 0,
+    "max": 100,
+    "default": 12,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Target",
+    "name": "LFO Target",
+    "choices": [
+      "Pitch",
+      "Filter",
+      "Pulse Width",
+      "Amp"
+    ],
+    "default": 1
+  },
+  {
+    "key": "Wave1",
+    "name": "Osc 1 Wave",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Pulse"
+    ],
+    "default": 1
+  },
+  {
+    "key": "Wave2",
+    "name": "Osc 2 Wave",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Pulse"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Filter",
+    "name": "Filter Type",
+    "choices": [
+      "Low-pass",
+      "Band-pass",
+      "High-pass",
+      "Notch"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DriveType",
+    "name": "Drive Type",
+    "choices": [
+      "Tape",
+      "Tube",
+      "Fuzz"
+    ],
+    "default": 0
+  },
+  {
+    "key": "VoiceMode",
+    "name": "Voice Mode",
+    "choices": [
+      "Mono",
+      "Legato",
+      "Poly"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Octave",
+    "name": "Osc 2 Oct",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "log": false
+  },
+  {
+    "key": "Pulse",
+    "name": "Pulse Width",
+    "min": 5,
+    "max": 95,
+    "default": 50,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Sub",
+    "name": "Sub Level",
+    "min": 0,
+    "max": 100,
+    "default": 10,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Noise",
+    "name": "Noise Level",
+    "min": 0,
+    "max": 30,
+    "default": 0,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "FM",
+    "name": "FM Amount",
+    "min": 0,
+    "max": 100,
+    "default": 12,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "AmpAttack",
+    "name": "Amp Attack",
+    "min": 1,
+    "max": 5000,
+    "default": 8,
+    "unit": "ms",
+    "log": true
+  },
+  {
+    "key": "AmpDecay",
+    "name": "Amp Decay",
+    "min": 1,
+    "max": 5000,
+    "default": 600,
+    "unit": "ms",
+    "log": true
+  },
+  {
+    "key": "AmpSustain",
+    "name": "Amp Sustain",
+    "min": 0,
+    "max": 100,
+    "default": 55,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "AmpRelease",
+    "name": "Amp Release",
+    "min": 1,
+    "max": 5000,
+    "default": 350,
+    "unit": "ms",
+    "log": true
+  },
+  {
+    "key": "FiltAttack",
+    "name": "Filter Attack",
+    "min": 1,
+    "max": 5000,
+    "default": 6,
+    "unit": "ms",
+    "log": true
+  },
+  {
+    "key": "FiltDecay",
+    "name": "Filter Decay",
+    "min": 1,
+    "max": 5000,
+    "default": 350,
+    "unit": "ms",
+    "log": true
+  },
+  {
+    "key": "FiltSustain",
+    "name": "Filter Sustain",
+    "min": 0,
+    "max": 100,
+    "default": 25,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "FiltRelease",
+    "name": "Filter Release",
+    "min": 1,
+    "max": 5000,
+    "default": 300,
+    "unit": "ms",
+    "log": true
+  },
+  {
+    "key": "Env",
+    "name": "Filter Env",
+    "min": -100,
+    "max": 100,
+    "default": 25,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "KeyTrack",
+    "name": "Key Track",
+    "min": 0,
+    "max": 100,
+    "default": 50,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Bend",
+    "name": "Bend Range",
+    "min": 0,
+    "max": 24,
+    "default": 2,
+    "unit": "st",
+    "log": false
+  },
+  {
+    "key": "GlideLegato",
+    "name": "Glide Mode",
+    "choices": [
+      "Always",
+      "Legato only"
+    ],
+    "default": 1
+  },
+  {
+    "key": "Sync",
+    "name": "LFO Sync",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Division",
+    "name": "LFO Division",
+    "choices": [
+      "1/16",
+      "1/8",
+      "1/4",
+      "1/2",
+      "1 bar"
+    ],
+    "default": 2
+  },
+  {
+    "key": "DriveMix",
+    "name": "Drive Mix",
+    "min": 0,
+    "max": 100,
+    "default": 100,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Chorus",
+    "name": "Chorus",
+    "min": 0,
+    "max": 100,
+    "default": 15,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Delay",
+    "name": "Delay Mix",
+    "min": 0,
+    "max": 100,
+    "default": 10,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Feedback",
+    "name": "Feedback",
+    "min": 0,
+    "max": 65,
+    "default": 25,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "DelayDivision",
+    "name": "Delay Division",
+    "choices": [
+      "1/8",
+      "1/4",
+      "1/4 dotted",
+      "1/2"
+    ],
+    "default": 1
+  },
+  {
+    "key": "SoundPreset",
+    "name": "Sound Preset",
+    "choices": [
+      "Init / Init",
+      "Bass / Pocket Anchor",
+      "Bass / Maple Thump",
+      "Bass / Brick Bounce",
+      "Bass / Molasses",
+      "Bass / Crate Knock",
+      "Bass / Soft Cone",
+      "Bass / Motor Hum",
+      "Bass / Felt Punch",
+      "Bass / Honey Slide",
+      "Bass / Walnut Pluck",
+      "Bass / Low Canvas",
+      "Bass / Dust Motor",
+      "Keys / Felt Circuit",
+      "Keys / Worn Tines",
+      "Keys / Honey Reeds",
+      "Keys / Kitchen Bell",
+      "Keys / Soft Hammer",
+      "Keys / Velour Clav",
+      "Keys / Milk Glass",
+      "Keys / Tape Celeste",
+      "Keys / Reed Cabinet",
+      "Keys / Bronze Mallet",
+      "Keys / Evening Felt",
+      "Keys / Pocket Organ",
+      "Keys / Pearl Hammer",
+      "Keys / Cocoa Tines",
+      "Keys / Dust Harp",
+      "Synth / Chopped Brass",
+      "Synth / Mellow Block",
+      "Synth / Velvet Stab",
+      "Synth / Amber Stack",
+      "Synth / Rubber Chord",
+      "Synth / Hollow Print",
+      "Synth / Record Bloom",
+      "Synth / Copper Pluck",
+      "Synth / Faded Poly",
+      "Synth / Small Ensemble",
+      "Synth / Syncopated Ink",
+      "Synth / Glass Chord",
+      "Lead / Ribbon Whistle",
+      "Lead / Bent Wire",
+      "Lead / Narrow Alley",
+      "Lead / Honey Horn",
+      "Lead / Syrup Line",
+      "Lead / Ink Flute",
+      "Lead / Frayed Saw",
+      "Lead / Pocket Squeak",
+      "Lead / Golden Thread",
+      "Lead / Melted Neon",
+      "Lead / Muted Trumpet",
+      "Lead / Round Needle",
+      "Pad / Draped Velvet",
+      "Pad / Paper Halo",
+      "Pad / Warm Projection",
+      "Pad / Woven Air",
+      "Pad / Satin Room",
+      "Pad / Faded Choir",
+      "Pad / Ember Strings",
+      "Pad / Curtain Light",
+      "Pad / Soft Horizon",
+      "Pad / Opaque Silk",
+      "Pad / Dusk Film",
+      "Pad / Golden Haze"
+    ],
+    "default": 0
+  },
+  {
+    "key": "InputMode",
+    "name": "Input Mode",
+    "choices": [
+      "Notes",
+      "Chords",
+      "Split"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Trigger",
+    "name": "Trigger Base",
+    "min": 0,
+    "max": 124,
+    "default": 36,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Spread",
+    "name": "Chord Spread",
+    "min": 0,
+    "max": 40,
+    "default": 0,
+    "unit": "ms",
+    "log": false
+  },
+  {
+    "key": "Progression",
+    "name": "Chord Preset",
+    "choices": [
+      "Sunday Soul",
+      "Basement Loop",
+      "After Hours",
+      "Velvet Morning",
+      "Dusty Sunset",
+      "Warm Windows",
+      "Open Sky",
+      "Soul Turnaround",
+      "Sunday Soul +2",
+      "Basement Loop +2",
+      "After Hours +2",
+      "Velvet Morning +2",
+      "Dusty Sunset +2",
+      "Warm Windows +2",
+      "Open Sky +2",
+      "Soul Turnaround +2",
+      "Sunday Soul -2",
+      "Basement Loop -2",
+      "After Hours -2",
+      "Velvet Morning -2",
+      "Dusty Sunset -2",
+      "Warm Windows -2",
+      "Open Sky -2",
+      "Soul Turnaround -2",
+      "Sunday Soul +5",
+      "Basement Loop +5",
+      "After Hours +5",
+      "Velvet Morning +5",
+      "Dusty Sunset +5",
+      "Warm Windows +5",
+      "Open Sky +5",
+      "Soul Turnaround +5"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root1",
+    "name": "Chord 1 Root",
+    "min": 24,
+    "max": 84,
+    "default": 50,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality1",
+    "name": "Chord 1 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Voicing1",
+    "name": "Chord 1 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root2",
+    "name": "Chord 2 Root",
+    "min": 24,
+    "max": 84,
+    "default": 55,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality2",
+    "name": "Chord 2 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 6
+  },
+  {
+    "key": "Voicing2",
+    "name": "Chord 2 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root3",
+    "name": "Chord 3 Root",
+    "min": 24,
+    "max": 84,
+    "default": 48,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality3",
+    "name": "Chord 3 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 3
+  },
+  {
+    "key": "Voicing3",
+    "name": "Chord 3 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root4",
+    "name": "Chord 4 Root",
+    "min": 24,
+    "max": 84,
+    "default": 57,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality4",
+    "name": "Chord 4 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Voicing4",
+    "name": "Chord 4 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordSlot",
+    "name": "Chord Slot",
+    "choices": [
+      "Pad 1",
+      "Pad 2",
+      "Pad 3",
+      "Pad 4",
+      "Pad 5",
+      "Pad 6",
+      "Pad 7",
+      "Pad 8",
+      "Pad 9",
+      "Pad 10",
+      "Pad 11",
+      "Pad 12",
+      "Pad 13",
+      "Pad 14",
+      "Pad 15",
+      "Pad 16"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SoundPrev",
+    "name": "SoundPrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SoundNext",
+    "name": "SoundNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordPrev",
+    "name": "ChordPrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordNext",
+    "name": "ChordNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Touch1",
+    "name": "Play Chord 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Touch2",
+    "name": "Play Chord 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Touch3",
+    "name": "Play Chord 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Touch4",
+    "name": "Play Chord 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "TouchStop",
+    "name": "Stop Chords",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "FXPreset",
+    "name": "FX Preset",
+    "choices": [
+      "Custom",
+      "Dry",
+      "Warm Tape",
+      "Wide Chorus",
+      "Slap Delay",
+      "Space Echo",
+      "Fuzz Box",
+      "Dark Dub"
+    ],
+    "default": 0
+  },
+  {
+    "key": "TremRate",
+    "name": "Tremolo Rate",
+    "min": 0.1,
+    "max": 15,
+    "default": 4,
+    "unit": "Hz",
+    "log": true
+  },
+  {
+    "key": "TremDepth",
+    "name": "Tremolo Depth",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "OscPair",
+    "name": "OSC Pair",
+    "choices": [
+      "Sine + Sine",
+      "Sine + Triangle",
+      "Sine + Saw",
+      "Sine + Pulse",
+      "Triangle + Sine",
+      "Triangle + Triangle",
+      "Triangle + Saw",
+      "Triangle + Pulse",
+      "Saw + Sine",
+      "Saw + Triangle",
+      "Saw + Saw",
+      "Saw + Pulse",
+      "Pulse + Sine",
+      "Pulse + Triangle",
+      "Pulse + Saw",
+      "Pulse + Pulse"
+    ],
+    "default": 1
+  },
+  {
+    "key": "PadNote1",
+    "name": "Pad 1 Note",
+    "min": 0,
+    "max": 127,
+    "default": 24,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "PadNote2",
+    "name": "Pad 2 Note",
+    "min": 0,
+    "max": 127,
+    "default": 26,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "PadNote3",
+    "name": "Pad 3 Note",
+    "min": 0,
+    "max": 127,
+    "default": 28,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "PadNote4",
+    "name": "Pad 4 Note",
+    "min": 0,
+    "max": 127,
+    "default": 29,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "PadMap",
+    "name": "Pad Mapping",
+    "choices": [
+      "Consecutive",
+      "Individual"
+    ],
+    "default": 1
+  },
+  {
+    "key": "PadLearn",
+    "name": "Pad Learn",
+    "choices": [
+      "Off",
+      "Slot 1",
+      "Slot 2",
+      "Slot 3",
+      "Slot 4",
+      "Slot 5",
+      "Slot 6",
+      "Slot 7",
+      "Slot 8",
+      "Slot 9",
+      "Slot 10",
+      "Slot 11",
+      "Slot 12",
+      "Slot 13",
+      "Slot 14",
+      "Slot 15",
+      "Slot 16"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Drift",
+    "name": "Drift",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "LearnStatus",
+    "name": "Pad Learn Status",
+    "choices": [
+      "Ready \u2014 LEARN assigns a physical pad",
+      "Pad 1 registered \u2014 press again to play",
+      "Pad 2 registered \u2014 press again to play",
+      "Pad 3 registered \u2014 press again to play",
+      "Pad 4 registered \u2014 press again to play",
+      "Pad 5 registered \u2014 press again to play",
+      "Pad 6 registered \u2014 press again to play",
+      "Pad 7 registered \u2014 press again to play",
+      "Pad 8 registered \u2014 press again to play",
+      "Pad 9 registered \u2014 press again to play",
+      "Pad 10 registered \u2014 press again to play",
+      "Pad 11 registered \u2014 press again to play",
+      "Pad 12 registered \u2014 press again to play",
+      "Pad 13 registered \u2014 press again to play",
+      "Pad 14 registered \u2014 press again to play",
+      "Pad 15 registered \u2014 press again to play",
+      "Pad 16 registered \u2014 press again to play"
+    ],
+    "default": 0
+  },
+  {
+    "key": "LowCut",
+    "name": "Low Cut",
+    "min": 0,
+    "max": 250,
+    "default": 0,
+    "unit": "Hz",
+    "log": false
+  },
+  {
+    "key": "OutputTrim",
+    "name": "Sound Trim",
+    "min": -18,
+    "max": 18,
+    "default": 0,
+    "unit": "dB",
+    "log": false
+  },
+  {
+    "key": "ChordOctave1",
+    "name": "Chord 1 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "ChordOctave2",
+    "name": "Chord 2 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "ChordOctave3",
+    "name": "Chord 3 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "ChordOctave4",
+    "name": "Chord 4 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Root5",
+    "name": "Chord 5 Root",
+    "min": 24,
+    "max": 84,
+    "default": 50,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality5",
+    "name": "Chord 5 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Voicing5",
+    "name": "Chord 5 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave5",
+    "name": "Chord 5 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote5",
+    "name": "Pad 5 Note",
+    "min": 0,
+    "max": 127,
+    "default": 31,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch5",
+    "name": "Play Chord 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root6",
+    "name": "Chord 6 Root",
+    "min": 24,
+    "max": 84,
+    "default": 55,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality6",
+    "name": "Chord 6 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 6
+  },
+  {
+    "key": "Voicing6",
+    "name": "Chord 6 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave6",
+    "name": "Chord 6 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote6",
+    "name": "Pad 6 Note",
+    "min": 0,
+    "max": 127,
+    "default": 33,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch6",
+    "name": "Play Chord 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root7",
+    "name": "Chord 7 Root",
+    "min": 24,
+    "max": 84,
+    "default": 48,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality7",
+    "name": "Chord 7 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 3
+  },
+  {
+    "key": "Voicing7",
+    "name": "Chord 7 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave7",
+    "name": "Chord 7 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote7",
+    "name": "Pad 7 Note",
+    "min": 0,
+    "max": 127,
+    "default": 35,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch7",
+    "name": "Play Chord 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root8",
+    "name": "Chord 8 Root",
+    "min": 24,
+    "max": 84,
+    "default": 57,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality8",
+    "name": "Chord 8 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Voicing8",
+    "name": "Chord 8 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave8",
+    "name": "Chord 8 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote8",
+    "name": "Pad 8 Note",
+    "min": 0,
+    "max": 127,
+    "default": 36,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch8",
+    "name": "Play Chord 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root9",
+    "name": "Chord 9 Root",
+    "min": 24,
+    "max": 84,
+    "default": 50,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality9",
+    "name": "Chord 9 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Voicing9",
+    "name": "Chord 9 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave9",
+    "name": "Chord 9 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote9",
+    "name": "Pad 9 Note",
+    "min": 0,
+    "max": 127,
+    "default": 38,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch9",
+    "name": "Play Chord 9",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root10",
+    "name": "Chord 10 Root",
+    "min": 24,
+    "max": 84,
+    "default": 55,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality10",
+    "name": "Chord 10 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 6
+  },
+  {
+    "key": "Voicing10",
+    "name": "Chord 10 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave10",
+    "name": "Chord 10 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote10",
+    "name": "Pad 10 Note",
+    "min": 0,
+    "max": 127,
+    "default": 40,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch10",
+    "name": "Play Chord 10",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root11",
+    "name": "Chord 11 Root",
+    "min": 24,
+    "max": 84,
+    "default": 48,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality11",
+    "name": "Chord 11 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 3
+  },
+  {
+    "key": "Voicing11",
+    "name": "Chord 11 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave11",
+    "name": "Chord 11 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote11",
+    "name": "Pad 11 Note",
+    "min": 0,
+    "max": 127,
+    "default": 41,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch11",
+    "name": "Play Chord 11",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root12",
+    "name": "Chord 12 Root",
+    "min": 24,
+    "max": 84,
+    "default": 57,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality12",
+    "name": "Chord 12 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Voicing12",
+    "name": "Chord 12 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave12",
+    "name": "Chord 12 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote12",
+    "name": "Pad 12 Note",
+    "min": 0,
+    "max": 127,
+    "default": 43,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch12",
+    "name": "Play Chord 12",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root13",
+    "name": "Chord 13 Root",
+    "min": 24,
+    "max": 84,
+    "default": 50,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality13",
+    "name": "Chord 13 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Voicing13",
+    "name": "Chord 13 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave13",
+    "name": "Chord 13 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote13",
+    "name": "Pad 13 Note",
+    "min": 0,
+    "max": 127,
+    "default": 45,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch13",
+    "name": "Play Chord 13",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root14",
+    "name": "Chord 14 Root",
+    "min": 24,
+    "max": 84,
+    "default": 55,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality14",
+    "name": "Chord 14 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 6
+  },
+  {
+    "key": "Voicing14",
+    "name": "Chord 14 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave14",
+    "name": "Chord 14 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote14",
+    "name": "Pad 14 Note",
+    "min": 0,
+    "max": 127,
+    "default": 47,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch14",
+    "name": "Play Chord 14",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root15",
+    "name": "Chord 15 Root",
+    "min": 24,
+    "max": 84,
+    "default": 48,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality15",
+    "name": "Chord 15 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 3
+  },
+  {
+    "key": "Voicing15",
+    "name": "Chord 15 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave15",
+    "name": "Chord 15 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote15",
+    "name": "Pad 15 Note",
+    "min": 0,
+    "max": 127,
+    "default": 48,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch15",
+    "name": "Play Chord 15",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Root16",
+    "name": "Chord 16 Root",
+    "min": 24,
+    "max": 84,
+    "default": 57,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Quality16",
+    "name": "Chord 16 Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "Voicing16",
+    "name": "Chord 16 Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordOctave16",
+    "name": "Chord 16 Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "PadNote16",
+    "name": "Pad 16 Note",
+    "min": 0,
+    "max": 127,
+    "default": 50,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "Touch16",
+    "name": "Play Chord 16",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SlotCount",
+    "name": "Chord Slots",
+    "choices": [
+      "4 SLOTS",
+      "8 SLOTS",
+      "12 SLOTS",
+      "16 SLOTS"
+    ],
+    "default": 0
+  },
+  {
+    "key": "MainChordPage",
+    "name": "Chord Pad Page",
+    "choices": [
+      "1\u20134",
+      "5\u20138",
+      "9\u201312",
+      "13\u201316"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SlotsMinus",
+    "name": "SlotsMinus",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SlotsPlus",
+    "name": "SlotsPlus",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "PadPagePrev",
+    "name": "PadPagePrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "PadPageNext",
+    "name": "PadPageNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordPlayingPage1",
+    "name": "Playing Chord Page 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordPlayingPage2",
+    "name": "Playing Chord Page 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordPlayingPage3",
+    "name": "Playing Chord Page 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordPlayingPage4",
+    "name": "Playing Chord Page 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Progression2",
+    "name": "Chord Preset Bank 2",
+    "choices": [
+      "Sunday Soul",
+      "Basement Loop",
+      "After Hours",
+      "Velvet Morning",
+      "Dusty Sunset",
+      "Warm Windows",
+      "Open Sky",
+      "Soul Turnaround",
+      "Sunday Soul +2",
+      "Basement Loop +2",
+      "After Hours +2",
+      "Velvet Morning +2",
+      "Dusty Sunset +2",
+      "Warm Windows +2",
+      "Open Sky +2",
+      "Soul Turnaround +2",
+      "Sunday Soul -2",
+      "Basement Loop -2",
+      "After Hours -2",
+      "Velvet Morning -2",
+      "Dusty Sunset -2",
+      "Warm Windows -2",
+      "Open Sky -2",
+      "Soul Turnaround -2",
+      "Sunday Soul +5",
+      "Basement Loop +5",
+      "After Hours +5",
+      "Velvet Morning +5",
+      "Dusty Sunset +5",
+      "Warm Windows +5",
+      "Open Sky +5",
+      "Soul Turnaround +5"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Progression3",
+    "name": "Chord Preset Bank 3",
+    "choices": [
+      "Sunday Soul",
+      "Basement Loop",
+      "After Hours",
+      "Velvet Morning",
+      "Dusty Sunset",
+      "Warm Windows",
+      "Open Sky",
+      "Soul Turnaround",
+      "Sunday Soul +2",
+      "Basement Loop +2",
+      "After Hours +2",
+      "Velvet Morning +2",
+      "Dusty Sunset +2",
+      "Warm Windows +2",
+      "Open Sky +2",
+      "Soul Turnaround +2",
+      "Sunday Soul -2",
+      "Basement Loop -2",
+      "After Hours -2",
+      "Velvet Morning -2",
+      "Dusty Sunset -2",
+      "Warm Windows -2",
+      "Open Sky -2",
+      "Soul Turnaround -2",
+      "Sunday Soul +5",
+      "Basement Loop +5",
+      "After Hours +5",
+      "Velvet Morning +5",
+      "Dusty Sunset +5",
+      "Warm Windows +5",
+      "Open Sky +5",
+      "Soul Turnaround +5"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Progression4",
+    "name": "Chord Preset Bank 4",
+    "choices": [
+      "Sunday Soul",
+      "Basement Loop",
+      "After Hours",
+      "Velvet Morning",
+      "Dusty Sunset",
+      "Warm Windows",
+      "Open Sky",
+      "Soul Turnaround",
+      "Sunday Soul +2",
+      "Basement Loop +2",
+      "After Hours +2",
+      "Velvet Morning +2",
+      "Dusty Sunset +2",
+      "Warm Windows +2",
+      "Open Sky +2",
+      "Soul Turnaround +2",
+      "Sunday Soul -2",
+      "Basement Loop -2",
+      "After Hours -2",
+      "Velvet Morning -2",
+      "Dusty Sunset -2",
+      "Warm Windows -2",
+      "Open Sky -2",
+      "Soul Turnaround -2",
+      "Sunday Soul +5",
+      "Basement Loop +5",
+      "After Hours +5",
+      "Velvet Morning +5",
+      "Dusty Sunset +5",
+      "Warm Windows +5",
+      "Open Sky +5",
+      "Soul Turnaround +5"
+    ],
+    "default": 0
+  },
+  {
+    "key": "EditRoot1",
+    "name": "Edit A Root",
+    "min": 24,
+    "max": 84,
+    "default": 50,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "EditQuality1",
+    "name": "Edit A Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "EditVoicing1",
+    "name": "Edit A Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "EditOctave1",
+    "name": "Edit A Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "EditRoot2",
+    "name": "Edit B Root",
+    "min": 24,
+    "max": 84,
+    "default": 55,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "EditQuality2",
+    "name": "Edit B Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 6
+  },
+  {
+    "key": "EditVoicing2",
+    "name": "Edit B Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "EditOctave2",
+    "name": "Edit B Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "EditRoot3",
+    "name": "Edit C Root",
+    "min": 24,
+    "max": 84,
+    "default": 48,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "EditQuality3",
+    "name": "Edit C Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 3
+  },
+  {
+    "key": "EditVoicing3",
+    "name": "Edit C Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "EditOctave3",
+    "name": "Edit C Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  },
+  {
+    "key": "EditRoot4",
+    "name": "Edit D Root",
+    "min": 24,
+    "max": 84,
+    "default": 57,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "EditQuality4",
+    "name": "Edit D Type",
+    "choices": [
+      "Minor 7",
+      "Major 7",
+      "Minor 9",
+      "Major 9",
+      "Dominant 7",
+      "Dominant 9",
+      "Dominant 13",
+      "Sus 2",
+      "Minor",
+      "Major",
+      "7 flat 9"
+    ],
+    "default": 2
+  },
+  {
+    "key": "EditVoicing4",
+    "name": "Edit D Voice",
+    "choices": [
+      "Root",
+      "1st inv",
+      "Open",
+      "2nd inv",
+      "3rd inv",
+      "4th inv"
+    ],
+    "default": 0
+  },
+  {
+    "key": "EditOctave4",
+    "name": "Edit D Octave",
+    "choices": [
+      "-2 oct",
+      "-1 oct",
+      "0 oct",
+      "+1 oct",
+      "+2 oct"
+    ],
+    "default": 2
+  }
+]

@@ -3,10 +3,10 @@ import Base from '../layouts/Base.astro';
 import {plugins, url} from '../data/plugins';
 const featured = plugins[0];
 ---
-<Base title="kim — Instrument plugins for MPC standalone" description="Independent instrument plugins for MPC standalone. Meet Donut Theory, a vintage-inspired synthesizer currently in development.">
+<Base title="Kim’s Work — Instrument plugins for MPC standalone" description="Independent instrument plugins for MPC standalone. Meet Donut Theory, a vintage-inspired synthesizer with up to sixteen chord slots.">
   <section class="launch wrap">
     <div class="launch-copy">
-      <div class="eyebrow">KIM / INDEPENDENT INSTRUMENTS</div>
+      <div class="eyebrow">KIM’S WORK / INDEPENDENT INSTRUMENTS</div>
       <h1>Instrument plugins<br/>for <em>MPC standalone.</em></h1>
       <p class="launch-intro">Vintage-inspired sounds, designed for hands-on music making.</p>
       <div class="featured-summary">
@@ -20,11 +20,11 @@ const featured = plugins[0];
     </div>
     <figure class="launch-art">
       <a class="cover" href={url(`plugins/${featured.slug}/`)} aria-label={`Explore ${featured.name}`}>
-        <div class="cover-top"><span>KIM RECORDING INSTRUMENTS</span><span>NO. 001</span></div>
-        <img src={url(`images/${featured.image}`)} alt={featured.imageAlt} width="1536" height="961" fetchpriority="high"/>
-        <div class="cover-bottom"><span>{featured.name.toUpperCase()}</span><span>DESIGN CONCEPT</span></div>
+        <div class="cover-top"><span>KIM’S WORK INSTRUMENTS</span><span>NO. 001</span></div>
+        <img src={url(`images/${featured.image}`)} alt={featured.imageAlt} width="1280" height="800" fetchpriority="high"/>
+        <div class="cover-bottom"><span>{featured.name.toUpperCase()}</span><span>MPC SCREENSHOT</span></div>
       </a>
-      <figcaption>Design concept. The running MPC interface may differ.</figcaption>
+      <figcaption>Actual MPC Live III screen capture.</figcaption>
       <p class="art-note">A little soul. A lot of possibility.</p>
     </figure>
   </section>

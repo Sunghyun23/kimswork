@@ -39,3 +39,7 @@ PC, 일반 모바일, 폴드 외부·내부 화면을 지원한다. 기종 판�
 ## 커스텀 도메인
 
 사용자가 구매한 `kimswork.app`을 기본 주소로 사용한다. 브랜드 확정명은 Kim’s Work이며 플러그인 vendor `kim`과 UID는 변경하지 않는다. Cloudflare DNS의 apex A 레코드는 GitHub Pages의 네 IP(185.199.108.153–185.199.111.153), www CNAME은 `sunghyun23.github.io`이며 DNS only로 둔다. GitHub Pages Custom domain은 `kimswork.app`, Astro site는 `https://kimswork.app`, base는 `/`다. 인증서 발급 후 Enforce HTTPS를 활성화한다. 배포는 기존 GitHub Actions로 유지하며 별도 웹 호스팅은 구매하지 않는다.
+
+
+## Donut Theory 1.0.0 publication
+The public brand is Kim’s Work at https://kimswork.app/. Product metadata lives in site/src/data/plugins.ts. Actual MPC Live III screenshots replace concept art. The detailed English manual is imported from docs/plugins/donut-theory/manual.md into /plugins/donut-theory/manual/; changes to that source trigger Pages too. Release metadata must reference an existing plugin-specific tag and asset, never repository-wide latest.

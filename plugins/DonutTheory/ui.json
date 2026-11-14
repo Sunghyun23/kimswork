@@ -1,0 +1,434 @@
+{
+  "kit": "amber",
+  "style": {
+    "background": "ffe1d2ae",
+    "text": "ff312b20",
+    "muted": "ff514634",
+    "accent": "ffac5b2a"
+  },
+  "pages": [
+    {
+      "name": "MAIN",
+      "controls": [
+        {
+          "param": "OSC Pair",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Body",
+          "widget": "knob"
+        },
+        {
+          "param": "Drift",
+          "widget": "knob"
+        },
+        {
+          "param": "Glide",
+          "widget": "knob"
+        },
+        {
+          "param": "Filter Cutoff",
+          "widget": "knob"
+        },
+        {
+          "param": "Resonance",
+          "widget": "knob"
+        },
+        {
+          "param": "Drive",
+          "widget": "knob"
+        },
+        {
+          "param": "Space",
+          "widget": "knob"
+        },
+        {
+          "param": "Amp Attack",
+          "widget": "fader"
+        },
+        {
+          "param": "Amp Decay",
+          "widget": "fader"
+        },
+        {
+          "param": "Amp Sustain",
+          "widget": "fader"
+        },
+        {
+          "param": "Amp Release",
+          "widget": "fader"
+        },
+        {
+          "param": "LFO Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "LFO Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "Tremolo Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "Tremolo Depth",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "OSC",
+      "controls": [
+        {
+          "param": "Osc 1 Wave",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Osc 2 Wave",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Osc Mix",
+          "widget": "knob"
+        },
+        {
+          "param": "Detune",
+          "widget": "knob"
+        },
+        {
+          "param": "Osc 2 Oct",
+          "widget": "knob"
+        },
+        {
+          "param": "Pulse Width",
+          "widget": "knob"
+        },
+        {
+          "param": "Sub Level",
+          "widget": "knob"
+        },
+        {
+          "param": "Noise Level",
+          "widget": "knob"
+        },
+        {
+          "param": "FM Amount",
+          "widget": "knob"
+        },
+        {
+          "param": "Tone",
+          "widget": "knob"
+        },
+        {
+          "param": "Body",
+          "widget": "knob"
+        },
+        {
+          "param": "Voice Mode",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Sound Preset",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "FILTER",
+      "controls": [
+        {
+          "param": "Filter Type",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Filter Cutoff",
+          "widget": "knob"
+        },
+        {
+          "param": "Resonance",
+          "widget": "knob"
+        },
+        {
+          "param": "Filter Env",
+          "widget": "knob"
+        },
+        {
+          "param": "Filter Attack",
+          "widget": "fader"
+        },
+        {
+          "param": "Filter Decay",
+          "widget": "fader"
+        },
+        {
+          "param": "Filter Sustain",
+          "widget": "fader"
+        },
+        {
+          "param": "Filter Release",
+          "widget": "fader"
+        },
+        {
+          "param": "Key Track",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "AMP",
+      "controls": [
+        {
+          "param": "Amp Attack",
+          "widget": "fader"
+        },
+        {
+          "param": "Amp Decay",
+          "widget": "fader"
+        },
+        {
+          "param": "Amp Sustain",
+          "widget": "fader"
+        },
+        {
+          "param": "Amp Release",
+          "widget": "fader"
+        },
+        {
+          "param": "Volume",
+          "widget": "knob"
+        },
+        {
+          "param": "Expression",
+          "widget": "knob"
+        },
+        {
+          "param": "Voice Mode",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Glide",
+          "widget": "knob"
+        },
+        {
+          "param": "Glide Mode",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Bend Range",
+          "widget": "knob"
+        },
+        {
+          "param": "Input Mode",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Trigger Base",
+          "widget": "knob"
+        },
+        {
+          "param": "Chord Spread",
+          "widget": "knob"
+        },
+        {
+          "param": "Chord Slot",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "MOD",
+      "controls": [
+        {
+          "param": "LFO Shape",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "LFO Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "LFO Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "LFO Target",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "LFO Sync",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "LFO Division",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Vibrato",
+          "widget": "knob"
+        },
+        {
+          "param": "Motion",
+          "widget": "knob"
+        },
+        {
+          "param": "Chord Preset",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "FX",
+      "controls": [
+        {
+          "param": "Drive Type",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Drive",
+          "widget": "knob"
+        },
+        {
+          "param": "Drive Mix",
+          "widget": "knob"
+        },
+        {
+          "param": "Chorus",
+          "widget": "knob"
+        },
+        {
+          "param": "Delay Mix",
+          "widget": "knob"
+        },
+        {
+          "param": "Feedback",
+          "widget": "knob"
+        },
+        {
+          "param": "Delay Division",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Space",
+          "widget": "knob"
+        },
+        {
+          "param": "FX Preset",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Tremolo Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "Tremolo Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "Low Cut",
+          "widget": "knob"
+        },
+        {
+          "param": "Sound Trim",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "CHORD",
+      "controls": [
+        {
+          "param": "Chord 1 Root",
+          "widget": "knob"
+        },
+        {
+          "param": "Chord 1 Type",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord 1 Voice",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord 2 Root",
+          "widget": "knob"
+        },
+        {
+          "param": "Chord 2 Type",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord 2 Voice",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord 3 Root",
+          "widget": "knob"
+        },
+        {
+          "param": "Chord 3 Type",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord 3 Voice",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord 4 Root",
+          "widget": "knob"
+        },
+        {
+          "param": "Chord 4 Type",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord 4 Voice",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord Preset",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Chord Spread",
+          "widget": "knob"
+        },
+        {
+          "param": "Input Mode",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Trigger Base",
+          "widget": "knob"
+        }
+      ]
+    }
+  ]
+}
