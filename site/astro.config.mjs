@@ -1,2 +1,2 @@
 import { defineConfig } from 'astro/config';
-export default defineConfig({ site: 'https://sunghyun23.github.io', base: '/mpc-plugins', trailingSlash: 'always', output: 'static' });
+export default defineConfig({ site: 'https://kimswork.app', base: '/', trailingSlash: 'always', output: 'static' });

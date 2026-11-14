@@ -1,6 +1,6 @@
 # kim GitHub Pages
 
-사이트: https://sunghyun23.github.io/mpc-plugins/
+사이트: https://kimswork.app/
 
 ## 구조와 배포
 
@@ -35,3 +35,7 @@ PC, 일반 모바일, 폴드 외부·내부 화면을 지원한다. 기종 판�
 홈의 주 제목은 “Instrument plugins for MPC standalone.”으로 제품 종류와 플랫폼을 명시한다. 첫 제품 이름·한 문장 용도·다운로드 가능 여부·제품 상세 버튼을 첫 화면에 모은다. 출시 전 상태는 “In development — not available to download yet.”로 명확히 쓴다. 시각적 슬로건은 보조 역할로 유지한다. PC는 설명과 제품 아트워크를 나란히, 모바일·폴드 내부의 중간 너비에서는 설명을 먼저 보여준다.
 
 상세 페이지 첫 화면에는 제품 용도·배포 상태·지원 환경·기능/검증 상태 바로가기를 둔다. Q-Link 표는 기능과 배포/검증 안내 뒤에 둔다. 첫 화면에서 알파 버전을 다운로드 가능 제품으로 오해하게 만들지 않는다. 320–1440px의 홈·상세 14개 조합에서 가로 넘침 없이 상태와 주 버튼 노출을 확인했다. 실제 신규 방문자 테스트와는 구분한다.
+
+## 커스텀 도메인
+
+사용자가 구매한 `kimswork.app`을 기본 주소로 사용한다. 브랜드 확정명은 Kim’s Work이며 플러그인 vendor `kim`과 UID는 변경하지 않는다. Cloudflare DNS의 apex A 레코드는 GitHub Pages의 네 IP(185.199.108.153–185.199.111.153), www CNAME은 `sunghyun23.github.io`이며 DNS only로 둔다. GitHub Pages Custom domain은 `kimswork.app`, Astro site는 `https://kimswork.app`, base는 `/`다. 인증서 발급 후 Enforce HTTPS를 활성화한다. 배포는 기존 GitHub Actions로 유지하며 별도 웹 호스팅은 구매하지 않는다.

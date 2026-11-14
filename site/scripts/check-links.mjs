@@ -7,8 +7,8 @@ for (const file of files.filter(f=>f.endsWith('.html'))) {
  const html=await readFile(file,'utf8');
  for (const [,ref] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
   if (!ref.startsWith('/')) continue;
-  if (!ref.startsWith('/mpc-plugins/')) throw Error(`Missing base: ${ref}`);
-  const u=new URL(ref,'https://example.invalid');let target=join(root,decodeURIComponent(u.pathname.slice('/mpc-plugins/'.length)));
+  if (ref.startsWith('/mpc-plugins/')) throw Error(`Obsolete base: ${ref}`);
+  const u=new URL(ref,'https://example.invalid');let target=join(root,decodeURIComponent(u.pathname.slice(1)));
   if ((await stat(target)).isDirectory()) target=join(target,'index.html');
   await stat(target);
   if(u.hash && !(await readFile(target,'utf8')).includes(`id="${decodeURIComponent(u.hash.slice(1))}"`)) throw Error(`Missing anchor: ${ref}`);

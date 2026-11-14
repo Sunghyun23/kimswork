@@ -10,7 +10,7 @@ npm run build
 npm run preview
 ```
 
-개발/프리뷰 주소는 터미널에 표시된 포트의 `/mpc-plugins/`다. 실제 Pages base도 `/mpc-plugins`이며 모든 내부 URL은 `url()`로 생성한다.
+개발/프리뷰 주소는 터미널에 표시된 포트의 `/`다. 커스텀 도메인의 base도 `/`이며 모든 내부 URL은 `url()`로 생성한다.
 
 ## 제품 추가
 
@@ -25,7 +25,7 @@ npm run preview
 
 GitHub repository Settings → Pages → Source: GitHub Actions. `main`의 site 변경 또는 수동 실행으로 배포한다. PR은 빌드만 진행한다. ZIP은 사이트에 넣지 않고 플러그인별 Release에 연결한다. 사이트 배포와 악기 Release 발행은 별도다.
 
-공개 목표: https://sunghyun23.github.io/mpc-plugins/
+공개 목표: https://kimswork.app/
 
 개발 중 기능을 출시 완료로 소개하지 않는다. 현재 Screen Q-Link와 화면 hold 발음 문제를 공개 상태에 반영한다.
 

@@ -24,7 +24,7 @@ export const plugins: Plugin[] = [{
 export const repo = 'https://github.com/Sunghyun23/mpc-plugins';
 // Version page navigation independently of hashed assets, so a cached HTML
 // document from an older release cannot reintroduce the previous theme.
-export const navigationVersion = 'clarity-3';
+export const navigationVersion = 'domain-4';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);
