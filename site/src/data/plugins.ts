@@ -21,7 +21,14 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/mpc-plugins';
-export const url = (path = '') => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+// Version page navigation independently of hashed assets, so a cached HTML
+// document from an older release cannot reintroduce the previous theme.
+export const navigationVersion = 'dark-2';
+export const url = (path = '') => {
+ const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
+ if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);
+ return target.pathname + target.search + target.hash;
+};
 export function releaseLinks(p: Plugin) {
  if (!p.release) return null;
  const tag = `${p.slug}/v${p.release.version}`;
