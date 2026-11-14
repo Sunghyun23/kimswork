@@ -57,3 +57,7 @@
 ## 현재 상태
 
 이 문서는 운영 정책이다. SDK 설치, 사이트, CI 워크플로, Pages 공개, Release는 아직 구현/생성하지 않았다.
+
+## Pages 구현 확정 (2026-11-14)
+
+사용자가 Pages 구현·서빙을 승인했다. `site/`의 Astro 정적 사이트와 `.github/workflows/pages.yml`로 구현한다. 제품 데이터는 `site/src/data/plugins.ts`, 공개 주소는 https://sunghyun23.github.io/mpc-plugins/ 이다. PC·일반 모바일·폴드 외부/내부 화면에 대응하며 세부 운영 규칙과 검증 결과는 [pages.md](pages.md)를 따른다. 이전의 사이트 미구현 상태 설명은 이 항목으로 대체한다. 플러그인 Release 발행은 사이트 배포와 별개다.

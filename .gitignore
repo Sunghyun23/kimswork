@@ -3,3 +3,8 @@ __pycache__/
 *.py[cod]
 .venv/
 plugins/*/build/
+
+# Static catalog
+site/node_modules/
+site/dist/
+site/.astro/

@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro';
+import {plugins, url} from '../data/plugins';
+
+---
+<Base title="kim — Instruments with a little soul."><section class="hero wrap"><div class="eyebrow">INDEPENDENT SOUNDS / MADE FOR MPC</div><h1>Instruments with<br/>a little <em>soul.</em></h1><div class="hero-bottom"><p>아이디어가 머무는 소리.<br/>당신의 MPC를 위한 작은 악기들.</p><a class="round-link" href="#collection">컬렉션 둘러보기 <span>↘</span></a></div><div class="edition">VOL. 001<br/>THE FIRST PRESSING</div></section>
+<section class="collection wrap" id="collection"><div class="section-head"><h2>The collection<span>만들고 있는 소리들</span></h2><span class="eyebrow">{String(plugins.length).padStart(2,'0')} / INSTRUMENTS</span></div>{plugins.map((p,i)=><article class="product"><a class="cover" href={url(`plugins/${p.slug}/`)} aria-label={`${p.name} 자세히 보기`}><div class="cover-top"><span>KIM RECORDING INSTRUMENTS</span><span>NO. {String(i+1).padStart(3,'0')}</span></div><img src={url(`images/${p.image}`)} alt={p.imageAlt} width="1536" height="961"/><div class="cover-bottom"><span>DESIGN STUDY / 디자인 시안</span><span>33⅓ RPM OF INSPIRATION</span></div></a><div class="product-copy"><span class="badge">{p.release ? `공개 버전 · ${p.release.version}` : '개발 알파 · 검증 중'}</span><p class="eyebrow">{p.category}</p><h3>{p.name}</h3><h4>{p.tagline}</h4><p>{p.description}</p><a class="button" href={url(`plugins/${p.slug}/`)}>악기 살펴보기 <span>↗</span></a><small>{p.release ? `공개 버전 ${p.release.version}` : `공개 다운로드 준비 중 · 개발 버전 ${p.developmentVersion}`}</small></div></article>)}</section>
+<section class="note wrap"><span class="eyebrow">THE WAY WE MAKE THINGS</span><h2>연주에 가까이.<br/>아이디어에 더 가까이.</h2><p>복잡한 설정에 머무르기보다, 소리를 만지고 다음 마디로 넘어갈 수 있도록. 작은 악기 하나씩 차근차근 만들고 있습니다.</p></section></Base>

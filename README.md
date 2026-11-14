@@ -39,3 +39,9 @@ third_party/mpc-plugin-builder-sdk/ 공유 SDK, 커밋 고정 (도입 예정)
 기본 구조와 규칙 문서를 준비했습니다. SDK 설치, DSP/MIDI 구현, 실제 MPC 스킨, 프리셋 음원 검증, Pages 사이트, CI, Release 배포는 아직 진행하지 않았습니다.
 
 승인 이미지는 디자인 콘셉트이며 실행 가능한 플러그인이나 실제 MPC 캡처가 아닙니다. 구현 시 SDK 좌표·호스트 영역·가독성에 맞춰 변환합니다.
+
+## GitHub Pages 사이트
+
+[플러그인 카탈로그](https://sunghyun23.github.io/mpc-plugins/) · [사이트 운영·반응형 기준](docs/pages.md) · [사이트 개발 안내](site/README.md)
+
+홈·제품 상세·설치 가이드는 `site/`에서 관리합니다. PC·일반 모바일·폴드 외부/내부 화면에 대응합니다. 제품의 공개 Release가 없으면 다운로드 준비 중으로 표시합니다.

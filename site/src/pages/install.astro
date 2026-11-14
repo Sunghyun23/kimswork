@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';import {url} from '../data/plugins';
+---
+<Base title="설치 가이드 — kim"><article class="wrap guide"><div class="eyebrow">FROM DOWNLOAD TO FIRST NOTE</div><h1>작은 악기 하나,<br/>당신의 MPC 안으로.</h1><p class="lead">공개 Release 패키지를 기준으로 한 설치 안내입니다.</p><div class="notice">공개 여부와 알려진 제한을 먼저 확인하세요. 출시 전 제품에는 다운로드가 제공되지 않습니다. <a href={url('plugins/donut-theory/#download')}>현재 상태 확인 →</a></div><section><h2>01. 지원 환경 확인</h2><p>MPC standalone OS 3.10.1 이상이 필요합니다. Preferences → Enhancements (Beta)에서 <strong>Enable Enhancements</strong>와 <strong>External Plugin Support</strong>를 활성화하세요. 기기의 안내를 확인한 뒤 적용합니다.</p><p>플러그인별 검증 모델과 알려진 제한은 해당 제품 페이지에서 확인하세요.</p></section><section><h2>02. 공식 Release 다운로드</h2><p>제품 페이지의 다운로드 버튼에서 해당 플러그인의 ZIP을 받습니다. 압축을 풀면 <code>kim - VST - Donut Theory</code>와 같은 플러그인 폴더가 나옵니다.</p></section><section><h2>03. 드라이브에 복사</h2><p>MPC에서 사용하는 드라이브의 최상위에 <code>VST2 Plugins</code> 폴더를 만들고, 압축을 푼 플러그인 폴더 전체를 넣습니다. 내부 파일 이름이나 구조는 바꾸지 마세요.</p><pre><code>드라이브/
+└─ VST2 Plugins/
+   └─ kim - VST - Donut Theory/
+      ├─ plugin.json
+      ├─ version.xml
+      ├─ VST/
+      └─ Plugin Skins/</code></pre></section><section><h2>04. 저장하고 다시 시작</h2><p>작업 중인 프로젝트를 저장한 뒤 MPC 앱 또는 기기를 재시작합니다. 플러그인 브라우저의 <strong>External Plugins</strong>에서 악기를 선택합니다.</p></section><section><h2>업데이트할 때</h2><p>프로젝트와 기존 플러그인 폴더를 백업합니다. 릴리스 노트를 읽고 같은 이름의 폴더를 새 패키지로 교체한 뒤 재시작하세요. 기존 프로젝트에서 UI나 매핑이 다르면 원본을 보존하고 새 테스트 트랙에서 비교하세요.</p></section><section><h2>목록에 나타나지 않는다면</h2><ul><li>OS 버전과 External Plugin Support 설정을 확인하세요.</li><li>폴더가 중복으로 한 단계 더 들어가지 않았는지 확인하세요.</li><li>ZIP 파일 자체가 아닌 압축을 푼 전체 폴더를 복사했는지 확인하세요.</li><li>다른 드라이브에 동일한 플러그인의 구버전이 있는지 확인하세요.</li></ul><p>문제를 제보할 때 MPC 모델, OS 버전, 플러그인 버전과 재현 순서를 함께 알려주세요.</p></section></article></Base>
