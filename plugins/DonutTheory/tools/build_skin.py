@@ -187,8 +187,8 @@ from sidebars import install as sidebars
 sidebars(g,tui,params,out)
 from chord_slots import install as chord_slots
 chord_slots(g,tui,ql,params,out)
-from pad_positions import install as pad_positions
-pad_positions(g,tui,params,out)
+# Manual pad-location hints retired: their per-slot 8x16 selection trees
+# inflate CHORD construction on MPC. MIDI/LEARN and stored IDs remain intact.
 # Later additions (bank arrows, pad hints) must never render or receive input
 # above a modal sidebar. Keep every tab's ordinary siblings below its modals.
 modal_defs={get(e,'key'):get(e,'value') for e in get(get(pd,'componentDefinitions'),'localComponentDefinitions')}

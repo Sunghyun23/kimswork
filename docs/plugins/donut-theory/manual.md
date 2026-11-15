@@ -92,7 +92,7 @@ The gray MPC **PRESET** selector is different. With the current host/SDK integra
 
 ## MAIN and Q-Link controls
 
-![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.2.1.webp)
+![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.2.2.webp)
 
 MAIN arranges four groups in reading order: A upper left, B upper right, C lower left and D lower right. Each group has four Q-Link controls.
 
@@ -213,7 +213,7 @@ In **CHORD → ADVANCED**, **Individual** pad mapping uses each slot's assignmen
 
 ## Chord editor
 
-![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.2.1.webp)
+![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.2.2.webp)
 
 ### Four to sixteen slots
 
@@ -404,7 +404,7 @@ When reporting an issue, include the package version, MPC model/OS, input mode, 
 
 ## Manual pad location hints
 
-**PAD LOCATION** in the shared CHORD editor lets you choose a bank (A–H) and a cell in a 4×4 grid. Pad 1 is bottom-left; pad 16 is top-right. Then use that slot's **LEARN** button and press the physical pad to register its MIDI note. The first registration press is silent. MAIN shows your chosen location beside the chord name; unassigned locations remain hidden. **CLEAR LOCATION** removes the hint without changing MIDI routing. The location is a manual reminder, not an automatically detected hardware position. If you change MPC pad layouts, verify the hint and repeat LEARN as needed. Project saving preserves all sixteen hints; sound/progression presets do not replace them. This feature is included in version 1.1.2. Location hints are saved with the project and are excluded from Q-Link and automation assignments.
+The manual bank/cell location hint feature introduced in 1.1.2 was removed in **1.2.2**. It is no longer displayed on MAIN or CHORD. This retires only a visual reminder, not physical-pad support. Use **MIDI Note / LEARN** to connect each physical pad as described above. Existing note assignments and all sixteen chord slots are retained. The old location parameter values remain stored solely for state compatibility and no longer drive any visible controls.
 
 ## Factory sound list
 
@@ -445,4 +445,11 @@ Hardware follow-up in 1.2.1: the engine ran on MPC Live III / OS 3.10.1.12. All 
 
 ## What changed in 1.2.1
 
-Fixed a layering bug that left chord-page arrow controls above the left selection drawer. Modal sidebars now render and intercept above ordinary tab widgets; Q-Link guides hide in the drawer and restore on closing. All seven plugin pages were visually checked on MPC. Current screenshots are actual 1.2.1 device captures. DSP, 208 parameter identities and Q-Link mappings are unchanged from 1.2.0. The device save/reload check used a native .xpl plugin preset, not a complete MPC project.
+Fixed a layering bug that left chord-page arrow controls above the left selection drawer. Modal sidebars now render and intercept above ordinary tab widgets; Q-Link guides hide in the drawer and restore on closing. All seven plugin pages were visually checked on MPC. That update used actual 1.2.1 captures; current images show 1.2.2. DSP, 208 parameter identities and Q-Link mappings are unchanged from 1.2.0. The device save/reload check used a native .xpl plugin preset, not a complete MPC project.
+
+
+## What changed in 1.2.2
+
+Manual pad-location selectors, tiny grid hints and their bank/cell popup trees were removed after reports of stalled MAIN-to-CHORD switching and unreliable position display. Hidden widgets still cost construction work: the expanded CHORD tree drops from 10,889 to 1,913 widgets. MAIN and CHORD remain two native sub-tabs of the first function key; pressing it again switches between them. No navigation help popup is used.
+
+On MPC Live III / OS 3.10.1.12, a fresh instance opened MAIN and entered CHORD, and repeated remote transitions followed by inversion selection, 4→8→12→16 expansion and bank 13–16 selection worked. Remote capture latency affected some rapid-test frames; this is not a timing benchmark or certification of every physical interaction. The original stall’s exact cause is not proven by a controlled old/new hardware A/B. The engine, sound recipes, UID, all 208 stored parameter declarations and Q-Link mappings remain unchanged. MIDI Note and LEARN remain the physical-pad connection controls. The old 16 location values are retained but unused by the UI.

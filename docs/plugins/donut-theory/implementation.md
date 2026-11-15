@@ -533,3 +533,13 @@ The preset arrows grow36×34→44×44 (58% greater area). Page arrows grow36×28
 - 증거: plugins/DonutTheory/build/qa-1.2.0/{factory-media,initial-four-chords,filter-load-media,final-media}/analysis.json 및 실제 viewer 스크린샷. 소스 녹화 원본은 Desktop에도 보존. build/ 미커밋. 공개 실제 스크린샷은 뷰어 chrome만 crop한1280×800으로 저장한다.
 - native/ARM32/ARM64 SDK0errors/0warnings, engine/UBSan/bridge/analog/skin와 host simulator19PASS. /tmp/donut-121-build.log,/tmp/donut-121-test.log. DSP는version metadata만10201로 변경했다.1.2.0 음성 엔진·64recipes·208params·Q-Link 유지.
 - 모든 물리 Q-Link·새 물리 LEARN·실제 손가락 동시누름·다른모델·전체프로젝트 복원은 재인증하지 않았다. 공식 배포 결과는donut-theory/v1.2.1과 Pages Actions에서 확인한다.
+
+## 1.2.2 — retire manual pad-location UI / CHORD construction budget
+
+사용자: MAIN 재탭 시 CHORD 미전환/벽돌 현상과 패드 위치 표시 불안정 보고, 위치 표시 기능 삭제 허용. 위치 스킨 설치 패스만 중단하고 원본 제작 코드/자산은 보존했다. MIDI Note/LEARN·208개 파라미터/UID·Q-Link·DSP·음색은 유지한다. PadPosition192–207은 저장 호환용 미사용 값이다. LEARN 버튼은 위치 표시 도입 이전의180px 크기로 복원된다.
+
+구성 그래프 계측: 1.2.1 MAIN1608/CHORD10889 → 1.2.2 MAIN1576/CHORD1913개. TUI19,568,032→13,542,804bytes. CHORD2500 이하·재귀 cycle 방지 검사 추가. 모든 빌드/SDK0errors0warnings/host19/engine·UBSan·bridge·analog·skin 통과 (/tmp/donut-122-build.log,/tmp/donut-122-test.log). 마지막 budget 검사 별도 통과.
+
+공식mpc_remote.py update로64개파일 검증 후 기존 사용자 폐기/재시작 허용 범위에서 재시작했다. 새 untitled QA 프로젝트/Plugin001에 로드. 초기 MAIN→CHORD 성공, 12개 연속 전환 입력 후 CHORD 응답 및 inversion 선택,4→8→12→16 증가,13–16 bank 확인. 초기8개 연속 캡처는 MAIN/CHORD 교대, 뒤 일부는 원격 프레임 지연으로 이전MAIN이 찍혔으며 이후 최신 CHORD와 편집 성공을 확인했다. 캡처만으로 정확한 전환 지연/12회 각 프레임 성공을 인증하지 않는다.
+
+초기 normal-window 좌표 입력이 제대로 전달되지 않은 것을 fullscreen에서 확인했다. 앞선 MAIN 미응답 재현 주장은 이 제약 때문에 근거가 부족하며 정정한다. 사용자 실제 멈춤 원인을 통제된 구버전/신버전 A/B로 확정하지 않았다. 제거한 대형 UI가 불필요한 구성 비용을 만들던 것은 그래프 계측으로 확인했다. 물리 재탭 확인은 사용자에게 요청했으며 응답 전에는 물리 검증 완료로 표시하지 않는다. 실제 screenshots: build/qa-1.2.2/*.jpg, 사이트는 fullscreen의 기기영역1080,308,1280,800만 crop한 실제WebP다. 공개 결과는1.2.2 Release/Pages를 따른다.

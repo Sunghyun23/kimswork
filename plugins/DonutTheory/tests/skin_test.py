@@ -164,37 +164,15 @@ print('PASS: independent knob definitions contain exactly one tick and value pla
 assert index['LearnStatus']==84 and len(params)==208
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
-assert len([w for w in chord_root if w['componentData']['type'].startswith('DTPadPositionPanel')])==16
+assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
+assert not any(key.startswith('DTPadPosition') for key in defs)
 for slot in range(1,17):
  p=params[index[f'PadPosition{slot}']]
  assert p['default']==0 and p['choices'][0]=='Unassigned'
  assert p['choices'][1]=='A1' and p['choices'][16]=='A16' and p['choices'][-1]=='H16'
- panel=defs[f'DTPadPositionPanel{slot}']
- assert panel['version']==4 and panel['hideQLinkBounds'] is True
- for bank in range(8):
-  cells=defs[f'DTPadPositionBank{slot}-{bank}']['componentsData']
-  assert len(cells)==16
-  for pad,cell in enumerate(cells):
-   x,y,w,h=map(int,cell['bounds']['bounds'].split())
-   assert (x,y,w,h)==(25+(pad%4)*95,194+(3-pad//4)*82,88,72)
-   assert cell['handle remapping']['map']==[{'key':'Data','value':f'Parameter {index[f"PadPosition{slot}"]}'},{'key':'Close','value':f'Local/2/padPositionOpen{slot}'}]
- # Shared cells write their exact location and close only their own drawer.
- for value in range(1,129):
-  cell=defs[f'DTPadPositionCell{value}']
-  assert cell['actions'][0]['handleName']=='Close'
-  assert cell['componentsData'][-1]['componentData']['data']['buttonId']==value
-  # A self-remap (Data -> Data) masked the outer slot binding on the MPC.
-  assert cell['componentsData'][0]['handle remapping']['map']==[]
-  assert cell['componentsData'][-1]['handle remapping']['map']==[]
+assert 'Position grid' not in json.dumps(t)
 from PIL import Image
-strip=Image.open(skin/'pad-position-strip.png')
-assert strip.size==(40,40*129)
-assert strip.crop((0,0,40,40)).getbbox() is None
-# A1 bottom-left, A16 top-right; the same position repeats for each bank.
-assert strip.getpixel((4,40+34))==(156,84,41,255)
-assert strip.getpixel((34,16*40+4))==(156,84,41,255)
-assert strip.crop((0,40,40,80)).tobytes()==strip.crop((0,17*40,40,18*40)).tobytes()
-print('PASS: 16 manual pad positions, A-H/4x4 orientation, clear/default, read-only native-size strip and modal guides')
+print('PASS: manual pad-location UI retired, saved parameter IDs retained and MIDI/LEARN independent')
 assert 'Stop touch chords' not in byname and 'Sync' not in byname and 'Division' not in byname
 assert 'DTLfoSettings' not in defs and 'DTChordAdvanced' in defs
 assert 'LFO settings' not in byname
@@ -396,3 +374,18 @@ for tab in t['tabs']:
   if modal:seen_modal=True
   else:assert not seen_modal, f"{tab['tabName']}: ordinary widget above modal: {widget['componentData']['name']}"
 print('PASS: all tab modal drawers render and intercept above ordinary widgets and bank arrows')
+
+# Hidden children are still constructed by the MPC. A 10,889-widget CHORD
+# tree is too costly; retiring pad-location pickers leaves 1,913 widgets.
+def expanded_widgets(component, stack=()):
+ total=0
+ for widget in component['componentsData']:
+  total+=1
+  kind=widget['componentData']['type']
+  if kind in defs:
+   assert kind not in stack, f'Component cycle: {stack} -> {kind}'
+   total+=expanded_widgets(defs[kind],stack+(kind,))
+ return total
+chord_definition=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']
+assert expanded_widgets(chord_definition)<=2500
+print('PASS: CHORD expanded widget budget <=2500, no recursive component cycles')
