@@ -189,5 +189,14 @@ from chord_slots import install as chord_slots
 chord_slots(g,tui,ql,params,out)
 from pad_positions import install as pad_positions
 pad_positions(g,tui,params,out)
+# Later additions (bank arrows, pad hints) must never render or receive input
+# above a modal sidebar. Keep every tab's ordinary siblings below its modals.
+modal_defs={get(e,'key'):get(e,'value') for e in get(get(pd,'componentDefinitions'),'localComponentDefinitions')}
+for tab in get(pd,'tabs'):
+ widgets=get(get(tab,'componentDefinition'),'componentsData')
+ def is_modal(w):
+  definition=modal_defs.get(get(get(w,'componentData'),'type'),[])
+  return any(k=='hideQLinkBounds' and v for k,v in definition)
+ widgets[:]=[w for w in widgets if not is_modal(w)]+[w for w in widgets if is_modal(w)]
 (out/'TUI.json').write_text(g.dump_json(tui)+'\n');(out/'Q-Links.json').write_text(g.dump_json(ql)+'\n')
 print('Custom skins generated: MAIN, 5 detail tabs and one bank-selectable CHORD editor')

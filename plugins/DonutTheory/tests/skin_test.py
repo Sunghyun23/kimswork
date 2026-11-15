@@ -387,3 +387,12 @@ for key in ('DTMenu-choice-46','sliderWithFocusMenu-choice-46'):
 print('PASS: single editor title, intact CHORDS caption and category-first touch launchers')
 
 assert all("HOLD TO PLAY" not in json.dumps(defs[c["componentData"]["type"]]) for c in children if c["componentData"]["name"].startswith("Chord ") and c["componentData"]["type"].startswith("DTPad"))
+
+# Real-device regression: MAIN bank-arrow art/hits were above selection drawers.
+for tab in t['tabs']:
+ seen_modal=False
+ for widget in tab['componentDefinition']['componentsData']:
+  modal=defs.get(widget['componentData']['type'],{}).get('hideQLinkBounds',False)
+  if modal:seen_modal=True
+  else:assert not seen_modal, f"{tab['tabName']}: ordinary widget above modal: {widget['componentData']['name']}"
+print('PASS: all tab modal drawers render and intercept above ordinary widgets and bank arrows')

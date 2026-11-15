@@ -9,7 +9,7 @@ export const plugins: Plugin[] = [{
  tagline: 'A little worn. Endlessly warm.',
  summary: 'A Moog-inspired synthesis engine, warm factory sounds and sixteen playable chord slots for MPC.',
  description: 'A nonlinear oscillator mixer, four-stage ladder low-pass and rounded VCA now shape the sound at its source. Explore 63 factory voices rebuilt for this engine, plus a dry Init, then play bass, leads and your own chord changes inside your MPC.',
- developmentVersion: '1.2.0', image: 'donut-theory-main-1.1.2.webp', release: {version:'1.2.0',tag:'donut-theory/v1.2.0',asset:'donut-theory-1.2.0-mpc.zip'},
+ developmentVersion: '1.2.1', image: 'donut-theory-main-1.2.1.webp', release: {version:'1.2.1',tag:'donut-theory/v1.2.1',asset:'donut-theory-1.2.1-mpc.zip'},
  imageAlt: 'Donut Theory running on MPC Live III, showing its four performance control groups and large chord pads',
  manual: 'plugins/donut-theory/manual/',
  intro: 'Sixteen oscillator pairs, hands-on envelopes and four Q-Link banks keep the sound close. Start with one of 64 sound presets, or build a chord arrangement across four banks of four slots.',
@@ -21,11 +21,12 @@ export const plugins: Plugin[] = [{
   'Use Q-Link Screen mode for chord editing. Program/Track mode retains the synth mapping.',
   'The MPC’s gray host PRESET list is flat. Use the instrument’s SOUND PRESET browser for category-first selection.',
   'Pad-location labels are manually assigned hints. Use LEARN to register MIDI; the plugin cannot automatically detect physical pad numbers or layout changes.',
-  'Version 1.2.0 files were transferred to MPC, but application restart is pending project preservation approval; the new engine has not been run on the device.',
-  'The new engine and 64 sounds pass offline checks. Full sound listening approval and worst-case MPC CPU certification are not established.',
+  'MPC Live III hardware checks cover all 64 program changes and audible screen-chord gates, filter sweeps and native preset reload after restart. The overlapping-release CPU test observed 41%; this is not a worst-case guarantee.',
+  'Remote Viewer reported audio-output dropouts during testing; their source was not isolated. Artifact-free hardware output and a full MPC project round-trip are not certified.',
   'The new engine changes existing project sounds. Keep 1.1.2 for sound-identical recall. Testing on other MPC models, simultaneous finger multi-touch and every physical Q-Link rotation is not certified.'
  ],
  changes: [
+  {title:'1.2.1: cleaner selection drawers, checked on MPC.',text:'Fixed chord-page arrows appearing over selection sidebars. The new engine has now run on MPC Live III: all 64 programs produced sound, screen holds released, and a saved native preset restored after restart. Actual 1.2.1 screens replace the earlier captures.'},
   {title:'A new engine, from mixer to VCA.',text:'Version 1.2.0 replaces the low-pass voice path with a four-stage nonlinear ladder, a saturating oscillator summer and level-dependent VCA rounding. This is the default engine, with no extra mode to enable. The existing band-limited oscillators, envelopes and effects remain part of the instrument.'},
   {title:'Resonance that responds to level.',text:'Nonlinear stages and a simultaneous feedback solve make resonance react to the signal. The ladder runs internally at twice the sample rate with output filtering. Higher resonance naturally reduces low-end gain; its top is limited below autonomous self-oscillation.'},
   {title:'Every playable factory sound refitted.',text:'All 63 Bass, Keys, Synth, Lead and Pad recipes have revised cutoff, resonance and filter-envelope settings, gentler external drive and remeasured output trims. Names, categories, program order and individual low-cut settings remain. Init keeps low-cut and effects off, while using the new engine.'},
@@ -33,8 +34,9 @@ export const plugins: Plugin[] = [{
   {title:'Saved settings load. Their sound changes.',text:'Existing projects pass through the new mixer, filter and VCA, so parameter compatibility does not mean identical sound. Keep the 1.1.2 package and render tracks before upgrading if you need their old sound. The new engine costs more CPU; full hardware load certification is listed separately.'}
  ],
  screenshots: [
-  {image:'donut-theory-main-1.1.2.webp',alt:'Donut Theory 1.1.2 running on MPC Live III with A1 to A4 manual position hints inside four large chord pads',caption:'MAIN · Actual v1.1.2 device screen. A1–A4 are manually assigned QA hints, not automatically detected pad positions.'},
-  {image:'donut-theory-chords-1.1.2.webp',alt:'Actual Donut Theory 1.1.2 CHORD editor with root, type, voicing, octave, manual pad location and LEARN',caption:'CHORD · One shared editor for chords, voicing, octave, manual pad locations and MIDI LEARN.'}
+  {image:'donut-theory-main-1.2.1.webp',alt:'Donut Theory 1.2.1 running on MPC Live III with four synthesis groups and large screen chord pads',caption:'MAIN · Actual v1.2.1 MPC Live III capture. The engine is active; no new mode is required.'},
+  {image:'donut-theory-chords-1.2.1.webp',alt:'Actual Donut Theory 1.2.1 editor with all sixteen slots enabled and bank 13 to 16 selected',caption:'CHORD · Sixteen slots, four at a time. Root, type, inversions, octave and individual MIDI assignments share one editor.'},
+  {image:'donut-theory-browser-1.2.1.webp',alt:'Actual Donut Theory 1.2.1 category-first sound browser over the MAIN screen',caption:'SOUND PRESET · Choose a category first. The left sidebar covers underlying chord arrows and hides Q-Link guides.'}
  ],
  features: [
   { title: '64 starting points. Six familiar categories.', text: 'The ladder engine has 63 individually refitted factory sounds and a dry Init. Browse Bass, Keys, Synth, Lead and Pad. Per-sound low-cut and output trim provide practical starting levels.' },
@@ -46,7 +48,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/mpc-plugins';
-export const navigationVersion = 'donut-theory-1-2-0';
+export const navigationVersion = 'donut-theory-1-2-1';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

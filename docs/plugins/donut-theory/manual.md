@@ -92,7 +92,7 @@ The gray MPC **PRESET** selector is different. With the current host/SDK integra
 
 ## MAIN and Q-Link controls
 
-![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.1.2.webp)
+![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.2.1.webp)
 
 MAIN arranges four groups in reading order: A upper left, B upper right, C lower left and D lower right. Each group has four Q-Link controls.
 
@@ -213,7 +213,7 @@ In **CHORD → ADVANCED**, **Individual** pad mapping uses each slot's assignmen
 
 ## Chord editor
 
-![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.1.2.webp)
+![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.2.1.webp)
 
 ### Four to sixteen slots
 
@@ -440,4 +440,9 @@ Builds for native, ARM32 and ARM64, SDK validation, host simulator 19 checks, en
 
 [Engine design and research references](https://github.com/Sunghyun23/mpc-plugins/blob/main/docs/plugins/donut-theory/engine.md)
 
-For this release, the 1.2.0 files were transferred to the MPC with size verification, but application restart is pending approval to discard or preserve the current unsaved project. The new engine has not been run on the device. Hardware audio/CPU and fresh project round-trip checks remain unverified; the screenshots document the unchanged 1.1.2 layout.
+Hardware follow-up in 1.2.1: the engine ran on MPC Live III / OS 3.10.1.12. All 64 factory programs changed and produced audible screen chords. Four screen holds and release tails, cutoff/resonance sweeps, all filter types and native preset restoration after restart were checked. Overlapping long-release chords showed 41% on the host CPU display (12% after release), not a worst-case guarantee. Remote Viewer reported output dropouts whose cause was not isolated. Every physical Q-Link, fresh physical MIDI/LEARN, simultaneous finger multi-touch and a full MPC project round-trip were not re-certified.
+
+
+## What changed in 1.2.1
+
+Fixed a layering bug that left chord-page arrow controls above the left selection drawer. Modal sidebars now render and intercept above ordinary tab widgets; Q-Link guides hide in the drawer and restore on closing. All seven plugin pages were visually checked on MPC. Current screenshots are actual 1.2.1 device captures. DSP, 208 parameter identities and Q-Link mappings are unchanged from 1.2.0. The device save/reload check used a native .xpl plugin preset, not a complete MPC project.

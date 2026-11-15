@@ -32,11 +32,11 @@ third_party/mpc-plugin-builder-sdk/ 공유 SDK, 커밋 고정
 
 | 이름 | 소스 경로 계획 | 상태 |
 |---|---|---|
-| Donut Theory | `plugins/DonutTheory/` | [v1.2.0 정식 릴리스](https://github.com/Sunghyun23/mpc-plugins/releases/tag/donut-theory/v1.2.0): 64음색·최대16코드 슬롯·뱅크별 진행·통합 편집; 검증 범위는 매뉴얼 참고 |
+| Donut Theory | `plugins/DonutTheory/` | [v1.2.1 정식 릴리스](https://github.com/Sunghyun23/mpc-plugins/releases/tag/donut-theory/v1.2.1): 64음색·최대16코드 슬롯·뱅크별 진행·통합 편집; 검증 범위는 매뉴얼 참고 |
 
 ## 현재 상태
 
-공유 SDK를 고정 커밋으로 설치하고 Donut Theory 1.2.0의 Moog-inspired 엔진과 공장 음색을 구현했습니다. native·ARM32·ARM64 빌드, host simulator 19항목 및 엔진·UBSan·스킨 회귀 검사를 통과했습니다. MPC Live III / OS 3.10.1.12에서 실제 UI를 검증했습니다. [제품 소개](https://kimswork.app/plugins/donut-theory/)와 [상세 매뉴얼](https://kimswork.app/plugins/donut-theory/manual/)에서 설치 조건과 알려진 제한을 확인하세요.
+공유 SDK를 고정 커밋으로 설치하고 Donut Theory 1.2.1의 Moog-inspired 엔진과 공장 음색을 구현했습니다. native·ARM32·ARM64 빌드, host simulator 19항목 및 엔진·UBSan·스킨 회귀 검사를 통과했습니다. MPC Live III / OS 3.10.1.12에서 64음색 전환·발음, 화면 hold/릴리스, 필터와 네이티브 프리셋 재시작 복원을 검증했습니다. [제품 소개](https://kimswork.app/plugins/donut-theory/)와 [상세 매뉴얼](https://kimswork.app/plugins/donut-theory/manual/)에서 설치 조건과 알려진 제한을 확인하세요.
 
 빌드: `python3 scripts/build_plugin.py DonutTheory --target all`
 
@@ -58,3 +58,8 @@ third_party/mpc-plugin-builder-sdk/ 공유 SDK, 커밋 고정
 프리셋 조정에서 엔진 자체 재설계로 전환했습니다. 비선형 오실레이터 믹서·4단 래더Low-pass·VCA를 기본 경로에 적용하고63개 연주 음색을 새 엔진에 맞춰 다시 설계·레벨 보정했습니다.208개 파라미터·UID·UI·Q-Link는 유지하지만 기존 프로젝트의 소리는 달라집니다. 정확한 구버전 소리가 필요하면1.1.2를 보관하고 트랙을 렌더하세요.
 
 [전체 변경 내역과 검증 범위](docs/plugins/donut-theory/releases/1.2.0.md) · [엔진 구조·연구 출처](docs/plugins/donut-theory/engine.md) · [프리셋 설계 기준](docs/plugins/donut-theory/presets.md). 전체 실기기 청음·최악CPU 인증과 자동 수치 검증을 구분합니다.
+
+
+## 1.2.1 실기기 검증과 UI 수정
+
+선택 사이드바 위로 코드 페이지 화살표가 겹치는 문제를 수정했습니다. 새 엔진의 MPC 실행·오디오·CPU 관찰과 실제1.2.1 스크린샷을 공개했습니다. [검증 결과와 한계](docs/plugins/donut-theory/releases/1.2.1.md)를 참고하세요.

@@ -518,3 +518,18 @@ The preset arrows grow36×34→44×44 (58% greater area). Page arrows grow36×28
 - compare_engines.cpp는같은serialized state/MIDI를구1.1.2/새1.2.0 library에적용한다.16voice desktop평균0.74%→5.78%,최악10.47%(새버전)로CPU증가를측정했다. 새로운host_sim3note 평균1.38%/최악3.49%. 이값을MPC실제부하로환산하거나보증하지않는다. 사이트24초A/B는Bass/공진Lead/4note순서로각old→new이며전체에동일3xgain을적용하고개별정규화하지않았다.
 - 공식mpc_remote.py update로기기드라이브36C7-1ACA에73개파일크기검증후설치했다. 재시작은자동승인검토가현재미저장데이터폐기미승인을이유로거절했다. 우회하지않았으며사용자에게명시적현재변경폐기허용을요청했다. 원격상단tray는접근했으나프로젝트저장화면으로이동할수없었다. 현재실행중인엔진은이전버전이며1.2.0실기기오디오/CPU/새저장복원은미검증이다. 사용자물리입력·전체63음색청음승인도확정하지않는다.
 - 공개사이트/매뉴얼/Release에는위제한을표시하고실제1.1.2MPC스크린샷이변경없는UI를보여준다고명시한다. 발행결과는donut-theory/v1.2.0및Pages Actions에서확인한다.
+
+## 1.2.1 — hardware engine verification and modal fix (2026-11-15)
+
+사용자가 현재 변경 폐기를 허용하고 사본 저장 불필요를 명시했다. 공식 SDK mpc_remote.py로1.2.0 재시작, 새 프로젝트/새 Plugin 인스턴스에서 MAIN 기본 진입을 확인했다. 이어 실기기에서 발견한 사이드바 레이어 버그를 고친1.2.1을 공식 update/restart로 적용했다. 고정 SDK/시스템 파일 변경 없음.
+
+- 1.2.0 실제64음색 순서·이름과 발음 확인. factory-cycle.mov(416.078초,44.1k stereo)64gate 모두 non-silent, 전체 peak0.6838989FS/마지막1초0. 각 gate는 Dm9 화면 hold1.6초이며 저음/고음별 음악적 평가나 전체 음색 주관 청음 승인을 대체하지 않는다.
+- 네 MAIN hold1.8초의 ON 시간과 오디오4영역을 확인했다. initial-four-chords.mov peak0.3793335FS/마지막1초0.0. 실제 손가락 다중 터치가 아닌 원격 hold다.
+- Cutoff20..18000Hz, resonance100%, BP/HP/Notch를 확인했다. Init/Poly/Split/Release5000ms의 여러 코드 중첩 뒤 host System Resources CPU41%,6초 후12% 관찰. 정확한16held voice 계측/최악 부하는 아니다. filter-load.mov peak0.3442993FS/clip0이며 종료 직전 Notch 음을 눌러 마지막 구간은 릴리스 중이다.
+- native plugin preset ladderqa.xpl 저장 후1.2.1 재시작/새 인스턴스에서 복원했다. Notch/fc1.34k/res46.4/Release5000이 같았다. MPC 전체 프로젝트 저장 복원으로 보고하지 않는다.
+- MAIN Filter Type 선택 사이드바 위로 코드 페이지 화살표가 떠 있는 버그 발견. chord_slots가 나중에 추가한 일반 형제를 modal 뒤에 붙이던 원인. 생성기 마지막에 모든 탭의 ordinary→modal stable partition을 수행하고 skin_test에 전 탭 회귀 검사 추가.1.2.1에서 기존 화살표가 목록에 뜨지 않음과 가이드 숨김/복원을 확인했다. 음색 category→list2page→Faded Poly 선택도 확인했다.
+- CHORD inversion2 선택,4→8→12→16 확장,13–16 bank,MAIN/OSC/FILTER/AMP/MOD/FX 각 화면을 실제 기기로 확인했다. 수정 전 화면/원격 전달 지연이 섞인 캡처는 공개 자료에서 제외한다.
+- 1.2.1 Filter LFO+tremolo 동시 적용 뒤2.8초 hold2개 기록: final-1.2.1.mov(358.153초)peak0.289917FS/clip0/마지막1초0. 원격 뷰어 output dropouts 누적 표시가 있어 transport/Mac playback/DSP 원인은 미분리다. 무결점 오디오나 모든 물리 입력을 인증하지 않는다.
+- 증거: plugins/DonutTheory/build/qa-1.2.0/{factory-media,initial-four-chords,filter-load-media,final-media}/analysis.json 및 실제 viewer 스크린샷. 소스 녹화 원본은 Desktop에도 보존. build/ 미커밋. 공개 실제 스크린샷은 뷰어 chrome만 crop한1280×800으로 저장한다.
+- native/ARM32/ARM64 SDK0errors/0warnings, engine/UBSan/bridge/analog/skin와 host simulator19PASS. /tmp/donut-121-build.log,/tmp/donut-121-test.log. DSP는version metadata만10201로 변경했다.1.2.0 음성 엔진·64recipes·208params·Q-Link 유지.
+- 모든 물리 Q-Link·새 물리 LEARN·실제 손가락 동시누름·다른모델·전체프로젝트 복원은 재인증하지 않았다. 공식 배포 결과는donut-theory/v1.2.1과 Pages Actions에서 확인한다.
