@@ -4,8 +4,9 @@
 
 - 이 저장소는 Akai MPC용 플러그인 모노레포다. MCP(Model Context Protocol) 프로젝트가 아니다.
 - README와 `docs/repository-policy.md`를 먼저 읽는다.
-- Donut Theory 작업에서는 `docs/plugins/donut-theory/spec.md`, `design.md`, 승인 이미지를 확인한다.
+- Donut Theory 작업에서는 `docs/plugins/donut-theory/handoff.md`의 최신 상태를 먼저 확인한 뒤 `spec.md`, `design.md`, 승인 이미지와 실제 최신 캡처를 확인한다. 버전별 과거 기록을 현재 사양으로 되돌리지 않는다.
 - 새 사용자 지시가 기존 결정을 바꾸면 관련 문서도 갱신한다. 확정 사항, 제안 목표, 미구현 상태를 구분한다.
+- Donut Theory의 매핑·음색·도넛 디자인 등 전용 결정은 다른 플러그인에 자동 적용하지 않는다. 새 프로젝트는 별도 요구·제조사·UID·사양으로 관리하고 기존 Donut 프로젝트는 보존한다.
 
 ## 구조와 SDK
 
@@ -64,11 +65,11 @@
 
 - 코드 프리셋은 MAIN에 보이는4슬롯의Root/Type만 변경하고 다른12슬롯 및 보이싱/옥타브/패드 매핑을 보존한다. 네뱅크 프리셋 선택은 독립 저장한다. MOD의 PRESET 1–4는 기존고정 Q-Link가 제어하는 첫뱅크 전용이며 동적값으로 위장하지 않는다. 단일step의가시성 조건에 RangedEnabling/N/N을 쓰지 말고 IndexedEnabling/N을 쓴다.
 
-- 슬롯 페이지 때문에 MAIN 키를 여러 번 누르게 하지 않는다. MAIN↔CHORD 두 서브탭만 유지하고 CHORD 안에서 묶음을 선택한다. Q-Link는16개 고정 편집 중계 파라미터에 연결하고 선택한 실제 슬롯을 읽고 쓴다. 실제192개 파라미터 중 중계16개는automation 대상이 아니다. 상태 복원 중 중계값으로 실제 코드를 덮어쓰지 않도록 보호한다. 오디오 스레드의 중계 readback은 별도 스레드 토큰+인덱스로 구분해 UI 동시 쓰기를 무시하지 않는다.
+- 슬롯 페이지 때문에 MAIN 키를 여러 번 누르게 하지 않는다. MAIN↔CHORD 두 서브탭만 유지하고 CHORD 안에서 묶음을 선택한다. Q-Link는16개 고정 편집 중계 파라미터에 연결하고 선택한 실제 슬롯을 읽고 쓴다. 현재208개 파라미터 중 중계16개는automation 대상이 아니며, 마지막16개 PadPosition도 비자동화 호환값이다. 상태 복원 중 중계값으로 실제 코드를 덮어쓰지 않도록 보호한다. 오디오 스레드의 중계 readback은 별도 스레드 토큰+인덱스로 구분해 UI 동시 쓰기를 무시하지 않는다.
 
-- 최신1.0.1 전면/Q-Link는 A=OSC Pair/Osc Mix/Body/Drift, D=Drive/Glide/Tremolo Rate/Tremolo Depth다. Space는 FX 상세에 유지하고 전면에서 제외한다. Glide는 AMP 상세에도 유지한다. B/C와 CHORD 매핑은 유지한다.
+- 1.0.1에서 도입해 현재 유지하는 전면/Q-Link는 A=OSC Pair/Osc Mix/Body/Drift, D=Drive/Glide/Tremolo Rate/Tremolo Depth다. Space는 FX 상세에 유지하고 전면에서 제외한다. Glide는 AMP 상세에도 유지한다. B/C와 CHORD 매핑은 유지한다.
 
-- 로컬1.1.2의 물리 패드 위치는 수동 힌트다. 공통 CHORD 편집에서 A–H/1–16을 선택하고 기존 LEARN으로 MIDI를 연결한다. MAIN에 코드별 EDIT를 추가하지 않고 위치명+작은4×4만 표시한다. 미등록은 숨기고 자동 감지로 설명하지 않는다. PadPosition1–16은192–207에 append하며 Q-Link/automation에서 제외한다. 기존 MIDI 매핑과 위치 정보는 별개이며 실제 MPC 배치 변경을 자동 추적하지 않는다.
+- [과거1.1.2 이력; 1.2.2에서 표시 UI 제거] 당시 물리 패드 위치는 수동 힌트다. 공통 CHORD 편집에서 A–H/1–16을 선택하고 기존 LEARN으로 MIDI를 연결한다. MAIN에 코드별 EDIT를 추가하지 않고 위치명+작은4×4만 표시한다. 미등록은 숨기고 자동 감지로 설명하지 않는다. PadPosition1–16은192–207에 append하며 Q-Link/automation에서 제외한다. 기존 MIDI 매핑과 위치 정보는 별개이며 실제 MPC 배치 변경을 자동 추적하지 않는다.
 
 - 사용자 확정1.1.0 음색 재조정은 UI·모드 추가 없이 기존64개 이름/순서를 유지한다.63개 연주 음색은 따뜻한 듀얼OSC/Low-pass/Tape 성격으로 조율하고 Init은 기본 출발점으로 보존한다. 이 프리셋 작업을24dB Moog 래더 필터 구현으로 설명하지 않는다. 레벨 보정은 스테레오 양 채널 피크로 측정하고 실제 청감/기기 검증 여부를 구분한다.
 
@@ -81,3 +82,5 @@
 - 선택 사이드바를 만든 뒤 일반 위젯을 추가하더라도 모든 탭의 modal 루트를 형제 목록 맨 뒤에 유지한다. MAIN 코드 페이지 화살표가 목록 위에 떠 있던 실기기 버그를 재발시키지 않는다. 스킨 회귀 검사와 실제 목록 중앙/바깥 닫기에서 확인한다.
 
 - 최신1.2.2에서는 사용자가 허용한 수동 Pad Location 표시/선택 UI를 제거했다. 실제 MIDI Note/LEARN은 유지한다. 호환용 PadPosition1–16(192–207)은 삭제·재정렬하지 않는다. CHORD의 숨은 선택 트리를 무한히 늘리지 말고 펼친 위젯 수2500 이하 회귀 검사를 유지한다. 원격 창 좌표 오류/지연을 플러그인 멈춤 재현으로 단정하지 않는다.
+
+- 2026-11-15 사용자는 설치된1.2.2의 MAIN↔CHORD 직접 터치 전환을 “정상 전환됨”으로 확인했다. 최신 상태·배포 해시·검증 한계·다음 프로젝트 분리는 docs/plugins/donut-theory/handoff.md를 따른다.

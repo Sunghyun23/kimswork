@@ -42,7 +42,7 @@ third_party/mpc-plugin-builder-sdk/ 공유 SDK, 커밋 고정
 
 검증: `python3 scripts/test_plugin.py`
 
-[설치·개발 안내](plugins/DonutTheory/README.md) · [구현 및 검증 기록](docs/plugins/donut-theory/implementation.md)
+[Donut Theory 인계·재개 기준](docs/plugins/donut-theory/handoff.md) · [설치·개발 안내](plugins/DonutTheory/README.md) · [구현 및 검증 기록](docs/plugins/donut-theory/implementation.md)
 
 승인 이미지는 디자인 콘셉트이며 실행 가능한 플러그인이나 실제 MPC 캡처가 아닙니다. 구현 시 SDK 좌표·호스트 영역·가독성에 맞춰 변환합니다.
 

@@ -1,5 +1,7 @@
 # Moog-inspired engine — 1.2.0
 
+현재 정식판1.2.2에서도 이1.2.0 엔진/레시피를 유지한다. 최신 배포·사용자 확인·검증 한계는 [인계 기준](handoff.md)을 따른다.
+
 ## Confirmed scope
 
 The user requested an engine redesign rather than preset-only voicing, with no added mode or UI. The new default voice path is two band-limited oscillators plus sub/noise/optional phase modulation → nonlinear oscillator summer → four-stage nonlinear ladder low-pass → amp envelope / velocity / rounded VCA → existing drive, tremolo, chorus, delay, low-cut and master. Oscillator wave generation still uses the pinned SDK PolyBLEP/wavetable components. Phase is retained between note retriggers; this is not continuously running idle VCO simulation. Drift stays explicitly controlled.

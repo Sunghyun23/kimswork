@@ -1,6 +1,12 @@
 # Donut Theory — 디자인 기준
 
-## 승인된 기준
+## 현재 적용 기준 — 1.2.2
+
+**정식 배포 완료, 2026-11-15.** [인계·재개 기준](handoff.md)과 최신 spec.md의 매핑을 먼저 적용한다. 아래 초기 승인 이미지/변경 일지는 미술 방향과 결정 이력이며 초기 B DRIVE / PLAY 배치나 과거 ‘아직 배포 전’ 상태를 현재 사양으로 해석하지 않는다.
+
+현재는 A Sound/Play, B Amp Envelope, C Filter/LFO, D FX/Tremolo이며 갈색 헤더/크림 본체/도넛 노브/올리브 LCD와 가로형 도넛·레코드 장식을 유지한다. 실제 [MAIN](../../../site/public/images/donut-theory-main-1.2.2.webp) / [CHORD](../../../site/public/images/donut-theory-chords-1.2.2.webp) / [목록](../../../site/public/images/donut-theory-browser-1.2.2.webp)이 현재 구현의 시각 기준이다. 수동 패드 위치 표시·선택 UI는1.2.2에서 제거했고 MIDI/LEARN은 유지한다. MAIN↔CHORD 직접 터치 전환은 사용자 확인까지 완료했다. 콘셉트·오프라인 렌더·실제 캡처를 구분한다.
+
+## 초기 승인 기준과 변경 이력
 
 사용자가 최종적으로 좋다고 확인한 화면은 아래 이미지다. **B DRIVE / PLAY, 맨 왼쪽 DRIVE, 그 위 Tape 선택기와 구분선**이 있는 버전을 기준으로 한다.
 

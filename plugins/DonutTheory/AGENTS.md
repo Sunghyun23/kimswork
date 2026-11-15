@@ -1,0 +1,14 @@
+# Donut Theory 작업 지침
+
+루트 AGENTS.md를 함께 적용한다. 작업 시작 시 [최신 인계 기준](../../docs/plugins/donut-theory/handoff.md), spec.md, design.md, engine.md, presets.md와 해당 SDK 스킬을 읽는다. 문서의 버전별 개발 이력보다 최신 사용자 확인/인계 상태를 우선한다.
+
+- 현재 정식판은1.2.2, vendor `kim`, UID `Krql`, 파라미터208개. 기존 ID/순서·저장값·Q-Link를 보존한다.
+- 기본 엔진은1.2.0 Moog-inspired mixer/4단 ladder/VCA. 프리셋만의 튜닝 또는 SDK 기본SVF를 래더로 소개하지 않는다. 정확한 구버전 소리 복원은 보장하지 않는다.
+- MAIN A=OSC Pair/Osc Mix/Body/Drift, B=ADSR, C=Filter Cutoff/Resonance/LFO Rate/Depth, D=Drive/Glide/Tremolo Rate/Depth. Space는 FX 상세다.
+- 첫 함수 키는 MAIN↔CHORD 두 서브탭. 초기 MAIN/안내팝업 없음. 사용자 직접 터치 정상 전환 확인 완료. CHORD Q-Link는 Root/Type/Voicing/Octave이며 Program/Track 신스 매핑은 유지한다.
+- 수동 Pad Location UI는 제거했다. `tools/pad_positions.py`를 build_skin에 다시 연결하지 않는다. 호환용 PadPosition1–16(192–207)은 유지하되 미사용이다. 실제 MIDI Note/LEARN과 패드 연주는 유지한다.
+- CHORD 구성 그래프의 펼친 위젯2500 이하/재귀 cycle 검사, 전 탭 modal 루트의 마지막 형제 순서, hold Slider/Mouse Down 동작과 캡션 위 hit 표면을 보존한다.
+- process()에서 할당/lock/I/O/host알림 금지. 중계 state-load 보호·render-thread token+index·노트 소유권을 임의 단순화하지 않는다.
+- native/양쪽 ARM·SDK validator·host simulator·engine/UBSan/bridge/analog/skin 결과와 실제 기기 확인을 구분한다. 사용자 확인은 사용자 확인으로 기록한다.
+- 모든 물리 입력·최악 CPU·다른 모델·전체 MPC 프로젝트 복원·원격 dropout 해결은 완료로 주장하지 않는다. 최신 상세는 handoff.md에 있다.
+- 새 변경은 새 버전으로 배포한다. 이미 공개한1.2.2 ZIP/태그를 재작성하지 않는다. 다른 프로젝트 작업을 이유로 이 플러그인을 변경하지 않는다.

@@ -4,11 +4,11 @@
 
 MPC standalone용 소울·힙합 신디사이저입니다. 베이스, 리드, 합성 키보드, 코드와 패드를 한 엔진에서 연주합니다. MPC Live III / OS 3.10.1.12에서 프리셋·메뉴·16슬롯 편집·표시 수정을 직접 검증한 배포 버전입니다. 검증 범위는 아래 기록을 참고하세요. **1.2.1 실기기 검증:** 64개 음색 전환·발음, 네 화면 hold 패드와 릴리스, 필터 스윕, 네이티브 음색 저장/재시작 복원 확인. 긴 릴리스 중첩 시험 CPU 41% 관찰. 원격 오디오 드롭아웃 원인은 미분리이며 물리 입력 전체·최악 CPU·프로젝트 저장 복원은 미인증. [상세 기록](../../docs/plugins/donut-theory/releases/1.2.1.md).
 
-[상세 사용자 매뉴얼](../../docs/plugins/donut-theory/manual.md) · [제품 소개](https://kimswork.app/plugins/donut-theory/)
+[프로젝트 인계·재개 기준](../../docs/plugins/donut-theory/handoff.md) · [상세 사용자 매뉴얼](../../docs/plugins/donut-theory/manual.md) · [제품 소개](https://kimswork.app/plugins/donut-theory/)
 
 ## 1.2.2 — 코드 편집 화면 경량화
 
-수동 PAD LOCATION 선택기와 MAIN 위치 힌트를 제거했습니다. CHORD 구성 요소는10,889→1,913개로 줄였으며 실기기 새 인스턴스의 MAIN↔CHORD 반복 전환, 보이싱 변경,16슬롯 이동을 원격 확인했습니다. 정확한 구버전 멈춤 원인을 통제된 A/B로 입증한 것은 아닙니다. 실제 MIDI Note/LEARN·저장된 매핑·208개 파라미터 ID·Q-Link·음원 엔진은 유지합니다. 아래1.1.2의 위치 표시 설명은 과거 기능 이력입니다.
+수동 PAD LOCATION 선택기와 MAIN 위치 힌트를 제거했습니다. CHORD 구성 요소는10,889→1,913개로 줄였으며 실기기 새 인스턴스의 MAIN↔CHORD 반복 전환, 보이싱 변경,16슬롯 이동을 원격 확인했습니다. 정확한 구버전 멈춤 원인을 통제된 A/B로 입증한 것은 아닙니다. 실제 MIDI Note/LEARN·저장된 매핑·208개 파라미터 ID·Q-Link·음원 엔진은 유지합니다. 사용자가 실제 기기의 첫 탭을 직접 두세 번 눌러 정상 전환됨을 확인했습니다(2026-11-15). 아래1.1.2의 위치 표시 설명은 과거 기능 이력입니다.
 
 ## 1.2.0 Moog-inspired engine
 
