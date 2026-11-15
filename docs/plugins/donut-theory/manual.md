@@ -18,7 +18,8 @@ This manual describes the current instrument layout. Check the release notes for
 10. [Troubleshooting](#troubleshooting)
 11. [Manual pad location hints](#manual-pad-location-hints)
 12. [Factory sound list](#factory-sound-list)
-13. [What changed in 1.1.2](#what-changed-in-112)
+13. [What changed in 1.2.0](#what-changed-in-120)
+14. [Earlier changes in 1.1.2](#earlier-changes-in-112)
 
 ## Install, update and remove
 
@@ -56,7 +57,7 @@ Avoid an extra nested copy of `kim - VST - Donut Theory` inside itself. Do not c
 
 ### Update
 
-Save and back up your MPC project first. Keep the previous package if you need to return to it. Replace the existing plugin folder with the new complete folder, then restart MPC. Avoid duplicate installations on different drives.
+Save and back up your MPC project first. Keep the previous package if you need to return to it. **The 1.2.0 engine changes the sound of saved projects even when their controls are unchanged. Render tracks before updating if you need exact old sound.** Replace the existing plugin folder with the new complete folder, then restart MPC. Avoid duplicate installations on different drives.
 
 Donut Theory retains its plugin identity across updates. Existing projects may retain host-side Q-Link assignments from an older instance. If a mapping looks wrong, compare a fresh plugin instance before changing the original track. Preserving the plugin identity does not guarantee that an older MPC OS can load a project saved by a newer OS.
 
@@ -130,7 +131,7 @@ The filter type, LFO Shape/Target and drive type have touch selectors near their
 
 ### Factory sounds
 
-Version **1.1.2** includes the Moog-inspired factory voicing introduced during 1.1.0 development. It revoices the existing 63 playable sounds toward warm subtractive analog character. It retains all names/program numbers, individual Low-cut settings and the dry Init. Oscillator blends, restrained detune, Low-pass envelopes and light Tape saturation carry the character; FM, chorus and pitch movement are reduced where appropriate. It adds no filter model, mode or UI and does not claim an exact Moog ladder-circuit emulation. Existing projects retain their saved parameter values; selecting a factory sound loads the revised recipe. This is the standard factory bank; no additional mode needs to be enabled.
+Version **1.2.0** uses a **Moog-inspired synthesis engine**, not just revised preset recipes. The default low-pass path combines nonlinear oscillator mixing, a four-stage nonlinear ladder and rounded VCA response. All 63 playable factory sounds have been refitted for its cutoff, resonance and envelope behavior, and output trims are remeasured. No additional mode needs to be enabled. It is an inspired hybrid engine rather than a component-accurate recreation of a named Moog instrument. Existing parameter values load, but existing project sounds change through the new engine. Keep 1.1.2 and render tracks before upgrading when exact old sound is needed.
 
 There are **64 factory sounds**: Init 1, Bass 12, Keys 15, Synth 12, Lead 12 and Pad 12. They use the same synthesis engine rather than acoustic instrument samples. Keys such as tines, bells and reeds describe their synthesized character.
 
@@ -286,7 +287,9 @@ The engine has **16 audio voices**, not sixteen complete chords of unlimited siz
 
 ### FILTER
 
-The main filter is a **12 dB/octave state-variable filter** with Low-pass, Band-pass, High-pass and Notch modes.
+**Low-pass** uses a four-stage nonlinear ladder with a 24 dB/octave asymptotic slope. Its input and resonant stages respond to level; higher resonance naturally reduces low-frequency gain. The loop gain is limited below autonomous self-oscillation. The displayed cutoff sets the pole frequency: at zero resonance the four-stage response is approximately −12 dB there, rather than a calibrated −3 dB point. The ladder runs at 2× internal rate with output filtering to reduce nonlinear aliasing.
+
+**Band-pass, High-pass and Notch** retain the existing 12 dB/octave SVF implementation as extensions. They are not ladder variants. The oscillator summer and VCA also add gentle nonlinear coloration with external Drive off. Oscillator wave generation remains band-limited PolyBLEP/wavetable synthesis; phase continues between retriggers. This is not a complete analog oscillator circuit simulation.
 
 | Control | Range / purpose |
 |---|---|
@@ -416,7 +419,7 @@ When reporting an issue, include the package version, MPC model/OS, input mode, 
 
 For exact release compatibility and completed validation, consult the download's release notes. The repository also maintains [preset design notes](https://github.com/Sunghyun23/mpc-plugins/blob/main/docs/plugins/donut-theory/presets.md) and the [implementation and verification record](https://github.com/Sunghyun23/mpc-plugins/blob/main/docs/plugins/donut-theory/implementation.md).
 
-## What changed in 1.1.2
+## Earlier changes in 1.1.2
 
 - **Default sound:** all 63 playable factory sounds have Moog-inspired voicing: revised oscillator blends, low-pass settings, envelopes, restrained detune and Tape saturation. Effects and pitch movement are reduced where appropriate. This is recipe retuning within the existing synthesis engine, not a new ladder-filter model.
 - **Level and low end:** stereo renders were used to recalibrate Sound Trim. Individual low-cut settings remain; dry Init is unchanged. Velocity, register, resonance, drive and overlapping chords still affect output level.
@@ -425,3 +428,16 @@ For exact release compatibility and completed validation, consult the download's
 - **Compatibility:** previous parameter IDs/order and Q-Link mappings are preserved; sixteen nonautomatable position parameters are appended. Existing project sounds retain their saved settings. Select a factory sound to hear its revised recipe. Old projects load with unassigned hints.
 
 Builds for native, ARM32 and ARM64, SDK validation, host simulator 19 checks, engine/UBSan/VST bridge and skin regressions pass. All 64 sounds have finite, non-silent offline renders within the measured test bounds. On MPC Live III / OS 3.10.1.12, the new location selection/clear/MAIN display and Q-Link guide hide/restore were checked through Remote Screen Viewer. A complete hardware listening review of all revoiced sounds, fresh physical LEARN inputs, all physical Q-Link rotations, simultaneous finger multi-touch and a new hardware project save/restart round-trip were not completed for this update. Automated state migration and note ownership tests pass.
+
+
+## What changed in 1.2.0
+
+- **Engine:** new nonlinear oscillator summer, four-stage nonlinear ladder Low-pass, simultaneous resonant feedback solve, 2× ladder processing with FIR output filtering, and rounded VCA response. No new UI or engine mode. The other filter types and downstream FX are retained.
+- **Factory bank:** all 63 playable sounds have new cutoff/resonance/envelope operating points and gentler external drive. Stereo renders recalibrate Sound Trim; names, categories, Low-cut and Init parameter recipe remain. Intrinsic engine coloration applies to Init too.
+- **Compatibility:** UID and all 208 parameter declarations/order/ranges, UI and Q-Link maps remain. Saved parameters restore but do not produce identical old sound. Use1.1.2 for exact old-engine recall.
+- **Performance:** the ladder costs more CPU. A desktop16-voice benchmark measured about 5.8% average / 10.5% worst block in the recorded run; this does not predict MPC headroom. Overlapping long-release chords are the most demanding case.
+- **Evidence:** dedicated filter response/nonlinearity/modulation/rate tests, engine/UBSan/bridge, host simulator19 and skin checks pass. All 64 sounds render finite/non-silent offline. Same-state A/B audio isolates engine changes from preset changes. Hardware verification and remaining limits are documented in the release notes.
+
+[Engine design and research references](https://github.com/Sunghyun23/mpc-plugins/blob/main/docs/plugins/donut-theory/engine.md)
+
+For this release, the 1.2.0 files were transferred to the MPC with size verification, but application restart is pending approval to discard or preserve the current unsaved project. The new engine has not been run on the device. Hardware audio/CPU and fresh project round-trip checks remain unverified; the screenshots document the unchanged 1.1.2 layout.

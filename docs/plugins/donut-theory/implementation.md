@@ -505,3 +505,16 @@ The preset arrows grow36×34→44×44 (58% greater area). Page arrows grow36×28
 사용자가 공식 Release 및 웹사이트 갱신을 승인했다. 앞선 로컬 후보의 공개판1.0.1 유지 기록은 당시 상태다. 이번 배포 대상은1.1.2이며63개 음색 재설계, 화살표 확대, 수동 패드 위치 기능을 포함한다. 사이트 제품 데이터·매뉴얼·변경 내역·다운로드는 동일 버전을 사용한다. MAIN/CHORD는 실제 MPC 캡처로 교체했으며 MAIN은 뷰어의 창 테두리만 제거했다.
 
 최종 native/ARM32/ARM64, SDK validator0 errors/0 warnings, 엔진/UBSan/bridge, host simulator19, 스킨 검사 및 사이트 빌드·로컬링크40개 검사를 통과했다. 사이트는390px 모바일·768px 폴드·1440px PC에서 가로 넘침 없이 확인했다. 패키지는 SDK package.py 결과에 MANUAL.md/RELEASE_NOTES.md를 추가하고 SHA256을 별도 제공한다. 실제 발행 여부는 명시적 donut-theory/v1.1.2 Release와 Pages 배포 결과로 확인한다. 실기기 미검증 범위는 릴리스 노트에 그대로 공개한다.
+
+
+## 1.2.0 — engine redesign and factory refit (2026-11-15)
+
+- 사용자 정정: 프리셋만의Moog풍 튜닝 대신 엔진 자체를Moog-inspired로 변경한다. 추가수락 없이 엔진·전체프리셋·검증·릴리스·사이트까지 진행하도록 명시 승인했다.
+- 프로젝트 원본MIT AnalogLadder.h: 비선형4단 차동쌍, trapezoidal integrator, 최대6회의동시Newton 해석,2x 내부래더와17tap Blackman FIR. 최소1회Newton을강제하여저레벨입력에서절대오차조기종료가만들던deadzone을제거했다. 테스트전용 계측으로 급격한컷오프/rate/res stress에서잔차<1e-4를확인했다. saturation값·미분계산을공유하여inner-loop 나눗셈을줄였다. 믹서/VCA도비선형으로교체하고VCO위상은노트재트리거사이에보존한다. 기존SDK파형생성/BP·HP·Notch/ADSR/FX를유지한다.
+- 63개연주음색의cutoff/resonance/env를개별수정하고Tone/Drive를줄였다. Sound Trim은재렌더계측으로−1.98..15.21dB. 64개이름/순서/카테고리/각Low-cut/Init값은공개1.1.2와동일하다. Init도새엔진고유경로를사용하므로오디오동일성은보장하지않는다.
+- UID와208개파라미터선언전체가공개HEAD와동일하다. TUI.json/Q-Links.json은공개1.1.2 ZIP과byte-identical이다. 상태호환과음색동일호환을명확히구분한다.
+- native/ARM32/ARM64및SDK validator0errors/0warnings, engine/UBSan/bridge/analog/skin, host simulator19 PASS. 추가host_sim48k/512 및96k/32도통과. 실시간할당금지·MIDIoffset·가변블록·코드소유권·상태마이그레이션도회귀검사했다. 로그:/tmp/donut-120-final-build.log,/tmp/donut-120-final-test.log,/tmp/donut-120-host48.log,/tmp/donut-120-host96.log.
+- 래더응답:48k/각pole1kHz/작은신호에서50Hz gain0.995019,1kHz0.249722,4kHz0.00333159.90%res에서1kHz gain2.24468.80%res에서small/hot gain1.17372/0.131283로입력레벨의존성을확인했다. 모든64×5s오프라인렌더finite/non-silent,피크0.177732..0.288887FS.
+- compare_engines.cpp는같은serialized state/MIDI를구1.1.2/새1.2.0 library에적용한다.16voice desktop평균0.74%→5.78%,최악10.47%(새버전)로CPU증가를측정했다. 새로운host_sim3note 평균1.38%/최악3.49%. 이값을MPC실제부하로환산하거나보증하지않는다. 사이트24초A/B는Bass/공진Lead/4note순서로각old→new이며전체에동일3xgain을적용하고개별정규화하지않았다.
+- 공식mpc_remote.py update로기기드라이브36C7-1ACA에73개파일크기검증후설치했다. 재시작은자동승인검토가현재미저장데이터폐기미승인을이유로거절했다. 우회하지않았으며사용자에게명시적현재변경폐기허용을요청했다. 원격상단tray는접근했으나프로젝트저장화면으로이동할수없었다. 현재실행중인엔진은이전버전이며1.2.0실기기오디오/CPU/새저장복원은미검증이다. 사용자물리입력·전체63음색청음승인도확정하지않는다.
+- 공개사이트/매뉴얼/Release에는위제한을표시하고실제1.1.2MPC스크린샷이변경없는UI를보여준다고명시한다. 발행결과는donut-theory/v1.2.0및Pages Actions에서확인한다.

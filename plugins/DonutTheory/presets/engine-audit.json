@@ -1,0 +1,86 @@
+{
+  "version": "1.2.0",
+  "scope": "Native desktop timing and identical-state comparison; not MPC CPU certification",
+  "filter_test": {
+    "sample_rate": 48000,
+    "cutoff_hz": 1000,
+    "small_signal_lp_gain_50hz": 0.995019,
+    "small_signal_lp_gain_1000hz": 0.249722,
+    "small_signal_lp_gain_4000hz": 0.00333159,
+    "resonance_90_percent_gain_at_1000hz": 2.24468
+  },
+  "comparison": [
+    {
+      "test": 0,
+      "engine": "1.1.2",
+      "voices": 1,
+      "peak": 0.0488724,
+      "rms": 0.0194815,
+      "cpu_percent": 0.46621,
+      "worst_block_percent": 2.57537
+    },
+    {
+      "test": 0,
+      "engine": "1.2.0",
+      "voices": 1,
+      "peak": 0.0421678,
+      "rms": 0.015593,
+      "cpu_percent": 0.643587,
+      "worst_block_percent": 1.62936
+    },
+    {
+      "test": 1,
+      "engine": "1.1.2",
+      "voices": 1,
+      "peak": 0.0583431,
+      "rms": 0.0211336,
+      "cpu_percent": 0.244229,
+      "worst_block_percent": 0.768029
+    },
+    {
+      "test": 1,
+      "engine": "1.2.0",
+      "voices": 1,
+      "peak": 0.0312652,
+      "rms": 0.0104286,
+      "cpu_percent": 0.596242,
+      "worst_block_percent": 1.24031
+    },
+    {
+      "test": 2,
+      "engine": "1.1.2",
+      "voices": 4,
+      "peak": 0.172905,
+      "rms": 0.0390287,
+      "cpu_percent": 0.310829,
+      "worst_block_percent": 0.724963
+    },
+    {
+      "test": 2,
+      "engine": "1.2.0",
+      "voices": 4,
+      "peak": 0.156485,
+      "rms": 0.0313284,
+      "cpu_percent": 1.4999,
+      "worst_block_percent": 2.63997
+    },
+    {
+      "test": 3,
+      "engine": "1.1.2",
+      "voices": 16,
+      "peak": 0.384484,
+      "rms": 0.0808684,
+      "cpu_percent": 0.741896,
+      "worst_block_percent": 1.29775
+    },
+    {
+      "test": 3,
+      "engine": "1.2.0",
+      "voices": 16,
+      "peak": 0.286783,
+      "rms": 0.059756,
+      "cpu_percent": 5.7756,
+      "worst_block_percent": 10.468
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-// Donut Theory by kim. Two oscillators + sub/FM/noise -> per-voice SVF and ADSRs
+// Donut Theory by kim. Two oscillators + sub/FM/noise -> nonlinear ladder / ADSRs / rounded VCA
 // -> drive -> stereo chorus/delay -> master. MIDI trigger ownership prevents
 // overlapping chords from releasing each other's notes. No allocation in process.
 #include "mpc_plugin.h"
@@ -12,6 +12,7 @@
 #include "Catalog.h"
 #include "ChordVoicing.h"
 #include "WowFlutter.h"
+#include "AnalogLadder.h"
 #include <array>
 #include <algorithm>
 #if defined(_WIN32)
@@ -37,7 +38,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10102;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10200;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -139,7 +140,8 @@ public:
         reset();
     }
     void reset() override {
-        clearNotes();for(int i=0;i<16;++i)for(int j=0;j<4;++j)lastTouchChord_[i][j]=getInt(chordField(i,j));lastSlotCount_=activeSlots();lastMainPage_=getInt(kMainChordPage);lastLowCut_=-1;cachePadMapping();for(auto& d:delay_)d.reset();chorus_.reset();
+        clearNotes();for(int i=0;i<N;++i){auto& v=voices_[i];const float phase=std::fmod(i*.61803398875f,1.f);v.a.resetPhase(phase);v.sineA.resetPhase(phase);v.b.resetPhase(std::fmod(phase+.23f,1.f));v.sineB.resetPhase(std::fmod(phase+.23f,1.f));v.sub.resetPhase(phase);v.fm.resetPhase(phase);}
+        for(int i=0;i<16;++i)for(int j=0;j<4;++j)lastTouchChord_[i][j]=getInt(chordField(i,j));lastSlotCount_=activeSlots();lastMainPage_=getInt(kMainChordPage);lastLowCut_=-1;cachePadMapping();for(auto& d:delay_)d.reset();chorus_.reset();
         wowFlutter_.reset();tapePitch_=0;tremolo_.reset();lfo_.reset();vibrato_.reset();drift_.reset();chorusLfo_.reset();
         setFromEngine(kOscPair,getInt(kWave1)*4+getInt(kWave2));lastPair_=getInt(kOscPair);
         lastFX_=getInt(kFXPreset);lastPatch_=getInt(kSoundPreset);for(int bank=0;bank<4;++bank)lastProgressions_[bank]=getInt(kBankProgressions[bank]);
@@ -250,7 +252,7 @@ public:
                     float oct=p_[kEnv]*.04f*env+p_[kKeyTrack]*.01f*(pitch-60)/12;
                     if(int(std::lround(raw_[kTarget]))==1)oct+=mod*p_[kDepth]*.025f;
                     oct+=(v.velocity-0.5f)*p_[kExpression]*.007f;
-                    v.filter.set(p_[kCutoff]*std::pow(2.f,std::clamp(oct,-8.f,8.f)),p_[kResonance]*.0092f);
+                    v.filter.set(p_[kCutoff]*std::pow(2.f,std::clamp(oct,-8.f,8.f)),p_[kResonance]*.01f);
                 }
                 const float fm=v.fm.process()*p_[kFM]*.004f*(.3f+env*.7f);
                 const float a=int(std::lround(raw_[kWave1]))==0?v.sineA.process(fm):v.a.process();
@@ -258,10 +260,10 @@ public:
                 const float sub=v.sub.process()*(p_[kSub]*.006f+p_[kBody]*.0015f);
                 float x=a*(1-mix)+b*mix+sub+noise_.nextBipolar()*p_[kNoise]*.003f;
                 // Tone adds harmonics while leaving the base Filter Cutoff parameter intact.
-                x=fastTanh(x*(.7f+p_[kTone]*.012f));
+                x=donut::analogMixer(x,p_[kTone]);
                 x=v.filter.process(x,int(std::lround(raw_[kFilter])));
                 float trem=int(std::lround(raw_[kTarget]))==3?1-(mod*.5f+.5f)*p_[kDepth]*.008f:1;
-                sum+=x*amp*v.velocityGain*trem*.3f;
+                sum+=donut::analogVca(x*amp*v.velocityGain*trem)*.45f;
             }
             const float drive=p_[kDrive]*.01f;float driven=sum;
             if(drive>.0001f){const float gain=1+drive*10;
@@ -307,7 +309,7 @@ public:
     }
     int activeVoices() const {int n=0;for(const auto& v:voices_)if(v.amp.isActive()||v.wait)n++;return n;}
 private:
-    struct Voice {PolyBlepOsc a,b;WavetableSine sineA,sineB,sub,fm;SVF filter;ADSR amp,env;Smoother pitch;int owner=-1,channel=0,wait=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
+    struct Voice {PolyBlepOsc a,b;WavetableSine sineA,sineB,sub,fm;donut::AnalogVoiceFilter filter;ADSR amp,env;Smoother pitch;int owner=-1,channel=0,wait=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
     std::array<Voice,N> voices_{};
     std::array<Smoother,kNumParams> smooth_{};float p_[kNumParams]{},raw_[kNumParams]{};
     uint16_t held_[16][128]{};uint64_t order_[16][128]{};int velocity_[16][128]{};
@@ -344,7 +346,7 @@ private:
         Voice& v=voices_[forced>=0?forced:allocate()];const bool sounding=v.amp.isActive(),connected=sounding&&v.amp.isHeld();
         v.owner=owner;v.channel=ch;v.order=++clock_;v.velocity=vel/127.f;v.velocityGain=1-(1-v.velocity)*p_[kExpression]*.01f;v.dirty=true;
         if(sounding&&raw_[kGlide]>0&&(int(std::lround(raw_[kGlideLegato]))==0||v.amp.isHeld()))v.pitch.setTarget(float(note));else v.pitch.snap(float(note));
-        if(!sounding){v.a.resetPhase();v.sineA.resetPhase();v.b.resetPhase(.23f);v.sineB.resetPhase(.23f);v.filter.reset();}
+        if(!sounding)v.filter.reset();
         v.wait=wait;if(wait){v.amp.reset();v.env.reset();}else if(!legato||!connected){v.amp.noteOn();v.env.noteOn();}
     }
     // Voice mode governs melody in NOTES and SPLIT; chord tones remain polyphonic.

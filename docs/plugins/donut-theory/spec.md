@@ -1,6 +1,6 @@
 # Donut Theory — 제품 및 구현 사양
 
-상태: v0.1.4 개발 알파, MPC Live III 터치 코드 UI·큰 글자·FX 프리셋 선택 검증. 물리 연주·성능 QA 남음. 현재 동작과 남은 항목은 [구현 기록](implementation.md), [프로젝트 README](../../../plugins/DonutTheory/README.md)를 우선 참고한다. 이 문서에는 장기 목표도 포함된다.
+상태: 엔진 재설계1.2.0 정식 배포 대상, 자동 검증 완료/실기기 재시작 보류. 아래 개발 이력보다 최신 버전 항목을 우선한다. 현재 동작과 남은 항목은 [구현 기록](implementation.md), [프로젝트 README](../../../plugins/DonutTheory/README.md)를 우선 참고한다. 이 문서에는 장기 목표도 포함된다.
 
 ## 제품 정체성
 
@@ -267,3 +267,7 @@ User-approved MAIN and Screen/Program Q-Link order: A = OSC Pair, OSC Mix, Body,
 사용자가 수동 위치 선택+LEARN 방식을 승인했다. MAIN의 각222×70 코드 연주 패드에는 등록한 위치명(A1–H16)과40×40 패드 배열을 표시한다. 미등록 위치는 숨긴다. 별도 코드별 EDIT 버튼을 추가하지 않고 기존 공통 CHORD 편집 화면에서 PAD LOCATION을 설정한다. 왼쪽426px 선택창에서 A–H 뱅크,4×4 위치(왼쪽 아래1,오른쪽 위16), CLEAR LOCATION을 제공한다. 위치 지정은 MIDI 라우팅을 변경하지 않으며 실제 패드 입력 연결은 기존 LEARN으로 등록한다. MPC Pad Perform 배치가 바뀌면 위치와 MIDI 연결을 다시 확인한다.
 
 기존192개 파라미터의ID/순서를 보존하고 PadPosition1–16(192–207)을 append한다. 위치는 프로젝트에 저장하며 automation/Q-Link에서 제외한다. 기존 프로젝트는 미등록으로 복원한다. 슬롯 축소·진행/음색 프리셋 선택으로 위치를 삭제하지 않는다. 실기기 검증 결과는 implementation.md에 별도로 기록한다.
+
+
+### 1.2.0 — Moog-inspired engine (supersedes preset-only scope)
+사용자가 프리셋 조정만으로는 부족하다고 정정했고, 기존 엔진 자체를 Moog-inspired로 변경하도록 확정했다. 새 모드/UI 없이 비선형 믹서·4단 래더Low-pass·레벨 의존VCA를 기본 경로로 사용한다.2x 내부 래더 처리와 출력FIR, 공진 피드백을 구현하며 다른 필터 종류·Low-cut·FX는 보존한다. 전체63개 프리셋은 새 엔진에 맞춰 재설계한다. 기존208개 파라미터/UI/Q-Link/UID는 유지하지만 저장값이 같아도 소리는 달라진다. 음색 동일 복원을 보장하지 않는다. 설계·연구·제한은 [engine.md](engine.md), 실제 검증 상태는 implementation.md를 따른다. 사용자가 검증·정식 릴리스·사이트 갱신까지 추가 수락 없이 진행하도록 승인했다.

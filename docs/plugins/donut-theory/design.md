@@ -241,3 +241,7 @@ User-approved MAIN and Screen/Program Q-Link order: A = OSC Pair, OSC Mix, Body,
 고정 SDK의 `framework/mpc_plugin.h`에서 `MidiEvent`는 sampleOffset과 MIDI 바이트만 전달하며 `ProcessContext`에도 물리 패드 번호·뱅크·Pad Perform 배치 정보가 없다. 현재 Donut Theory LEARN 역시 수신 MIDI note만 저장한다. 따라서 입력만으로 A1/A2 같은 실제 위치를 자동 판별할 수 있다고 보장하지 않는다. 키보드와 패드가 같은 MIDI note를 보낼 수도 있다.
 
 사용자가 이 방식을 승인해 로컬1.1.2에 구현했다. 공통 CHORD 편집의 PAD LOCATION에서 뱅크와4×4 위치를 지정한 뒤 기존 LEARN으로 MIDI note를 연결한다. MAIN의 각 연주 패드 안에40×40 위치 그림과 A1 같은 라벨을 표시하되 미등록 위치는 숨긴다. 이는 사용자가 지정한 위치이며 MPC 배치의 실시간 동기화 정보가 아니다. Pad Perform 설정이 바뀌면 재등록이 필요할 수 있다. 코드별 EDIT는 메인에 추가하지 않는다. 위치 선택창은 기존 왼쪽426px 사이드바와 version4/hideQLinkBounds 계약을 따른다. 파라미터192–207에16개 위치를 append해 저장한다. 실제 검증은 implementation.md를 따른다.
+
+
+### 1.2.0 — engine redesign, unchanged UI
+사용자는UI 색상이 아니라 엔진을Moog-inspired로 변경하도록 확정했다. 이번 변경은믹서/필터/VCA와공장음색이며, 승인된 이미지·위젯·16개 신스Q-Link·CHORD 매핑은 바꾸지 않는다. 새모드/엔진선택기는추가하지 않는다.
