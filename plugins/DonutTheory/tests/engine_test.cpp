@@ -23,6 +23,16 @@ struct Rig {
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
+ // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
+ {static_assert(kPadPosition1==192&&kNumParams==208,"Append-only pad positions");
+  Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
+  m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
+  m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);
+  auto state=m.p->internalSaveState();Rig r;assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();for(int slot=0;slot<16;++slot)assert(r.p->getInt(kPadPosition1+slot)==slot*8+1);
+  size_t pos=12;for(int i=0;i<192;++i)pos+=1+state[pos]+8;state.resize(pos+4);for(int j=0;j<4;++j){state[8+j]=j?0:192;state[pos+j]=0;}
+  assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();for(int slot=0;slot<16;++slot)assert(r.p->getInt(kPadPosition1+slot)==0);assert(r.p->getInt(kPadNote1)==75);
+ }
+ std::cout<<"PASS: manual pad locations, LEARN and sound independence, 208-param round-trip and 192-param migration\n";
  // Osc Mix endpoints isolate the other oscillator at neutral Body shaping.
  {for(float mix:{0.f,100.f}){Rig a,b;
    for(auto* m:{&a,&b}){m->p->setProgram(0);m->p->set(kBody,40);m->p->set(kMix,mix);m->p->set(kWave1,0);m->p->set(kWave2,2);m->p->set(kAmpAttack,1);m->p->set(kAmpSustain,100);m->p->set(kCutoff,18000);m->p->reset();}

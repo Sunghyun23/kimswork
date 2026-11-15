@@ -28,17 +28,17 @@
 
 | 그룹 | 1 | 2 | 3 | 4 |
 |---|---|---|---|---|
-| A · SOUND / PLAY | OSC PAIR | BODY | DRIFT | GLIDE |
+| A · SOUND / PLAY | OSC PAIR | OSC MIX | BODY | DRIFT |
 | B · AMP ENVELOPE | ATTACK | DECAY | SUSTAIN | RELEASE |
 | C · FILTER / LFO | FILTER CUTOFF | RESONANCE | LFO RATE | LFO DEPTH |
-| D · FX / TREMOLO | DRIVE | SPACE | TREMOLO RATE | TREMOLO DEPTH |
+| D · FX / TREMOLO | DRIVE | GLIDE | TREMOLO RATE | TREMOLO DEPTH |
 
 - BODY는 반드시 유지한다. FILTER CUTOFF/RESONANCE를 넣기 위해 BODY를 삭제하지 않는다.
 - 컷오프 이름은 `FILTER CUTOFF`로 표시하고 Hz/kHz 값을 보인다.
 - BEND는 메인 Q-Link에서 제외하고 상세 PLAY 설정에 둔다. 피치 벤드 기능을 삭제하는 것이 아니다.
 - OSC PAIR는 두 파형 조합을 선택한다. 전면 OSC1/OSC2 직접 선택기는 제거한다. 기존 OSC 상세 페이지와 파라미터는 호환성을 위해 유지한다. 필터 종류와 LFO Shape/Target은 C 그룹의 터치 선택기다.
 - 왜곡 종류는 D 그룹 첫 번째 DRIVE 노브 바로 위의 선택기다. 선택값 Tape/Tube/Fuzz를 표시한다.
-- 최신 사용자 승인으로 DRIVE는 D 그룹 첫 번째에 둔다. GLIDE는 A 그룹 네 번째다. C의 필터/LFO와 D의 FX/Tremolo 사이에 구분선을 둔다.
+- 최신 사용자 승인으로 DRIVE는 D 그룹 첫 번째에 둔다. GLIDE는 D 그룹 두 번째다. C의 필터/LFO와 D의 FX/Tremolo 사이에 구분선을 둔다.
 
 ## 매크로와 모듈레이션 역할
 
@@ -251,3 +251,19 @@ PAD LEARN은 첫 물리 입력으로 등록(무음), 다음 입력부터 코드 
 
 ### 1.0.1 — Main oscillator mix / glide placement
 User-approved MAIN and Screen/Program Q-Link order: A = OSC Pair, OSC Mix, Body, Drift; D = Drive, Glide, Tremolo Rate, Tremolo Depth. B/C are unchanged. Space remains on FX, outside the MAIN sixteen controls; Glide also remains on AMP. Existing parameter IDs and DSP behavior are unchanged. OSC Mix is the existing balance parameter; Body still contributes its established mix/sub shaping.
+
+
+### 1.1.0 — 기존 음색 전체 재조정(로컬 후보)
+모드나UI를 추가하지 않고 기존63개 연주 음색의OSC/Low-pass/엔벌로프/Tape/효과를 따뜻한 아날로그 성격으로 재조정한다.64개 이름/순서, Init과개별Low-cut, UI/Q-Link, UID/파라미터는 유지한다. 엔진의12dB SVF를24dB 래더로 설명하지 않는다. 스테레오 피크를 재측정해레벨을 보정하며 실기기청음 승인은 별도다. presets.md가 최신 레시피·레벨 기준이다.
+
+
+### 1.1.1 — 코드 영역 화살표 터치 확대
+사용자 불편에 따라 코드 프리셋 이전/다음은44×44 표시·터치, 슬롯 페이지는44×32 표시와44×44 터치로 확대한다. 코드 패드222×70을 유지한다. 아래프리셋행y580–624, 페이지hit y536–580으로 분리하며 위필터LCD(y534까지)와 겹치지 않는다. 네뱅크 선택기는220×44로 함께 키우고 기본프리셋명 글씨는 유지한다. HOLD문구통합·코드이름위계·누름피드백강화·EDIT CHORDS진입버튼은 아직 제안이며 구현하지 않았다.
+
+- 최신 사용자 결정: HOLD TO PLAY는 공통 안내도 표시하지 않는다. MAIN 패드에는 슬롯 번호와 코드 이름만 남긴다.
+
+### 1.1.2 — 수동 물리 패드 위치 표시 (로컬 후보)
+
+사용자가 수동 위치 선택+LEARN 방식을 승인했다. MAIN의 각222×70 코드 연주 패드에는 등록한 위치명(A1–H16)과40×40 패드 배열을 표시한다. 미등록 위치는 숨긴다. 별도 코드별 EDIT 버튼을 추가하지 않고 기존 공통 CHORD 편집 화면에서 PAD LOCATION을 설정한다. 왼쪽426px 선택창에서 A–H 뱅크,4×4 위치(왼쪽 아래1,오른쪽 위16), CLEAR LOCATION을 제공한다. 위치 지정은 MIDI 라우팅을 변경하지 않으며 실제 패드 입력 연결은 기존 LEARN으로 등록한다. MPC Pad Perform 배치가 바뀌면 위치와 MIDI 연결을 다시 확인한다.
+
+기존192개 파라미터의ID/순서를 보존하고 PadPosition1–16(192–207)을 append한다. 위치는 프로젝트에 저장하며 automation/Q-Link에서 제외한다. 기존 프로젝트는 미등록으로 복원한다. 슬롯 축소·진행/음색 프리셋 선택으로 위치를 삭제하지 않는다. 실기기 검증 결과는 implementation.md에 별도로 기록한다.

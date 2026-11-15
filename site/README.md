@@ -32,4 +32,4 @@ GitHub repository Settings → Pages → Source: GitHub Actions. `main`의 site 
 반응형 검증·운영 규칙: [docs/pages.md](../docs/pages.md). 내부 링크 검사: `npm run check:links` (빌드 후).
 
 
-Current publication: Kim’s Work / https://kimswork.app/. Donut Theory1.0.0 is an official GitHub Release. The product page uses actual device exports and imports the English manual from docs/plugins/donut-theory/manual.md. Never replace these images with conceptual renders labelled as device screenshots.
+Current publication: Kim’s Work / https://kimswork.app/. Donut Theory1.1.2 is an official GitHub Release. The product page uses actual device exports and imports the English manual from docs/plugins/donut-theory/manual.md. Never replace these images with conceptual renders labelled as device screenshots.

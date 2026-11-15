@@ -221,3 +221,23 @@ PAD LEARN은 첫 물리 입력으로 등록(무음), 다음 입력부터 코드 
 
 ### 1.0.1 — Main oscillator mix / glide placement
 User-approved MAIN and Screen/Program Q-Link order: A = OSC Pair, OSC Mix, Body, Drift; D = Drive, Glide, Tremolo Rate, Tremolo Depth. B/C are unchanged. Space remains on FX, outside the MAIN sixteen controls; Glide also remains on AMP. Existing parameter IDs and DSP behavior are unchanged. OSC Mix is the existing balance parameter; Body still contributes its established mix/sub shaping.
+
+
+### 1.1.0 음색 작업
+사용자는 무그 느낌을 UI 색상이 아닌 음색에 요청했다. UI·Q-Link·이미지·모드 목록은1.0.1 그대로 유지한다.
+
+
+### 1.1.1 — 코드 영역 화살표 터치 확대
+사용자 불편에 따라 코드 프리셋 이전/다음은44×44 표시·터치, 슬롯 페이지는44×32 표시와44×44 터치로 확대한다. 코드 패드222×70을 유지한다. 아래프리셋행y580–624, 페이지hit y536–580으로 분리하며 위필터LCD(y534까지)와 겹치지 않는다. 네뱅크 선택기는220×44로 함께 키우고 기본프리셋명 글씨는 유지한다. HOLD문구통합·코드이름위계·누름피드백강화·EDIT CHORDS진입버튼은 아직 제안이며 구현하지 않았다.
+
+
+### 전체5개 제안 시안(리뷰용, 미구현)
+사용자 요청으로 코드명확대/번호축소, HOLD문구한번표시, 눌림그림강화, 프리셋과슬롯탐색구분, EDIT CHORDS 바로가기를 모두 포함한 시안을 build/ui-review-all/main-preview.png에 렌더했다. 실제기기화면이 아니며 runtime1.1.1에는 화살표확대만 반영됐다. 바로가기는 SDK의직접탭이동이 확인되지 않았으므로 작동완료로보고하지 않는다. Q-Link가신스에남는단순팝업으로대체하지 않는다.
+
+- 최신 사용자 결정: HOLD TO PLAY는 공통 안내도 표시하지 않는다. MAIN 패드에는 슬롯 번호와 코드 이름만 남긴다.
+
+### 물리 패드 위치 표시 — 가능성 조사, 미구현
+
+고정 SDK의 `framework/mpc_plugin.h`에서 `MidiEvent`는 sampleOffset과 MIDI 바이트만 전달하며 `ProcessContext`에도 물리 패드 번호·뱅크·Pad Perform 배치 정보가 없다. 현재 Donut Theory LEARN 역시 수신 MIDI note만 저장한다. 따라서 입력만으로 A1/A2 같은 실제 위치를 자동 판별할 수 있다고 보장하지 않는다. 키보드와 패드가 같은 MIDI note를 보낼 수도 있다.
+
+사용자가 이 방식을 승인해 로컬1.1.2에 구현했다. 공통 CHORD 편집의 PAD LOCATION에서 뱅크와4×4 위치를 지정한 뒤 기존 LEARN으로 MIDI note를 연결한다. MAIN의 각 연주 패드 안에40×40 위치 그림과 A1 같은 라벨을 표시하되 미등록 위치는 숨긴다. 이는 사용자가 지정한 위치이며 MPC 배치의 실시간 동기화 정보가 아니다. Pad Perform 설정이 바뀌면 재등록이 필요할 수 있다. 코드별 EDIT는 메인에 추가하지 않는다. 위치 선택창은 기존 왼쪽426px 사이드바와 version4/hideQLinkBounds 계약을 따른다. 파라미터192–207에16개 위치를 append해 저장한다. 실제 검증은 implementation.md를 따른다.

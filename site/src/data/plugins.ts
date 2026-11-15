@@ -1,15 +1,15 @@
 export interface Plugin {
  slug: string; name: string; category: string; tagline: string; description: string; summary: string;
  developmentVersion: string; image: string; imageAlt: string; intro: string; mapping: string[][]; limitations: string[]; verifiedDevice: string; features: {title: string; text: string}[];
- manual?: string; screenshots: {image:string; alt:string; caption:string}[];
+ changes: {title:string; text:string}[]; manual?: string; screenshots: {image:string; alt:string; caption:string}[];
  release: null | { version: string; tag: string; asset: string };
 }
 export const plugins: Plugin[] = [{
  slug: 'donut-theory', name: 'Donut Theory', category: 'POLYPHONIC SYNTHESIZER',
  tagline: 'A little worn. Endlessly warm.',
- summary: 'Vintage-inspired bass, keys, leads and pads—with up to sixteen playable chord slots.',
- description: 'Shape rounded bass, soulful keys, analog-style leads and soft pads inside your MPC. Add a little pitch drift, tape-like drive and independent tremolo, then play your own chord changes.',
- developmentVersion: '1.0.1', image: 'donut-theory-main-1.0.1.webp', release: {version:'1.0.1',tag:'donut-theory/v1.0.1',asset:'donut-theory-1.0.1-mpc.zip'},
+ summary: 'Moog-inspired warmth across bass, keys, synths, leads and pads—with up to sixteen playable chord slots.',
+ description: 'Start with a factory bank revoiced for rounded Moog-inspired bass, singing leads, warm keys and soft pads. Shape the sound with hands-on controls, tape-like drive and independent tremolo, then play your own chord changes inside your MPC.',
+ developmentVersion: '1.1.2', image: 'donut-theory-main-1.1.2.webp', release: {version:'1.1.2',tag:'donut-theory/v1.1.2',asset:'donut-theory-1.1.2-mpc.zip'},
  imageAlt: 'Donut Theory running on MPC Live III, showing its four performance control groups and large chord pads',
  manual: 'plugins/donut-theory/manual/',
  intro: 'Sixteen oscillator pairs, hands-on envelopes and four Q-Link banks keep the sound close. Start with one of 64 sound presets, or build a chord arrangement across four banks of four slots.',
@@ -20,25 +20,32 @@ export const plugins: Plugin[] = [{
   'Screen chord pads audition the instrument; they do not send MIDI notes to the MPC sequencer.',
   'Use Q-Link Screen mode for chord editing. Program/Track mode retains the synth mapping.',
   'The MPC’s gray host PRESET list is flat. Use the instrument’s SOUND PRESET browser for category-first selection.',
+  'Pad-location labels are manually assigned hints. Use LEARN to register MIDI; the plugin cannot automatically detect physical pad numbers or layout changes.',
+  'The refreshed 63-sound bank was measured offline; a complete listening review of every revised sound on hardware is not certified.',
   'Testing on other MPC models, simultaneous finger multi-touch and a complete physical Q-Link rotation matrix are not certified.'
  ],
+ changes: [
+  {title:'Moog-inspired character, built into the factory sounds.',text:'All 63 playable factory presets have been revoiced across Bass, Keys, Synth, Lead and Pad. Fuller oscillator blends, smoother low-pass shaping, filter envelopes and restrained Tape saturation create the new starting sound. There is no extra mode to enable.'},
+  {title:'A cleaner, more balanced starting point.',text:'Per-sound low-cut settings are retained and output trims have been recalibrated from stereo renders. Init remains dry with low-cut and effects off. The 64 names and program order stay the same.'},
+  {title:'Easier chord navigation.',text:'Chord-preset arrows and slot-page arrows now have 44 × 44 touch targets. The four large chord pads remain, chord names have room beside the position hints, and the repeated HOLD TO PLAY captions are gone.'},
+  {title:'See the pad position you assigned.',text:'Choose A–H and a cell in the 4 × 4 PAD LOCATION drawer inside the shared CHORD editor, then connect the physical pad with LEARN. MAIN shows the saved label and highlighted cell. Unassigned hints stay hidden; CLEAR LOCATION leaves MIDI routing intact.'},
+  {title:'Keep your saved projects.',text:'Existing parameter identities and Q-Link assignments are preserved. Saved projects retain their stored sound settings; select a factory preset to load its refreshed voicing. Older projects start with pad-location hints unassigned. Screen pads audition sound and do not record MIDI into the MPC sequencer.'}
+ ],
  screenshots: [
-  {image:'donut-theory-main-1.0.1.webp',alt:'Donut Theory main performance screen on MPC',caption:'MAIN · Sound, amp envelope, filter/LFO and FX/tremolo.'},
-  {image:'donut-theory-chords-1.0.1.webp',alt:'Donut Theory chord editor showing bank selection and sixteen available slots',caption:'CHORD · Select a bank inside one editor. Edit root, type, voicing and octave.'},
-  {image:'donut-theory-presets-1.0.1.webp',alt:'Donut Theory sound preset browser with Init, Bass, Keys, Synth, Lead and Pad categories',caption:'SOUND PRESET · Choose a category before a sound.'},
-  {image:'donut-theory-fx-1.0.1.webp',alt:'Donut Theory FX detail page with drive, chorus, delay, tremolo and low-cut controls',caption:'FX · Character effects, independent tremolo and low-end cleanup.'}
+  {image:'donut-theory-main-1.1.2.webp',alt:'Donut Theory 1.1.2 running on MPC Live III with A1 to A4 manual position hints inside four large chord pads',caption:'MAIN · Actual v1.1.2 device screen. A1–A4 are manually assigned QA hints, not automatically detected pad positions.'},
+  {image:'donut-theory-chords-1.1.2.webp',alt:'Actual Donut Theory 1.1.2 CHORD editor with root, type, voicing, octave, manual pad location and LEARN',caption:'CHORD · One shared editor for chords, voicing, octave, manual pad locations and MIDI LEARN.'}
  ],
  features: [
-  { title: '64 starting points. Six familiar categories.', text: 'Browse Init, Bass, Keys, Synth, Lead and Pad. Per-sound low-cut and output trim help place the sound in a mix, while Init starts dry.' },
+  { title: '64 starting points. Six familiar categories.', text: 'The refreshed Moog-inspired bank is the standard factory voicing. Browse Init, Bass, Keys, Synth, Lead and Pad. Per-sound low-cut and output trim help place the sound in a mix, while Init starts dry.' },
   { title: 'A little movement goes a long way.', text: 'Drift adds slow wow and faster flutter. Filter LFO and independent tremolo have separate rate and depth controls, alongside a complete amp ADSR.' },
-  { title: 'Your changes, across sixteen slots.', text: 'Start with four chords and expand to eight, twelve or sixteen. Keep four large touch pads on MAIN; assign physical pads with LEARN. Each bank keeps its own chord-preset selection.' },
+  { title: 'Your changes, across sixteen slots.', text: 'Start with four chords and expand to eight, twelve or sixteen. Keep four large touch pads on MAIN; assign physical pads with LEARN and add a manual location hint. Each bank keeps its own chord-preset selection.' },
   { title: 'Shape the voicing. Keep the groove.', text: 'Choose the available inversions for each chord, Open voicing and an independent ±2-octave offset. The 32 four-chord presets are starting points, and affect only the bank you are viewing.' },
   { title: 'Weight, warmth and space.', text: 'Combine Tape, Tube or Fuzz character with chorus and tempo delay. Filter cutoff and resonance sit beside the LFO that moves them.' },
   { title: 'An MPC instrument, from the first screen.', text: 'Play keyboard notes, chord triggers or both in Split mode. Mono and Legato apply to melody notes; chord pads keep their full voicings.' }
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/mpc-plugins';
-export const navigationVersion = 'donut-theory-1-0-1';
+export const navigationVersion = 'donut-theory-1-1-2';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

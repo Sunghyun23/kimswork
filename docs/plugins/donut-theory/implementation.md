@@ -471,3 +471,37 @@ User requested A=OSC Pair/Osc Mix/Body/Drift and D=Drive/Glide/Tremolo Rate/Trem
 Device check (MPC Live III / OS3.10.1.12): installed with official mpc_remote.py and restarted with user's discard approval. Fresh instance opens MAIN. New A/D layout renders without overlap. MAIN Osc Mix drag0→71.4% is mirrored on OSC; MAIN Glide0→238ms is mirrored on AMP. Screen/Program serialized Q-Link bindings match exactly; physical knob rotation matrix was not repeated remotely. No DSP behavior changed; neutral-Body oscillator endpoint isolation also passes engine/UBSan tests.
 
 - Actual device audio: two1.2s chord holds before/after OSC Mix20→67.6%,44.1kHz stereo20.56s recording. Two separated audible regions, peak0.574FS, final3s peak0.0. FX Space0→33.3% leaves MAIN/AMP Glide238ms unchanged. Fresh preset loading and CHORD4→16 bank13–16 navigation also pass. Four1.0.1 screenshots exported from the device replace the website images; no synthetic UI render is labelled as a device screenshot.
+
+
+## 1.1.0 local candidate — warm factory-bank voicing
+
+User corrected a misunderstanding: Moog-like sound character was requested, not UI color. Scope: revoice existing sounds, no added modes/UI.
+
+- All63 playable recipes explicitly revoiced in sound_bank.py; Init and64 program names/order retained. Existing Low-cut values remain unchanged. No DSP algorithm,192 parameter declarations, UID, chord recipes or mapping changes. The only DonutTheory.cpp change is version10001→10100. Existing12dB SVF is not presented as24dB ladder modeling.
+- Bass/Synth/Lead/Pad have FM0; Keys retain smallFM amounts up to18 for sound identity. Every playable recipe uses existingLP/Tape; lower chorus and drift; each patch has explicit Body/Resonance/Env/Pulse values.
+- Stereo peak calibration: render with OutputTrim0, calculate gain through the final tanh using calibrate_factory.py, regenerate and re-render. Bass/Lead measured−15.00dBFS; Keys/Synth/Pad−12.00dBFS. Init unchanged. Trim range−3.00..13.02dB. These are a fixed musical-pattern peak reference, not perceived loudness or guaranteed headroom for every performance.
+- audit_presets.cpp renders64×5s at44.1kHz; each has finite non-silent stereo output in range. Max measured peak0.251319FS. Before/after mono WAVs use identical MIDI/hold/release and no post-render normalization; raw/report files are in build/voicing-before, voicing-untrimmed, voicing-after.
+- Native/ARM32/ARM64, SDK validators0 errors/0 warnings, engine/UBSan, host bridge and host simulator19 pass/0 warnings/0 failures. Skin regression includes the new bank contract. TUI.json and Q-Links.json SHA256 are identical to1.0.1.
+- Before/after demos for Bass Maple Thump, Keys Felt Circuit, Synth Mellow Block, Lead Bent Wire and Pad Draped Velvet generated. A spectral energy centroid falls in33/63; this is only a waveform descriptor, not a metric that proves subjective analog warmth or an audible Moog match. No full64-preset listening approval is claimed.
+- No MPC installation/restart, new device CPU/physical-input verification, push, Release or Pages publication performed for this local candidate.
+
+
+## 1.1.1 — chord navigation target size
+The preset arrows grow36×34→44×44 (58% greater area). Page arrows grow36×28→44×32 visually, with44×44 topmost transparent hit surfaces (92% greater hit area). Preset label remains220px wide and grows34→44px high. Four222×70 hold pads and mappings are unchanged. Hardware image dimensions match visible widgets. Upper hits starty536, after filter controls endy534; lower hits starty580, preventing overlaps. Automated native/ARM32/ARM64, validators, simulator19, engine/UBSan and skin checks pass. Other four proposed UI improvements are not implemented. Device results follow when checked.
+### 1.1.2 — 수동 패드 위치 구현 및 실기기 확인 (2026-11-15)
+
+- 로컬 후보1.1.2를 공식 SDK update/restart로 MPC Live III / OS3.10.1.12에 적용했다. 기존192개 파라미터 선언 전체가 공개HEAD와 동일한 것을 비교했고, PadPosition1–16만192–207에 append했다. 위치는 비자동화 파라미터이며 Q-Link 매핑을 바꾸지 않는다.
+- 공통 CHORD 편집에 PAD LOCATION을 추가하고, A–H/4×4 사이드바에서 위치를 수동 지정한다. MAIN의 기존222×70 hold 패드에 위치명과40×40 배열을 장식으로 추가했다. 별도 코드별 EDIT는 추가하지 않았다. 미등록은 숨기며 HOLD TO PLAY도 제거했다.
+- 실제 기기에서 초기 MAIN/안내 팝업 없음, 미등록 숨김, 슬롯1–4에 A1–A4 개별 등록, 슬롯2의 H16 등록, CLEAR LOCATION→Unassigned, 해제 전후 MIDI26 보존, MAIN의 각 위치명과 아래 행 강조를 확인했다. 선택 후 닫힘, 선택창에서 Q-Link 가이드 숨김/닫은 뒤 복원도 확인했다. 초기 셀의 Data→Data 자기 remap이 외부 슬롯 바인딩을 가리는 문제가 있어 제거하고 A1/H16 저장을 재시험했다. 위치 팝업은 CHORD 탭 루트의 형제 컴포넌트로 배치한다.
+- 원격 입력에서 기존 포커스 좌표로 클릭이 들어가 MAIN/CHORD가 다시 전환되는 현상이 있었다. 전체화면의 작은 drag 입력으로 위치 선택을 재검증했다. 실제 손가락이나 물리 패드를 누른 시험으로 설명하지 않는다.
+- native/ARM32/ARM64 빌드 및 SDK validator0 errors/0 warnings, host simulator19 PASS, 엔진/UBSan/VST bridge 및 스킨 검사 PASS. 위치16개 저장·복원, LEARN/음색과의 독립성,192개 구버전 상태 복원 시 미등록 기본값을 회귀 검사했다. 로그: /tmp/donut-112-build.log, /tmp/donut-112-test.log, /tmp/donut-112-skin-test.log.
+- 실제 캡처: plugins/DonutTheory/build/qa-1.1.2/main-viewer.png(원격 뷰어 창1280×900), chord-editor.png(기기1280×800). MAIN은 현재 표시 중인 뷰어 창 원본을 보존했고 CHORD는 Remote Screen Viewer의 Screenshot으로 저장해 편집 없이 복사했다. 표시된 A1–A4는 QA에서 수동 지정한 힌트이며 실제 물리 패드 연결을 재인증한 것이 아니다.
+- 기기 오디오 녹화의 마지막45초를 PCM으로 분석했다. 짧은 터치 발음1구간을 검출했고 피크0.093689FS/마지막1초 무음이었다. 원격 입력 문제 때문에 네 버튼의 장시간 hold 시험 완료로 보고하지 않는다. 이번 실행에서 물리 LEARN 입력·물리 Q-Link 회전·손가락 hold·MPC 프로젝트 저장/재시작 복원은 재검증하지 않았다. 기존 hold 제스처 표면은 보존했고 엔진 상태/노트 소유권 검사는 통과했다.
+- 공개push/Release/Pages 갱신 없음. 공개판은1.0.1을 유지한다.
+
+
+### 1.1.2 official distribution preparation — 2026-11-15
+
+사용자가 공식 Release 및 웹사이트 갱신을 승인했다. 앞선 로컬 후보의 공개판1.0.1 유지 기록은 당시 상태다. 이번 배포 대상은1.1.2이며63개 음색 재설계, 화살표 확대, 수동 패드 위치 기능을 포함한다. 사이트 제품 데이터·매뉴얼·변경 내역·다운로드는 동일 버전을 사용한다. MAIN/CHORD는 실제 MPC 캡처로 교체했으며 MAIN은 뷰어의 창 테두리만 제거했다.
+
+최종 native/ARM32/ARM64, SDK validator0 errors/0 warnings, 엔진/UBSan/bridge, host simulator19, 스킨 검사 및 사이트 빌드·로컬링크40개 검사를 통과했다. 사이트는390px 모바일·768px 폴드·1440px PC에서 가로 넘침 없이 확인했다. 패키지는 SDK package.py 결과에 MANUAL.md/RELEASE_NOTES.md를 추가하고 SHA256을 별도 제공한다. 실제 발행 여부는 명시적 donut-theory/v1.1.2 Release와 Pages 배포 결과로 확인한다. 실기기 미검증 범위는 릴리스 노트에 그대로 공개한다.

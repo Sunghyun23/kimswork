@@ -70,7 +70,7 @@ def install(g,tui,params,out):
   # Numbers are part of the existing caption; hold gesture remains topmost.
   for w in get(defs['DTPad'+str(i)],'componentsData'):
    if get(cd(w),'type')=='Label':put(get(w,'bounds'),'bounds','0 14 222 56')
-  get(defs['DTPad'+str(i)],'componentsData').insert(1,label(str(i+1)+' · HOLD TO PLAY','0 0 222 20',17))
+  get(defs['DTPad'+str(i)],'componentsData').insert(1,label(str(i+1),'8 0 28 20',17))
  # Filter/LFO and FX/Tremolo use the same four-control grouping as Q-Link.
  # Shape/Target stay with the filter; Sync/Division remain on MOD.
  children.append(label('FREE RATE · DEPTH 0 = OFF','966 356 284 28',20))

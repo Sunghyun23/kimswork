@@ -1,10 +1,14 @@
 # Donut Theory
 
-**kim · v1.0.1 · UID `Krql`**
+**kim · v1.1.2 · UID `Krql`**
 
 MPC standalone용 소울·힙합 신디사이저입니다. 베이스, 리드, 합성 키보드, 코드와 패드를 한 엔진에서 연주합니다. MPC Live III / OS 3.10.1.12에서 프리셋·메뉴·16슬롯 편집·표시 수정을 직접 검증한 배포 버전입니다. 검증 범위는 아래 기록을 참고하세요.
 
 [상세 사용자 매뉴얼](../../docs/plugins/donut-theory/manual.md) · [제품 소개](https://kimswork.app/plugins/donut-theory/)
+
+## 1.1.0 음색 재조정
+
+기존63개 연주 음색을 더 두꺼운OSC 배합, 부드러운Low-pass, 필터 엔벌로프와Tape 포화 중심으로 조율했습니다. Init과64개 이름/순서, Low-cut·코드 설정·UI·Q-Link는 유지합니다. 새 필터 모드나 DSP 알고리즘 변경은 없으며 Moog 회로의 정밀복각은 아닙니다. 1.1.2의 기본 공장 음색입니다. 전체 음색의 실기기 청음 승인은 별도이며 정확한 검증 범위는 릴리스 노트를 참고하세요.
 
 ## 현재 검증 범위와 남은 항목
 
@@ -215,3 +219,7 @@ Native/ARM 빌드, SDK validator, 엔진/UBSan/bridge, host_sim19항목과 UI �
 - 기존91개 인덱스를 보존하고 추가 슬롯·제어·활동 값을 append하여 총192개입니다. 예전 프로젝트는4슬롯/MAIN 패드1–4로 복원됩니다. Chord Slot/Pad Learn/완료 표시의 choice 범위 확장으로 이전 정규화 automation은 재확인해야 합니다. 기존 plain 상태 복원은 검사합니다.
 
 검증 환경과 결과는 [구현 기록](../../docs/plugins/donut-theory/implementation.md)을 따릅니다. B 헤더 위 Q-Link 선은 사용자 요청대로 유지했습니다.
+
+## 1.1.2 — 수동 패드 위치 안내
+
+공통 CHORD 편집의 PAD LOCATION에서 A–H 뱅크와4×4 위치를 지정한 뒤 LEARN으로 실제 패드의 MIDI 노트를 연결합니다. MAIN의 연주 패드 안에 위치명과 작은 배열을 표시하며 미등록은 숨깁니다. 위치는 자동 감지 정보가 아닙니다. CLEAR LOCATION은 위치 안내만 지우며 MIDI 연결은 유지합니다. 메인에 코드별 EDIT를 추가하지 않았습니다. 기존192개 파라미터를 보존하고 위치16개를192–207에 append했으며 Q-Link/automation에서는 제외합니다. 저장·복원 및192개 상태에서의 마이그레이션을 검사했습니다. 1.1.2 배포에 포함하며 실기기 검증 범위는 구현 기록을 따릅니다.

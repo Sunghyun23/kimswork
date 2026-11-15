@@ -187,5 +187,7 @@ from sidebars import install as sidebars
 sidebars(g,tui,params,out)
 from chord_slots import install as chord_slots
 chord_slots(g,tui,ql,params,out)
+from pad_positions import install as pad_positions
+pad_positions(g,tui,params,out)
 (out/'TUI.json').write_text(g.dump_json(tui)+'\n');(out/'Q-Links.json').write_text(g.dump_json(ql)+'\n')
 print('Custom skins generated: MAIN, 5 detail tabs and one bank-selectable CHORD editor')

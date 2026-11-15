@@ -16,7 +16,9 @@ This manual describes the current instrument layout. Check the release notes for
 8. [Synthesis reference](#synthesis-reference)
 9. [Saving, recording and automation](#saving-recording-and-automation)
 10. [Troubleshooting](#troubleshooting)
-11. [Factory sound list](#factory-sound-list)
+11. [Manual pad location hints](#manual-pad-location-hints)
+12. [Factory sound list](#factory-sound-list)
+13. [What changed in 1.1.2](#what-changed-in-112)
 
 ## Install, update and remove
 
@@ -89,7 +91,7 @@ The gray MPC **PRESET** selector is different. With the current host/SDK integra
 
 ## MAIN and Q-Link controls
 
-![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.0.1.webp)
+![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.1.2.webp)
 
 MAIN arranges four groups in reading order: A upper left, B upper right, C lower left and D lower right. Each group has four Q-Link controls.
 
@@ -127,6 +129,8 @@ The filter type, LFO Shape/Target and drive type have touch selectors near their
 ## Sounds and presets
 
 ### Factory sounds
+
+Version **1.1.2** includes the Moog-inspired factory voicing introduced during 1.1.0 development. It revoices the existing 63 playable sounds toward warm subtractive analog character. It retains all names/program numbers, individual Low-cut settings and the dry Init. Oscillator blends, restrained detune, Low-pass envelopes and light Tape saturation carry the character; FM, chorus and pitch movement are reduced where appropriate. It adds no filter model, mode or UI and does not claim an exact Moog ladder-circuit emulation. Existing projects retain their saved parameter values; selecting a factory sound loads the revised recipe. This is the standard factory bank; no additional mode needs to be enabled.
 
 There are **64 factory sounds**: Init 1, Bass 12, Keys 15, Synth 12, Lead 12 and Pad 12. They use the same synthesis engine rather than acoustic instrument samples. Keys such as tines, bells and reeds describe their synthesized character.
 
@@ -208,13 +212,13 @@ In **CHORD → ADVANCED**, **Individual** pad mapping uses each slot's assignmen
 
 ## Chord editor
 
-![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.0.1.webp)
+![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.1.2.webp)
 
 ### Four to sixteen slots
 
 New instances start with **four active slots**. The editor's **+ / −** changes the active count in groups of four: 4, 8, 12 or 16. Reducing the count retains the inactive slots' settings for later reactivation. Changing the active count clears sounding notes.
 
-Use the in-screen **1–4 / 5–8 / 9–12 / 13–16** bank buttons to edit the available banks. MAIN shares this selection and always shows four large pads. Its page arrows change banks; its CHORD PRESET arrows change the recipe for the visible bank. Physical note mappings continue to address their slots independently of the visible bank.
+Use the in-screen **1–4 / 5–8 / 9–12 / 13–16** bank buttons to edit the available banks. MAIN shares this selection and always shows four large pads. Its page arrows change banks; its CHORD PRESET arrows change the recipe for the visible bank. Version 1.1.2 gives both arrow pairs 44×44 touch targets while retaining the four large chord pads. Physical note mappings continue to address their slots independently of the visible bank.
 
 ### Q-Link editing
 
@@ -395,6 +399,10 @@ Selecting a different sound or changing input/voice routing clears current notes
 
 When reporting an issue, include the package version, MPC model/OS, input mode, voice mode, sound name, active chord bank, Q-Link mode and whether it occurs in a new instance or an older project. A screenshot and a short reproducible sequence are more useful than an isolated symptom.
 
+## Manual pad location hints
+
+**PAD LOCATION** in the shared CHORD editor lets you choose a bank (A–H) and a cell in a 4×4 grid. Pad 1 is bottom-left; pad 16 is top-right. Then use that slot's **LEARN** button and press the physical pad to register its MIDI note. The first registration press is silent. MAIN shows your chosen location beside the chord name; unassigned locations remain hidden. **CLEAR LOCATION** removes the hint without changing MIDI routing. The location is a manual reminder, not an automatically detected hardware position. If you change MPC pad layouts, verify the hint and repeat LEARN as needed. Project saving preserves all sixteen hints; sound/progression presets do not replace them. This feature is included in version 1.1.2. Location hints are saved with the project and are excluded from Q-Link and automation assignments.
+
 ## Factory sound list
 
 | Category | Sounds |
@@ -407,3 +415,13 @@ When reporting an issue, include the package version, MPC model/OS, input mode, 
 | **Pad · 12** | Draped Velvet; Paper Halo; Warm Projection; Woven Air; Satin Room; Faded Choir; Ember Strings; Curtain Light; Soft Horizon; Opaque Silk; Dusk Film; Golden Haze |
 
 For exact release compatibility and completed validation, consult the download's release notes. The repository also maintains [preset design notes](https://github.com/Sunghyun23/mpc-plugins/blob/main/docs/plugins/donut-theory/presets.md) and the [implementation and verification record](https://github.com/Sunghyun23/mpc-plugins/blob/main/docs/plugins/donut-theory/implementation.md).
+
+## What changed in 1.1.2
+
+- **Default sound:** all 63 playable factory sounds have Moog-inspired voicing: revised oscillator blends, low-pass settings, envelopes, restrained detune and Tape saturation. Effects and pitch movement are reduced where appropriate. This is recipe retuning within the existing synthesis engine, not a new ladder-filter model.
+- **Level and low end:** stereo renders were used to recalibrate Sound Trim. Individual low-cut settings remain; dry Init is unchanged. Velocity, register, resonance, drive and overlapping chords still affect output level.
+- **Chord navigation:** chord-preset and slot-page arrows have 44 × 44 touch targets. Four large 222 × 70 chord pads remain. Repeated HOLD TO PLAY captions are removed, with chord names and optional location hints sharing the pad face.
+- **Physical-position hints:** the shared CHORD editor has a manual A–H / 1–16 location drawer. MAIN shows the assigned label and 4 × 4 highlight. Clear removes the hint without changing MIDI. Register the actual input with LEARN.
+- **Compatibility:** previous parameter IDs/order and Q-Link mappings are preserved; sixteen nonautomatable position parameters are appended. Existing project sounds retain their saved settings. Select a factory sound to hear its revised recipe. Old projects load with unassigned hints.
+
+Builds for native, ARM32 and ARM64, SDK validation, host simulator 19 checks, engine/UBSan/VST bridge and skin regressions pass. All 64 sounds have finite, non-silent offline renders within the measured test bounds. On MPC Live III / OS 3.10.1.12, the new location selection/clear/MAIN display and Q-Link guide hide/restore were checked through Remote Screen Viewer. A complete hardware listening review of all revoiced sounds, fresh physical LEARN inputs, all physical Q-Link rotations, simultaneous finger multi-touch and a new hardware project save/restart round-trip were not completed for this update. Automated state migration and note ownership tests pass.

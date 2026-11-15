@@ -161,7 +161,40 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==192
+assert index['LearnStatus']==84 and len(params)==208
+assert index['PadPosition1']==192 and index['PadPosition16']==207
+chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
+assert len([w for w in chord_root if w['componentData']['type'].startswith('DTPadPositionPanel')])==16
+for slot in range(1,17):
+ p=params[index[f'PadPosition{slot}']]
+ assert p['default']==0 and p['choices'][0]=='Unassigned'
+ assert p['choices'][1]=='A1' and p['choices'][16]=='A16' and p['choices'][-1]=='H16'
+ panel=defs[f'DTPadPositionPanel{slot}']
+ assert panel['version']==4 and panel['hideQLinkBounds'] is True
+ for bank in range(8):
+  cells=defs[f'DTPadPositionBank{slot}-{bank}']['componentsData']
+  assert len(cells)==16
+  for pad,cell in enumerate(cells):
+   x,y,w,h=map(int,cell['bounds']['bounds'].split())
+   assert (x,y,w,h)==(25+(pad%4)*95,194+(3-pad//4)*82,88,72)
+   assert cell['handle remapping']['map']==[{'key':'Data','value':f'Parameter {index[f"PadPosition{slot}"]}'},{'key':'Close','value':f'Local/2/padPositionOpen{slot}'}]
+ # Shared cells write their exact location and close only their own drawer.
+ for value in range(1,129):
+  cell=defs[f'DTPadPositionCell{value}']
+  assert cell['actions'][0]['handleName']=='Close'
+  assert cell['componentsData'][-1]['componentData']['data']['buttonId']==value
+  # A self-remap (Data -> Data) masked the outer slot binding on the MPC.
+  assert cell['componentsData'][0]['handle remapping']['map']==[]
+  assert cell['componentsData'][-1]['handle remapping']['map']==[]
+from PIL import Image
+strip=Image.open(skin/'pad-position-strip.png')
+assert strip.size==(40,40*129)
+assert strip.crop((0,0,40,40)).getbbox() is None
+# A1 bottom-left, A16 top-right; the same position repeats for each bank.
+assert strip.getpixel((4,40+34))==(156,84,41,255)
+assert strip.getpixel((34,16*40+4))==(156,84,41,255)
+assert strip.crop((0,40,40,80)).tobytes()==strip.crop((0,17*40,40,18*40)).tobytes()
+print('PASS: 16 manual pad positions, A-H/4x4 orientation, clear/default, read-only native-size strip and modal guides')
 assert 'Stop touch chords' not in byname and 'Sync' not in byname and 'Division' not in byname
 assert 'DTLfoSettings' not in defs and 'DTChordAdvanced' in defs
 assert 'LFO settings' not in byname
@@ -188,6 +221,16 @@ for ci,category in enumerate(('Init','Bass','Keys','Synth','Lead','Pad'),1):
  choices=[i for i,preset in enumerate(bank) if preset['category']==category]
  assert all(f'DTSideRow{index["SoundPreset"]}-{i}' in defs for i in choices)
 print('PASS: category-first 64-new-sound bank, Init, unique recipes and per-sound low cut')
+
+# Bank voicing contract: warm subtractive programs without new modes/UI choices.
+for sound in bank[1:]:
+ v=sound['values'];assert v['Filter']==0 and v['DriveType']==0,sound['name']
+ assert v['Drift']<=5 and v['FM']<=18 and abs(v['Detune'])<=7,sound['name']
+ if sound['category']!='Keys':assert v['FM']==0,sound['name']
+ if sound['category']=='Bass':assert v['Chorus']==v['Delay']==v['Space']==0 and v['LowCut']<=28,sound['name']
+assert bank[0]['values']['FM']==bank[0]['values']['Drive']==bank[0]['values']['Drift']==0
+print('PASS: warm subtractive factory voicing, restrained drift/FM and dry bass/Init')
+
 
 import re
 manifest=json.loads((P/'plugin.json').read_text())
@@ -280,7 +323,7 @@ for slot in range(5,17):
  assert definition['actions'][0]['handleName']==f'Parameter {index["Touch"+str(slot)]}'
  assert definition['componentsData'][-1]['componentData']['data']['handleName']==f'ResetOnGestureEnd/Parameter {index["Touch"+str(slot)]}'
  assert pad['bounds']['additionalInvalidatingHandles']==[f'IndexedEnabling/{(slot-1)//4}/4/Parameter {index["MainChordPage"]}']
- assert any(w['componentData']['type']=='Label' and w['componentData']['data'].get('text')==f'{slot} · HOLD TO PLAY' for w in definition['componentsData'])
+ assert any(w['componentData']['type']=='Label' and w['componentData']['data'].get('text')==str(slot) for w in definition['componentsData'])
  assert index['Root'+str(slot)]==91+(slot-5)*6
 assert params[index['SlotCount']]['default']==0
 print('PASS: 16-slot append-only graph, four large MAIN pad pages, one static editor mirror map and release surfaces')
@@ -306,6 +349,24 @@ for page,key in enumerate(('Progression','Progression2','Progression3','Progress
  assert index[key]==(50 if page==0 else 172+page)
 print('PASS: four independent bank preset selectors with matching visible pad pages')
 
+# Preset arrows and bank navigation must each provide a 44x44 hit surface.
+for name in ('ChordPrev','ChordNext'):
+ c=byname[name];assert tuple(map(int,c['bounds']['bounds'].split()[2:]))==(44,44)
+ definition=defs[c['componentData']['type']]
+ assert all(w['bounds']['bounds']=='0 0 44 44' for w in definition['componentsData'])
+for caption in ('‹','›'):
+ hit=next(c for c in children if c['componentData']['name']==caption+' touch')
+ assert tuple(map(int,hit['bounds']['bounds'].split()[2:]))==(44,44)
+ x,y,w,h=map(int,hit['bounds']['bounds'].split());assert y>=534 and y+h<=580
+for page in range(4):
+ selector=next(c for c in children if c['componentData']['name']=='Progression' and any(v['value']==f'Parameter {index[("Progression","Progression2","Progression3","Progression4")[page]]}' for v in c['handle remapping']['map']))
+ assert selector['bounds']['bounds']=='68 580 220 44'
+ for w in defs[selector['componentData']['type']]['componentsData']:assert int(w['bounds']['bounds'].split()[3])==44
+assert byname['ChordPrev']['bounds']['bounds']=='18 580 44 44'
+assert byname['ChordNext']['bounds']['bounds']=='294 580 44 44'
+print('PASS: four navigation arrows have 44x44 hit targets, safe gaps, native-size art and full-height selectors')
+
+
 editor_widgets=defs['Editor_DTAllChords']['componentsData']
 for page in range(4):
  assert any(w['componentData']['type']=='Button' and w['componentData']['name']==f'{page*4+1}–{page*4+4}' and w['componentData']['data']['buttonId']==page for w in editor_widgets)
@@ -324,3 +385,5 @@ for key in ('DTMenu-choice-46','sliderWithFocusMenu-choice-46'):
  assert launcher['componentsData'][0]['handle remapping']['map']==[{'key':'Data','value':'Local/7/soundCategory46'}]
  assert launcher['componentsData'][0]['componentData']['data']['buttonId']==0
 print('PASS: single editor title, intact CHORDS caption and category-first touch launchers')
+
+assert all("HOLD TO PLAY" not in json.dumps(defs[c["componentData"]["type"]]) for c in children if c["componentData"]["name"].startswith("Chord ") and c["componentData"]["type"].startswith("DTPad"))

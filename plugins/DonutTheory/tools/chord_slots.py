@@ -22,7 +22,7 @@ def install(g,tui,ql,params,out):
  def instance(key,b='0 0 1280 628',conditions=None):return g.entry(key,key,O(('version',1),('handleName','Data')),b,'Children','Hide' if conditions else 'Show','Always',remap=[('Data','Parameter 0')],invalidating=conditions)
  def image(file,w,height,on=False):
   im=Image.new('RGBA',(w,height));d=ImageDraw.Draw(im);d.rounded_rectangle((1,1,w-2,height-2),5,fill='#b06f37' if on else '#dbc594',outline='#79552c',width=2);d.line((7,4,w-8,4),fill='#ffe6b6');im.save(out/file)
- for w,height in ((36,28),(44,44),(132,32)):
+ for w,height in ((36,28),(44,32),(44,44),(132,32)):
   for suffix,on in (('off',False),('on',True)):image(f'slot-{w}-{height}-{suffix}.png',w,height,on)
  # Transparent safe bottom edge for the existing sound/chord preset arrows too.
  image('arrow.png',36,34)
@@ -119,8 +119,33 @@ def install(g,tui,ql,params,out):
    c,names=clone_graph(source,actual,f'Main{slot}_');put(cd(c),'name',f'Chord {slot}')
    definition=defs[names[f'DTPad{row}']]
    for w in get(definition,'componentsData'):
-    if get(cd(w),'type')=='Label' and dict(get(cd(w),'data')).get('type')=='Text':put(get(cd(w),'data'),'text',f'{slot} · HOLD TO PLAY')
+    if get(cd(w),'type')=='Label' and dict(get(cd(w),'data')).get('type')=='Text':put(get(cd(w),'data'),'text',str(slot))
    put(get(c,'bounds'),'additionalInvalidatingHandles',[f'IndexedEnabling/{bank}/4/{h("Chord Pad Page")}']);children.append(c)
+ # Larger chord navigation: preset arrows are 44x44; bank arrows have a
+ # 44x44 invisible hit area around a 44x32 face. The top target begins below
+ # the filter LCDs (ending at y534); targets meet at y580 without overlap.
+ for key in ('DTPrev','DTNext'):
+  comp=copy.deepcopy(defs[key]);large=key+'ChordLarge'
+  for w in get(comp,'componentsData'):
+   put(get(w,'bounds'),'bounds','0 0 44 44')
+   data=get(cd(w),'data')
+   if get(cd(w),'type')=='Button' and get(data,'offImage')!='button-hit.png':
+    put(data,'onImage','slot-44-44-on.png');put(data,'offImage','slot-44-44-off.png')
+   if get(cd(w),'type')=='Label':put(get(get(data,'textStyle'),'font'),'height',30.)
+  add(large,comp)
+ for c in children:
+  name=get(cd(c),'name')
+  if name in ('ChordPrev','ChordNext'):
+   put(cd(c),'type',('DTPrev' if name=='ChordPrev' else 'DTNext')+'ChordLarge')
+   put(get(c,'bounds'),'bounds',f'{18 if name=="ChordPrev" else 294} 580 44 44')
+  elif name=='Progression':
+   put(get(c,'bounds'),'bounds','68 580 220 44')
+   # This selector definition is unique to the chord bank; sound UI stays intact.
+   for w in get(defs[get(cd(c),'type')],'componentsData'):
+    x,y,wid,hei=map(int,get(get(w,'bounds'),'bounds').split())
+    put(get(w,'bounds'),'bounds',f'{x} 0 {wid} 44')
+ menu=Image.open(out/'menu-chord.png').convert('RGBA')
+ menu.resize((220,44),Image.Resampling.BICUBIC).save(out/'menu-chord.png')
  progression=next(c for c in children if get(cd(c),'name')=='Progression');progression_panel=next(c for c in children if get(cd(c),'type')=='DTChoicePanel'+str(by['Chord Preset'].index))
  for bank in range(1,4):
   pair,_=clone_graph([progression,progression_panel],{by['Chord Preset'].index:by[f'Chord Preset Bank {bank+1}'].index},f'Bank{bank+1}_')
@@ -128,10 +153,14 @@ def install(g,tui,ql,params,out):
  for c in (progression,progression_panel):visible(c,[f'IndexedEnabling/0/4/{h("Chord Pad Page")}'])
  for c in children:
   if get(cd(c),'name')=='CHORD PRESET':put(get(c,'bounds'),'bounds','18 548 146 28');put(get(get(get(cd(c),'data'),'textStyle'),'font'),'height',18.)
- children+=button('‹',h('PadPagePrev'),'166 548 36 28')+button('›',h('PadPageNext'),'286 548 36 28')
+ for caption,key,x in [('‹','PadPagePrev',172),('›','PadPageNext',294)]:
+  ws=button(caption,h(key),f'{x} 542 44 32')
+  # Only the final, topmost transparent surface receives the extended hit box.
+  put(get(ws[-1],'bounds'),'bounds',f'{x} 536 44 44')
+  children+=ws
  for count in range(4):
-  for bank in range(count+1):children.append(label(f'{bank*4+1}–{bank*4+4} / {(count+1)*4}','201 550 85 24',18,invalid=[f'IndexedEnabling/{bank}/4/{h("Chord Pad Page")}',f'IndexedEnabling/{count}/4/{h("Chord Slots")}']))
- for bank in range(4):children.append(label(str(bank+1),f'{207+bank*19} 539 18 12',12,invalid=[f'IndexedEnabling/1/2/{h("Playing Chord Page "+str(bank+1))}']))
+  for bank in range(count+1):children.append(label(f'{bank*4+1}–{bank*4+4} / {(count+1)*4}','218 548 72 28',18,invalid=[f'IndexedEnabling/{bank}/4/{h("Chord Pad Page")}',f'IndexedEnabling/{count}/4/{h("Chord Slots")}']))
+ for bank in range(4):children.append(label(str(bank+1),f'{220+bank*17} 534 16 12',12,invalid=[f'IndexedEnabling/1/2/{h("Playing Chord Page "+str(bank+1))}']))
  mod=next(t for t in tabs if get(t,'tabName')=='MOD')
  for c in get(get(mod,'componentDefinition'),'componentsData'):
   if get(cd(c),'name')=='Chord Preset':

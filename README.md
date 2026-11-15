@@ -32,11 +32,11 @@ third_party/mpc-plugin-builder-sdk/ 공유 SDK, 커밋 고정
 
 | 이름 | 소스 경로 계획 | 상태 |
 |---|---|---|
-| Donut Theory | `plugins/DonutTheory/` | [v1.0.1 정식 릴리스](https://github.com/Sunghyun23/mpc-plugins/releases/tag/donut-theory/v1.0.1): 64음색·최대16코드 슬롯·뱅크별 진행·통합 편집; 검증 범위는 매뉴얼 참고 |
+| Donut Theory | `plugins/DonutTheory/` | [v1.1.2 정식 릴리스](https://github.com/Sunghyun23/mpc-plugins/releases/tag/donut-theory/v1.1.2): 64음색·최대16코드 슬롯·뱅크별 진행·통합 편집; 검증 범위는 매뉴얼 참고 |
 
 ## 현재 상태
 
-공유 SDK를 고정 커밋으로 설치하고 Donut Theory 1.0.1을 구현했습니다. native·ARM32·ARM64 빌드, host simulator 19항목 및 엔진·UBSan·스킨 회귀 검사를 통과했습니다. MPC Live III / OS 3.10.1.12에서 실제 UI를 검증했습니다. [제품 소개](https://kimswork.app/plugins/donut-theory/)와 [상세 매뉴얼](https://kimswork.app/plugins/donut-theory/manual/)에서 설치 조건과 알려진 제한을 확인하세요.
+공유 SDK를 고정 커밋으로 설치하고 Donut Theory 1.1.2를 구현했습니다. native·ARM32·ARM64 빌드, host simulator 19항목 및 엔진·UBSan·스킨 회귀 검사를 통과했습니다. MPC Live III / OS 3.10.1.12에서 실제 UI를 검증했습니다. [제품 소개](https://kimswork.app/plugins/donut-theory/)와 [상세 매뉴얼](https://kimswork.app/plugins/donut-theory/manual/)에서 설치 조건과 알려진 제한을 확인하세요.
 
 빌드: `python3 scripts/build_plugin.py DonutTheory --target all`
 
@@ -51,3 +51,10 @@ third_party/mpc-plugin-builder-sdk/ 공유 SDK, 커밋 고정
 [플러그인 카탈로그](https://kimswork.app/) · [사이트 운영·반응형 기준](docs/pages.md) · [사이트 개발 안내](site/README.md)
 
 홈·제품 상세·설치 가이드는 `site/`에서 관리합니다. PC·일반 모바일·폴드 외부/내부 화면에 대응합니다. 제품의 공개 Release가 없으면 다운로드 준비 중으로 표시합니다.
+
+
+## 1.1.2 변경 사항
+
+63개 연주 프리셋에 무그에서 영감을 받은 따뜻한 아날로그 성향을 기본 적용했습니다. Init/64개 이름·순서/Low-cut과 기존 프로젝트의 저장된 음색은 유지합니다. 코드 탐색 화살표를 키우고 HOLD 문구를 제거했으며 공통 CHORD 편집에서 수동 패드 위치를 지정해 MAIN에 표시합니다. 기존192개 파라미터는 보존하고 위치16개만 append했습니다.
+
+[전체 변경 내역과 검증 범위](docs/plugins/donut-theory/releases/1.1.2.md) · [프리셋 설계 기준](docs/plugins/donut-theory/presets.md). 새 필터 모델이나 모드는 추가하지 않았으며 무그 회로의 정밀 복각으로 설명하지 않습니다. 전체 음색의 MPC 청음과 물리 입력 재검증 여부는 릴리스 노트에 명시합니다.
