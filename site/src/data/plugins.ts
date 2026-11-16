@@ -46,8 +46,23 @@ export const plugins: Plugin[] = [{
   { title: 'Weight, warmth and space.', text: 'Combine Tape, Tube or Fuzz character with chorus and tempo delay. Filter cutoff and resonance sit beside the LFO that moves them.' },
   { title: 'An MPC instrument, from the first screen.', text: 'Play keyboard notes, chord triggers or both in Split mode. Mono and Legato apply to melody notes; chord pads keep their full voicings.' }
  ]
+},
+{
+ slug:'groove-dice', name:'Groove Dice', category:'DRUM & GROOVE INSTRUMENT',
+ tagline:'A new groove, one roll away.',
+ summary:'Original drums, rule-guided grooves and fill recording for MPC.',
+ description:'Shape neo-soul and hip-hop drums with timing controls, role-specific rhythm rules and independent kick, snare, hat and percussion-set choices.',
+ developmentVersion:'0.9.0', release:null, image:'groove-dice-main-0.9.0.webp',
+ imageAlt:'Actual Groove Dice 0.9.0 MAIN screen on MPC Live III with its original core bank',
+ intro:'The original core includes 128 synthesized one-shots, 96 curated kit combinations, two beats and 93 timing templates. Independent expansion files add sounds without rebuilding the engine.',
+ verifiedDevice:'MPC Live III / OS 3.10.1.12; partial device verification',
+ mapping:[['A · Timing','Swing','Snare Late','Hat Shift','Rnd Nudge'],['B · Rules','Kick','Snare','Hat','Perc'],['C · Drum Sounds','Kick Select','Snare Select','Hat Select','Perc Select'],['D · Character','Drive','Dust','Room','Hat Rhythm']],
+ features:[{title:'Shape a musical phrase.',text:'Rules protect the backbeat and guide kick placement. Straight and dotted hat divisions support short fills and rolls.'},{title:'Record your own fills.',text:'Capture physical-pad MIDI into four fill slots and edit timing, velocity, gate and probability.'},{title:'Keep packs independent.',text:'The original public core and optional .gdexp expansions use separate payloads. Reopen the plugin to refresh installed packs.'}],
+ changes:[{title:'Original Workshop core.',text:'128 original one-shots and 96 kit combinations replace the personal library in the base distribution.'},{title:'Modular expansion catalogues.',text:'Browse and randomize installed kits and role choices through a shared pack filter. Missing references are preserved.'},{title:'Development status.',text:'Public-ready source; no public plugin Release yet. The companion Pack Builder remains at the design stage.'}],
+ limitations:['Development build; no public download yet.','Full physical Q-Link coverage, worst-case hardware CPU and all separate-output destinations remain unverified.','Expansion installation uses a Python CLI and requires reopening the plugin; it is not native MPC XPN registration.','The macOS/Windows Pack Builder application has not been implemented.'],
+ screenshots:[{image:'groove-dice-main-0.9.0.webp',alt:'Groove Dice running its original core on MPC Live III',caption:'MAIN · Actual 0.9.0 development build on MPC Live III / OS 3.10.1.12. Original core: 128 WAV / 95 MIDI.'}]
 }];
-export const repo = 'https://github.com/Sunghyun23/mpc-plugins';
+export const repo = 'https://github.com/Sunghyun23/kimswork';
 export const navigationVersion = 'donut-theory-1-2-2';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');

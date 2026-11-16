@@ -1,0 +1,10 @@
+{
+  "format": "GDEXP001",
+  "id": "kim-original-workshop",
+  "name": "Original Workshop",
+  "redistributable": true,
+  "version": "1.0.0",
+  "sha256": "b98c4b813ff381fb5befca49bfa7385c5c7ace9d54355739569596cf8b81bb8f",
+  "bytes": 19734488,
+  "source": "Procedural synthesis and independently written MIDI; no external audio/MIDI/model input"
+}

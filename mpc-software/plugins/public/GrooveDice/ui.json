@@ -1,0 +1,136 @@
+{
+  "kit": "amber",
+  "pages": [
+    {
+      "name": "MAIN",
+      "controls": [
+        "Swing",
+        "Snare Late",
+        "Hat Shift",
+        "Rnd Nudge",
+        "Kick Rule",
+        "Snare Rule",
+        "Hat Rule",
+        "Perc Rule",
+        "Kick Select",
+        "Snare Select",
+        "Hat Select",
+        "Perc Select",
+        "Drive",
+        "Dust",
+        "Room",
+        "Hat Rhythm"
+      ]
+    },
+    {
+      "name": "FILL",
+      "controls": [
+        "Fill Select",
+        "Fill Length",
+        "Rec Mode",
+        "Count-in",
+        "Note Nudge",
+        "Note Velocity",
+        "Note Gate",
+        "Note Chance"
+      ]
+    },
+    {
+      "name": "GROOVE",
+      "controls": [
+        "Swing",
+        "Snare Late",
+        "Hat Shift",
+        "Rnd Nudge",
+        "Density",
+        "Ghost",
+        "Vel Spread",
+        "Random Amt",
+        "Preview BPM",
+        "Note Select",
+        "Note Nudge",
+        "Note Velocity",
+        "Fill Select",
+        "Fill Density",
+        "Fill Every",
+        "Variation"
+      ]
+    },
+    {
+      "name": "DRUMS",
+      "controls": [
+        "Kit Select",
+        "Dice Mode",
+        "Random Amt",
+        "Kit Lock",
+        "Sample 1",
+        "Level 1",
+        "Tune 1",
+        "Decay 1",
+        "Sample 2",
+        "Level 2",
+        "Tune 2",
+        "Decay 2",
+        "Sample 3",
+        "Level 3",
+        "Tune 3",
+        "Decay 3"
+      ]
+    },
+    {
+      "name": "KITS",
+      "controls": [
+        "Kit Select",
+        "Kit Lock",
+        "Pattern",
+        "Pattern Lock",
+        "User Kit",
+        "Save Kit",
+        "Load Kit",
+        "Choke Time",
+        "Choke 1",
+        "Choke 2",
+        "Choke 3",
+        "Choke 4",
+        "Choke 5",
+        "Choke 6",
+        "Choke 7",
+        "Choke 8"
+      ]
+    },
+    {
+      "name": "FX",
+      "controls": [
+        "Drive",
+        "Dust",
+        "Room",
+        "Duck",
+        "Low Cut",
+        "Mod Rate",
+        "Mod Depth",
+        "Master"
+      ]
+    },
+    {
+      "name": "ROUTING",
+      "controls": [
+        "Output 1",
+        "Output 2",
+        "Output 3",
+        "Output 4",
+        "Output 5",
+        "Output 6",
+        "Output 7",
+        "Output 8",
+        "Pad Note 1",
+        "Pad Note 2",
+        "Pad Note 3",
+        "Pad Note 4",
+        "Pad Note 5",
+        "Pad Note 6",
+        "Pad Note 7",
+        "Pad Note 8"
+      ]
+    }
+  ]
+}

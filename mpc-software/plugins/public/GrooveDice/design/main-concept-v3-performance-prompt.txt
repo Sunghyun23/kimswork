@@ -1,0 +1,14 @@
+Edit target is the supplied GROOVE DICE vintage UI. Create revised MAIN concept v3, exactly16:10 full-screen flat touchscreen screenshot. Preserve espresso/cream/olive/amber palette, beautiful vintage wordmark and cream dice on record sleeve art, tactile knobs/pads, six bottom tabs. Native host strip stays top. No external device frame. Main must prioritize playing, randomizing, save, and fill triggering. Readable at1280x800 logical resolution. No tiny controls.
+
+Compact branded masthead; below it KIT "Dusty Velvet" and PATTERN "Late Night / 02" selectors with broad arrows and separate lock buttons, plus prominent "SAVE" button.
+Small clear transport strip: "FOLLOW MPC" lit, "PLAYING · BAR 2 / 4", "92 BPM" read-only, a separate "PREVIEW" button with play icon for stopped-host audition.
+Exactly FOUR panels in2x2 arrangement, EXACTLY FOUR rotary knobs each, total16. Their order is left-to-right then next row, corresponds Q-Link A-D:
+A · TIMING (upper left): "Swing" 54%, "Snare Late" +12ms, "Hat Shift" -4ms, "Rnd Nudge" 8ms.
+B · PATTERN (upper right): "Density" 62%, "Ghost" 24%, "Vel Spread" 16%, "Random Amt" 35%.
+C · FILL / VARIATION (lower left): "Fill Select" A, "Fill Density" 45%, "Fill Every" OFF, "Variation" 18%.
+D · CHARACTER (lower right): "Drive" 12%, "Dust" 18%, "Room" 9%, "Duck" 22%.
+No part volume knobs onMAIN; those remain onDRUMS. Each panel badge A/B/C/D, large labels/padded value plates; no extra knobs.
+One generous action row: dominant orange "ROLL DICE", scope selector "GROOVE" under small SCOPE caption; distinct "UNDO" and "KEEP" buttons. Kit/pattern locks prevent changes, KEEP freezes current random result.
+One COMPACT single-row fill performance strip: "FILL A" atleft, small status "READY", wide amber "TRIGGER FILL" button and broad "EDIT / REC" button. Do NOT include record setup knobs, count-in/replace settings or a huge recorder onMAIN. Clear visual hierarchy primary performance actions.
+Four large touch pads KICK/SNARE/CLOSED HAT/OPEN HAT, shared small CHOKE1 tags on hats. More sounds exist onphysicalpads.
+Bottom tabs MAIN selected, GROOVE, DRUMS, KITS, FX, ROUTING. No missing tabs, no duplicate Fill buttons elsewhere. All blocks align to consistent margins. Maintain rich premium vintage hardware visual aesthetic. No explanatory annotation outside screenshot. Main transport saysPLAYING but noactive recording. Show proposed UI, not marketing poster.

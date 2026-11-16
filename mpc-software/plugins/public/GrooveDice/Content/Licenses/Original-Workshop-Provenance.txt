@@ -1,0 +1,9 @@
+Groove Dice Original Workshop
+Prepared for kim from procedural oscillators, envelopes, modal resonators and deterministic pseudorandom noise.
+128 synthesized one-shots, 96 kit configurations, 2 independently authored beats and 93 timing templates.
+No recorded samples, commercial sample libraries, source MIDI files or pretrained audio-model outputs were used as synthesis inputs.
+Generator: tools/build_original_bank.py; source SHA and payload hashes are recorded in the development manifest.
+This provenance statement does not assert exclusive copyright in mathematical synthesis methods or generated timbres.
+The MPC Plugin Builder SDK software is separately licensed under MIT; its notice is included.
+
+Repository migration: canonical generator is mpc-software/expansions/groove-dice/public/original-workshop/tools/build.py. Historical generator hash refers to the source before relocation.

@@ -1,0 +1,17 @@
+Use case: ui-mockup edit. Edit the supplied Groove Dice MAIN design. Preserve the existing warm vintage style, expressive GROOVE DICE wordmark, bakelite dice/record art, espresso/cream/olive/amber palette, precisely FOUR groups of FOUR knobs (exactly16 total), kit/pattern selectors, four large performance pads, and six bottom tabs MAIN/GROOVE/DRUMS/KITS/FX/ROUTING. Flat complete screen image, 16:10 aspect ratio, 1280x800 logical target, no device frame. This is a revised design concept, not implemented software.
+
+Primary change: include a genuinely usable, clearly visible dedicated FILL selection and recording strip ON THE MAIN SCREEN. Reallocate vertical space thoughtfully; do NOT squeeze microscopic controls into the timeline. Remove the old K/S/H 16step overview to provide space. Reduce decorative masthead height by about25%, preserve beautiful dice artwork and large logo at readable size. Four knob groups can be slightly shorter but all16 controls must stay and fonts readable.
+
+Layout from top:
+thin native host header unchanged.
+more compact branded masthead with dice.
+kit/pattern selector row unchanged.
+2x2 knob panels EXACT SAME sixteen knobs and labels as input: A GROOVE Pocket Swing Rnd Nudge Feel; B DRUM BALANCE Kick Snare Hi-Hat Perc; C VARIATION Density Ghost Fill Evolve; D CHARACTER Drive Dust Room Duck.
+Random action strip: large ROLL DICE, SCOPE: KIT + GROOVE, UNDO, FREEZE. Remove the old solitary FILL button from this row.
+NEW distinct cream/brown FILL RECORDER section, two well-spaced lines, about125px height at1280x800:
+First line: title FILL; FOUR generous clearly separate bank buttons A (selected amber), B, C, D; length selector "1 BAR" with dropdown arrow; mode selector "REPLACE" with dropdown arrow; small setting "COUNT-IN 1 BAR".
+Second line: large red-accented record arm button with circle symbol and text "REC FILL"; a separate large button "PLAY FILL" with play triangle; small olive status display "FILL A · READY"; progress mini dots or subtle position line; clearly visible small text "RETURNS TO MAIN PATTERN". Recording concerns plugin-internal fill notes, never imply recording into MPC sequencer. Image should show READY idle, not simultaneously recording/playing. Record and play must be easy to distinguish. Bank buttons and record/play minimum44px logical hit heights. Fill A-D selection meaning explicit, not a generic pattern selector.
+Below: FOUR large broad dark rubber performance pads KICK / SNARE / CLOSED HAT / OPEN HAT; hat pads show linked CHOKE1 tags.
+Bottom native tabs unchanged.
+
+Make this revised screen beautifully balanced with equal margins and NO clipping, no label overlapping and no extra knobs. Important: all panels/buttons fit inside exactly16:10 screen. Add only the specified functional fill controls, no new brand tagline, no annotations outside UI. Printed grain restrained, crisp legible cream lettering. Main appeal: vintage drum machine, not a modern website dashboard.

@@ -1,0 +1,17 @@
+{
+  "name": "Donut Theory",
+  "manufacturer": "kim",
+  "version": "1.2.2",
+  "format": "vst2",
+  "kind": "instrument",
+  "uid": "Krql",
+  "numInputs": 0,
+  "numOutputs": 2,
+  "category": "Synth",
+  "file32": "VST/donut-theory-arm32.so",
+  "file64": "VST/donut-theory-arm64.so",
+  "description": "Soulful polyphonic synth with up to sixteen editable chord slots and independent sound/progression presets.",
+  "author": "kim",
+  "url": "https://github.com/Sunghyun23/kimswork",
+  "license": "MIT"
+}

@@ -1,7 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import {plugins,url,releaseLinks} from '../../../data/plugins';
-import * as manual from '../../../../../docs/plugins/donut-theory/manual.md';
+import * as manual from '../../../../../mpc-software/docs/plugins/donut-theory/manual.md';
 const plugin=plugins.find(p=>p.slug==='donut-theory')!;
 const release=releaseLinks(plugin);
 const headings=manual.getHeadings().filter(h=>h.depth===2 && h.text!=='Contents');

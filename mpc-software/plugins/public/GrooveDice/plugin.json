@@ -1,0 +1,17 @@
+{
+  "name": "Groove Dice",
+  "manufacturer": "kim",
+  "version": "0.9.0",
+  "format": "vst2",
+  "kind": "instrument",
+  "uid": "KpGy",
+  "numInputs": 0,
+  "numOutputs": 16,
+  "category": "Drum",
+  "file32": "VST/groove-dice-arm32.so",
+  "file64": "VST/groove-dice-arm64.so",
+  "description": "Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.",
+  "author": "kim",
+  "url": "https://kimswork.app/",
+  "license": "MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions"
+}

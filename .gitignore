@@ -2,11 +2,20 @@
 __pycache__/
 *.py[cod]
 .venv/
-plugins/*/build/
-third_party/mpc-plugin-builder-sdk/
+.codex-attachments/
+mpc-software/plugins/*/*/build/
+mpc-software/apps/*/*/build/
+mpc-software/apps/*/*/dist/
+mpc-software/third_party/mpc-plugin-builder-sdk/
 .sdk-tools/
-
-# Static catalog
 site/node_modules/
 site/dist/
 site/.astro/
+/mpc-software/local-content/
+/mpc-software/plugins/private/*
+!/mpc-software/plugins/private/README.md
+!/mpc-software/plugins/private/AGENTS.md
+/mpc-software/expansions/*/private/**
+!/mpc-software/expansions/*/private/README.md
+mpc-software/expansions/*/public/*/work/
+mpc-software/expansions/*/public/*/dist/

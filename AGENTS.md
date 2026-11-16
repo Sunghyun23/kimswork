@@ -2,18 +2,18 @@
 
 ## 작업 시작
 
-- 이 저장소는 Akai MPC용 플러그인 모노레포다. MCP(Model Context Protocol) 프로젝트가 아니다.
+- 이 저장소는 kimswork 소프트웨어 모노레포이며 MPC 작업은 mpc-software/에 둔다. MCP(Model Context Protocol) 프로젝트가 아니다.
 - README와 `docs/repository-policy.md`를 먼저 읽는다.
-- Donut Theory 작업에서는 `docs/plugins/donut-theory/handoff.md`의 최신 상태를 먼저 확인한 뒤 `spec.md`, `design.md`, 승인 이미지와 실제 최신 캡처를 확인한다. 버전별 과거 기록을 현재 사양으로 되돌리지 않는다.
+- Donut Theory 작업에서는 `mpc-software/docs/plugins/donut-theory/handoff.md`의 최신 상태를 먼저 확인한 뒤 `spec.md`, `design.md`, 승인 이미지와 실제 최신 캡처를 확인한다. 버전별 과거 기록을 현재 사양으로 되돌리지 않는다.
 - 새 사용자 지시가 기존 결정을 바꾸면 관련 문서도 갱신한다. 확정 사항, 제안 목표, 미구현 상태를 구분한다.
 - Donut Theory의 매핑·음색·도넛 디자인 등 전용 결정은 다른 플러그인에 자동 적용하지 않는다. 새 프로젝트는 별도 요구·제조사·UID·사양으로 관리하고 기존 Donut 프로젝트는 보존한다.
 
 ## 구조와 SDK
 
-- 플러그인은 `plugins/<PluginName>/`의 독립 프로젝트로 관리한다. 루트를 단일 플러그인으로 바꾸지 않는다.
+- 플러그인은 `mpc-software/plugins/public/<PluginName>/` 또는 `mpc-software/plugins/private/<PluginName>/`의 독립 프로젝트로 관리한다. 루트를 단일 플러그인으로 바꾸지 않는다.
 - 공식 `inmusic-software/mpc-plugin-builder-sdk` 한 벌을 공유하고 도입 시 커밋을 고정한다. 출처와 라이선스를 기록한다.
 - SDK를 프로젝트마다 복제하거나 임의 수정하지 않는다. 필요한 변경은 이유와 패치로 기록한다.
-- 실제 공유 수요가 생길 때만 `shared/`로 코드를 추출한다.
+- 실제 공유 수요가 생길 때만 `mpc-software/shared/`로 코드를 추출한다.
 - SDK 도입 후 해당 SDK의 AGENTS.md와 작업별 스킬을 읽는다. Donut Theory의 제조사/vendor는 사용자 확정값 `kim`, UID는 `Krql`이다. 다른 플러그인은 실제 스캐폴딩 전에 제조사명을 확인한다.
 
 ## UI·사양 보존
@@ -46,7 +46,7 @@
 
 - 물리 코드 패드 연결은 MPC Pad Perform 설정 변경을 요구하지 않는다. 플러그인의 개별 Pad Note/LEARN으로 맞춘다. MAIN에는 높이70px 코드 패드 네 개를 둔다. 코드 편집은 첫 번째 하단 탭을 다시 눌러 CHORD로 이동하며 한 화면에서4개 코드·보이싱을 편집하고 총16슬롯까지 제공한다. SDK에 없는 탭 이동을 안내 팝업으로 대체하지 않는다.
 
-- 공장 음색은 Init/Bass/Keys/Synth/Lead/Pad, 카테고리→음색 탐색을 따른다. Init은 Low-cut/효과Off. 기존 뱅크는 사용자 지시로 전면 교체했으며 현재 기준은 docs/plugins/donut-theory/presets.md다. Low-cut과 음색용 Low-pass를 혼동하지 않는다. 사용자 확인값은 저역 정리용Low-cut이다. 카탈로그 생성기가 버전을 임의로 덮어쓰지 않도록 한다.
+- 공장 음색은 Init/Bass/Keys/Synth/Lead/Pad, 카테고리→음색 탐색을 따른다. Init은 Low-cut/효과Off. 기존 뱅크는 사용자 지시로 전면 교체했으며 현재 기준은 mpc-software/docs/plugins/donut-theory/presets.md다. Low-cut과 음색용 Low-pass를 혼동하지 않는다. 사용자 확인값은 저역 정리용Low-cut이다. 카탈로그 생성기가 버전을 임의로 덮어쓰지 않도록 한다.
 
 - 코드 편집은 첫 함수 키의 단일 CHORD 편집 서브탭에서 Q-LINK SCREEN으로 사용한다. A–D=각 화면의 네 슬롯, 순서는 Root/Type/Voicing/Octave다. MIDI Note는 Q-Link와 가이드 범위에서 제외하고 읽기용 값+더블탭 수동 지정/LEARN으로 제공한다. 팝업만 띄워 신스 Q-Link가 남는 구성을 반복하지 않는다. Screen Tab1/SubTab2와 MAIN Tab1/SubTab1을 구분하고 Program/Track의 신스 기본 매핑은 유지한다. SDK에 없는 탭 이동/동적 팝업 매핑 handler를 발명하지 않는다.
 
@@ -77,10 +77,26 @@
 
 - 최신 사용자 결정: HOLD TO PLAY는 공통 안내도 표시하지 않는다. MAIN 패드에는 슬롯 번호와 코드 이름만 남긴다.
 
-- 최신 사용자 확정1.2.0: 프리셋만의 Moog풍 조정에서 엔진 자체 재설계로 범위를 변경한다. 별도 모드/UI 없이 nonlinear mixer → four-stage ladder Low-pass → rounded VCA를 기본 적용하고 전체63음색을 재설계한다. 엔진 설계는 docs/plugins/donut-theory/engine.md를 따른다.208개 파라미터·UID·매핑은 보존하되 구버전과 동일 음색 복원을 주장하지 않는다. BP/HP/Notch는 기존SVF 확장으로 구분한다.
+- 최신 사용자 확정1.2.0: 프리셋만의 Moog풍 조정에서 엔진 자체 재설계로 범위를 변경한다. 별도 모드/UI 없이 nonlinear mixer → four-stage ladder Low-pass → rounded VCA를 기본 적용하고 전체63음색을 재설계한다. 엔진 설계는 mpc-software/docs/plugins/donut-theory/engine.md를 따른다.208개 파라미터·UID·매핑은 보존하되 구버전과 동일 음색 복원을 주장하지 않는다. BP/HP/Notch는 기존SVF 확장으로 구분한다.
 
 - 선택 사이드바를 만든 뒤 일반 위젯을 추가하더라도 모든 탭의 modal 루트를 형제 목록 맨 뒤에 유지한다. MAIN 코드 페이지 화살표가 목록 위에 떠 있던 실기기 버그를 재발시키지 않는다. 스킨 회귀 검사와 실제 목록 중앙/바깥 닫기에서 확인한다.
 
 - 최신1.2.2에서는 사용자가 허용한 수동 Pad Location 표시/선택 UI를 제거했다. 실제 MIDI Note/LEARN은 유지한다. 호환용 PadPosition1–16(192–207)은 삭제·재정렬하지 않는다. CHORD의 숨은 선택 트리를 무한히 늘리지 말고 펼친 위젯 수2500 이하 회귀 검사를 유지한다. 원격 창 좌표 오류/지연을 플러그인 멈춤 재현으로 단정하지 않는다.
 
-- 2026-11-15 사용자는 설치된1.2.2의 MAIN↔CHORD 직접 터치 전환을 “정상 전환됨”으로 확인했다. 최신 상태·배포 해시·검증 한계·다음 프로젝트 분리는 docs/plugins/donut-theory/handoff.md를 따른다.
+- 2026-11-15 사용자는 설치된1.2.2의 MAIN↔CHORD 직접 터치 전환을 “정상 전환됨”으로 확인했다. 최신 상태·배포 해시·검증 한계·다음 프로젝트 분리는 mpc-software/docs/plugins/donut-theory/handoff.md를 따른다.
+
+## 공개·개인용 프로젝트 분리
+
+- 공개 프로젝트는 `mpc-software/plugins/public/`, 개인용은 `mpc-software/plugins/private/`에 둔다. Donut Theory는 public이다.
+- private의 안내 파일 외 프로젝트·자료는 Git에서 제외한다. 강제 추가하거나 Pages/공개 Release에 포함하지 않는다. 개인용 프로젝트에는 공개 소개 페이지를 만들지 않는다.
+- 개인 사용과 외부 콘텐츠의 추출·변환·배포 권한을 구분한다. 프로젝트 생성 전 vendor/UID 확인 규칙은 동일하다.
+
+## 2026-11-16 확정 구조
+
+- 저장소/로컬 루트 이름은 `kimswork`, GitHub는 `Sunghyun23/kimswork`다. 브랜드 사이트는 루트 `site/`로 유지한다.
+- MPC 플러그인/앱/확장팩/공유도구/SDK/개발문서는 `mpc-software/` 아래에 둔다. 루트 docs에는 저장소·사이트 운영 정책을 둔다.
+- DonutTheory와 GrooveDice는 public 프로젝트다. GrooveDice 공개 소스/기본 배포는 자체 제작 Original Workshop만 포함한다.
+- 확장팩은 `mpc-software/expansions/<product-slug>/{public,private}/<pack-slug>/`로 관리한다. Splat-to-Clat은 groove-dice/private/splat-to-clat이며 자료·패키지·연구·import 도구 모두 Git 제외다.
+- GrooveDicePackBuilder는 `mpc-software/apps/public/GrooveDicePackBuilder/`의 독립 프로젝트이며 현재는 디자인 단계다.
+- UID/파라미터/릴리스 태그를 경로 변경 때문에 바꾸지 않는다. SDK는 mpc-software/third_party의 고정 한 벌만 사용한다.
+- 공개 경로 이동과 GitHub 이름 변경은 새 제품 Release/웹 배포 허가를 의미하지 않는다.

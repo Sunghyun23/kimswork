@@ -1,0 +1,88 @@
+from pathlib import Path
+import json
+P=Path(__file__).resolve().parents[1];params=[]
+def f(key,name,lo,hi,default,unit='',dec=0,auto=True):params.append(dict(key=key,name=name,min=lo,max=hi,default=default,unit=unit,decimals=dec,auto=auto))
+def c(key,name,choices,default=0,auto=True):params.append(dict(key=key,name=name,choices=choices,default=default,auto=auto))
+def b(key,name,default=0,auto=True):c(key,name,['Off','On'],default,auto)
+f('Master','Master',0,1,.7,'',2)
+for i in range(16):f('Q'+str(i+1),'Screen '+str(i+1),0,1,0,'',3,False)
+f('Swing','Swing',50,75,54,'%');f('SnareLate','Snare Late',-40,60,12,'ms');f('HatShift','Hat Shift',-40,40,-4,'ms');f('RndNudge','Rnd Nudge',0,30,4,'ms')
+f('Density','Density',0,100,100,'%');f('Ghost','Ghost',0,100,15,'%');f('VelSpread','Vel Spread',0,50,8,'%');f('RandomAmt','Random Amt',0,100,35,'%')
+c('FillSlot','Fill Select',['A','B','C','D']);f('FillDensity','Fill Density',0,100,100,'%');c('FillEvery','Fill Every',['Off','4 Bars','8 Bars','16 Bars']);f('Variation','Variation',0,100,0,'%')
+f('Drive','Drive',0,100,10,'%');f('Dust','Dust',0,100,10,'%');f('Room','Room',0,100,8,'%');f('Duck','Duck',0,100,15,'%')
+c('Kit','Kit',['Dusty Velvet','Basement Soul','Amber Room']);c('Pattern','Pattern',['Velvet Stoop','Basement Bounce','Sunday Steps']);b('KitLock','Kit Lock');b('PatternLock','Pattern Lock');c('Scope','Scope',['Kit Only','Kit + Pattern','Kit + Groove','Kit + Fill','All','Kit + FX'],1)
+for k,n in [('Roll','Roll Dice'),('Undo','Undo'),('Keep','Keep'),('Trigger','Trigger Fill'),('Record','Rec Fill'),('Cancel','Cancel'),('SaveKit','Save Kit'),('LoadKit','Load Kit')]:b(k,n,auto=False)
+b('Preview','Preview');b('Follow','Follow MPC',1);f('PreviewBpm','Preview BPM',40,180,92,'BPM');b('Editor','Fill Editor',auto=False)
+c('FillLength','Fill Length',['1 Beat','2 Beats','1 Bar','2 Bars','4 Bars'],2);c('RecMode','Rec Mode',['Replace','Overdub']);c('CountIn','Count-in',['Off','1 Bar','2 Bars'],1)
+f('NoteSelect','Note Select',0,127,0);f('NoteNudge','Note Nudge',-60,60,0,'ms');f('NoteVelocity','Note Velocity',1,127,100);f('NoteGate','Note Gate',5,500,80,'ms');f('NoteChance','Note Chance',0,100,100,'%');b('NoteDelete','Delete Note',auto=False)
+f('Status','Status',0,6,0,auto=False);f('Position','Position',0,9999,0,auto=False);f('RecordedCount','Fill Notes',0,128,0,auto=False)
+for v in range(8):
+ f(f'Pad{v}',f'Pad {v+1}',0,1,0,auto=False)
+ f(f'Level{v}',f'Level {v+1}',-48,6,-6 if v in (2,3) else 0,'dB')
+ f(f'Tune{v}',f'Tune {v+1}',-12,12,0,'st',1)
+ f(f'Decay{v}',f'Decay {v+1}',20,2000,500,'ms')
+ f(f'Pan{v}',f'Pan {v+1}',-100,100,0,'%')
+ c(f'Sample{v}',f'Sample {v+1}',['1','2','3','4','5','6','7','8'])
+ f(f'Choke{v}',f'Choke {v+1}',0,16,1 if v in (2,3) else 0)
+ c(f'Route{v}',f'Output {v+1}',['Main/Kick','Snare','Closed Hat','Open Hat','Clap','Tom','Cymbal','Perc'],v)
+ f(f'PadNote{v}',f'Pad Note {v+1}',0,127,[24,26,28,29,31,33,35,36][v])
+f('ChokeTime','Choke Time',1,30,5,'ms');b('Separate','Separate Out');f('LowCut','Low Cut',0,300,0,'Hz');f('ModRate','Mod Rate',.05,8,.3,'Hz',2);f('ModDepth','Mod Depth',0,100,0,'%')
+# Compact saved user kit slots, data kept in extra state.
+c('UserKit','User Kit',['1','2','3','4','5','6','7','8']);c('EditDrum','Edit Drum',['Kick','Snare','Closed Hat']);b('Gated','Gated Samples')
+f('GridSelect','Grid Select',0,64,0,auto=False)
+for i in range(64):f(f'Grid{i}',f'Cell {i+1}',0,1,0,auto=False)
+f('BankInfo','Sound Bank',0,1,0,auto=False)
+c('GridBar','View Bar',['1','2','3','4'])
+b('GridTap','Grid Tap',auto=False)
+for key in ['KitPrev','KitNext','PatternPrev','PatternNext']:b(key,key,auto=False)
+# Full private library: numeric identities do not expand native choice lists into thousands of widgets.
+for r in range(8):f('LibrarySample'+str(r),'Library Sound '+str(r+1),0,11039,0,auto=False)
+f('LibraryBeat','Library Beat',0,2,0,auto=False);f('GrooveTemplate','Groove Template',0,93,0,auto=False)
+b('LibraryOpen','Library Browser',auto=False);c('LibraryKind','Library Type',['Kits','Chops','Loops','Beats','Grooves'],auto=False);c('LibraryRole','Destination',['Kick','Snare','Closed Hat','Open Hat','Clap','Tom','Cymbal','Perc'],auto=False)
+f('LibraryPage','Library Page',0,2000,0,auto=False)
+for k in ['LibraryPrev','LibraryNext','LibraryLegacy','LibraryBeatOff','GrooveOff']:b(k,k,auto=False)
+for r in range(8):b('LibraryPick'+str(r),'Library Pick '+str(r+1),auto=False)
+for r in range(8):f('LibraryRow'+str(r),'Library Row '+str(r+1),0,1,0,auto=False)
+f('LibraryInfo','Library Info',0,1,0,auto=False)
+f('LibraryFolder','Library Folder',0,2000,0,auto=False);b('LibraryBack','Library Back',auto=False)
+f('LibraryCurrentSound','Current Sound',0,1,0,auto=False);f('LibraryPlaybackInfo','Library Playback',0,1,0,auto=False)
+legacy=json.loads((P/'legacy-catalogue.json').read_text());factory=[{'name':n} for n in legacy['FactoryKit']['choices'][1:]]
+c('FactoryKit','Drum Kit',['Custom / Legacy']+[k['name']for k in factory]);c('KitDiceMode','Dice Mode',['Whole Kit','Mix Parts'])
+f('KitBrowserPage','Kit Page',0,(len(factory))//8,0,auto=False)
+for key in ['KitPagePrev','KitPageNext']:b(key,key,auto=False)
+f('DiceInfo','Dice Result',0,1,0,auto=False);b('FactoryReload','Reload Kit',auto=False)
+pools=[range(legacy[k]['max']) for k in ['SoundKick','SoundSnare','SoundHat','SoundPerc']]
+for key,name,pool in zip(['SoundKick','SoundSnare','SoundHat','SoundPerc'],['Kick','Snare','Hat','Perc Set'],pools):f(key,name,0,len(pool),0,auto=False)
+c('SoundBrowserGroup','Sound Role',['Kick','Snare','Hat Pairs','Perc Sets'],auto=False);f('SoundBrowserPage','Sound Page',0,100,0,auto=False);b('SoundOpen','Role Sounds',auto=False)
+for key in ['SoundPrev','SoundNext']+[f'SoundPick{i}'for i in range(8)]:b(key,key,auto=False)
+for i in range(8):f(f'SoundRow{i}',f'Sound Row {i+1}',0,1,0,auto=False)
+f('SoundInfo','Sound Info',0,1,0,auto=False)
+for key,name,default in [('RuleKick','Kick Rule',1),('RuleSnare','Snare Rule',1),('RuleHat','Hat Rule',2),('RulePerc','Perc Rule',2)]:c(key,name,['LOCK','POCKET','LOOSE','BUSY'],default)
+f('ActionInfo','Last Action',0,1,0,auto=False)
+c('HatGrid','Hat Grid',['1/4','1/8','1/16','1/32 Roll'],1)
+f('PhraseState','Phrase State',0,262143,0,auto=False)
+c('HatRhythm','Hat Rhythm',[base+suffix for base in ['1/4','1/8','1/16','1/8 DOT','1/16 DOT'] for suffix in ['', ' + FILL',' + ROLL']],3)
+f('HatPhraseState','Hat Phrase State',0,4095,0,auto=False)
+c('HatRhythmPage','Hat Rhythm Page',['1 / 2','2 / 2'],auto=False)
+# Expansion catalogue values are append-only; old fixed-size controls stay as compatibility aliases.
+f('XKit','Expansion Kit',0,65535,0,auto=False)
+for role in ['Kick','Snare','Hat','Perc']:f('XSound'+role,role+' Catalog',0,65535,0,auto=False)
+for r in range(8):f('XSample'+str(r),'Expansion Sound '+str(r+1),0,1048575,0,auto=False)
+for key,name in [('XBeat','Expansion Beat'),('XGroove','Expansion Groove'),('XKitPage','Kit Catalog Page'),('XSoundPage','Sound Catalog Page'),('XLibraryPage','Library Catalog Page'),('XLibraryFolder','Library Catalog Folder')]:f(key,name,0,131071,0,auto=False)
+f('PackFilter','Expansion Filter',0,128,0,auto=False)
+for key in ['PackPrev','PackNext','KitOpen']:b(key,key,auto=False)
+f('PackInfo','Expansion Info',0,1,0,auto=False)
+for i in range(8):f('KitRow'+str(i),'Kit Row '+str(i+1),0,1,0,auto=False)
+for i in range(8):b('KitPick'+str(i),'Kit Pick '+str(i+1),auto=False)
+for key,name in [('XQKit','Kit Select'),('XQKick','Kick Select'),('XQSnare','Snare Select'),('XQHat','Hat Select'),('XQPerc','Perc Select')]:f(key,name,0,1,0,'',4,False)
+P.joinpath('parameters.json').write_text(json.dumps(params,indent=2)+'\n')
+lines=['// Generated parameter declarations. Stable index order from parameters.json.','enum Key { '+', '.join('k'+p['key'] for p in params)+', kParamCount };','inline void declareParameters(mpc::Plugin& plugin) {']
+for p in params:
+ if 'choices'in p:expr='mpc::choiceParam('+json.dumps(p['key'])+','+json.dumps(p['name'])+',{'+','.join(json.dumps(v)for v in p['choices'])+'},'+str(p['default'])+')'
+ else:expr='mpc::floatParam('+','.join([json.dumps(p['key']),json.dumps(p['name']),str(p['min']),str(p['max']),str(p['default']),json.dumps(p['unit']),str(p['decimals'])])+')'
+ lines+=['{ auto p='+expr+'; p.automatable='+str(p['auto']).lower()+'; plugin.addParam(p); }']
+lines+=['}'];P.joinpath('src/Parameters.h').write_text('\n'.join(lines)+'\n')
+p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='0.9.0',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
+main=['Swing','Snare Late','Hat Shift','Rnd Nudge','Kick Rule','Snare Rule','Hat Rule','Perc Rule','Kick Select','Snare Select','Hat Select','Perc Select','Drive','Dust','Room','Hat Rhythm']
+pages=[{'name':'MAIN','controls':main},{'name':'FILL','controls':['Fill Select','Fill Length','Rec Mode','Count-in','Note Nudge','Note Velocity','Note Gate','Note Chance']},{'name':'GROOVE','controls':main[:4]+['Density','Ghost','Vel Spread','Random Amt']+['Preview BPM','Note Select','Note Nudge','Note Velocity','Fill Select','Fill Density','Fill Every','Variation']},{'name':'DRUMS','controls':['Kit Select','Dice Mode','Random Amt','Kit Lock']+[f'{n} {v}' for v in range(1,4)for n in ['Sample','Level','Tune','Decay']]},{'name':'KITS','controls':['Kit Select','Kit Lock','Pattern','Pattern Lock','User Kit','Save Kit','Load Kit','Choke Time']+[f'Choke {i}'for i in range(1,9)]},{'name':'FX','controls':['Drive','Dust','Room','Duck','Low Cut','Mod Rate','Mod Depth','Master']},{'name':'ROUTING','controls':[f'Output {i}'for i in range(1,9)]+[f'Pad Note {i}'for i in range(1,9)]}]
+P.joinpath('ui.json').write_text(json.dumps({'kit':'amber','pages':pages},indent=2)+'\n')

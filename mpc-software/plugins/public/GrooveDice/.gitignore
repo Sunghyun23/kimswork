@@ -1,0 +1,7 @@
+build/
+dist/
+__pycache__/
+# Private content belongs only under expansions/groove-dice/private/.
+
+# Rebuilt from tools/build_skin.py; keep generated runtime skin local.
+/skins/

@@ -2,7 +2,7 @@
 
 ## 프로젝트 구조
 
-- 소스: `plugins/<PluginName>/` (첫 프로젝트 `plugins/DonutTheory/`).
+- 소스: `mpc-software/plugins/public/<PluginName>/` 또는 `mpc-software/plugins/private/<PluginName>/` (첫 프로젝트 `mpc-software/plugins/public/DonutTheory/`).
 - 공개 slug: 소문자 kebab-case (`donut-theory`). 표시 이름: `Donut Theory`.
 - 제조사와 UID는 생성 전에 결정한다. manifest·코드·패키지의 이름/제조사/UID가 일치해야 한다.
 - 프로젝트는 `plugin.json`, `src/`, `ui.json` 또는 커스텀 `skins/`, README를 가진다. 리소스는 SDK 규칙에 맞춰 둔다.
@@ -13,7 +13,7 @@
 
 공식 저장소: https://github.com/inmusic-software/mpc-plugin-builder-sdk
 
-`third_party/mpc-plugin-builder-sdk/`에 한 벌을 두고 커밋을 고정한다. `third_party/sdk.lock.json`과 `scripts/bootstrap_sdk.py`로 고정 커밋을 설치하고 재현 절차를 기록한다.
+`mpc-software/third_party/mpc-plugin-builder-sdk/`에 한 벌을 두고 커밋을 고정한다. `mpc-software/third_party/sdk.lock.json`과 `mpc-software/scripts/bootstrap_sdk.py`로 고정 커밋을 설치하고 재현 절차를 기록한다.
 
 초기 분석 출처는 `febd2ca5bd9eb16c4a412837196e145566bc981b`다. 현재 설치된 공유 SDK도 이 커밋으로 고정한다. 업데이트 시 API·스킨·호스트 계약 변경을 확인한다.
 
@@ -56,8 +56,32 @@
 
 ## 현재 상태
 
-이 문서는 운영 정책이다. 공유 SDK는 `third_party/sdk.lock.json`과 `scripts/bootstrap_sdk.py` 방식으로 도입했다. 사이트와 Pages 워크플로는 구현됐으며 공개 도메인은 https://kimswork.app/ 이다. 릴리스 상태는 제품 메타데이터와 GitHub Releases에서 확인한다.
+이 문서는 운영 정책이다. 공유 SDK는 `mpc-software/third_party/sdk.lock.json`과 `mpc-software/scripts/bootstrap_sdk.py` 방식으로 도입했다. 사이트와 Pages 워크플로는 구현됐으며 공개 도메인은 https://kimswork.app/ 이다. 릴리스 상태는 제품 메타데이터와 GitHub Releases에서 확인한다.
 
 ## Pages 구현 확정 (2026-11-14)
 
 사용자가 Pages 구현·서빙을 승인했다. `site/`의 Astro 정적 사이트와 `.github/workflows/pages.yml`로 구현한다. 제품 데이터는 `site/src/data/plugins.ts`, 공개 주소는 https://kimswork.app/ 이다. PC·일반 모바일·폴드 외부/내부 화면에 대응하며 세부 운영 규칙과 검증 결과는 [pages.md](pages.md)를 따른다. 이전의 사이트 미구현 상태 설명은 이 항목으로 대체한다. 플러그인 Release 발행은 사이트 배포와 별개다.
+
+## 공개·비공개 분리 (2026-11-15)
+
+- `mpc-software/plugins/public/<PluginName>/`: 공개 가능한 소스. 기존 Donut Theory를 이 경로로 이동한다.
+- `mpc-software/plugins/private/<PluginName>/`: 개인용 로컬 프로젝트. 안내 README/AGENTS 외에는 Git에서 제외한다. 폴더명만으로 GitHub 접근 권한이 달라지는 것은 아니다. 강제 추가하지 않는다. 별도 원격 백업이 필요하면 비공개 저장소를 사용한다.
+- private은 Pages 카탈로그·공개 상세 문서·GitHub Release·공개 빌드 산출물에 포함하지 않는다. 새 프로젝트의 소개 페이지 작성 의무는 public에만 적용한다.
+- 프로젝트 빌드는 `python3 mpc-software/scripts/build_plugin.py public/DonutTheory --target native`처럼 경로를 지정한다. 기존 `DonutTheory` 인자는 public의 단축형으로 유지한다. private 빌드도 같은 경로 형식을 사용하되 프로젝트별 빌드 절차가 준비돼 있어야 한다.
+- 공개 전환은 명시적 사용자 요청과 모든 외부 코드·샘플의 사용권 확인 후 진행한다. 개인용 여부와 외부 콘텐츠 라이선스는 별개다.
+- 경로 이동은 플러그인 버전·UID·파라미터·기존 Release를 변경하지 않는다.
+
+검증: 이동 경로에서 Donut Theory native 재빌드·스킨 생성 성공, engine/UBSan/analog/bridge/skin 회귀 검사 통과, 재빌드 바이너리 host simulator 19 PASS/0 WARN/0 FAIL. 이번 경로 변경에 대한 새 실기기·ARM 재검증/Release 발행은 하지 않았다. private의 샘플 경로와 public 빌드 결과의 Git 제외를 확인했다.
+
+## kimswork structure — 2026-11-16 (current)
+
+Repository: https://github.com/Sunghyun23/kimswork. `mpc-software/` is the MPC domain root. All paths in older records are historical when they disagree with this section.
+
+- Public plugins: `mpc-software/plugins/public/{DonutTheory,GrooveDice}/`.
+- Apps: `mpc-software/apps/public/GrooveDicePackBuilder/` (design only).
+- Expansions: `mpc-software/expansions/<product-slug>/{public,private}/<pack-slug>/`.
+- Own public core: `groove-dice/public/original-workshop`; restricted personal pack: `groove-dice/private/splat-to-clat`. Plugin public status does not authorize redistribution of optional restricted content.
+- `mpc-software/shared/groove-dice-expansion/` owns the standalone format/packing/installer backend. `mpc-software/third_party/` owns the single pinned SDK, `mpc-software/scripts/` the build wrappers, and `mpc-software/docs/` product documentation.
+- Root `docs/` retains repository/site operations; root `site/` retains the existing GitHub Pages source and custom domain. Workflow path filters and manual imports follow the new paths.
+- Versions are independent across plugin/app/pack. `work/`, `build/`, `dist/`, private assets and extracted source files are not committed. Original Workshop's small redistributable core binary in the public plugin is allowed; it must match its provenance/hash manifest.
+- A source migration is not a new plugin release. Publish only within the user's explicitly authorized scope.

@@ -42,4 +42,4 @@ PC, 일반 모바일, 폴드 외부·내부 화면을 지원한다. 기종 판�
 
 
 ## Donut Theory 1.0.0 publication
-The public brand is Kim’s Work at https://kimswork.app/. Product metadata lives in site/src/data/plugins.ts. Actual MPC Live III screenshots replace concept art. The detailed English manual is imported from docs/plugins/donut-theory/manual.md into /plugins/donut-theory/manual/; changes to that source trigger Pages too. Release metadata must reference an existing plugin-specific tag and asset, never repository-wide latest.
+The public brand is Kim’s Work at https://kimswork.app/. Product metadata lives in site/src/data/plugins.ts. Actual MPC Live III screenshots replace concept art. The detailed English manual is imported from mpc-software/docs/plugins/donut-theory/manual.md into /plugins/donut-theory/manual/; changes to that source trigger Pages too. Release metadata must reference an existing plugin-specific tag and asset, never repository-wide latest.

@@ -1,0 +1,14 @@
+Create the FILL EDIT / REC companion screen to supplied GROOVE DICE concept. Input image is style reference, not a layout to copy. Preserve same premium espresso brown/cream/olive/amber vintage touchscreen, compact GROOVE DICE wordmark and bakelite dice record sleeve header, same tactile knobs, crisp high contrast large English text. Flat screen16:10, 1280x800 logical target, no exterior frame. Must look like same app, not website.
+
+Thin native host bar at top "PLUGIN Groove Dice" and "PRESET Init / Custom". Compact masthead left GROOVE DICE, dice artwork right, matching source.
+Below masthead a prominent navigation/title strip: wide "< BACK TO MAIN" button, title "FILL EDIT / REC", status "FILL A · READY", and "SAVE" button.
+Next four large bank selector buttons A / B / C / D, A selected amber, with "FILL SLOT" caption and clearly visible UNDO action right.
+Below, EXACTLY TWO groups of FOUR knobs, eight knobs TOTAL in two side-by-side panels:
+A · RECORD SETUP: "Fill Select" A, "Length" 1 BAR, "Rec Mode" OVERDUB, "Count-in" 1 BAR.
+B · SELECTED NOTE: "Nudge" +12ms, "Velocity" 86, "Gate" 80ms, "Chance" 100%.
+Badge A/B makes Q-Link context clear. Do not add controls for groups C/D, those are unassigned here. Fill bank row and first knob synchronized display.
+Large central drum event editor clearly headed "FILL A · 1 BAR" and timing ruler1e&a 2e&a 3e&a 4e&a. Exactly4 rows KICK, SNARE, CLOSED HAT, OPEN HAT; 16columns with wide cells, amber/cream MIDI blocks and selected SNARE note outlined orange. A few blocks subtly off-grid to show microtiming. Enough row height for finger use, no microscopic piano roll. Selected note status "SNARE · STEP 8" connects grid selection to B knobs. Editor generous ~170logical px high.
+Below timeline wide recording control row: red "REC FILL" record-arm button, separate "AUDITION" play button, "CANCEL" button and a readable status "READY · 1 BAR COUNT-IN". This image showsREADY, not alreadyrecording. REC arms finite internal note recording; avoid false claim MIDItoMPC.
+Bottom four broad touch pads KICK / SNARE / CLOSED HAT / OPEN HAT, hats share CHOKE1tags.
+Bottom 6 tabs MAIN / GROOVE / DRUMS / KITS / FX / ROUTING consistent with original; subtle MAIN highlight because this is MAIN child screen with explicit BACK.
+No tiny extra shortcuts or instructional paragraphs. Use whitespace, equal aligned margins, coherent consistent scale and finger-sized targets. Entire image16:10 and all content fits. Design concept only, no device photo.

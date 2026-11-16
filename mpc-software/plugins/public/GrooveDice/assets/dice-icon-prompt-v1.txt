@@ -1,0 +1,1 @@
+Built-in image_gen2026-11-16: isolated pair of cream aged bakelite dice with black recessed pips, warm upper-left light, transparent alpha, same approved main-v3 art direction; compact horizontal icon, no text/background/record. Native48x32 production icon mechanically cropped/resized in build_skin.py.

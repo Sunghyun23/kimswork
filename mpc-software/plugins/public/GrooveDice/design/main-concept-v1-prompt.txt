@@ -1,0 +1,21 @@
+Create one exceptionally beautiful, credible touchscreen music instrument UI concept for "GROOVE DICE", an Akai MPC neo-soul / dusty hip-hop / R&B drum groove instrument. Use-case ui-mockup. Flat straight-on screenshot, no physical device, no perspective, no desk, no external margins. Exact overall display aspect ratio 16:10 (MPC 1280x800 logical screen). This is a design concept, not an implementation screenshot. English UI only.
+
+Visual direction: sophisticated late-1970s recording studio meets underground Detroit record shop. Deep espresso brown header, warm ivory parchment panels with VERY restrained fine print grain, muted olive LCDs, amber LEDs, burnt orange accents, embossed tobacco-colored knobs with ivory pointer, tactile dark rubber pads. High contrast, readable typography at actual 1280 width, mostly large clean condensed sans text plus expressive chunky vintage GROOVE DICE wordmark. Carefully integrated wide illustration of two worn cream bakelite dice with black pips on an old record sleeve at top right, die-cut irregular contours but background seamlessly matches brown header, no rectangular image patch. Art occupies header only; not behind controls. No artist name, no manufacturer logo, no fake wood frame, no gratuitous sci-fi graphics. Tastefully rich and distinctive, not generic dashboard.
+
+Layout is precise and balanced:
+Top 65px dark neutral host-owned bar: PLUGIN Groove Dice at left and PRESET Init / Custom at right, small folder icon.
+Next plugin masthead approx 100px: GROOVE DICE wordmark left, small "DRUMS WITH A LITTLE LEAN" subtitle, dice art right.
+Next 60px selector row: wide KIT selector "Dusty Velvet" with large previous/next hit buttons and small lock icon; wide PATTERN selector "Late Night / 02" with previous/next and lock icon; compact "HOST SYNC" lit amber. No fake BPM knob because host controls BPM.
+Central main control area approx 300px, clean 2 by 2 group panels, exactly FOUR rotary controls per panel and EXACTLY SIXTEEN knobs total. Panel headings physically spaced above knobs. Small A/B/C/D group badges match Q-Link:
+upper left A · GROOVE: Pocket [58%], Swing [54%], Nudge [8ms], Feel [36%].
+upper right B · DRUM BALANCE: Kick [0dB], Snare [-2dB], Hi-Hat [-6dB], Perc [-8dB].
+lower left C · VARIATION: Density [62%], Ghost [24%], Fill [35%], Evolve [18%].
+lower right D · CHARACTER: Drive [12%], Dust [18%], Room [9%], Duck [22%].
+Readable padded little value plates, no text collisions. Knobs medium size, not donut knobs. Random Nudge explicit within the Nudge control label or subcaption; use "Rnd Nudge" for exact knob label instead of Nudge.
+
+Below controls a 55px action row: prominent burnt-orange "ROLL DICE" with dice icon, smaller "SCOPE: KIT + GROOVE" selector, "UNDO", "FREEZE", and big amber "FILL" momentary button. Clear touch-sized buttons, not tiny.
+Below action row a compact 40px timeline strip showing a tasteful 16-step rhythm overview in three lanes K/S/H with naturally offset hit markers; no extra rotary knobs.
+Below that approx 85px four large wide touch performance pads labeled KICK, SNARE, CLOSED HAT, OPEN HAT. The two hats share small visually linked "CHOKE 1" tags. Selected snare pad glows subtly amber; white legible pad text. Do not show 16 tiny drum pads: device physical pads supply detailed performance.
+Bottom 55px black native-style function tab bar exactly six tabs MAIN (selected amber), GROOVE, DRUMS, KITS, FX, ROUTING. Native bar aligned fully across bottom.
+
+Use enough whitespace for finger use, disciplined horizontal alignment, consistent panel margins, strong hierarchy. Absolutely no marketing website layout. Render high-fidelity polished UI screenshot at 16:10 aspect ratio with accurate readable text and all controls laid out within the screen.

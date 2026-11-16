@@ -1,0 +1,58 @@
+# Groove Dice
+
+루트/public 지침과 README.md, SOUND_BANK.md, VALIDATION.md를 먼저 읽는다.
+
+- vendor kim, UID KpGy, 개발0.9.0. 공개 소스이며 아직 공개 릴리스가 아니다. 자체 제작 코어는 공개 가능하며 Splat 자료는 expansions/groove-dice/private/ 밖으로 복사하거나 Git에 추가하지 않는다.
+- 사용자 승인 시안은 design/main-concept-v3-performance.png 및 fill-editor-concept-v1.png. 실제 영역1280x628, runtime배경1280x628 및 knob64x(64*127) 크기를 지킨다. 원본 이미지를 호스트가 자동 축소할 것으로 가정하지 않는다.
+- MAIN16 Q-Link는 엔진 SCREEN relay에 연결한다. EDIT/REC를 누르면 실제 녹음/노트 파라미터를 조절한다. 편집C/D는 미할당. Program/Track MAIN 실제 매핑은 보존한다. SDK에 없는 탭 핸들러를 만들지 않는다.
+- UI가 읽는 변경 알림은 render thread token 검사 후 UI idle/value-read에서만 배출한다. process()에서 host알림·I/O·할당·잠금을 하지 않는다.
+- 필인 입력은 MIDI/직접 화면 패드만이며 자동 출력은 다시 녹음하지 않는다. 카운트인/오버더빙/녹음 중 선택 슬롯 고정/유한 녹음/loop/seek/stop을 함께 검사한다.
+- sample/외부 MIDI는 Content/Banks/default.gdbank에만 둔다. src에 파생 오디오나 비트를 굽지 않는다. 공개 전환 전 외부 자료의 사용권과 자체 음원 교체를 확인한다.
+- 실제 구현과 제안/미구현을 구분한다. 외부 사이드체인·전체 MIDI 라이브러리·물리 Q-Link 전체·라우팅을 확인 없이 완료로 보고하지 않는다.
+
+- 2026-11-16: 승인 v3의 재질·입체감·카드 구조를 복원한다. 노브는64px native frame, 크림 패널138px, 기존214개 파라미터 ID/순서는 보존한다. 전체 라이브러리는 단일 뱅크 확장에 넣고 제한된 비동기 캐시만 연주에 사용한다. process()는 파일 접근·디코드·할당·잠금을 하지 않는다. 캐시 수명은 pending/current/voice 참조를 분리한다.
+
+- 0.3 공장 킷96개는 원본 프리셋 복제가 아닌 추출 WAV의 역할별 재조합이다. bank-work/factory-kits.json과 뱅크 GDKITS03 suffix가 출처/샘플SHA/설정을 보유한다. first254 parameter IDs/order 유지,7개 append(261개).
+- DRUMS A=FactoryKit/KitDiceMode/RandomAmt/KitLock, B/C/D=Kick/Snare/ClosedHat Sample/Level/Tune/Decay. MAIN/FILL SCREEN 매핑은 유지한다.
+- Native PRESET Init+96 programs와 내부 FactoryKit 선택을 동기화한다. 킷 선택은 샘플/파트음색/FX만 적용하고 master/pad/routing/groove/fill/user slots를 보존한다. ROLL은 모든 Scope에서 킷도 바꾸되 KitLock/Amount0는 보존하며 원인을 표시한다. Undo는 변경 전 샘플/음색/FX도 복원한다.
+
+- 0.4 MAIN C=SoundKick/SoundSnare/SoundHat/SoundPerc, Screen relay Q9–12 및 Program 고정 매핑을 함께 맞춘다. FillSlot/Density/Every/Variation은 GROOVE D에 유지한다. RULES 전환/파트별 제약 프로필은 아직 제안이며 확정 구현으로 보고하지 않는다.
+- 원본 기준 패턴 변형, downbeat/backbeat 보호, 역할 cap/최소 간격, Amount 비례 그루브 변화, NEXT BAR 큐/stop·seek 취소를 유지한다. 기준 패턴·그루브를 extra state에 저장하며 구형extra크기도 허용한다. 기존261개 parameterID/순서 유지,26개 append(287).
+- 역할 선택1606개는 single bank GDSND004 확장으로 저장한다. SoundRequests로 동시 UI입력을 보존하고 오디오의 선택값 readback은 CAS로 다른 UI쓰기를 덮지 않는다. Hat pair를 함께 전환한다. 비동기 로딩 중 직전 소스를 보호하며 voice cache 수명규칙을 유지한다.
+
+- MPC .xpl의chunk후개별파라미터 재적용을 고려해 로드 후0.5audio-second 동안 command/parameter side effect를 억제한다. 마지막 보호 블록에서 proxySeenTarget을 무효화해 구형Q9–12저장값을 실제새Sound선택값으로 다시 동기화한다. 일반오디오/실제MIDI 입력은 유지한다.
+
+- 0.5사용자확정: MAIN B는RULES(Kick/Snare/Hat/Perc), C는기존SOUND4개유지. 모드전환제안아님. Density/Ghost/VelSpread/RandomAmt는GROOVE B유지. first287IDs/order고정,Rule4append=291.
+- RULES는자동재생에도적용하며직접MIDI/터치는제약하지않는다. LOCK의빈파트/실제스케줄불변,POCKET노트증감없음,킷/필인만ROLL시메인seed유지검증. 수동A노브는GrooveROLL로덮지않고파트별offset/seed사용,Undo와extraGRP5에저장한다.
+- hideQLinkBounds(version4)는disableCoarseDataWheel/repeats뒤,componentsData앞직렬화순서를지킨다. MAINguide=panelbounds좌우4px상하2px외부여백. SDK가이드숨김은실제로포커스를잡고Kit/Pattern등팝업을열어확인한다.
+
+- 0.6 사용자 확정: MAIN action은 하단 BROWSE/CREATE/PLAY3줄(60px). 위쪽은 읽기용 요약. 필인 명령도 하단, 슬롯/마디 선택기는 그리드 근처다. 명령버튼은 Local press gate+연속Slider ResetOnGestureEnd로 누름 색을 제어하고 실제 엔진 command는 Mouse Down1회만 보낸다. release로 엔진 command를 다시 보내지 않는다. 지속 스위치는 실제 On/Off 상태를 표시한다.
+- Perc는 단일role7이 아니라 Clap/Tom/Cymbal/Perc4파트 세트다.244기존Perc앵커+같은팩 bank factory catalogue3파트로 구성하며 MAIN C/역할목록/MixParts가 함께교체한다. 수동부분조합은 Custom이며 기존샘플을 덮지않는다. 킥/스네어/하이햇/라우팅/FX/필인보존을 검사한다. first291IDs/order유지,ActionInfo append=292.
+- MIDI95개 runtime bank_path는 전부 새이름. 원본path와SHA/바이트는 provenance로보존한다. 이름 변경은 tools/midi_names.py로 재현하며 bank-work/midi-name-map.json 및 midi-renamed95개를 관리한다. beats2/grooves93 구분을 유지한다. 공개자료로 보내지 않는다.
+
+- 최신사용자결정: 하단화면드럼8pads는제거한다. 물리패드로연주하며 기존Pad파라미터/MIDI/녹음은보존한다. MAIN 하단3줄 높이60px, 필인 하단은명령+결과표시다. 화면연주패드를다시좁게끼워넣지않는다.
+
+- 0.6.1 Q-Link가이드최신규칙: 패널전체외곽을감싸는0.5/0.6규칙은폐기한다. 제목/A–D배지는가이드밖, 네컨트롤이름·노브·값은안쪽이다.614×138패널에서guide=(x+4,y+26,606,110), 컨트롤=(x+44+j*140,y+28,138,108). Q배지40px용왼쪽여백을확보하며LCD116×24/숫자크기는유지한다. MAIN및상세페이지에동일적용하고팝업가이드숨김/실제매핑은보존한다. 회귀검사는제목비교차·네컨트롤포함·Q여백을검사한다.
+
+- 0.7사용자확정: Pattern/AllROLL은리듬형→파트규칙→4마디문장→상관된강약/타이밍으로구성한다. 스네어2/4고정, 킥2/4정박제외, HatGrid1/4·1/8·1/16·1/32Roll(연속32타아님), Perc는빈자리응답. RULES4Q-Link는변형강도로유지하며 HatGrid는GROOVE하단터치,다음패턴ROLL에적용한다.
+- first292IDs/order고정,HatGrid292/PhraseState293 append=294. PhraseState flags3bits+actualhatgrids9bits(4=legacy)+origins6bits 저장. 기존notes128/extra state형식유지. Undo는PhraseState포함. 신규Scope기본1Kit+Pattern,기존저장Scope는보존한다. KitOnly/GrooveOnly/PatternLock/allLOCK은기존리듬보존.
+- LOCK이구조규칙보다우선. legacy부분LOCK은loop길이/위상유지. 전체언락은4bar. 과밀LOCK/큰외부MIDI부분LOCK은자르지말고RHYTHMLOCKLIMIT. 독립녹음Fill은PatternROLL로덮지않고Fill/All요청에만기존변형을적용한다.
+- 생성패턴의livebudget은HatGrid를지원하고, 고스트는프레이즈에기록해중복autoGhost를추가하지않는다. 8thSwing/32nd보간, 반복파트타이밍, Density0, backbeat실제스케줄검사. 낮은Amount재ROLL은기본킥모티프를보존한다. 저장값만보고완료라하지말고actualevent·WAV·실기기결과를구분한다.
+
+- 0.8 사용자확정: MAIN D4 Duck→HatRhythm. Duck은 FX상세/기존저장값 유지. SCREEN Q16 relay/Program고정매핑 함께 변경.5간격(quarter/eighth/sixteenth/eighthDOT/sixteenthDOT)×3(plain/FILL/ROLL)=15. HatRule4프로필 유지. 전면LCD터치/왼쪽8행2페이지목록/모달가이드숨김 유지. GROOVE구HatGrid버튼은새선택기로대체.
+- first294 parameter정의고정; HatRhythm294/HatPhraseState295/HatRhythmPage296 append=297. HatPhraseState는bank4..6별4bit(rhythm+1;0legacy). Undo/hoststate에 실제리듬보존. 구294state는HatGrid선택만마이그레이션하고 노트/위상은유지. Dotstride720/360ticks는마디경계연속,4barloop에서reset. Dot에straightSwing강제하지않음.
+- FILL은응답마디2/4의짧은pickup,ROLL은마지막eighth내32nd4연타. 기본16th FILL도차이가있어야함. 다음Pattern/AllROLL적용,선택만으로현재노트불변,HatRuleLOCK우선/녹음Fill보존. 기존128노트/RT고정배열/오디오thread무할당규칙준수.15×20생성과actualscheduler/상태/Undo/legacy/Q-Link/Duck보존검사필수. 하드웨어노브검증은화면조작/자동검사와구분.
+
+- 0.9확정: 자체제작코어128WAV/95새MIDI/96kit기본. Splat추출11039WAV/95MIDI/96kit는독립PRIVATE `.gdexp`. 확장팩payload를빌드때병합하지않음. 별도bank파일+registry.tsv를시작시병합색인. 설치/삭제는로컬expansions.py, 재인스턴스화로반영. NativeXPN등록으로보고하지말것.
+- 기존297parameter정의고정.45append=342. Legacyfixedselector는alias, 새global카탈로그와normalizedQrelay를사용. C/DRUMS/KITS화면+Program매핑함께맞춤.8row동적KitBrowser/Packfilter/ROLE/LIBRARY공통필터. ROLL은현재필터안에서만Kit/parts선택. 128pack/65535kit와rolechoices/1048575entries한계는성능인증아님.
+- constructor에서만팩merge, entries마다sourcepath. Cache64/voice수명유지, 오디오thread할당/잠금/I/O/host콜백금지. 누락팩이면다른소리로교체하지말고MISSING표시/해당voice무음. missing상태재저장→재설치후에도sample/MIDI/kit/pack식별자를보존. unresolved문자열은state로드에서만쓰기, render는atomicref만변경. 신규GDXP0001 200byte trailer, legacyextra허용.
+- sourceContent는자체코어만. 개인확장팩은bank-work/personal/Content에설치. publicassembly가private확장팩을복사하지않는지실제ZIPpayload검증. core/expansion SHA검사,경로탈출/중복ID/암묵적덮어쓰기금지. 공개용artifact작성과외부publish구분. SDK/기존샘플공유조건을확정법률보증으로말하지않음.
+
+## 2026-11-16 repository structure
+
+- Public project: `mpc-software/plugins/public/GrooveDice/`. Root is `kimswork/`.
+- Original authoring: `mpc-software/expansions/groove-dice/public/original-workshop/`.
+- Restricted source/import scripts/work/personal packs: `mpc-software/expansions/groove-dice/private/splat-to-clat/`; ignored by Git.
+- Shared standalone expansion implementation: `mpc-software/shared/groove-dice-expansion/expansions.py`. Plugin entry point delegates to it. Packaged CLI must include the standalone implementation.
+- Public build and default packaging must work without the private tree. `tools/package_profiles.py --personal` explicitly adds the local optional private assembly.
+- Historical bank-work references below describe pre-migration artifacts. Current private work is at the expansion path above. Preserve legacy parameter IDs/order/captions using legacy-catalogue.json; never regenerate them from a different bank.
