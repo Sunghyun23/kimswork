@@ -1,0 +1,15 @@
+Mode: built-in image_gen edit
+Reference: main-concept-v5-performance.png
+Status: approved eight-button concept; separate from hardware screenshot.
+
+Use case: ui-mockup. Precisely edit supplied CRATE PRESS MPC main-screen concept. Preserve the ENTIRE screen unchanged except replacing the bottom row of six performance buttons with EIGHT equal-sized performance buttons in ONE horizontal row. Keep16:10 proportions. Keep host header, brand header, record press artwork, waveform, compression graph, allmeters, ALL16knobs/faders/labels, and bottom function tabs MAIN/DUCK/COLOR/PERFORM/MORE unchanged. No kim badge. Same sophisticated aged ivory, espresso etched metal, copper bevels and ivory vintage serif text.
+Within the same existing performance strip between control panels and bottom tabs, fit exactly8equal-width generously touchable rectangular raised buttons across almost the full screen width. Exact left to right order:
+1 TAPE STOP
+2 REVERSE
+3 REPEAT
+4 DUB ECHO
+5 FILTER DIP
+6 CRUSH
+7 WOBBLE
+8 DROPOUT
+Labels must remain readable, use two text lines for TAPE STOP, DUB ECHO and FILTER DIP if needed, consistent typography. Center a small tasteful ivory symbol above each label: tape reels, backward arrow, circular repeat arrow, echo waves, filter curve, quantized blocks, sine wave, broken signal respectively. Slightly wider gap or subtle thin copper divider BETWEEN buttons4and5 distinguishes timing effects from texture effects. All8buttons occupy ONE single row, never two rows. REPEAT (third button) is actively pressed and glows bright amber/copper with a small bottom progress line. All7other buttons idle dark brown. Keep each button the same height as reference and reduce only widths, use restrained icon sizing, no tiny sublabels. Do not add controls elsewhere, remove no existing controls. No HOLD TO PLAY text, no extra edit icons, no watermark. Beautiful production-grade vintage musical performance interface. Design concept only, not real hardware screenshot.

@@ -1,0 +1,277 @@
+{
+  "kit": "amber",
+  "pages": [
+    {
+      "name": "MAIN",
+      "controls": [
+        {
+          "param": "Drive",
+          "widget": "knob"
+        },
+        {
+          "param": "Compress",
+          "widget": "knob"
+        },
+        {
+          "param": "Punch",
+          "widget": "knob"
+        },
+        {
+          "param": "Release",
+          "widget": "knob"
+        },
+        {
+          "param": "Low Comp",
+          "widget": "knob"
+        },
+        {
+          "param": "Mid Comp",
+          "widget": "knob"
+        },
+        {
+          "param": "High Comp",
+          "widget": "knob"
+        },
+        {
+          "param": "Duck",
+          "widget": "knob"
+        },
+        {
+          "param": "Tone",
+          "widget": "knob"
+        },
+        {
+          "param": "High Cut",
+          "widget": "knob"
+        },
+        {
+          "param": "Lo-Fi",
+          "widget": "knob"
+        },
+        {
+          "param": "Drift",
+          "widget": "knob"
+        },
+        {
+          "param": "Input",
+          "widget": "fader"
+        },
+        {
+          "param": "Low Cut",
+          "widget": "knob"
+        },
+        {
+          "param": "Mix",
+          "widget": "fader"
+        },
+        {
+          "param": "Output",
+          "widget": "fader"
+        }
+      ]
+    },
+    {
+      "name": "DUCK",
+      "controls": [
+        {
+          "param": "Duck Source",
+          "widget": "switch"
+        },
+        {
+          "param": "Division",
+          "widget": "switch"
+        },
+        {
+          "param": "Detector",
+          "widget": "knob"
+        },
+        {
+          "param": "Sensitivity",
+          "widget": "knob"
+        },
+        {
+          "param": "Duck Low",
+          "widget": "switch"
+        },
+        {
+          "param": "Duck Mid",
+          "widget": "switch"
+        },
+        {
+          "param": "Duck High",
+          "widget": "switch"
+        },
+        {
+          "param": "Duck",
+          "widget": "knob"
+        },
+        {
+          "param": "Low Split",
+          "widget": "knob"
+        },
+        {
+          "param": "High Split",
+          "widget": "knob"
+        },
+        {
+          "param": "Release",
+          "widget": "knob"
+        },
+        "empty"
+      ]
+    },
+    {
+      "name": "COLOR",
+      "controls": [
+        {
+          "param": "Drive",
+          "widget": "knob"
+        },
+        {
+          "param": "Tone",
+          "widget": "knob"
+        },
+        {
+          "param": "Lo-Fi",
+          "widget": "knob"
+        },
+        {
+          "param": "Drift",
+          "widget": "knob"
+        },
+        {
+          "param": "Lo-Fi Type",
+          "widget": "switch"
+        },
+        {
+          "param": "Wow Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "Flutter",
+          "widget": "knob"
+        },
+        {
+          "param": "Noise",
+          "widget": "knob"
+        },
+        {
+          "param": "Stereo Width",
+          "widget": "knob"
+        },
+        {
+          "param": "Low Cut",
+          "widget": "knob"
+        },
+        {
+          "param": "High Cut",
+          "widget": "knob"
+        },
+        {
+          "param": "Peak Guard",
+          "widget": "switch"
+        }
+      ]
+    },
+    {
+      "name": "PERFORM",
+      "controls": [
+        {
+          "param": "Tape Time",
+          "widget": "knob"
+        },
+        {
+          "param": "Reverse Length",
+          "widget": "switch"
+        },
+        {
+          "param": "Repeat Division",
+          "widget": "switch"
+        },
+        {
+          "param": "Echo Division",
+          "widget": "switch"
+        },
+        {
+          "param": "Echo Feedback",
+          "widget": "knob"
+        },
+        {
+          "param": "Echo Mix",
+          "widget": "knob"
+        },
+        {
+          "param": "Filter Dip",
+          "widget": "knob"
+        },
+        {
+          "param": "FX Amount",
+          "widget": "knob"
+        },
+        {
+          "param": "Crush Bits",
+          "widget": "knob"
+        },
+        {
+          "param": "Crush Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "Wobble Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "Wobble Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "Dropout Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "Dropout Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "FX Release",
+          "widget": "knob"
+        },
+        {
+          "param": "FX Output",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "MORE",
+      "controls": [
+        {
+          "param": "Bypass",
+          "widget": "switch"
+        },
+        {
+          "param": "Auto Makeup",
+          "widget": "switch"
+        },
+        {
+          "param": "Peak Guard",
+          "widget": "switch"
+        },
+        "empty",
+        {
+          "param": "Input",
+          "widget": "fader"
+        },
+        {
+          "param": "Output",
+          "widget": "fader"
+        },
+        {
+          "param": "Mix",
+          "widget": "fader"
+        },
+        "empty"
+      ]
+    }
+  ]
+}

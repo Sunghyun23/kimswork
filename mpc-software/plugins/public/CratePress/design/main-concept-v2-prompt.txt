@@ -1,0 +1,13 @@
+Mode: built-in image_gen edit
+Edit target: main-concept-v1.png
+Status: design concept, not a device screenshot.
+
+Edit this Crate Press MPC plugin design concept. The supplied local image is the EDIT TARGET. Preserve the exact 16:10 screen composition, authentic MPC top/bottom host bars, all positions of the four equal control panels, gorgeous vintage espresso/ivory/copper materials, embossed bakelite knobs, engraved typography, record-press artwork, branding, meter strip and band-duck target choices. This is a precise control regrouping edit, not a redesign.
+
+Make exactly these changes:
+1. Upper-left A panel title becomes "COMP / DRIVE". Replace its first "Input" vertical fader with a bakelite rotary knob labelled "Drive" with value "4%". Its other three controls remain Compress 18%, Punch 72%, Release 170 ms.
+2. Upper-right B panel is unchanged: "BAND / DUCK", Low Comp 6%, Mid Comp 12%, High Comp 8%, Duck 32%.
+3. Lower-left C "COLOR" panel: first knob is now "Tone" with value "-6%"; second knob is now "High Cut" with value "18.0 kHz"; third and fourth remain Lo-Fi 0% and Drift 0%. These four labels must appear exactly once in this panel and stay well spaced.
+4. Lower-right D panel title becomes "I/O / MIX". It contains all input/output/mix controls together, in this exact left-to-right order: "Input" vertical fader 0.0 dB; "Low Cut" rotary knob Off; "Mix" vertical fader 100%; "Output" vertical fader 0.0 dB. There is no High Cut control in D now.
+
+Keep exactly 16 front controls, four per panel. No control has been deleted: Drive moved from C to A, Input moved from A to D, High Cut moved from D to C, and Low Cut remains in D in its second position. No duplicated Input/Drive/Tone/High Cut controls. Input, Mix and Output must visibly be one coherent D group. Preserve clear labels, readable values with inner LCD padding and generous header gaps. Upper INPUT/OUTPUT level METERS remain unchanged; those are meters, not extra faders. Everything else unchanged. No explanatory text outside the interface.

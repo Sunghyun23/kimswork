@@ -1,0 +1,20 @@
+Mode: built-in image_gen edit
+Reference: main-concept-v4.png
+Status: performance layout concept under review; not implemented/device screenshot.
+
+Use case: ui-mockup. Edit the supplied CRATE PRESS main screen concept to add six large tactile lo-fi performance buttons in a single dedicated bottom row. This is a design concept, not a hardware screenshot.
+Preserve exactly the existing sophisticated vintage espresso-brown etched metal, warm ivory aged panels, copper highlights, real photographed-looking dark bakelite knobs, generous typography, engraved record press in header. No kim logo or maker badge anywhere. Straight-on edge-to-edge16:10 MPC screen, no physical device frame.
+Reallocate vertical space deliberately: slim black MPC host header about7% height; compact CRATE PRESS branding header7%; permanent waveform/comp/meter strip21%; two equal rows of two control panels total46%; performance button strip11%; black function tab footer8%. All bounds aligned, no cramped text or overlaps. Reduce decorative empty space and slightly reduce knob diameters, but preserve every control and readable labels.
+Top black host bar TRACK / Audio001, PLUGIN / Crate Press, PRESET / Drums / Pocket Press.
+Permanent dark signal monitor: left half WAVE with faded ivory INPUT and copper OUTPUT waveform lines overlaid around a zero axis, plausible aligned transient audio with smaller output peaks. Right side a clearly visible compression transfer curve in a labeled square graph, and compact LOW/MID/HIGH/DUCK gain reduction meters. Both waveforms and graph always visible at same time.
+Control panels EXACT contents, all16:
+A COMP / DRIVE: Drive / Compress / Punch / Release.
+B BAND / DUCK: Low Comp / Mid Comp / High Comp / Duck.
+C COLOR: Tone / High Cut / Lo-Fi / Drift.
+D I/O / MIX: Input / Low Cut / Mix / Output. Input/Mix/Output vertical faders, Low Cut rotary knob.
+Each control has its own neat dark rectangular ivory numeric readout. Keep proper spacing between group titles and control labels.
+NEW performance strip below all four panels and ABOVE black host function tabs: six equal very large rectangular raised mechanical buttons, aligned across whole width, generous finger touch areas. Exact left to right labels:
+"TAPE STOP", "REPEAT", "DUB ECHO", "FILTER DIP", "CRUSH", "WOBBLE".
+Elegant dark chocolate buttons with copper bevels and ivory typography. REPEAT is actively pressed with bright amber/copper illumination and a small progress line along its bottom edge; the other five are idle dark brown. Subtle role pictograms above each label allowed but labels must be primary, no clipart. This row should look like a musical performance instrument, with clean distinction from the knob controls. No small extra knobs, no tiny per-button edit icons, no HOLD TO PLAY text, no stop transport button.
+Black bottom function tabs: MAIN / DUCK / COLOR / PERFORM / MORE, MAIN highlighted amber.
+Critical: all6 performance buttons are on MAIN; do not hide them on a second page. Keep record press illustration in the compact header, do not remove waveform or existing knobs to make room. Strong layout balance, polished production-quality vintage UI.

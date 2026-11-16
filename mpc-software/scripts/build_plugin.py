@@ -11,6 +11,8 @@ if len(plugin_path.parts)!=2 or plugin_path.parts[0] not in ('public','private')
 project=ROOT/'plugins'/plugin_path
 if not (project/'plugin.json').is_file(): ap.error(f'Plugin not found: {plugin_path}')
 ensure_sdk();sdk=ROOT/'third_party/mpc-plugin-builder-sdk'
+if (project/'tools/generate_presets.py').is_file():
+ subprocess.run([sys.executable,str(project/'tools/generate_presets.py')],check=True)
 if (project/'tools/generate_catalog.py').is_file():
  subprocess.run([sys.executable,str(project/'tools/generate_catalog.py')],check=True)
 subprocess.run([sys.executable,str(sdk/'tools/build.py'),str(project),'--target','native','--toolchain','gcc'],check=True)

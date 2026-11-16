@@ -1,0 +1,21 @@
+Mode: built-in image_gen
+Status: design concept, pending user review; separate from runtime skin.
+
+Use case: ui-mockup.
+Create one refined, production-quality design concept for "Crate Press", a kim audio effect plugin for an Akai MPC touchscreen. This is a straight-on flat 1280 x 800 pixel screen composition, EXACT 16:10 aspect ratio; no perspective, no computer monitor, no physical MPC chassis, no desk. The complete interface must fit, with clear readable English typography.
+
+Purpose: very easy hands-on vintage character compression, genuine three-band compression and frequency-selective ducking, for both the master bus and tracks in neo-soul, loose instrumental hip-hop, lo-fi beat music. Independent original visual design, not a copy of any commercial plugin. Mood: a carefully restored 1970s mastering rack crossed with a dusty vinyl pressing workshop. Stylish, confident and tactile, not cluttered, cartoonish, steampunk, glossy gaming or generic modern dashboard. Rich espresso/charcoal faceplate, fine subtly worn painted metal, warm ivory control modules, copper/small muted orange details, engraved dark legends, dark smoked LCD values, dimensional bakelite knobs with fine pointers, restrained screws/bevels. Materials should feel expensive and musical, legible rather than heavily distressed. No doughnuts or dice graphics.
+
+Exact screen zones:
+1. MPC-owned dark charcoal header, y=0..108: small TRACK caption and "Plugin 001" at left; PLUGIN caption and "Crate Press" in middle; PRESET caption and "Master / Kick Space" at right; small folder/save icons at far right.
+2. Plugin usable rectangle is y=108..736, precisely 1280x628. Top 70px of this area is a gorgeous dark espresso branding bar, large warm-ivory slab-serif "CRATE PRESS" at left and small "kim" maker stamp. Right area has a subtle original engraved vinyl-press / stacked record emblem integrated with the same continuous background, never a separate rectangle.
+3. Below branding, a compact 90px status/meter strip: small INPUT/OUTPUT level bars at left, clearly separate LOW / MID / HIGH gain-reduction meters at center with values such as 0.8 dB / 2.1 dB / 1.4 dB. At right, "DUCK TARGET" with three touch chips LOW, MID, HIGH; MID and HIGH visibly selected, LOW not selected. "BASS SENSE" selected and "TEMPO" alternate are touch choices directly below or beside target chips. This communicates that ducking leaves bass intact.
+4. The remaining plugin area has FOUR equally sized tactile modules arranged in a balanced 2x2 grid with identical left/right margins and generous label gaps. A is upper-left, B upper-right, C lower-left, D lower-right. Each module contains exactly four large readable controls in ONE row, no extra hidden knobs. Module header occupies its own line well above parameter labels. The Q-Link A/B/C/D badge is a small clearly detached copper tab to the left of its section title, no guide lines across names.
+A header "A  COMP": Input / Compress / Punch / Release, values 0.0 dB / 18% / 72% / 170 ms.
+B header "B  BAND / DUCK": Low Comp / Mid Comp / High Comp / Duck, values 6% / 12% / 8% / 32%.
+C header "C  COLOR": Drive / Tone / Lo-Fi / Drift, values 4% / -6% / 0% / 0%.
+D header "D  FINISH": Low Cut / High Cut / Mix / Output, values Off / 18.0 kHz / 100% / 0.0 dB.
+Use restrained 64–72px-diameter physical bakelite knobs for most parameters. Input and Output may use compact tactile vertical faders, and Mix a compact fader, still aligned with the four-control row. Values have breathing room and readable moderately sized numerals, not crammed into their LCD borders. Main controls are large enough to touch and do not collide with meters, headings or the function key bar. Clear actual mapping order and no duplicated controls.
+5. The MPC-owned bottom y=736..800 is black, with large function keys MAIN (active underline), DUCK, COLOR, MORE, then two unused dark positions. No keyboard or chord pads, no pattern sequencer, no play/stop transport, no extra illustration occupying the controls.
+
+Polished realistic UI artwork, artistically composed warm vintage atmosphere with modern clarity. It should look like a desirable musical instrument/effect panel, not a spreadsheet. No explanatory notes or external title around the screen. Preserve all 16 parameter labels in exactly these groups.

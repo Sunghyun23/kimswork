@@ -1,0 +1,616 @@
+{
+  "schema": 1,
+  "presets": [
+    {
+      "name": "Init / Clean",
+      "values": {
+        "Compress": 0,
+        "Punch": 50,
+        "Release": 160,
+        "LowComp": 0,
+        "MidComp": 0,
+        "HighComp": 0,
+        "Duck": 0,
+        "Drive": 0,
+        "Tone": 0,
+        "Lofi": 0,
+        "Drift": 0,
+        "Mix": 100
+      }
+    },
+    {
+      "name": "Drums / Pocket Press",
+      "values": {
+        "Compress": 55,
+        "Punch": 76,
+        "Release": 140,
+        "LowComp": 15,
+        "MidComp": 20,
+        "HighComp": 10,
+        "Duck": 0,
+        "Drive": 18,
+        "Tone": -12,
+        "Lofi": 12,
+        "Drift": 0,
+        "Mix": 75
+      }
+    },
+    {
+      "name": "Drums / Back Room",
+      "values": {
+        "Compress": 64,
+        "Punch": 70,
+        "Release": 180,
+        "LowComp": 18,
+        "MidComp": 26,
+        "HighComp": 16,
+        "Duck": 12,
+        "Drive": 22,
+        "Tone": -20,
+        "Lofi": 20,
+        "Drift": 3,
+        "Mix": 75
+      }
+    },
+    {
+      "name": "Drums / Soft Concrete",
+      "values": {
+        "Compress": 42,
+        "Punch": 80,
+        "Release": 190,
+        "LowComp": 15,
+        "MidComp": 10,
+        "HighComp": 8,
+        "Duck": 0,
+        "Drive": 12,
+        "Tone": -20,
+        "Lofi": 18,
+        "Drift": 0,
+        "Mix": 85
+      }
+    },
+    {
+      "name": "Drums / Loose Breaks",
+      "values": {
+        "Compress": 48,
+        "Punch": 82,
+        "Release": 110,
+        "LowComp": 10,
+        "MidComp": 22,
+        "HighComp": 16,
+        "Duck": 20,
+        "Drive": 20,
+        "Tone": -14,
+        "Lofi": 28,
+        "Drift": 4,
+        "Mix": 75
+      }
+    },
+    {
+      "name": "Drums / Snare Room",
+      "values": {
+        "Compress": 40,
+        "Punch": 88,
+        "Release": 160,
+        "LowComp": 0,
+        "MidComp": 38,
+        "HighComp": 22,
+        "Duck": 0,
+        "Drive": 14,
+        "Tone": 8,
+        "Lofi": 8,
+        "Drift": 0,
+        "Mix": 85
+      }
+    },
+    {
+      "name": "Drums / Dusty Knock",
+      "values": {
+        "Compress": 58,
+        "Punch": 78,
+        "Release": 130,
+        "LowComp": 12,
+        "MidComp": 24,
+        "HighComp": 12,
+        "Duck": 0,
+        "Drive": 28,
+        "Tone": -26,
+        "Lofi": 42,
+        "Drift": 2,
+        "Mix": 70
+      }
+    },
+    {
+      "name": "Drums / Ghost Lift",
+      "values": {
+        "Compress": 62,
+        "Punch": 30,
+        "Release": 240,
+        "LowComp": 8,
+        "MidComp": 20,
+        "HighComp": 26,
+        "Duck": 0,
+        "Drive": 8,
+        "Tone": -8,
+        "Lofi": 8,
+        "Drift": 0,
+        "Mix": 70
+      }
+    },
+    {
+      "name": "Drums / Bus Pump",
+      "values": {
+        "Compress": 68,
+        "Punch": 62,
+        "Release": 100,
+        "LowComp": 18,
+        "MidComp": 28,
+        "HighComp": 18,
+        "Duck": 25,
+        "Drive": 20,
+        "Tone": -12,
+        "Lofi": 16,
+        "Drift": 0,
+        "Mix": 65
+      }
+    },
+    {
+      "name": "Keys / Sunday Dust",
+      "values": {
+        "Compress": 28,
+        "Punch": 52,
+        "Release": 280,
+        "LowComp": 0,
+        "MidComp": 15,
+        "HighComp": 20,
+        "Duck": 0,
+        "Drive": 12,
+        "Tone": -28,
+        "Lofi": 18,
+        "Drift": 12,
+        "Mix": 100,
+        "HighCut": 12000,
+        "LowCut": 35
+      }
+    },
+    {
+      "name": "Keys / Slow Velvet",
+      "values": {
+        "Compress": 32,
+        "Punch": 48,
+        "Release": 330,
+        "LowComp": 8,
+        "MidComp": 12,
+        "HighComp": 16,
+        "Duck": 0,
+        "Drive": 18,
+        "Tone": -32,
+        "Lofi": 10,
+        "Drift": 20,
+        "Mix": 100,
+        "HighCut": 12000,
+        "LowCut": 35
+      }
+    },
+    {
+      "name": "Keys / Worn Chords",
+      "values": {
+        "Compress": 38,
+        "Punch": 60,
+        "Release": 230,
+        "LowComp": 0,
+        "MidComp": 18,
+        "HighComp": 25,
+        "Duck": 18,
+        "Drive": 20,
+        "Tone": -25,
+        "Lofi": 38,
+        "Drift": 14,
+        "Mix": 80,
+        "LofiType": 1,
+        "HighCut": 12000,
+        "LowCut": 35
+      }
+    },
+    {
+      "name": "Keys / Electric Honey",
+      "values": {
+        "Compress": 24,
+        "Punch": 70,
+        "Release": 260,
+        "LowComp": 0,
+        "MidComp": 10,
+        "HighComp": 12,
+        "Duck": 0,
+        "Drive": 22,
+        "Tone": -16,
+        "Lofi": 6,
+        "Drift": 7,
+        "Mix": 100,
+        "HighCut": 12000,
+        "LowCut": 35
+      }
+    },
+    {
+      "name": "Keys / Soft Felt",
+      "values": {
+        "Compress": 30,
+        "Punch": 45,
+        "Release": 370,
+        "LowComp": 0,
+        "MidComp": 14,
+        "HighComp": 28,
+        "Duck": 0,
+        "Drive": 8,
+        "Tone": -38,
+        "Lofi": 12,
+        "Drift": 4,
+        "Mix": 100,
+        "HighCut": 7000,
+        "LowCut": 35
+      }
+    },
+    {
+      "name": "Keys / Midnight Tape",
+      "values": {
+        "Compress": 26,
+        "Punch": 55,
+        "Release": 310,
+        "LowComp": 0,
+        "MidComp": 12,
+        "HighComp": 18,
+        "Duck": 10,
+        "Drive": 16,
+        "Tone": -30,
+        "Lofi": 24,
+        "Drift": 18,
+        "Mix": 90,
+        "HighCut": 12000,
+        "LowCut": 35
+      }
+    },
+    {
+      "name": "Samples / Crate Air",
+      "values": {
+        "Compress": 48,
+        "Punch": 62,
+        "Release": 150,
+        "LowComp": 10,
+        "MidComp": 20,
+        "HighComp": 18,
+        "Duck": 15,
+        "Drive": 22,
+        "Tone": -18,
+        "Lofi": 48,
+        "Drift": 12,
+        "Mix": 80,
+        "LofiType": 1,
+        "HighCut": 11000,
+        "LowCut": 28
+      }
+    },
+    {
+      "name": "Samples / Loose Wire",
+      "values": {
+        "Compress": 58,
+        "Punch": 70,
+        "Release": 115,
+        "LowComp": 12,
+        "MidComp": 28,
+        "HighComp": 30,
+        "Duck": 25,
+        "Drive": 38,
+        "Tone": -12,
+        "Lofi": 68,
+        "Drift": 5,
+        "Mix": 65,
+        "LofiType": 2,
+        "HighCut": 11000,
+        "LowCut": 28
+      }
+    },
+    {
+      "name": "Samples / Amber Room",
+      "values": {
+        "Compress": 35,
+        "Punch": 65,
+        "Release": 260,
+        "LowComp": 8,
+        "MidComp": 14,
+        "HighComp": 22,
+        "Duck": 0,
+        "Drive": 16,
+        "Tone": -35,
+        "Lofi": 24,
+        "Drift": 9,
+        "Mix": 95,
+        "HighCut": 11000,
+        "LowCut": 28
+      }
+    },
+    {
+      "name": "Samples / Low Resolution",
+      "values": {
+        "Compress": 35,
+        "Punch": 65,
+        "Release": 210,
+        "LowComp": 0,
+        "MidComp": 15,
+        "HighComp": 24,
+        "Duck": 0,
+        "Drive": 16,
+        "Tone": -20,
+        "Lofi": 75,
+        "Drift": 4,
+        "Mix": 70,
+        "LofiType": 1,
+        "HighCut": 11000,
+        "LowCut": 28
+      }
+    },
+    {
+      "name": "Samples / Chopped Soul",
+      "values": {
+        "Compress": 46,
+        "Punch": 78,
+        "Release": 140,
+        "LowComp": 10,
+        "MidComp": 20,
+        "HighComp": 18,
+        "Duck": 22,
+        "Drive": 24,
+        "Tone": -18,
+        "Lofi": 30,
+        "Drift": 8,
+        "Mix": 80,
+        "HighCut": 11000,
+        "LowCut": 28
+      }
+    },
+    {
+      "name": "Samples / Frayed Edges",
+      "values": {
+        "Compress": 50,
+        "Punch": 55,
+        "Release": 180,
+        "LowComp": 4,
+        "MidComp": 24,
+        "HighComp": 30,
+        "Duck": 12,
+        "Drive": 36,
+        "Tone": -32,
+        "Lofi": 58,
+        "Drift": 22,
+        "Mix": 65,
+        "LofiType": 2,
+        "HighCut": 11000,
+        "LowCut": 28
+      }
+    },
+    {
+      "name": "Master / Gentle Glue",
+      "values": {
+        "Compress": 18,
+        "Punch": 72,
+        "Release": 330,
+        "LowComp": 8,
+        "MidComp": 10,
+        "HighComp": 6,
+        "Duck": 0,
+        "Drive": 3,
+        "Tone": -4,
+        "Lofi": 0,
+        "Drift": 0,
+        "Mix": 100,
+        "Noise": 0,
+        "Width": 100,
+        "DuckLow": 0,
+        "LowCut": 0
+      }
+    },
+    {
+      "name": "Master / Kick Space",
+      "values": {
+        "Compress": 15,
+        "Punch": 75,
+        "Release": 170,
+        "LowComp": 6,
+        "MidComp": 12,
+        "HighComp": 8,
+        "Duck": 24,
+        "Drive": 2,
+        "Tone": -3,
+        "Lofi": 0,
+        "Drift": 0,
+        "Mix": 100,
+        "Noise": 0,
+        "Width": 100,
+        "DuckLow": 0,
+        "LowCut": 0
+      }
+    },
+    {
+      "name": "Master / Soft Pulse",
+      "values": {
+        "Compress": 12,
+        "Punch": 70,
+        "Release": 210,
+        "LowComp": 5,
+        "MidComp": 8,
+        "HighComp": 7,
+        "Duck": 15,
+        "Drive": 2,
+        "Tone": -4,
+        "Lofi": 0,
+        "Drift": 0,
+        "Mix": 100,
+        "DuckSource": 1,
+        "Noise": 0,
+        "Width": 100,
+        "DuckLow": 0,
+        "LowCut": 0
+      }
+    },
+    {
+      "name": "Master / Warm Finish",
+      "values": {
+        "Compress": 22,
+        "Punch": 70,
+        "Release": 300,
+        "LowComp": 10,
+        "MidComp": 13,
+        "HighComp": 12,
+        "Duck": 0,
+        "Drive": 7,
+        "Tone": -10,
+        "Lofi": 3,
+        "Drift": 0,
+        "Mix": 85,
+        "Noise": 0,
+        "Width": 100,
+        "DuckLow": 0,
+        "LowCut": 0
+      }
+    },
+    {
+      "name": "Master / Sub Weight",
+      "values": {
+        "Compress": 14,
+        "Punch": 80,
+        "Release": 350,
+        "LowComp": 12,
+        "MidComp": 6,
+        "HighComp": 4,
+        "Duck": 0,
+        "Drive": 4,
+        "Tone": -6,
+        "Lofi": 0,
+        "Drift": 0,
+        "Mix": 100,
+        "Noise": 0,
+        "Width": 100,
+        "DuckLow": 0,
+        "LowCut": 0
+      }
+    },
+    {
+      "name": "Master / Mid Pocket",
+      "values": {
+        "Compress": 16,
+        "Punch": 75,
+        "Release": 280,
+        "LowComp": 4,
+        "MidComp": 20,
+        "HighComp": 6,
+        "Duck": 8,
+        "Drive": 3,
+        "Tone": -3,
+        "Lofi": 0,
+        "Drift": 0,
+        "Mix": 100,
+        "Noise": 0,
+        "Width": 100,
+        "DuckLow": 0,
+        "LowCut": 0
+      }
+    },
+    {
+      "name": "Master / Silk Top",
+      "values": {
+        "Compress": 12,
+        "Punch": 72,
+        "Release": 320,
+        "LowComp": 4,
+        "MidComp": 8,
+        "HighComp": 20,
+        "Duck": 0,
+        "Drive": 2,
+        "Tone": -8,
+        "Lofi": 0,
+        "Drift": 0,
+        "Mix": 100,
+        "Noise": 0,
+        "Width": 100,
+        "DuckLow": 0,
+        "LowCut": 0
+      }
+    },
+    {
+      "name": "Master / Dry Glue",
+      "values": {
+        "Compress": 20,
+        "Punch": 78,
+        "Release": 280,
+        "LowComp": 6,
+        "MidComp": 10,
+        "HighComp": 8,
+        "Duck": 0,
+        "Drive": 0,
+        "Tone": 0,
+        "Lofi": 0,
+        "Drift": 0,
+        "Mix": 75,
+        "Noise": 0,
+        "Width": 100,
+        "DuckLow": 0,
+        "LowCut": 0
+      }
+    },
+    {
+      "name": "Performance / Half Light",
+      "values": {
+        "Compress": 50,
+        "Punch": 80,
+        "Release": 130,
+        "LowComp": 10,
+        "MidComp": 25,
+        "HighComp": 20,
+        "Duck": 48,
+        "Drive": 28,
+        "Tone": -24,
+        "Lofi": 50,
+        "Drift": 15,
+        "Mix": 70,
+        "DuckSource": 1
+      }
+    },
+    {
+      "name": "Performance / Dotted Sway",
+      "values": {
+        "Compress": 38,
+        "Punch": 70,
+        "Release": 260,
+        "LowComp": 8,
+        "MidComp": 18,
+        "HighComp": 22,
+        "Duck": 38,
+        "Drive": 18,
+        "Tone": -20,
+        "Lofi": 28,
+        "Drift": 10,
+        "Mix": 80,
+        "DuckSource": 1,
+        "Division": 2
+      }
+    },
+    {
+      "name": "Performance / Brake Room",
+      "values": {
+        "Compress": 58,
+        "Punch": 60,
+        "Release": 340,
+        "LowComp": 12,
+        "MidComp": 24,
+        "HighComp": 30,
+        "Duck": 55,
+        "Drive": 32,
+        "Tone": -38,
+        "Lofi": 58,
+        "Drift": 28,
+        "Mix": 65,
+        "DuckSource": 1,
+        "Division": 1
+      }
+    }
+  ]
+}

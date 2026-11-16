@@ -1,0 +1,17 @@
+{
+  "name": "Crate Press",
+  "manufacturer": "kim",
+  "version": "0.2.2",
+  "format": "vst2",
+  "kind": "effect",
+  "uid": "K36Z",
+  "numInputs": 2,
+  "numOutputs": 2,
+  "category": "Effect",
+  "file32": "VST/crate-press-arm32.so",
+  "file64": "VST/crate-press-arm64.so",
+  "description": "Independent character compressor with three-band compression and selective bass/tempo ducking, sampler colour and wow/flutter. Eight momentary lo-fi performance effects with an independent setup page.",
+  "author": "kim",
+  "url": "https://kimswork.app/",
+  "license": "Project implementation by kim; MPC Plugin Builder SDK MIT"
+}

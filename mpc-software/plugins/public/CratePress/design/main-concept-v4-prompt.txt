@@ -1,0 +1,5 @@
+Mode: built-in image_gen edit
+Edit target: main-concept-v3.png
+Status: concept, not a device screenshot.
+
+Edit the supplied Crate Press MPC UI concept precisely. In the dark brown branded header immediately below the black MPC host bar, REMOVE the entire small boxed 'kim' brand badge on the left AND the short vertical divider just to its right. Seamlessly reconstruct the same dark brown engraved vintage metal background there. Move the 'CRATE PRESS' title left to occupy this freed space, beginning at the same generous left margin as the panels below. Keep the title size, vintage serif typography and ivory color unchanged. Retain the record pressing machine artwork on the right. Keep absolutely everything else unchanged: host bar, waveforms, compression transfer graph, meters, all16controls, knob art, alllabels, panel boundaries, bottomtabs, 16:10 aspect ratio. Do not add new brand text. This is a targeted header branding removal; no redesign elsewhere.
