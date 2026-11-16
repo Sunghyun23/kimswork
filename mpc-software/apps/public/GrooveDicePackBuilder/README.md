@@ -1,23 +1,50 @@
-# Groove Dice Pack Builder
+# Groove Dice Pack Builder 1.0.0
 
-Cross-platform desktop companion for creating Groove Dice expansion packs from folders of user-owned WAV and MIDI files.
+A standalone desktop companion for turning folders of WAV and MIDI files into Groove Dice `.gdexp` expansions. No Python installation is required for the packaged app. macOS and Windows are built independently; exact platform validation is recorded in VALIDATION.md.
 
-Status: design and specification stage. A desktop application has not been implemented or tested on Windows. The existing plugin's command-line expansion tools are a separate working component.
+## Workflow
 
-Confirmed requirements:
+1. **Open Folder**: choose a source directory. Original files remain unchanged.
+2. **Review Mapping**: inspect detected roles and excluded invalid files. Uncertain WAV roles must be assigned. MIDI can be classified as Beats or Grooves.
+3. Set pack name, creator, stable ID, version and rights. Personal is the default. Choose Redistributable only when you have the required rights.
+4. **Generate Kits**: choose 1–512 kits. Existing named `Kits/<name>/<role>` folders are respected. Edit eight parts at right, set their levels and lock parts or whole kits before regenerating. Rename kits as needed.
+5. **Audition Kit**: hear a two-bar reference beat at the selected BPM/Swing. Stop with ■. This preview is a packing aid, not the MPC engine's full FX/groove processor.
+6. **Save Project** stores a `.gdproject` with relative source paths, mappings, stable ID, rights, levels and locks. Source files remain external; move them with the project when transferring computers.
+7. **Export Expansion** writes a separate `.gdexp`. **Manage Packs** installs/removes packs in a locally accessible Groove Dice `Content` directory. Reopen the plugin after changes. Core is retained.
 
-- Independent project in the existing monorepo, alongside the MPC plugin.
-- macOS and Windows executables with the required runtime bundled.
-- Select a root folder; detect instrument subfolders and optionally named kit folders.
-- Review automatic role mapping, edit and audition generated kits, and export independent `.gdexp` files.
-- Keep installed expansion payloads separate. New audio packs must not require rebuilding the MPC engine.
-- Support local pack installation/removal and stable identities for updates.
-- Separate personal-only content from redistributable output.
+Input layout:
 
-Proposed implementation: PySide6 with a shared Python packing/validation backend. Platform builds and runtime testing must be performed separately on macOS and Windows. Do not claim cross-platform validation from a Mac-only build.
+```text
+My Sessions/
+  Kick/  Snare/  ClosedHat/  OpenHat/
+  Clap/  Tom/  Cymbal/  Perc/
+  MIDI/Beats/  MIDI/Grooves/
+```
 
-Proposed UI: pack metadata and source tree at left, instrument mapping and waveform audition in the center, generated kits at right, with import/map/generate/export actions in a fixed bottom bar. The English design uses espresso brown, warm ivory and amber.
+Alternatively use `Kits/<Kit Name>/<Role>/`. Nearest recognized folder wins; filename-prefix detection is a fallback. Missing instruments block generation unless **Allow silent missing roles** is explicitly enabled; then generated silence is used. The app never borrows sounds from other installed libraries. Invalid files are excluded and listed for review.
 
-The first design image is a concept, not a screenshot of a working app. No proprietary samples are included in this project. The standalone format/packing backend is at mpc-software/shared/groove-dice-expansion/; the plugin delegates to it and the future app will consume it. The single pinned SDK stays in mpc-software/third_party/ and is not copied into this app.
+Supported WAV: uncompressed mono/stereo PCM 8/16/24/32-bit integer,8–192kHz, maximum1,920,000frames and32MB per file. Float/compressed WAV requires conversion first. Up to5000 source files,512 kits and4GB bank. These are format limits, not hardware-performance certification. Only current full-kit packs are emitted; partial sources are completed with explicitly approved silence.
 
-[Implementation proposal](../../../docs/apps/groove-dice-pack-builder/proposal.md).
+MIDI: standard format0/1 PPQ files. **Auto** keeps native notes60–67 or converts General MIDI drums35–81. Explicit Native/GM choices resolve ambiguous note ranges. Mapping affects the exported bank only; source MIDI is unchanged. Unsupported note sets are rejected rather than silently turning into kicks.
+
+## Running from source
+
+From this app directory:
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python src/main.py
+```
+
+Windows: use `.venv\Scripts\python.exe` instead. Pinned Qt/PyInstaller dependencies are bundled in platform builds. Shared authoring and installer backend: `mpc-software/shared/groove-dice-expansion/`.
+
+```sh
+python -m unittest discover -s tests -p test_authoring.py -v
+python tests/test_gui.py
+python tools/build.py
+```
+
+Build on the target OS; CI builds/tests macOS and Windows separately. macOS builds are ad-hoc signed, not notarized. Windows binaries are not code-signed. No signing identities are included. See [third-party notices](THIRD_PARTY.md) and [validation](VALIDATION.md).
+
+The approved image in design/ is a concept. Current app captures and the shipped binaries are separate artifacts. No proprietary drum library is bundled.

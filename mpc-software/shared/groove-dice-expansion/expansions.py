@@ -15,6 +15,8 @@ def atomic_json(path,data):
 def validate(m):
  if m.get('format')!='GDEXP001'or not ID.fullmatch(m.get('id','')):raise ValueError('Unsupported expansion manifest/id')
  if not isinstance(m.get('name'),str)or not 0<len(m['name'].encode('utf-8'))<=63 or any(c in m['name']for c in '\t\r\n/\\'):raise ValueError('Invalid expansion name')
+ if m.get('target','groove-dice')!='groove-dice' or m.get('plugin_uid','KpGy')!='KpGy':raise ValueError('Expansion targets another product')
+ if not re.fullmatch(r'\d+\.\d+\.\d+',m.get('version','1.0.0')):raise ValueError('Invalid pack version')
  if not isinstance(m.get('redistributable'),bool):raise ValueError('Explicit redistribution classification required')
  if not re.fullmatch('[0-9a-f]{64}',m.get('sha256','')):raise ValueError('Missing payload hash')
  if not 32<=m.get('bytes',0)<=4*1024**3:raise ValueError('Payload size exceeds limit')
@@ -24,9 +26,9 @@ def checkbank(path):
   if f.read(8)!=b'GDBANK01':raise ValueError('Invalid bank prefix')
   f.seek(-16,2)
   if f.read(8)!=b'GDLEND02':raise ValueError('Missing indexed library')
-def pack(bank,out,id,name,private):
+def pack(bank,out,id,name,private,*,version="1.0.0",rights=None,creator="kim"):
  if not ID.fullmatch(id):raise ValueError('Invalid id')
- checkbank(bank);m=validate(dict(format='GDEXP001',id=id,name=name,redistributable=not private,bytes=bank.stat().st_size,sha256=sha(bank),version='1.0.0',rights='Restricted original vendor content. Personal use package only; no redistribution clearance.'if private else'Original procedural synthesis and independently authored MIDI for kim. No external audio or MIDI inputs.'))
+ checkbank(bank);m=validate(dict(format='GDEXP001',id=id,name=name,redistributable=not private,bytes=bank.stat().st_size,sha256=sha(bank),version=version,target='groove-dice',plugin_uid='KpGy',creator=creator,rights=rights or ('Restricted original vendor content. Personal use package only; no redistribution clearance.'if private else'Original procedural synthesis and independently authored MIDI for kim. No external audio or MIDI inputs.')))
  out.parent.mkdir(parents=True,exist_ok=True);tmp=out.with_suffix('.partial')
  with zipfile.ZipFile(tmp,'w',zipfile.ZIP_DEFLATED,compresslevel=1,allowZip64=True)as z:
   z.writestr('manifest.json',json.dumps(m,indent=2)+'\n');z.write(bank,'bank.gdbank');z.writestr('RIGHTS.txt',m['rights']+'\n')

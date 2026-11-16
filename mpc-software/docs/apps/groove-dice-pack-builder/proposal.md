@@ -1,3 +1,7 @@
+# Current implementation
+
+The approved proposal below is now implemented by [Groove Dice Pack Builder](../../../apps/public/GrooveDicePackBuilder/README.md). See its validation record for actual platform/device coverage; the historical design text is retained as rationale.
+
 # Groove Dice Pack Builder — proposal
 
 Status: proposed UI/technology, not implemented or approved as a finished application. User-required scope: macOS and Windows desktop app; choose an input root folder with separated instrument folders; automatically build an independent expansion pack. Existing CLI is not the desktop application.
