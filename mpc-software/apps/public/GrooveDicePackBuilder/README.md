@@ -45,6 +45,6 @@ python tests/test_gui.py
 python tools/build.py
 ```
 
-Build on the target OS; The local macOS build and the Windows CI build/test run separately. macOS builds are ad-hoc signed, not notarized. Windows binaries are not code-signed. No signing identities are included. See [third-party notices](THIRD_PARTY.md) and [validation](VALIDATION.md).
+Build on the target OS; The local macOS build and the Windows CI build/test run separately. macOS builds are ad-hoc signed, not notarized. Windows binaries are not code-signed. No signing identities are included. See [third-party notices](https://github.com/Sunghyun23/kimswork/blob/main/mpc-software/apps/public/GrooveDicePackBuilder/THIRD_PARTY.md) and [validation](https://github.com/Sunghyun23/kimswork/blob/main/mpc-software/apps/public/GrooveDicePackBuilder/VALIDATION.md).
 
 The approved image in design/ is a concept. Current app captures and the shipped binaries are separate artifacts. No proprietary drum library is bundled.

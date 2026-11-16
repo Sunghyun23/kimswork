@@ -1,3 +1,30 @@
+# Current verification — 1.0.0
+
+Includes Original Workshop only:128 original synthesized WAV,96 kit configurations,two authored beats and93 timing templates. The base package contains no private third-party bank. Main timing/rule/sound/character groups,15 Hat Rhythm modes, fill recording, user-kit state and independent .gdexp expansions are included. Vendor kim, UID KpGy and342 parameter identities are unchanged from0.9.
+
+## Verified
+
+- Native,ARM32,ARM64 build; SDK validator0errors/0warnings; engine/UBSan/bank/factory/groove/rules/usability/musical/hat/skin/expansion-manager suite; host simulator19PASS/0WARN/0FAIL.
+- Actual MPC Live III /3.10.1.12: official install completed, fresh MAIN with all installed expansions, Pack Builder-authored Workshop Sessions filter and eight kit list, kit selection and actual preview playback. Saved a new Gdpack.xpl, changed kit and reloaded; Workshop Sessions/Velvet Room and sound selections restored.
+- Actual GUI-exported .gdexp contains32 own WAV,2 own MIDI and8 kits. Actual C++ engine test checks all roles, async decoding/non-silent audio, native programs and saved kit identity.
+- Device recording49.821s,stereo,peak−7.10dBFS,RMS−26.26dBFS. Viewer dropout counter134→134 during the recording; that does not certify every hardware load. Preview/Audio/Record left off; existing personal packs preserved on the owner's test device.
+- Standalone Pack Builder: macOS Apple Silicon actual app launch, UI audition and export; Windows x64 backend/Qt UI/bundle smoke tests passed in CI run43814119104 (commit6af7dfa). The public app has no private samples.
+
+## Installation and compatibility
+
+MPC standalone OS3.10.1+ with Enable Enhancements and External Plugin Support. Extract the complete kim - VST - Groove Dice folder into VST2 Plugins on a drive. Restart/rescan the application; save work before restarting. Read MANUAL.md and VERIFICATION.md in the ZIP.
+
+Expansions remain separate. Reopen the plugin after installing/removing them. Missing required packs mute/report missing sounds and preserve identities for later reinstallation. Older0.8 engines cannot read new expansion identities. The native PRESET list is host-owned; category-first factory-plugin navigation is not promised.
+
+## Known limits
+
+Full physical Q-Link coverage, all MPC multi-output destinations and worst-case hardware load are not certified. External audio sidechain, complete per-part insert chains, MIDI output to the MPC sequencer, live import/time-stretch and native XPN registration are not provided. Windows audio-device compatibility beyond the automated tests is not certified. The app is ad-hoc signed on Mac, unsigned on Windows; no notarization/developer certificate is claimed.
+
+[Full user manual](../../../docs/plugins/groove-dice/manual.md). Actual screenshots are used on the website; installed expansion counts in captures can exceed the base128WAV/95MIDI inventory.
+
+
+# Historical records
+
 # Current verification — 0.9.0 / original core and expansions
 
 - Public project now at mpc-software/plugins/public/GrooveDice. First297 parameter declarations preserved,45 appended (342 total); vendor kim / UID KpGy unchanged.

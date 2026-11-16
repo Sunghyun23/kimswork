@@ -70,3 +70,8 @@ Default assembly is PUBLIC: non-redistributable packs are excluded, core/payload
 `tools/build_original_bank.py` reproducibly synthesizes the initial original pack. `tools/expansions.py pack --bank ... --id ... --name ... --out ...` wraps a compatible GDBANK/GDLIB payload. Add `--private` for restricted material. The pack creator must classify its rights truthfully. The engine reads the new catalogue at startup; no generated C++ sample arrays or per-pack SDK copies are used.
 
 Limits: at most128loaded packs,65535kit programs/role choices and1048575indexed entries. The current compatible payload reader accepts up to512kits and5000role choices per bank. Actual MPC performance and native preset-browser limits may be lower; only the tested two-pack configuration is claimed after device validation. Native programme menus remain host-owned. New342-parameter/identity-trailer states are forward-only;0.8andolder engines do not understand expansion identities.
+
+
+## 1.0.0 authoring app
+
+Groove Dice Pack Builder is implemented for standalone macOS Apple Silicon and Windows x64. It scans user WAV/MIDI, reviews roles and MIDI mapping, generates/edits/auditions kits, saves projects and exports compatible .gdexp files. Use its Manage Packs to install/remove on a locally accessible MPC drive. Source files are unchanged. Missing roles require explicit silence permission. New manifests declare target groove-dice and plugin_uid KpGy; legacy manifests remain readable. Full native XPN registration and live hot-reload are not provided.

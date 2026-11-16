@@ -78,10 +78,15 @@
 Repository: https://github.com/Sunghyun23/kimswork. `mpc-software/` is the MPC domain root. All paths in older records are historical when they disagree with this section.
 
 - Public plugins: `mpc-software/plugins/public/{DonutTheory,GrooveDice}/`.
-- Apps: `mpc-software/apps/public/GrooveDicePackBuilder/` (design only).
+- Apps: `mpc-software/apps/public/GrooveDicePackBuilder/` (standalone desktop app).
 - Expansions: `mpc-software/expansions/<product-slug>/{public,private}/<pack-slug>/`.
 - Own public core: `groove-dice/public/original-workshop`; restricted personal pack: `groove-dice/private/splat-to-clat`. Plugin public status does not authorize redistribution of optional restricted content.
 - `mpc-software/shared/groove-dice-expansion/` owns the standalone format/packing/installer backend. `mpc-software/third_party/` owns the single pinned SDK, `mpc-software/scripts/` the build wrappers, and `mpc-software/docs/` product documentation.
 - Root `docs/` retains repository/site operations; root `site/` retains the existing GitHub Pages source and custom domain. Workflow path filters and manual imports follow the new paths.
 - Versions are independent across plugin/app/pack. `work/`, `build/`, `dist/`, private assets and extracted source files are not committed. Original Workshop's small redistributable core binary in the public plugin is allowed; it must match its provenance/hash manifest.
 - A source migration is not a new plugin release. Publish only within the user's explicitly authorized scope.
+
+
+## Software catalog and release targets
+
+The user approved stable Groove Dice1.0.0, Pack Builder1.0.0, a real app-authored original expansion, and website publication. Software navigation groups Instruments/Apps/Expansions. Companion apps use app-slug/vVERSION tags with OS/architecture-specific ZIPs; sound packs use product-qualified pack-slug/vVERSION tags and .gdexp plus SHA256. Preserve standalone original-core plugin packaging and private exclusions.

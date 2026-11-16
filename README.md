@@ -12,9 +12,9 @@ Kim’s Work: musical software and sound libraries for a vintage-inspired workfl
 site/                                      Astro catalog, manuals, GitHub Pages
 mpc-software/
   plugins/public/DonutTheory/               Released synth (1.2.2)
-  plugins/public/GrooveDice/                Drum instrument (0.9.0 development)
+  plugins/public/GrooveDice/                Drum instrument (1.0.0 stable)
   plugins/private/                         Other local-only plugin projects
-  apps/public/GrooveDicePackBuilder/        Desktop app design; not implemented
+  apps/public/GrooveDicePackBuilder/        Standalone desktop pack authoring app
   expansions/groove-dice/
     public/original-workshop/              Own sounds, kits and MIDI authoring
     private/splat-to-clat/                 Local-only source and optional pack
@@ -24,7 +24,7 @@ mpc-software/
   third_party/mpc-plugin-builder-sdk/       One pinned, unmodified SDK checkout
 ```
 
-Private projects and expansion payloads are Git-ignored and excluded from public packages. A `private` directory is not a GitHub access-control mechanism. Groove Dice public packages use the independently created Original Workshop core only. Its source being public-ready does not mean a public Release has been published.
+Private projects and expansion payloads are Git-ignored and excluded from public packages. A `private` directory is not a GitHub access-control mechanism. Groove Dice public packages use the independently created Original Workshop core only. Groove Dice 1.0.0 ships only the original core; optional personal packs remain private.
 
 ## Development
 
@@ -45,7 +45,7 @@ Install developer dependencies from `mpc-software/requirements-dev.txt`. Follow 
 | Product | Status | Documentation |
 |---|---|---|
 | Donut Theory | [1.2.2 release](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.2.2) | [Handoff](mpc-software/docs/plugins/donut-theory/handoff.md), [manual](mpc-software/docs/plugins/donut-theory/manual.md) |
-| Groove Dice | 0.9.0 development, public source with original core | [README](mpc-software/plugins/public/GrooveDice/README.md), [verification](mpc-software/plugins/public/GrooveDice/VALIDATION.md) |
-| Groove Dice Pack Builder | Approved design; application not yet implemented | [Project](mpc-software/apps/public/GrooveDicePackBuilder/README.md) |
+| Groove Dice | 1.0.0 stable, public source with original core | [README](mpc-software/plugins/public/GrooveDice/README.md), [verification](mpc-software/plugins/public/GrooveDice/VALIDATION.md) |
+| Groove Dice Pack Builder | 1.0.0 standalone macOS/Windows app | [Project](mpc-software/apps/public/GrooveDicePackBuilder/README.md) |
 
 MPC installation requires standalone OS 3.10.1+ and Enable Enhancements / External Plugin Support. Actual device verification and remaining limits are recorded per product. Pages uses the existing `site/` project and `kimswork.app`; local restructuring does not itself publish a new site or Release.

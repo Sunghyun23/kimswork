@@ -97,6 +97,8 @@
 - MPC 플러그인/앱/확장팩/공유도구/SDK/개발문서는 `mpc-software/` 아래에 둔다. 루트 docs에는 저장소·사이트 운영 정책을 둔다.
 - DonutTheory와 GrooveDice는 public 프로젝트다. GrooveDice 공개 소스/기본 배포는 자체 제작 Original Workshop만 포함한다.
 - 확장팩은 `mpc-software/expansions/<product-slug>/{public,private}/<pack-slug>/`로 관리한다. Splat-to-Clat은 groove-dice/private/splat-to-clat이며 자료·패키지·연구·import 도구 모두 Git 제외다.
-- GrooveDicePackBuilder는 `mpc-software/apps/public/GrooveDicePackBuilder/`의 독립 프로젝트이며 현재는 디자인 단계다.
+- GrooveDicePackBuilder는 `mpc-software/apps/public/GrooveDicePackBuilder/`의 독립 프로젝트이며 현재는 macOS/Windows 독립 앱이 구현되어 있다.
 - UID/파라미터/릴리스 태그를 경로 변경 때문에 바꾸지 않는다. SDK는 mpc-software/third_party의 고정 한 벌만 사용한다.
 - 공개 경로 이동과 GitHub 이름 변경은 새 제품 Release/웹 배포 허가를 의미하지 않는다.
+
+- 2026-11-16 사용자 정식배포 승인: Groove Dice1.0.0, Pack Builder1.0.0 및 자체제작 Workshop Sessions 팩을 별도태그/다운로드로 관리한다. 사이트 Software 하위 Instruments/Apps/Expansions에 연결한다. 물리/최악CPU/Windows오디오기기 검증 한계를 숨기지 않는다.

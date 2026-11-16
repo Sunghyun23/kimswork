@@ -1,4 +1,4 @@
-# Groove Dice 0.9.0 — Original Workshop
+# Groove Dice 1.0.0 — Original Workshop
 
 A neo-soul, hip-hop and R&B drum instrument by kim for standalone Akai MPC.
 
@@ -19,6 +19,6 @@ Expansion kits appear in the kit browser and MPC's native PRESET list. Browser h
 
 MPC OS3.10.1or newer is required. Enable both Enable Enhancements and External Plugin Support in Preferences → Enhancements (Beta). Copy the complete `kim - VST - Groove Dice` folder to `VST2 Plugins` on a drive, then restart/rescan the MPC application if necessary. See INSTALL.txt.
 
-This0.9development package is not a claim of complete physical Q-Link, all-output routing or worst-case MPC performance certification. See the verification summary supplied with the package. Previously saved projects may reference optional expansions; removing a required pack reports missing samples instead of substituting unrelated sounds. Original0.8andolder engines cannot read new expansion identities.
+This is the first stable public release. Verification covers the builds and documented automated/device checks; complete physical Q-Link coverage, every output destination and worst-case hardware performance are not certified. See the verification summary supplied with the package. Previously saved projects may reference optional expansions; removing a required pack reports missing samples instead of substituting unrelated sounds. Original0.8andolder engines cannot read new expansion identities.
 
 The SDK's MIT notice and original-content provenance are included under Content/Licenses. Optional expansions retain their own terms. No personal-only expansion is bundled in this edition.

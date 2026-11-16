@@ -2,7 +2,7 @@
 
 루트/public 지침과 README.md, SOUND_BANK.md, VALIDATION.md를 먼저 읽는다.
 
-- vendor kim, UID KpGy, 개발0.9.0. 공개 소스이며 아직 공개 릴리스가 아니다. 자체 제작 코어는 공개 가능하며 Splat 자료는 expansions/groove-dice/private/ 밖으로 복사하거나 Git에 추가하지 않는다.
+- vendor kim, UID KpGy, 정식1.0.0. 공개 소스 및 자체 제작 코어 배포판이다. 자체 제작 코어는 공개 가능하며 Splat 자료는 expansions/groove-dice/private/ 밖으로 복사하거나 Git에 추가하지 않는다.
 - 사용자 승인 시안은 design/main-concept-v3-performance.png 및 fill-editor-concept-v1.png. 실제 영역1280x628, runtime배경1280x628 및 knob64x(64*127) 크기를 지킨다. 원본 이미지를 호스트가 자동 축소할 것으로 가정하지 않는다.
 - MAIN16 Q-Link는 엔진 SCREEN relay에 연결한다. EDIT/REC를 누르면 실제 녹음/노트 파라미터를 조절한다. 편집C/D는 미할당. Program/Track MAIN 실제 매핑은 보존한다. SDK에 없는 탭 핸들러를 만들지 않는다.
 - UI가 읽는 변경 알림은 render thread token 검사 후 UI idle/value-read에서만 배출한다. process()에서 host알림·I/O·할당·잠금을 하지 않는다.
@@ -56,3 +56,5 @@
 - Shared standalone expansion implementation: `mpc-software/shared/groove-dice-expansion/expansions.py`. Plugin entry point delegates to it. Packaged CLI must include the standalone implementation.
 - Public build and default packaging must work without the private tree. `tools/package_profiles.py --personal` explicitly adds the local optional private assembly.
 - Historical bank-work references below describe pre-migration artifacts. Current private work is at the expansion path above. Preserve legacy parameter IDs/order/captions using legacy-catalogue.json; never regenerate them from a different bank.
+
+- 1.0.0 release preserves342 parameter identities and UID KpGy. App-authored packs use GDEXP001 with optional target=groove-dice/plugin_uid=KpGy metadata; old manifests remain readable. Pack Builder UI hides its auto-generated Pack ID under Advanced; it is not an account identifier.

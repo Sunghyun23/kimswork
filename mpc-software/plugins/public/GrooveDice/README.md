@@ -1,6 +1,6 @@
 # Groove Dice
 
-`kim`의 공개 소스 MPC 드럼·그루브 플러그인. UID `KpGy`, 개발판 `0.9.0`. **구현·검증 진행 중이며 공개 정식판이 아니다.** source는 public이며 자체 제작 코어만 기본 포함한다. 제한된 외부 확장팩은 Git 제외이고 Donut Theory의 소리·UID·기존 릴리스는 변경하지 않는다.
+`kim`의 공개 소스 MPC 드럼·그루브 플러그인. UID `KpGy`, 정식판 `1.0.0`. 검증 범위와 남은 제한은 VALIDATION.md를 따른다. source는 public이며 자체 제작 코어만 기본 포함한다. 제한된 외부 확장팩은 Git 제외이고 Donut Theory의 소리·UID·기존 릴리스는 변경하지 않는다.
 
 승인 디자인은 `design/main-concept-v3-performance.png`, `design/fill-editor-concept-v1.png`다. 실제 MPC 사용 영역은1280×628이며 상단 호스트 바/하단 함수 키는 호스트 소유다. 이미지 시안을 작동하는 스킨이나 실기기 캡처와 혼동하지 않는다.
 

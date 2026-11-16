@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import {categories,companion,workshop} from '../../data/software';
+import {plugins,url} from '../../data/plugins';
+export function getStaticPaths(){return categories.map(category=>({params:{category:category.slug},props:{category}}));}
+const {category:c}=Astro.props;
+const items=c.slug==='instruments'?plugins.map(p=>({name:p.name,path:`plugins/${p.slug}/`,summary:p.summary,status:p.release?`Available · ${p.release.version}`:'In development'})):c.slug==='apps'?[{...companion,status:'macOS Apple Silicon · Windows x64'}]:[{...workshop,status:'For Groove Dice 1.0.0 or later'}];
+---
+<Base title={`${c.name} — Kim’s Work`} description={c.description}><article class="wrap guide"><a class="back" href={url('software/')}>← All software</a><p class="eyebrow">KIM’S WORK / {c.name.toUpperCase()}</p><h1>{c.name}</h1><p class="lead">{c.description}</p><nav class="category-tabs" aria-label="Software categories">{categories.map(v=><a aria-current={v.slug===c.slug?'page':undefined} href={url(`software/${v.slug}/`)}>{v.name}</a>)}</nav><div class="software-grid">{items.map(p=><a class="software-card" href={url(p.path)}><p class="eyebrow">{p.status}</p><h2>{p.name} →</h2><p>{p.summary}</p></a>)}</div></article></Base>
