@@ -83,7 +83,7 @@ class Cover(QWidget):
 
 class Window(QMainWindow):
     def __init__(self):
-        super().__init__();self.project=None;self.project_file=None;self.selected_role=0;self.task=None;self.dirty=False;self.parts=[];self.cards=[];self.preview_temp=tempfile.TemporaryDirectory(prefix='gd-audition-');self.audio=QAudioOutput(self);self.audio.setVolume(.7);self.player=QMediaPlayer(self);self.player.setAudioOutput(self.audio)
+        super().__init__();self.project=None;self.project_file=None;self.selected_role=0;self.task=None;self.dirty=False;self.parts=[];self.cards=[];self.preview_serial=0;self.preview_temp=tempfile.TemporaryDirectory(prefix='gd-audition-',ignore_cleanup_errors=True);self.audio=QAudioOutput(self);self.audio.setVolume(.7);self.player=QMediaPlayer(self);self.player.setAudioOutput(self.audio)
         self.setWindowTitle('Groove Dice Pack Builder');self.resize(1450,940);self.setMinimumSize(1160,820)
         center=QWidget();self.setCentralWidget(center);root=QVBoxLayout(center);root.setContentsMargins(0,0,0,0);root.setSpacing(0)
         header=QFrame();header.setObjectName('header');hv=QHBoxLayout(header);hv.setContentsMargins(22,18,22,18);title=QLabel('⚄  Groove Dice Pack Builder');title.setObjectName('title');hv.addWidget(title);hv.addStretch();self.project_title=QLabel('YOUR NEXT SESSION');hv.addWidget(self.project_title);hv.addWidget(QLabel('v'+VERSION));root.addWidget(header)
@@ -224,7 +224,7 @@ class Window(QMainWindow):
                 data=authoring.safe_file(self.project['source_root'],path).read_bytes();self.wave.set_audio(data);info=authoring.wave_info(data);self.file_label.setText(f'{Path(path).name}  ·  {info["rate"]/1000:g} kHz  ·  {info["width"]*8}-bit  ·  {info["frames"]/info["rate"]:.2f} s')
             except Exception as e:self.error(str(e))
     def play_bytes(self,data):
-        self.player.stop();target=Path(self.preview_temp.name)/'audition.wav';target.write_bytes(data);self.player.setSource(QUrl.fromLocalFile(str(target)));self.player.play();self.status.setText('Audition playing')
+        self.player.stop();self.player.setSource(QUrl());self.preview_serial+=1;target=Path(self.preview_temp.name)/f'audition-{self.preview_serial}.wav';target.write_bytes(data);self.player.setSource(QUrl.fromLocalFile(str(target)));self.player.play();self.status.setText('Audition playing')
     def stop_audio(self):self.player.stop()
     def audition_role(self,r):
         if not self.project:return
@@ -242,12 +242,14 @@ class Window(QMainWindow):
         if not self.project['private'] and QMessageBox.question(self,'Redistributable pack','Confirm that you have permission to redistribute every included WAV and MIDI file. This declaration is stored with the pack.')!=QMessageBox.StandardButton.Yes:return
         target,_=QFileDialog.getSaveFileName(self,'Export expansion',f'groove-dice-{self.project["id"]}-{self.project["version"]}.gdexp','Groove Dice expansion (*.gdexp)')
         if target:
+            if not target.lower().endswith('.gdexp'):target+='.gdexp'
             p=copy.deepcopy(self.project);self.run_task(lambda:authoring.export(p,target),lambda report:self.status.setText(f'Exported {Path(target).name} · {report["kits"]} kits · {report["wav"]} WAV · {report["midi"]} MIDI'),'Writing and verifying expansion…')
     def save(self):
         if not self.project:return
         self.metadata();target=self.project_file
         if not target:target,_=QFileDialog.getSaveFileName(self,'Save project',self.name.text()+'.gdproject','Pack Builder project (*.gdproject)')
         if target:
+            if not target.lower().endswith('.gdproject'):target+='.gdproject'
             try:authoring.save_project(self.project,target);self.project_file=target;self.dirty=False;self.status.setText('Project saved · source files remain in their original folder')
             except Exception as e:self.error(str(e))
     def open_project(self):
@@ -271,7 +273,9 @@ class Window(QMainWindow):
             if not archive:return
             try:
                 import zipfile
-                with zipfile.ZipFile(archive)as z:m=expansions.validate(json.loads(z.read('manifest.json')))
+                with zipfile.ZipFile(archive)as z:
+                    if z.getinfo('manifest.json').file_size>16384:raise ValueError('Oversized expansion metadata')
+                    m=expansions.validate(json.loads(z.read('manifest.json')))
                 allow=False
                 if not m['redistributable']:
                     allow=QMessageBox.question(dlg,'Personal-only pack','Install this private pack for your own use? Its redistribution is not cleared.')==QMessageBox.StandardButton.Yes
@@ -289,7 +293,7 @@ class Window(QMainWindow):
     def closeEvent(self,event):
         if self.task:event.ignore();return
         if not self.discard_ok():event.ignore();return
-        self.player.stop();self.preview_temp.cleanup();event.accept()
+        self.player.stop();self.player.setSource(QUrl());self.preview_temp.cleanup();event.accept()
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--project',type=Path);parser.add_argument('--smoke-test',action='store_true');args=parser.parse_args()
