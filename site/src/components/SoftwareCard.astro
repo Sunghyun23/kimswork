@@ -1,0 +1,5 @@
+---
+import {url} from '../data/plugins';
+const {item:p}=Astro.props;
+---
+<a class="software-card product-card" href={url(p.path)}><img class="software-thumbnail" src={url(`images/${p.image}`)} alt={p.imageAlt} width="1280" height="800" loading="lazy"/><div class="software-card-copy"><p class="eyebrow">{p.status}</p><h2>{p.name} →</h2><p>{p.summary}</p></div></a>

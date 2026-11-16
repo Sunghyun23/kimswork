@@ -1,10 +1,23 @@
 export interface Plugin {
- slug: string; name: string; category: string; tagline: string; description: string; summary: string;
+ slug: string; name: string; kind?: 'instrument' | 'effect'; category: string; tagline: string; description: string; summary: string;
  developmentVersion: string; image: string; imageAlt: string; intro: string; mapping: string[][]; limitations: string[]; verifiedDevice: string; features: {title: string; text: string}[];
  changes: {title:string; text:string}[]; manual?: string; screenshots: {image:string; alt:string; caption:string}[];
- release: null | { version: string; tag: string; asset: string };
+ release: null | { version: string; tag: string; asset: string; preview?: boolean };
 }
 export const plugins: Plugin[] = [{
+ slug:'crate-press',name:'Crate Press',kind:'effect',category:'STEREO CHARACTER & PERFORMANCE EFFECT',
+ tagline:'Press your sound into a new shape.',summary:'Character compression, three-band ducking and eight playable lo-fi effects for MPC tracks and masters.',
+ description:'Bring weight and movement to drums, keys and samples with independent full-band and three-band compression, drive, sampler color and wow/flutter. Eight performance effects share the main screen with a live stereo waveform and compression curve.',
+ developmentVersion:'0.2.2',release:{version:'0.2.2',tag:'crate-press/v0.2.2',asset:'crate-press-0.2.2-mpc.zip',preview:true},image:'crate-press-main-0.2.2.webp',imageAlt:'Actual Crate Press 0.2.2 master insert on MPC Live III with compact section titles and eight performance buttons',manual:'plugins/crate-press/manual/',
+ intro:'Start with one of 32 programs, then use four Q-Link groups to shape the sound. Hold an effect for a brief change, or enable LATCH and combine independent tap toggles.',
+ verifiedDevice:'MPC Live III / OS 3.10.1.12; partial hardware verification',
+ mapping:[['A · Comp / Drive','Drive','Compress','Punch','Release'],['B · Band / Duck','Low Comp','Mid Comp','High Comp','Duck'],['C · Color','Tone','High Cut','Lo-Fi','Drift'],['D · I/O / Mix','Input','Low Cut','Mix','Output']],
+ features:[{title:'Compression in context.',text:'Full-band character compression and a three-band crossover let you control low, mid and high energy separately. Internal bass sensing or host-tempo pulses can duck selected bands.'},{title:'Eight effects, close at hand.',text:'Tape Stop, Reverse, Repeat, Dub Echo, Filter Dip, Crush, Wobble and Dropout can overlap. LATCH keeps independent effects engaged; turn it off to release them all.'},{title:'See the signal.',text:'MAIN permanently shows measured input/output stereo extrema, a static compressor transfer curve and gain-reduction meters. No decorative waveform animation.'},{title:'A practical starting point.',text:'32 programs cover Init, Drums, Keys, Samples, Master and Performance. Factory programs preserve your performance timing and latch preference.'}],
+ changes:[{title:'First public preview.',text:'0.2.2 introduces the stereo effect, eight performance gates and global LATCH. Manufacturer metadata remains kim; the visible design has no manufacturer badge.'},{title:'Quieter typography.',text:'Smaller 18 px section lettering and lighter reference-derived captions keep the controls prominent. Numeric readouts and detail-page choice captions were corrected against the running MPC interface.'},{title:'Combination testing.',text:'All 28 effect pairs were checked at three sample rates against both solo effects, with independent release and echo-tail checks. Hardware multi-touch and worst-case CPU are not certified.'}],
+ limitations:['Public preview: hardware verification is partial; read the manual before using it in a critical live set.','External sidechain input is not implemented. Ducking uses internal bass detection or host tempo.','Real-device checks cover master-insert loading, project recall, visible controls, tab navigation and independent latched button states. Physical Q-Link rotation, simultaneous finger touches and track-insert audio remain unverified.','Automated audio tests pass; subjective listening and full hardware audio/latency compensation and worst-case CPU certification remain outstanding.','The transfer curve is static and pre-makeup, not the combined nonlinear effect transfer. The waveform is a 0.77-second extrema overview.','Peak Guard is a soft peak bound, not a true-peak limiter. Captured performance history is limited to eight seconds.'],
+ screenshots:[{image:'crate-press-main-0.2.2.webp',alt:'Crate Press MAIN running on MPC Live III',caption:'MAIN · Actual MPC Live III capture, 0.2.2. Compact section headings, live numeric values and eight performance buttons.'},{image:'crate-press-perform-0.2.2.webp',alt:'Crate Press PERFORM settings running on MPC Live III',caption:'PERFORM · Actual MPC capture. Independent timing, feedback, texture and release controls.'}]
+},
+{
  slug: 'donut-theory', name: 'Donut Theory', category: 'POLYPHONIC SYNTHESIZER',
  tagline: 'A little worn. Endlessly warm.',
  summary: 'A Moog-inspired synthesis engine, warm factory sounds and sixteen playable chord slots for MPC.',
@@ -63,7 +76,7 @@ export const plugins: Plugin[] = [{
  screenshots:[{image:'groove-dice-main-1.0.0.webp',alt:'Groove Dice running original sounds and optional expansions on MPC Live III',caption:'MAIN · Actual 1.0.0 on MPC Live III / OS 3.10.1.12, playing the Pack Builder-authored Workshop Sessions pack. Optional packs are installed in this capture; the base release contains 128 WAV / 95 MIDI.'}]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-16';
+export const navigationVersion = 'software-2026-11-16-crate-press';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

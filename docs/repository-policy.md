@@ -90,3 +90,7 @@ Repository: https://github.com/Sunghyun23/kimswork. `mpc-software/` is the MPC d
 ## Software catalog and release targets
 
 The user approved stable Groove Dice1.0.0, Pack Builder1.0.0, a real app-authored original expansion, and website publication. Software navigation groups Instruments/Apps/Expansions. Companion apps use app-slug/vVERSION tags with OS/architecture-specific ZIPs; sound packs use product-qualified pack-slug/vVERSION tags and .gdexp plus SHA256. Preserve standalone original-core plugin packaging and private exclusions.
+
+## Crate Press and software thumbnails — 2026-11-16
+
+The user authorized Crate Press publication and website updates after verification. The first public package is 0.2.2 **preview**, with partial hardware checks explicitly recorded. Do not label outstanding audio, physical Q-Link, multi-touch or CPU certification complete. Software overview and category lists must begin each product card with its real software screenshot. Keep Effects separate from Instruments, Apps and Expansions.

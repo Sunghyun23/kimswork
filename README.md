@@ -12,6 +12,7 @@ Kim’s Work: musical software and sound libraries for a vintage-inspired workfl
 site/                                      Astro catalog, manuals, GitHub Pages
 mpc-software/
   plugins/public/DonutTheory/               Released synth (1.2.2)
+  plugins/public/CratePress/                Stereo effect (0.2.2 public preview)
   plugins/public/GrooveDice/                Drum instrument (1.0.0 stable)
   plugins/private/                         Other local-only plugin projects
   apps/public/GrooveDicePackBuilder/        Standalone desktop pack authoring app
@@ -45,6 +46,7 @@ Install developer dependencies from `mpc-software/requirements-dev.txt`. Follow 
 | Product | Status | Documentation |
 |---|---|---|
 | Donut Theory | [1.2.2 release](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.2.2) | [Handoff](mpc-software/docs/plugins/donut-theory/handoff.md), [manual](mpc-software/docs/plugins/donut-theory/manual.md) |
+| Crate Press | 0.2.2 public preview, partial hardware verification | [Manual](mpc-software/docs/plugins/crate-press/manual.md), [verification](mpc-software/docs/plugins/crate-press/validation.md) |
 | Groove Dice | 1.0.0 stable, public source with original core | [README](mpc-software/plugins/public/GrooveDice/README.md), [verification](mpc-software/plugins/public/GrooveDice/VALIDATION.md) |
 | Groove Dice Pack Builder | 1.0.0 standalone macOS/Windows app | [Project](mpc-software/apps/public/GrooveDicePackBuilder/README.md) |
 

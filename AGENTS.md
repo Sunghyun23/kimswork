@@ -102,3 +102,5 @@
 - 공개 경로 이동과 GitHub 이름 변경은 새 제품 Release/웹 배포 허가를 의미하지 않는다.
 
 - 2026-11-16 사용자 정식배포 승인: Groove Dice1.0.0, Pack Builder1.0.0 및 자체제작 Workshop Sessions 팩을 별도태그/다운로드로 관리한다. 사이트 Software 하위 Instruments/Apps/Expansions에 연결한다. 물리/최악CPU/Windows오디오기기 검증 한계를 숨기지 않는다.
+
+- 2026-11-16 Crate Press는 public effect, vendor kim, UID K36Z다. 자체 spec/manual/validation 및 프로젝트 AGENTS를 따른다. 사용자가 검증 후 Release/웹 업데이트를 승인했다. Software 첫 목록과 카테고리 제품 카드에는 실제 소프트웨어 스크린샷 썸네일을 먼저 보여주고 Effects 카테고리를 별도로 유지한다. 미검증 물리/오디오/CPU를 완료로 주장하지 않는다.

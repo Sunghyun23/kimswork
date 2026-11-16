@@ -1,8 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import {categories} from '../../data/software';
+import SoftwareCard from '../../components/SoftwareCard.astro';
+import {categories,softwareItems} from '../../data/software';
 import {url} from '../../data/plugins';
 ---
-<Base title="Software — Kim’s Work" description="Explore MPC instruments, desktop apps and independent sound expansions by Kim’s Work.">
-<article class="wrap guide"><p class="eyebrow">KIM’S WORK / SOFTWARE</p><h1>A place for every<br/>part of the session.</h1><p class="lead">Choose an instrument, prepare your sounds, or find a new pack.</p><div class="software-grid">{categories.map(c=><a class="software-card" href={url(`software/${c.slug}/`)}><p class="eyebrow">EXPLORE</p><h2>{c.name} →</h2><p>{c.description}</p></a>)}</div></article>
-</Base>
+<Base title="Software — Kim’s Work" description="Explore MPC instruments, effects, desktop apps and independent sound expansions."><article class="wrap guide"><p class="eyebrow">KIM’S WORK / SOFTWARE</p><h1>Tools for your<br/>next session.</h1><p class="lead">Instruments, effects and sound tools. See the software, find your workflow.</p><nav class="category-tabs" aria-label="Software categories">{categories.map(c=><a href={url(`software/${c.slug}/`)}>{c.name}</a>)}</nav><div class="software-grid">{softwareItems.map(item=><SoftwareCard item={item}/>)}</div></article></Base>
