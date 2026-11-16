@@ -1,0 +1,27 @@
+[
+  {
+    "file": "LGPL-3.0-only.txt",
+    "source": "https://raw.githubusercontent.com/pyside/pyside-setup/v6.10.2/LICENSES/LGPL-3.0-only.txt",
+    "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
+  },
+  {
+    "file": "GPL-3.0-only.txt",
+    "source": "https://raw.githubusercontent.com/pyside/pyside-setup/v6.10.2/LICENSES/GPL-3.0-only.txt",
+    "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+  },
+  {
+    "file": "FFmpeg-COPYING.LGPLv2.1",
+    "source": "https://raw.githubusercontent.com/FFmpeg/FFmpeg/n7.1.2/COPYING.LGPLv2.1",
+    "sha256": "b634ab5640e258563c536e658cad87080553df6f34f62269a21d554844e58bfe"
+  },
+  {
+    "file": "FFmpeg-LICENSE.md",
+    "source": "https://raw.githubusercontent.com/FFmpeg/FFmpeg/n7.1.2/LICENSE.md",
+    "sha256": "cb48bf09a11f5fb576cddb0431c8f5ed0a60157a9ec942adffc13907cbe083f2"
+  },
+  {
+    "file": "Python-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/python/cpython/v3.13.7/LICENSE",
+    "sha256": "78b12c3a81360b357002334f0e70ea0e92eebf7a9b358805c03c48484945f3bb"
+  }
+]

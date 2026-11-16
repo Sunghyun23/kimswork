@@ -205,6 +205,7 @@ def write_bank(project,path):
         start=f.tell();f.write(struct.pack('<8s6I',b'GDLIB002',2,len(records),384,0,0,0));f.write(b'\0'*(384*len(records)));directory=[]
         for e in records:
             data=e['data']if 'data'in e else e['source'].read_bytes()
+            if digest(data)!=e['sha']:raise ValueError('Source changed during export; rescan the folder')
             if e['kind']>=3:data=map_midi(data,project.get('midi_mode','auto'));e['sha']=digest(data)
             offset=f.tell();f.write(data)
             directory.append(struct.pack('<64s256sQ10I16x',e['sha'].encode(),e['name'].encode(),offset,len(data),zlib.crc32(data),e['kind'],e['role'],e.get('rate',0),e.get('channels',0),e.get('frames',0),0,0,0))

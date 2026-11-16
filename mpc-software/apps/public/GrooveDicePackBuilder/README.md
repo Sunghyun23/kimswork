@@ -6,7 +6,7 @@ A standalone desktop companion for turning folders of WAV and MIDI files into Gr
 
 1. **Open Folder**: choose a source directory. Original files remain unchanged.
 2. **Review Mapping**: inspect detected roles and excluded invalid files. Uncertain WAV roles must be assigned. MIDI can be classified as Beats or Grooves.
-3. Set pack name, creator, stable ID, version and rights. Personal is the default. Choose Redistributable only when you have the required rights.
+3. Set pack name, creator, version and rights. Pack ID is generated automatically and lives under **Advanced pack settings**; it identifies the sound pack, not a user account. Keep it unchanged when updating a pack. Personal is the default. Choose Redistributable only when you have the required rights.
 4. **Generate Kits**: choose 1–512 kits. Existing named `Kits/<name>/<role>` folders are respected. Edit eight parts at right, set their levels and lock parts or whole kits before regenerating. Rename kits as needed.
 5. **Audition Kit**: hear a two-bar reference beat at the selected BPM/Swing. Stop with ■. This preview is a packing aid, not the MPC engine's full FX/groove processor.
 6. **Save Project** stores a `.gdproject` with relative source paths, mappings, stable ID, rights, levels and locks. Source files remain external; move them with the project when transferring computers.
@@ -45,6 +45,6 @@ python tests/test_gui.py
 python tools/build.py
 ```
 
-Build on the target OS; CI builds/tests macOS and Windows separately. macOS builds are ad-hoc signed, not notarized. Windows binaries are not code-signed. No signing identities are included. See [third-party notices](THIRD_PARTY.md) and [validation](VALIDATION.md).
+Build on the target OS; The local macOS build and the Windows CI build/test run separately. macOS builds are ad-hoc signed, not notarized. Windows binaries are not code-signed. No signing identities are included. See [third-party notices](THIRD_PARTY.md) and [validation](VALIDATION.md).
 
 The approved image in design/ is a concept. Current app captures and the shipped binaries are separate artifacts. No proprietary drum library is bundled.

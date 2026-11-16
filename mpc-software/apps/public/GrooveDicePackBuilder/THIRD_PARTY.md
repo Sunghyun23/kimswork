@@ -10,3 +10,5 @@ The application uses Python, PySide6/Qt 6 (LGPLv3/GPL/commercial options; this b
 The app has no bundled commercial drum samples. Approved interface artwork was generated with the built-in image generation tool; source concept and prompt are in design/. A small vinyl cover region is rendered from that asset. Exported sound packs retain the creator's own declared rights; choosing “Redistributable” does not independently establish legal clearance.
 
 Pack Builder source is copyright kim. Public availability does not alter third-party library licenses. No Apple Developer ID certificate or Windows signing certificate is bundled. macOS builds are ad-hoc signed, not notarized; Windows builds are not code-signed.
+
+License texts and exact upstream retrieval URLs/hashes are included in licenses/. Corresponding source: PySide6 v6.10.2 at https://code.qt.io/pyside/pyside-setup.git/tag/?h=v6.10.2 ; Qt 6.10.2 source archives at https://download.qt.io/archive/qt/6.10/6.10.2/single/ ; FFmpeg 7.1.2 at https://ffmpeg.org/releases/ffmpeg-7.1.2.tar.xz . Bundled Qt/FFmpeg binaries are from the unmodified pinned PySide6 wheels; this app does not rebuild or patch those libraries.

@@ -16,10 +16,12 @@ def main():
  import PySide6
  site=Path(PySide6.__file__).parent.parent
  for package in ['PySide6','PySide6_Essentials','PySide6_Addons','shiboken6']:
-  for info in site.glob(package+'-*.dist-info'):
+  for info in [d for d in site.glob('*.dist-info') if d.name.lower().startswith(package.lower()+'-')]:
    for f in info.rglob('*'):
     if f.is_file()and any(k in f.name.lower()for k in ['license','copying','notice']):dest=notices/package/f.relative_to(info);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(f,dest)
+ shutil.copytree(P/'licenses',notices/'licenses',dirs_exist_ok=True)
  shutil.copy2(P/'THIRD_PARTY.md',notices/'README.md')
+ if len(list(notices.rglob('*LICENSE*')))+len(list(notices.rglob('*license*')))==0:raise RuntimeError('Third-party license texts missing from bundle')
  # Library replacements modify macOS signatures. Ad-hoc sign after all bundle changes.
  if sys.platform=='darwin':subprocess.run(['codesign','--force','--deep','--sign','-',str(runtime)],check=True)
  env=dict(os.environ,QT_QPA_PLATFORM='offscreen');subprocess.run([str(executable),'--smoke-test'],env=env,timeout=60,check=True)
