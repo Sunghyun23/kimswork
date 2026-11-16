@@ -18,7 +18,8 @@ struct Library {
  struct Pack{std::string id,name;bool isPrivate=false;std::array<std::vector<int>,5> categories;std::array<std::vector<int>,3> folders;std::array<std::vector<int>,4> sounds;std::vector<int> kits;};
  std::vector<Pack> packs;int expansionErrors=0;
  std::vector<Entry> entries;std::array<std::vector<int>,5> categories;std::vector<Midi> midi;
- std::array<Slot,64> slots;std::array<std::atomic<int>,8> request{},ready,failed{},active{},serial{};std::array<int,8> current,desiredSeen{};
+ std::array<Slot,64> slots;static constexpr int Channels=14;
+ std::array<std::atomic<int>,Channels> request{},ready,failed{},active{},serial{};std::array<int,Channels> current,desiredSeen{};
  std::atomic<bool> quit{false};std::thread worker;std::string path;bool loaded=false;
  Library(){current.fill(-1);for(auto& r:ready)r.store(-1);}
  ~Library(){stop();}
@@ -117,16 +118,16 @@ struct Library {
  const char* identity(int id)const{return id>0&&id<=int(entries.size())?entries[id-1].id.c_str():nullptr;}
  // AUDIO ONLY: single ownership handoff prevents an old voice reading an evicted slot.
  void release(int slot){if(slot>=0&&--slots[slot].refs==0)slots[slot].state.store(0,std::memory_order_release);}
- void poll(const std::array<int,8>& desired){
-  for(int r=0;r<8;++r){int id=desired[r];if(desiredSeen[r]!=id){desiredSeen[r]=id;request[r].store(id,std::memory_order_relaxed);serial[r].fetch_add(1,std::memory_order_release);}int s=ready[r].exchange(-1,std::memory_order_acquire);if(s>=0){if(slots[s].id==id){slots[s].refs=1;slots[s].state.store(3);release(current[r]);current[r]=s;active[r].store(id);}else slots[s].state.store(0,std::memory_order_release);}
+ template<size_t N> void poll(const std::array<int,N>& desired){
+  static_assert(N<=Channels,"cache request capacity");for(size_t r=0;r<N;++r){int id=desired[r];if(desiredSeen[r]!=id){desiredSeen[r]=id;request[r].store(id,std::memory_order_relaxed);serial[r].fetch_add(1,std::memory_order_release);}int s=ready[r].exchange(-1,std::memory_order_acquire);if(s>=0){if(slots[s].id==id){slots[s].refs=1;slots[s].state.store(3);release(current[r]);current[r]=s;active[r].store(id);}else slots[s].state.store(0,std::memory_order_release);}
    if(id==0&&current[r]>=0){release(current[r]);current[r]=-1;active[r].store(0);}
   }
  }
  int acquireCurrent(int role){int s=current[role];if(s>=0){++slots[s].refs;return s;}return -1;}
  int acquire(int role,int desired){int s=current[role];if(s>=0&&slots[s].id==desired){++slots[s].refs;return s;}return -1;}
- void run(){std::ifstream f;std::string opened;std::vector<uint8_t>b;std::array<int,8>lastSerial{};
+ void run(){std::ifstream f;std::string opened;std::vector<uint8_t>b;std::array<int,Channels>lastSerial{};
   while(!quit.load()){
-   for(int r=0;r<8&&!quit.load();++r){int generation=serial[r].load(std::memory_order_acquire);int id=request[r].load(std::memory_order_relaxed);if(id==0){lastSerial[r]=generation;failed[r].store(0);continue;}if(id<0||id>int(entries.size())){failed[r].store(id);lastSerial[r]=generation;continue;}if(generation==lastSerial[r]||ready[r].load()!=-1)continue;auto&e=entries[id-1];if(e.kind>=3){failed[r].store(id);lastSerial[r]=generation;continue;}
+   for(int r=0;r<Channels&&!quit.load();++r){int generation=serial[r].load(std::memory_order_acquire);int id=request[r].load(std::memory_order_relaxed);if(id==0){lastSerial[r]=generation;failed[r].store(0);continue;}if(id<0||id>int(entries.size())){failed[r].store(id);lastSerial[r]=generation;continue;}if(generation==lastSerial[r]||ready[r].load()!=-1)continue;auto&e=entries[id-1];if(e.kind>=3){failed[r].store(id);lastSerial[r]=generation;continue;}
     int selected=-1;for(int i=0;i<64;++i){int free=0;if(slots[i].state.compare_exchange_strong(free,1,std::memory_order_acquire)){selected=i;break;}}if(selected<0)continue;
     auto&s=slots[selected];if(opened!=e.dataPath){f.close();f.clear();f.open(e.dataPath,std::ios::binary);opened=e.dataPath;}bool ok=read(f,e.offset,e.bytes,b)&&crc32(b)==e.crc&&dsp::parseWav(b,s.sound)&&s.sound.numFrames()==e.frames&&s.sound.numChannels()==int(e.channels)&&s.sound.sampleRate==e.rate;
     if(ok){s.id=id;s.refs=0;s.state.store(2);ready[r].store(selected,std::memory_order_release);failed[r].store(0);}else{s.state.store(0,std::memory_order_release);failed[r].store(id);}lastSerial[r]=generation;

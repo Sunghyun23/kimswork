@@ -5,6 +5,16 @@ P=Path(__file__).resolve().parents[1];SDK=P.parents[2]/'third_party/mpc-plugin-b
 for flag,name in [([], 'engine_test'),(['-fsanitize=undefined'],'engine_test_ubsan')]:
  subprocess.run(['clang++','-std=c++17','-O2',*flag,'-I'+str(SDK/'framework'),str(P/'tests/engine_test.cpp'),'-o',str(P/'build'/name)],check=True)
  subprocess.run([str(P/'build'/name)],env=env,check=True)
+subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests/one_bar_loop_test.cpp'),'-o',str(P/'build/one_bar_loop_test')],check=True)
+subprocess.run([str(P/'build/one_bar_loop_test')],env=env,check=True)
+subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests/host_countin_test.cpp'),'-o',str(P/'build/host_countin_test')],check=True)
+subprocess.run([str(P/'build/host_countin_test')],env=env,check=True)
+subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests/live_rules_bridge_test.cpp'),'-o',str(P/'build/live_rules_bridge_test')],check=True)
+subprocess.run([str(P/'build/live_rules_bridge_test')],env=env,check=True)
+for name in ['room_reverb_test','sample_arrows_test']:
+ binary=P/'build'/name
+ subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests'/f'{name}.cpp'),'-o',str(binary)],check=True)
+ subprocess.run([str(binary)],env=env,check=True)
 subprocess.run(['clang++','-std=c++17','-O2','-I'+str(SDK/'framework'),str(P/'tests/bank_test.cpp'),'-o',str(P/'build/bank_test')],check=True)
 subprocess.run([str(P/'build/bank_test'),str(P/'Content/Banks/default.gdbank')],check=True)
 if with_private:
@@ -26,6 +36,14 @@ subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-I'+str(SDK
 subprocess.run([str(P/'build/hat_rhythm_test')],env=env,check=True)
 subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-I'+str(SDK/'framework'),str(P/'tests/original_bank_test.cpp'),'-o',str(P/'build/original_bank_test')],check=True)
 subprocess.run([str(P/'build/original_bank_test')],env=env,check=True)
+subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests/layers_test.cpp'),'-o',str(P/'build/layers_test')],check=True)
+subprocess.run([str(P/'build/layers_test')],env=env,check=True)
+subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests/layer_names_test.cpp'),'-o',str(P/'build/layer_names_test')],check=True)
+subprocess.run([str(P/'build/layer_names_test')],env=env,check=True)
+subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests/display_names_test.cpp'),'-o',str(P/'build/display_names_test')],check=True)
+subprocess.run([str(P/'build/display_names_test')],env=env,check=True)
+import json
+assert json.loads((P/'parameters.json').read_text())[:342]==json.loads((P/'tests/legacy-parameters-1.0.0.json').read_text()),'legacy342 parameter identities/order changed'
 subprocess.run([sys.executable,str(P/'tests/skin_test.py')],check=True)
 subprocess.run([sys.executable,str(P/'tests/expansion_manager_test.py')],check=True)
 env=dict(os.environ,MPC_PLUGIN_FOLDER=str(P))

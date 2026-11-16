@@ -58,7 +58,7 @@ preset('SoundPreset','SoundPrev','SoundNext',22,132)
 children.append(label('SOUND PRESET','22 108 240 24',24))
 menu('VoiceMode',440,132);menu('InputMode',596,132)
 children.append(label('VOICE','440 108 136 24',24));children.append(label('INPUT','596 108 136 24',24))
-groups=[('A  SOUND / PLAY',['OscPair','Mix','Body','Drift'],18,174),('B  AMP ENVELOPE',['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],650,174),('C  FILTER / LFO',['Cutoff','Resonance','Rate','Depth'],18,365),('D  FX / TREMOLO',['Drive','Glide','TremRate','TremDepth'],650,365)]
+groups=[('A  SOUND / PLAY',['OscPair','Mix','Sub','Drift'],18,174),('B  AMP ENVELOPE',['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],650,174),('C  FILTER / LFO',['Cutoff','Resonance','Rate','Depth'],18,365),('D  FX / TREMOLO',['Drive','Glide','TremRate','TremDepth'],650,365)]
 # Real vertical filmstrip faders, one widget per ADSR parameter.
 from PIL import Image,ImageDraw
 frames=127;fw,fh=64,92

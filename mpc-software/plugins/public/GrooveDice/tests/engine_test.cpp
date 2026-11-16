@@ -8,11 +8,12 @@
 static thread_local bool forbidAlloc=false;
 void* operator new(std::size_t n){if(forbidAlloc)std::abort();if(void*p=std::malloc(n))return p;throw std::bad_alloc();}
 void operator delete(void*p) noexcept{std::free(p);}void operator delete(void*p,std::size_t) noexcept{std::free(p);}
+struct RuleProbe {static void clear(GrooveDice&p){p.clearBank(4);}static bool downbeat(GrooveDice&p){return p.eventCount==1&&p.events[0].offset==17&&p.events[0].role==0;}};
 struct Host {
  std::unique_ptr<GrooveDice> p=std::make_unique<GrooveDice>();
- float audio[16][512]{};float* output[16];double ppq=0;int frames=128;double bpm=120;bool playing=false,cycling=false;double energy[16]{};
+ float audio[16][512]{};float* output[16];double ppq=0;int frames=128;double bpm=120;bool playing=false,cycling=false,recording=false;double energy[16]{};
  Host(){for(int i=0;i<16;++i)output[i]=audio[i];p->prepare(44100,512);p->reset();block();}
- void block(const mpc::MidiEvent* midi=nullptr,int count=0){for(auto& ch:audio)std::fill(ch,ch+512,0);mpc::ProcessContext c;c.outputs=output;c.numOutputs=16;c.numFrames=frames;c.sampleRate=44100;c.midi=midi;c.numMidiEvents=count;c.transport.valid=c.transport.tempoValid=c.transport.ppqValid=true;c.transport.bpm=bpm;c.transport.playing=playing;c.transport.ppqPos=ppq;c.transport.cycling=cycling;c.transport.cycleStartPpq=0;c.transport.cycleEndPpq=4;forbidAlloc=true;p->process(c);forbidAlloc=false;for(int ch=0;ch<16;++ch)for(int n=0;n<frames;++n){assert(std::isfinite(audio[ch][n]));energy[ch]+=audio[ch][n]*audio[ch][n];}if(playing||p->getBool(kPreview))ppq+=frames*bpm/(60*44100);if(cycling&&ppq>=4)ppq-=4;}
+ void block(const mpc::MidiEvent* midi=nullptr,int count=0){for(auto& ch:audio)std::fill(ch,ch+512,0);mpc::ProcessContext c;c.outputs=output;c.numOutputs=16;c.numFrames=frames;c.sampleRate=44100;c.midi=midi;c.numMidiEvents=count;c.transport.valid=c.transport.tempoValid=c.transport.ppqValid=true;c.transport.bpm=bpm;c.transport.playing=playing;c.transport.recording=recording;c.transport.ppqPos=ppq;c.transport.cycling=cycling;c.transport.cycleStartPpq=0;c.transport.cycleEndPpq=4;forbidAlloc=true;p->process(c);forbidAlloc=false;for(int ch=0;ch<16;++ch)for(int n=0;n<frames;++n){assert(std::isfinite(audio[ch][n]));energy[ch]+=audio[ch][n]*audio[ch][n];}if(playing||p->getBool(kPreview))ppq+=frames*bpm/(60*44100);if(cycling&&ppq>=4)ppq-=4;}
  void until(double beat){while(ppq<beat)block();}
  void pulse(int key){p->set(key,p->getBool(key)?0:1);block();}
  void note(int note,int offset=0,int velocity=100){auto e=mpc::MidiEvent::noteOn(0,note,velocity,offset);block(&e,1);}
@@ -45,5 +46,29 @@ int main(){
  {Host h;auto&p=*h.p;p.set(kScope,3);for(auto&n:p.notes[0])n.data.store(0);h.pulse(kRoll);assert(p.countNotes(0)>0);h.pulse(kUndo);assert(p.countNotes(0)==0);std::cout<<"PASS random fill generates from empty slot and Undo restores empty slot\n";}
  {Host h;auto&p=*h.p;std::atomic<bool>done{false};std::thread writer([&]{for(int i=0;i<10000;++i)p.setNormalised(kQ1,(i%100)*.01f);done.store(true);});while(!done.load())h.block();writer.join();p.setNormalised(kQ1,.64f);h.block();assert(std::abs(p.get(kSwing)-66)<.001f);AEffect fake{};p.effect_=&fake;p.host_=&callback;p.flushHostUpdates();assert(notified.load()>=0);p.effect_=nullptr;p.host_=nullptr;std::cout<<"PASS concurrent relay input survives audio readback and queues target UI notification\n";}
  {Host h;auto&p=*h.p;p.set(kEditor,1);h.block();p.set(kFillSlot,0);h.block();for(int i=0;i<200;++i){p.setNormalised(kQ1,p.getNormalised(kQ1)+.01f);h.block();}assert(p.getInt(kFillSlot)==3);std::cout<<"PASS small relative Q-Link increments accumulate across discrete Fill Select steps\n";}
+ // Host count-in uses negative PPQ. Never loop a pattern into that region.
+ for(int frames:{32,128,512})for(bool preview:{false,true}){
+  Host h;auto&p=*h.p;h.frames=frames;h.playing=h.recording=true;h.ppq=-8;
+  p.set(kPreview,preview);p.set(kGhost,0);p.set(kRndNudge,0);p.set(kHatShift,0);p.set(kSnareLate,0);p.set(kSwing,50);p.set(kXBeat,0);p.set(kPattern,0);RuleProbe::clear(p);p.notes[4][0].write({0,0,110,100,80});
+  double step=h.bpm/(60*44100.);
+  while(h.ppq+frames*step<=0){h.block();assert(p.fired.load()==0);assert(h.energy[0]==0);}
+  // Crossing block keeps the true frame offset of the downbeat.
+  h.ppq=-17*step;h.block();assert(RuleProbe::downbeat(p));assert(p.fired.load()==1);
+  h.block();assert(p.fired.load()==1);
+ }
+ std::cout<<"PASS host count-in8beats silent, Preview cannot bypass it, sample-exact downbeat at32/128/512frames\n";
+ {Host h;auto&p=*h.p;h.playing=h.recording=true;h.ppq=-4;h.note(p.getInt(kPadNote0));assert(p.fired.load()==1);std::cout<<"PASS physical MIDI monitoring remains playable during host count-in\n";}
+ // Kit lock protects factory / custom samples, role settings and all layers in every scope.
+ for(int mode:{0,1})for(int scope=0;scope<6;++scope){
+  Host h;auto&p=*h.p;p.set(kKitLock,1);p.set(kKitDiceMode,mode);p.set(kScope,scope);p.set(kRandomAmt,100);p.set(kL0Sample,p.layerAll[0][0]);p.set(kL0Level,-12);p.set(kL0Shift,-7);h.block();
+  std::vector<std::pair<int,float>> saved;auto remember=[&](int k){saved.emplace_back(k,p.get(k));};remember(kXKit);
+  for(int r=0;r<8;++r){remember(kXSample0+r);for(int n=1;n<=6;++n)remember(kPad0+r*9+n);}
+  for(int k=kRoleOn0;k<kParamCount;++k)remember(k);for(int k=kMixKick;k<=kMixPerc;++k)remember(k);
+  for(int n=0;n<10;++n){h.pulse(kRoll);for(auto kv:saved)assert(p.get(kv.first)==kv.second);}
+  static const char* titles[]={"No Changes","Pattern Only","Groove Only","Fill Only","Rhythm + FX","FX Only"};assert(p.displayText(kScope)==titles[scope]);
+  if(scope==1)assert(p.countNotes(4)>0);
+  auto state=p.internalSaveState();Host restored;assert(restored.p->internalLoadState(state.data(),state.size()));assert(restored.p->getBool(kKitLock));assert(restored.p->displayText(kScope)==titles[scope]);
+ }
+ std::cout<<"PASS KIT FIXED preserves samples/roles/layers/mix in6scopes x2dice modes x10rolls; effective labels and saved lock\n";
  std::cout<<"ALL ENGINE TESTS PASSED\n";
 }

@@ -103,7 +103,7 @@ def install(g,tui,out):
  'Stop touch chords':(1182,588,80,32),
  'Filter / LFO divider':(320,390,2,144),'FX / Tremolo divider':(952,390,2,144),
  }
- groups=[(['OscPair','Mix','Body','Drift'],26,164,144),(['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],658,136,168),(['Cutoff','Resonance','Rate','Depth'],26,390,144),(['Drive','Glide','TremRate','TremDepth'],658,390,144)]
+ groups=[(['OscPair','Mix','Sub','Drift'],26,164,144),(['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],658,136,168),(['Cutoff','Resonance','Rate','Depth'],26,390,144),(['Drive','Glide','TremRate','TremDepth'],658,390,144)]
  for keys,x,y,h in groups:
   for j,key in enumerate(keys):placements[key]=(x+j*150,y,146,h)
  for i in range(4):placements['Chord '+str(i+1)]=(348+i*204,586,195,40);placements['Edit chord '+str(i+1)]=(390+i*204,556,110,26)

@@ -81,6 +81,8 @@ def build(defaults):
   for row in RECIPES[family]:
    name,a,b,mix,det,cut,att,dec,sus,rel,fm,sub,low,body,res,env,pulse=row
    v=dict(init);v.update(Wave1=a,Wave2=b,Mix=mix,Body=body,Sub=sub,Detune=det,Cutoff=cut,Resonance=res,Env=env,KeyTrack=35,AmpAttack=att,AmpDecay=dec,AmpSustain=sus,AmpRelease=rel,FiltAttack=max(2,att),FiltDecay=dec*.65,FiltSustain=16,FiltRelease=rel,FM=fm,Tone=30,LowCut=low,Drive=7,DriveMix=65,Pulse=pulse,Expression=55,Drift=2 if family=='Bass' else 4)
+   # Preserve the former Body contribution in explicit mixer/sub controls.
+   v.update(Mix=max(0,min(100,mix+(body-40)*.2)),Sub=min(100,sub+body*.25),Body=0)
    if family=='Bass':v.update(VoiceMode=1,Chorus=0,Delay=0,Space=0,Glide=65 if name=='Honey Slide' else 0,Depth=0,FiltSustain=8,Drive=8,Tone=38,KeyTrack=25)
    if family=='Keys':v.update(Chorus=4,Delay=2,Feedback=10,Space=0,TremRate=3.8,TremDepth=8 if name in ('Worn Tines','Cocoa Tines') else 0,Tone=27,Drive=5,KeyTrack=40)
    if family=='Synth':v.update(Chorus=7,Delay=3,Feedback=12,Depth=2,Target=1,Rate=.28,FiltSustain=22,Tone=34)

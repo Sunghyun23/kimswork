@@ -1,5 +1,5 @@
 // Generated parameter declarations. Stable index order from parameters.json.
-enum Key { kMaster, kQ1, kQ2, kQ3, kQ4, kQ5, kQ6, kQ7, kQ8, kQ9, kQ10, kQ11, kQ12, kQ13, kQ14, kQ15, kQ16, kSwing, kSnareLate, kHatShift, kRndNudge, kDensity, kGhost, kVelSpread, kRandomAmt, kFillSlot, kFillDensity, kFillEvery, kVariation, kDrive, kDust, kRoom, kDuck, kKit, kPattern, kKitLock, kPatternLock, kScope, kRoll, kUndo, kKeep, kTrigger, kRecord, kCancel, kSaveKit, kLoadKit, kPreview, kFollow, kPreviewBpm, kEditor, kFillLength, kRecMode, kCountIn, kNoteSelect, kNoteNudge, kNoteVelocity, kNoteGate, kNoteChance, kNoteDelete, kStatus, kPosition, kRecordedCount, kPad0, kLevel0, kTune0, kDecay0, kPan0, kSample0, kChoke0, kRoute0, kPadNote0, kPad1, kLevel1, kTune1, kDecay1, kPan1, kSample1, kChoke1, kRoute1, kPadNote1, kPad2, kLevel2, kTune2, kDecay2, kPan2, kSample2, kChoke2, kRoute2, kPadNote2, kPad3, kLevel3, kTune3, kDecay3, kPan3, kSample3, kChoke3, kRoute3, kPadNote3, kPad4, kLevel4, kTune4, kDecay4, kPan4, kSample4, kChoke4, kRoute4, kPadNote4, kPad5, kLevel5, kTune5, kDecay5, kPan5, kSample5, kChoke5, kRoute5, kPadNote5, kPad6, kLevel6, kTune6, kDecay6, kPan6, kSample6, kChoke6, kRoute6, kPadNote6, kPad7, kLevel7, kTune7, kDecay7, kPan7, kSample7, kChoke7, kRoute7, kPadNote7, kChokeTime, kSeparate, kLowCut, kModRate, kModDepth, kUserKit, kEditDrum, kGated, kGridSelect, kGrid0, kGrid1, kGrid2, kGrid3, kGrid4, kGrid5, kGrid6, kGrid7, kGrid8, kGrid9, kGrid10, kGrid11, kGrid12, kGrid13, kGrid14, kGrid15, kGrid16, kGrid17, kGrid18, kGrid19, kGrid20, kGrid21, kGrid22, kGrid23, kGrid24, kGrid25, kGrid26, kGrid27, kGrid28, kGrid29, kGrid30, kGrid31, kGrid32, kGrid33, kGrid34, kGrid35, kGrid36, kGrid37, kGrid38, kGrid39, kGrid40, kGrid41, kGrid42, kGrid43, kGrid44, kGrid45, kGrid46, kGrid47, kGrid48, kGrid49, kGrid50, kGrid51, kGrid52, kGrid53, kGrid54, kGrid55, kGrid56, kGrid57, kGrid58, kGrid59, kGrid60, kGrid61, kGrid62, kGrid63, kBankInfo, kGridBar, kGridTap, kKitPrev, kKitNext, kPatternPrev, kPatternNext, kLibrarySample0, kLibrarySample1, kLibrarySample2, kLibrarySample3, kLibrarySample4, kLibrarySample5, kLibrarySample6, kLibrarySample7, kLibraryBeat, kGrooveTemplate, kLibraryOpen, kLibraryKind, kLibraryRole, kLibraryPage, kLibraryPrev, kLibraryNext, kLibraryLegacy, kLibraryBeatOff, kGrooveOff, kLibraryPick0, kLibraryPick1, kLibraryPick2, kLibraryPick3, kLibraryPick4, kLibraryPick5, kLibraryPick6, kLibraryPick7, kLibraryRow0, kLibraryRow1, kLibraryRow2, kLibraryRow3, kLibraryRow4, kLibraryRow5, kLibraryRow6, kLibraryRow7, kLibraryInfo, kLibraryFolder, kLibraryBack, kLibraryCurrentSound, kLibraryPlaybackInfo, kFactoryKit, kKitDiceMode, kKitBrowserPage, kKitPagePrev, kKitPageNext, kDiceInfo, kFactoryReload, kSoundKick, kSoundSnare, kSoundHat, kSoundPerc, kSoundBrowserGroup, kSoundBrowserPage, kSoundOpen, kSoundPrev, kSoundNext, kSoundPick0, kSoundPick1, kSoundPick2, kSoundPick3, kSoundPick4, kSoundPick5, kSoundPick6, kSoundPick7, kSoundRow0, kSoundRow1, kSoundRow2, kSoundRow3, kSoundRow4, kSoundRow5, kSoundRow6, kSoundRow7, kSoundInfo, kRuleKick, kRuleSnare, kRuleHat, kRulePerc, kActionInfo, kHatGrid, kPhraseState, kHatRhythm, kHatPhraseState, kHatRhythmPage, kXKit, kXSoundKick, kXSoundSnare, kXSoundHat, kXSoundPerc, kXSample0, kXSample1, kXSample2, kXSample3, kXSample4, kXSample5, kXSample6, kXSample7, kXBeat, kXGroove, kXKitPage, kXSoundPage, kXLibraryPage, kXLibraryFolder, kPackFilter, kPackPrev, kPackNext, kKitOpen, kPackInfo, kKitRow0, kKitRow1, kKitRow2, kKitRow3, kKitRow4, kKitRow5, kKitRow6, kKitRow7, kKitPick0, kKitPick1, kKitPick2, kKitPick3, kKitPick4, kKitPick5, kKitPick6, kKitPick7, kXQKit, kXQKick, kXQSnare, kXQHat, kXQPerc, kParamCount };
+enum Key { kMaster, kQ1, kQ2, kQ3, kQ4, kQ5, kQ6, kQ7, kQ8, kQ9, kQ10, kQ11, kQ12, kQ13, kQ14, kQ15, kQ16, kSwing, kSnareLate, kHatShift, kRndNudge, kDensity, kGhost, kVelSpread, kRandomAmt, kFillSlot, kFillDensity, kFillEvery, kVariation, kDrive, kDust, kRoom, kDuck, kKit, kPattern, kKitLock, kPatternLock, kScope, kRoll, kUndo, kKeep, kTrigger, kRecord, kCancel, kSaveKit, kLoadKit, kPreview, kFollow, kPreviewBpm, kEditor, kFillLength, kRecMode, kCountIn, kNoteSelect, kNoteNudge, kNoteVelocity, kNoteGate, kNoteChance, kNoteDelete, kStatus, kPosition, kRecordedCount, kPad0, kLevel0, kTune0, kDecay0, kPan0, kSample0, kChoke0, kRoute0, kPadNote0, kPad1, kLevel1, kTune1, kDecay1, kPan1, kSample1, kChoke1, kRoute1, kPadNote1, kPad2, kLevel2, kTune2, kDecay2, kPan2, kSample2, kChoke2, kRoute2, kPadNote2, kPad3, kLevel3, kTune3, kDecay3, kPan3, kSample3, kChoke3, kRoute3, kPadNote3, kPad4, kLevel4, kTune4, kDecay4, kPan4, kSample4, kChoke4, kRoute4, kPadNote4, kPad5, kLevel5, kTune5, kDecay5, kPan5, kSample5, kChoke5, kRoute5, kPadNote5, kPad6, kLevel6, kTune6, kDecay6, kPan6, kSample6, kChoke6, kRoute6, kPadNote6, kPad7, kLevel7, kTune7, kDecay7, kPan7, kSample7, kChoke7, kRoute7, kPadNote7, kChokeTime, kSeparate, kLowCut, kModRate, kModDepth, kUserKit, kEditDrum, kGated, kGridSelect, kGrid0, kGrid1, kGrid2, kGrid3, kGrid4, kGrid5, kGrid6, kGrid7, kGrid8, kGrid9, kGrid10, kGrid11, kGrid12, kGrid13, kGrid14, kGrid15, kGrid16, kGrid17, kGrid18, kGrid19, kGrid20, kGrid21, kGrid22, kGrid23, kGrid24, kGrid25, kGrid26, kGrid27, kGrid28, kGrid29, kGrid30, kGrid31, kGrid32, kGrid33, kGrid34, kGrid35, kGrid36, kGrid37, kGrid38, kGrid39, kGrid40, kGrid41, kGrid42, kGrid43, kGrid44, kGrid45, kGrid46, kGrid47, kGrid48, kGrid49, kGrid50, kGrid51, kGrid52, kGrid53, kGrid54, kGrid55, kGrid56, kGrid57, kGrid58, kGrid59, kGrid60, kGrid61, kGrid62, kGrid63, kBankInfo, kGridBar, kGridTap, kKitPrev, kKitNext, kPatternPrev, kPatternNext, kLibrarySample0, kLibrarySample1, kLibrarySample2, kLibrarySample3, kLibrarySample4, kLibrarySample5, kLibrarySample6, kLibrarySample7, kLibraryBeat, kGrooveTemplate, kLibraryOpen, kLibraryKind, kLibraryRole, kLibraryPage, kLibraryPrev, kLibraryNext, kLibraryLegacy, kLibraryBeatOff, kGrooveOff, kLibraryPick0, kLibraryPick1, kLibraryPick2, kLibraryPick3, kLibraryPick4, kLibraryPick5, kLibraryPick6, kLibraryPick7, kLibraryRow0, kLibraryRow1, kLibraryRow2, kLibraryRow3, kLibraryRow4, kLibraryRow5, kLibraryRow6, kLibraryRow7, kLibraryInfo, kLibraryFolder, kLibraryBack, kLibraryCurrentSound, kLibraryPlaybackInfo, kFactoryKit, kKitDiceMode, kKitBrowserPage, kKitPagePrev, kKitPageNext, kDiceInfo, kFactoryReload, kSoundKick, kSoundSnare, kSoundHat, kSoundPerc, kSoundBrowserGroup, kSoundBrowserPage, kSoundOpen, kSoundPrev, kSoundNext, kSoundPick0, kSoundPick1, kSoundPick2, kSoundPick3, kSoundPick4, kSoundPick5, kSoundPick6, kSoundPick7, kSoundRow0, kSoundRow1, kSoundRow2, kSoundRow3, kSoundRow4, kSoundRow5, kSoundRow6, kSoundRow7, kSoundInfo, kRuleKick, kRuleSnare, kRuleHat, kRulePerc, kActionInfo, kHatGrid, kPhraseState, kHatRhythm, kHatPhraseState, kHatRhythmPage, kXKit, kXSoundKick, kXSoundSnare, kXSoundHat, kXSoundPerc, kXSample0, kXSample1, kXSample2, kXSample3, kXSample4, kXSample5, kXSample6, kXSample7, kXBeat, kXGroove, kXKitPage, kXSoundPage, kXLibraryPage, kXLibraryFolder, kPackFilter, kPackPrev, kPackNext, kKitOpen, kPackInfo, kKitRow0, kKitRow1, kKitRow2, kKitRow3, kKitRow4, kKitRow5, kKitRow6, kKitRow7, kKitPick0, kKitPick1, kKitPick2, kKitPick3, kKitPick4, kKitPick5, kKitPick6, kKitPick7, kXQKit, kXQKick, kXQSnare, kXQHat, kXQPerc, kMixKick, kMixSnare, kMixHat, kMixPerc, kSoundPart, kSoundRow, kSoundDetails, kSoundQ0, kSoundQ1, kSoundQ2, kSoundQ3, kSoundQ4, kSoundQ5, kSoundQ6, kSoundQ7, kSoundQ8, kSoundQ9, kSoundQ10, kSoundQ11, kSoundQ12, kSoundQ13, kSoundQ14, kSoundQ15, kSoundRowInfo0, kSoundRowInfo1, kSoundRowInfo2, kSoundRowInfo3, kSoundOn0, kSoundOn1, kSoundOn2, kSoundOn3, kSoundSolo0, kSoundSolo1, kSoundSolo2, kSoundSolo3, kSoundLock0, kSoundLock1, kSoundLock2, kSoundLock3, kSoundInvert, kSoundRoll, kSoundUndo, kSoundAudition, kRoleOn0, kRoleOn1, kRoleOn2, kRoleOn3, kRoleOn4, kRoleOn5, kRoleOn6, kRoleOn7, kRoleSolo0, kRoleSolo1, kRoleSolo2, kRoleSolo3, kRoleSolo4, kRoleSolo5, kRoleSolo6, kRoleSolo7, kRoleLock0, kRoleLock1, kRoleLock2, kRoleLock3, kRoleLock4, kRoleLock5, kRoleLock6, kRoleLock7, kRoleShift0, kRoleShift1, kRoleShift2, kRoleShift3, kRoleShift4, kRoleShift5, kRoleShift6, kRoleShift7, kRoleStart0, kRoleStart1, kRoleStart2, kRoleStart3, kRoleStart4, kRoleStart5, kRoleStart6, kRoleStart7, kRoleLowCut0, kRoleLowCut1, kRoleLowCut2, kRoleLowCut3, kRoleLowCut4, kRoleLowCut5, kRoleLowCut6, kRoleLowCut7, kRoleHighCut0, kRoleHighCut1, kRoleHighCut2, kRoleHighCut3, kRoleHighCut4, kRoleHighCut5, kRoleHighCut6, kRoleHighCut7, kRoleInvert0, kRoleInvert1, kRoleInvert2, kRoleInvert3, kRoleInvert4, kRoleInvert5, kRoleInvert6, kRoleInvert7, kL0Sample, kL0Level, kL0Tune, kL0Shift, kL0Decay, kL0On, kL0Lock, kL0Solo, kL0Start, kL0LowCut, kL0HighCut, kL0Invert, kL1Sample, kL1Level, kL1Tune, kL1Shift, kL1Decay, kL1On, kL1Lock, kL1Solo, kL1Start, kL1LowCut, kL1HighCut, kL1Invert, kL2Sample, kL2Level, kL2Tune, kL2Shift, kL2Decay, kL2On, kL2Lock, kL2Solo, kL2Start, kL2LowCut, kL2HighCut, kL2Invert, kL3Sample, kL3Level, kL3Tune, kL3Shift, kL3Decay, kL3On, kL3Lock, kL3Solo, kL3Start, kL3LowCut, kL3HighCut, kL3Invert, kL4Sample, kL4Level, kL4Tune, kL4Shift, kL4Decay, kL4On, kL4Lock, kL4Solo, kL4Start, kL4LowCut, kL4HighCut, kL4Invert, kL5Sample, kL5Level, kL5Tune, kL5Shift, kL5Decay, kL5On, kL5Lock, kL5Solo, kL5Start, kL5LowCut, kL5HighCut, kL5Invert, kRuleKickStyle, kRuleSnareStyle, kRuleHatStyle, kRulePercStyle, kSoundSamplePrev0, kSoundSampleNext0, kSoundSamplePrev1, kSoundSampleNext1, kSoundSamplePrev2, kSoundSampleNext2, kSoundSamplePrev3, kSoundSampleNext3, kParamCount };
 inline void declareParameters(mpc::Plugin& plugin) {
 { auto p=mpc::floatParam("Master","Master",0,1,0.7,"",2); p.automatable=true; plugin.addParam(p); }
 { auto p=mpc::floatParam("Q1","Screen 1",0,1,0,"",3); p.automatable=false; plugin.addParam(p); }
@@ -343,4 +343,195 @@ inline void declareParameters(mpc::Plugin& plugin) {
 { auto p=mpc::floatParam("XQSnare","Snare Select",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
 { auto p=mpc::floatParam("XQHat","Hat Select",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
 { auto p=mpc::floatParam("XQPerc","Perc Select",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("MixKick","Kick Mix",-48,6,0,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("MixSnare","Snare Mix",-48,6,0,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("MixHat","Hat Mix",-48,6,0,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("MixPerc","Perc Mix",-48,6,0,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundPart","Sound Part",{"KICK","SNARE","HI-HAT","PERC"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundRow","Selected Layer",{"1","2","3","4"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundDetails","Sound Details",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ0","Sound Control 1",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ1","Sound Control 2",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ2","Sound Control 3",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ3","Sound Control 4",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ4","Sound Control 5",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ5","Sound Control 6",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ6","Sound Control 7",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ7","Sound Control 8",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ8","Sound Control 9",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ9","Sound Control 10",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ10","Sound Control 11",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ11","Sound Control 12",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ12","Sound Control 13",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ13","Sound Control 14",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ14","Sound Control 15",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundQ15","Sound Control 16",0,1,0,"",4); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundRowInfo0","Layer Name 1",0,1,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundRowInfo1","Layer Name 2",0,1,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundRowInfo2","Layer Name 3",0,1,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("SoundRowInfo3","Layer Name 4",0,1,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundOn0","On 1",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundOn1","On 2",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundOn2","On 3",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundOn3","On 4",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSolo0","Solo 1",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSolo1","Solo 2",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSolo2","Solo 3",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSolo3","Solo 4",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundLock0","Lock 1",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundLock1","Lock 2",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundLock2","Lock 3",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundLock3","Lock 4",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundInvert","Invert Polarity",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundRoll","Roll Sound",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundUndo","Undo Sound",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundAudition","Audition Sound",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleOn0","On Part 1",{"Off","On"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleOn1","On Part 2",{"Off","On"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleOn2","On Part 3",{"Off","On"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleOn3","On Part 4",{"Off","On"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleOn4","On Part 5",{"Off","On"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleOn5","On Part 6",{"Off","On"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleOn6","On Part 7",{"Off","On"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleOn7","On Part 8",{"Off","On"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleSolo0","Solo Part 1",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleSolo1","Solo Part 2",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleSolo2","Solo Part 3",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleSolo3","Solo Part 4",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleSolo4","Solo Part 5",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleSolo5","Solo Part 6",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleSolo6","Solo Part 7",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleSolo7","Solo Part 8",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleLock0","Lock Part 1",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleLock1","Lock Part 2",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleLock2","Lock Part 3",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleLock3","Lock Part 4",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleLock4","Lock Part 5",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleLock5","Lock Part 6",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleLock6","Lock Part 7",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleLock7","Lock Part 8",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleShift0","Shift Part 1",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleShift1","Shift Part 2",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleShift2","Shift Part 3",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleShift3","Shift Part 4",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleShift4","Shift Part 5",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleShift5","Shift Part 6",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleShift6","Shift Part 7",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleShift7","Shift Part 8",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleStart0","Start Part 1",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleStart1","Start Part 2",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleStart2","Start Part 3",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleStart3","Start Part 4",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleStart4","Start Part 5",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleStart5","Start Part 6",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleStart6","Start Part 7",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleStart7","Start Part 8",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleLowCut0","LowCut Part 1",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleLowCut1","LowCut Part 2",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleLowCut2","LowCut Part 3",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleLowCut3","LowCut Part 4",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleLowCut4","LowCut Part 5",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleLowCut5","LowCut Part 6",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleLowCut6","LowCut Part 7",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleLowCut7","LowCut Part 8",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleHighCut0","HighCut Part 1",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleHighCut1","HighCut Part 2",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleHighCut2","HighCut Part 3",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleHighCut3","HighCut Part 4",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleHighCut4","HighCut Part 5",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleHighCut5","HighCut Part 6",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleHighCut6","HighCut Part 7",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("RoleHighCut7","HighCut Part 8",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleInvert0","Invert Part 1",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleInvert1","Invert Part 2",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleInvert2","Invert Part 3",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleInvert3","Invert Part 4",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleInvert4","Invert Part 5",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleInvert5","Invert Part 6",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleInvert6","Invert Part 7",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RoleInvert7","Invert Part 8",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L0Sample","Kick L2 Sample",0,1048575,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L0Level","Kick L2 Level",-48,6,-12,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L0Tune","Kick L2 Tune",-12,12,0,"st",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L0Shift","Kick L2 Shift",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L0Decay","Kick L2 Decay",20,2000,500,"ms",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L0On","Kick L2 On",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L0Lock","Kick L2 Lock",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L0Solo","Kick L2 Solo",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L0Start","Kick L2 Start",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L0LowCut","Kick L2 Low Cut",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L0HighCut","Kick L2 High Cut",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L0Invert","Kick L2 Invert",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L1Sample","Kick L3 Sample",0,1048575,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L1Level","Kick L3 Level",-48,6,-12,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L1Tune","Kick L3 Tune",-12,12,0,"st",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L1Shift","Kick L3 Shift",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L1Decay","Kick L3 Decay",20,2000,500,"ms",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L1On","Kick L3 On",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L1Lock","Kick L3 Lock",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L1Solo","Kick L3 Solo",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L1Start","Kick L3 Start",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L1LowCut","Kick L3 Low Cut",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L1HighCut","Kick L3 High Cut",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L1Invert","Kick L3 Invert",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L2Sample","Kick L4 Sample",0,1048575,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L2Level","Kick L4 Level",-48,6,-12,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L2Tune","Kick L4 Tune",-12,12,0,"st",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L2Shift","Kick L4 Shift",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L2Decay","Kick L4 Decay",20,2000,500,"ms",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L2On","Kick L4 On",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L2Lock","Kick L4 Lock",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L2Solo","Kick L4 Solo",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L2Start","Kick L4 Start",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L2LowCut","Kick L4 Low Cut",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L2HighCut","Kick L4 High Cut",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L2Invert","Kick L4 Invert",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L3Sample","Snare L2 Sample",0,1048575,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L3Level","Snare L2 Level",-48,6,-12,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L3Tune","Snare L2 Tune",-12,12,0,"st",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L3Shift","Snare L2 Shift",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L3Decay","Snare L2 Decay",20,2000,500,"ms",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L3On","Snare L2 On",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L3Lock","Snare L2 Lock",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L3Solo","Snare L2 Solo",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L3Start","Snare L2 Start",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L3LowCut","Snare L2 Low Cut",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L3HighCut","Snare L2 High Cut",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L3Invert","Snare L2 Invert",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L4Sample","Snare L3 Sample",0,1048575,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L4Level","Snare L3 Level",-48,6,-12,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L4Tune","Snare L3 Tune",-12,12,0,"st",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L4Shift","Snare L3 Shift",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L4Decay","Snare L3 Decay",20,2000,500,"ms",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L4On","Snare L3 On",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L4Lock","Snare L3 Lock",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L4Solo","Snare L3 Solo",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L4Start","Snare L3 Start",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L4LowCut","Snare L3 Low Cut",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L4HighCut","Snare L3 High Cut",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L4Invert","Snare L3 Invert",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L5Sample","Snare L4 Sample",0,1048575,0,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L5Level","Snare L4 Level",-48,6,-12,"dB",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L5Tune","Snare L4 Tune",-12,12,0,"st",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L5Shift","Snare L4 Shift",-30,30,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L5Decay","Snare L4 Decay",20,2000,500,"ms",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L5On","Snare L4 On",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L5Lock","Snare L4 Lock",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L5Solo","Snare L4 Solo",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L5Start","Snare L4 Start",0,200,0,"ms",1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L5LowCut","Snare L4 Low Cut",0,1000,0,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::floatParam("L5HighCut","Snare L4 High Cut",2000,20000,20000,"Hz",0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("L5Invert","Snare L4 Invert",{"Off","On"},0); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RuleKickStyle","Kick Style",{"LOCK","BASIC","VARIED","BUSY","DOWNBEAT","OFFBEATS","SYNCOPATED","DOUBLE HIT"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RuleSnareStyle","Snare Style",{"LOCK","BASIC","VARIED","BUSY","SOFT","GHOST BEFORE","GHOST AFTER","DOUBLE GHOST"},1); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RuleHatStyle","Hat Style",{"LOCK","BASIC","VARIED","BUSY","SPARSE","OFFBEATS","ACCENTED","OPEN HAT"},2); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("RulePercStyle","Perc Style",{"LOCK","BASIC","VARIED","BUSY","SPARSE","OFFBEATS","ANSWER SNARE","PERC LOOP"},2); p.automatable=true; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSamplePrev0","Previous Sample 1",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSampleNext0","Next Sample 1",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSamplePrev1","Previous Sample 2",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSampleNext1","Next Sample 2",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSamplePrev2","Previous Sample 3",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSampleNext2","Next Sample 3",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSamplePrev3","Previous Sample 4",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::choiceParam("SoundSampleNext3","Next Sample 4",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
 }

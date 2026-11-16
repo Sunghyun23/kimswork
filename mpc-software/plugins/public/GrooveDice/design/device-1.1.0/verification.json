@@ -1,0 +1,83 @@
+{
+  "version": "1.1.0 development",
+  "vendor": "kim",
+  "uid": "KpGy",
+  "sdk_commit": "febd2ca5bd9eb16c4a412837196e145566bc981b",
+  "parameter_count": 521,
+  "legacy_parameter_count": 342,
+  "reported_latency_ms": 30,
+  "sha256": {
+    "build/native/groove-dice.dylib": "310a1f1641e4f697fd52968a4551f727e5bf0b29293dd764e1e8d23d9923e028",
+    "build/kim - VST - Groove Dice/VST/groove-dice-arm32.so": "3cd72154f23f0256f082f173b6a34ac63e920b675358554e910645d5f5e9e4e7",
+    "build/kim - VST - Groove Dice/VST/groove-dice-arm64.so": "e19384cc0444530c315259c65ea326de2cc931ae3b0494258475121167ed09c2"
+  },
+  "host_sim": {
+    "32": {
+      "pass": 19,
+      "warn": 0,
+      "fail": 0
+    },
+    "128": {
+      "pass": 19,
+      "warn": 0,
+      "fail": 0
+    },
+    "512": {
+      "pass": 19,
+      "warn": 0,
+      "fail": 0
+    }
+  },
+  "hardware": {
+    "model": "MPC Live III",
+    "os": "3.10.1.12",
+    "optional_pack_inventory": {
+      "wav": 11199,
+      "midi": 192
+    },
+    "observed": [
+      "fresh MAIN; Init FX off",
+      "four SOUND part layouts; centred sample captions",
+      "Shift and detail editing",
+      "user-kit save/load",
+      "host preset save and restore after app restart",
+      "SOLO audition",
+      "locked ROLL SOUND and Undo",
+      "background Q bounds hidden by library/detail overlays",
+      "four active Kick layers shown in final capture"
+    ],
+    "sample_focus_recheck": "PASS: Sample2/3/4/1 drags focus B/C/D/A and edit their corresponding samples",
+    "physical_q_link_rotation": "not certified",
+    "hardware_pdc": "not measured",
+    "worst_case_cpu": "not certified",
+    "audio": {
+      "seconds": 92.83918367346939,
+      "sample_rate": 44100,
+      "channels": 2,
+      "peak_dbfs": -16.288006084611563,
+      "rms_dbfs": -51.28120159659317,
+      "audible_groups": [
+        {
+          "start_s": 31.75,
+          "end_s": 32.15,
+          "max_50ms_rms_dbfs": -22.398437056339503
+        },
+        {
+          "start_s": 52.7,
+          "end_s": 53.05,
+          "max_50ms_rms_dbfs": -23.67661515218241
+        },
+        {
+          "start_s": 79.8,
+          "end_s": 80.05,
+          "max_50ms_rms_dbfs": -30.609065025455408
+        }
+      ],
+      "viewer_dropouts": 2
+    }
+  },
+  "skin_sha256": {
+    "TUI.json": "849824b725c6b2cba8486805044b375aa3cc01b2d5401374cf53e7f071f70e9a",
+    "Q-Links.json": "6075bf40f7d87d1fdb31d424946fa607cfc011d8d01bd4653c7627805ce4822b"
+  }
+}

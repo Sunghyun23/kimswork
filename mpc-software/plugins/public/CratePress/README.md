@@ -1,6 +1,6 @@
 # Crate Press
 
-Development public preview 0.2.2. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
+Maintenance public preview 0.2.3. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
 
 Independent full-band character compression, Linkwitz–Riley three-band compression, selective bass-sensing or host-tempo ducking, drive, sampler coloration, wow/flutter, tone/cuts and aligned dry/wet mix. This is not a proprietary circuit model or an endorsed artist product. External sidechain input is not implemented.
 
@@ -62,3 +62,7 @@ Simultaneous behavior: all28two-effect pairs were tested at3sample rates, compar
 LATCH is a touch-only global header button (parameter379, appended). Off: eight momentary surfaces retain the verified hold pattern. On: the eight surfaces become normal tap toggles, allowing multiple effects to remain engaged. Turning LATCH off releases every effect gate; echo tails decay naturally. The mode preference is retained in full state and stays independent of factory programs; loading state never resumes saved active effects. The16main Q-Links and16PERFORM Q-Links remain unchanged. The VST tail budget is240seconds at the actual sample rate, covering the maximum slow-tempo/feedback echo rather than the old short tail.
 
 Native skin cache updates use a plugin-local bridge: sound programs and state loads queue a refresh; measured telemetry queues changed values; non-render host reads/idle drain notifications. No notification is sent from process(), including parameter reads made on a registered render thread. The shared SDK is unmodified.
+
+## 0.2.3 maintenance update
+
+DSP, presets, parameter identities and UI are unchanged from 0.2.2. Updated package metadata and installation guidance: prefer a single complete installation under internal storage `VST2 Plugins`; remove duplicate older copies from removable drives before rescanning. Keep `VST`, `Content` and `Plugin Skins` together. This remains a public preview with the hardware limits documented in the manual.

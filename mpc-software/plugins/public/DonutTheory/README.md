@@ -1,3 +1,7 @@
+## 1.2.3 — 전면 SUB
+
+A SOUND/PLAY는 OSC Pair / OSC Mix / Sub / Drift다. 기존 Body 대신 한 옥타브 아래 독립 사인 서브를 직접 조절한다. Factory64의 기존 Mix/Sub 기여를 이전했으며 Body ID는 숨긴 호환 항목으로만 유지한다. 사용자 Body 자동화는 이전과 소리가 달라질 수 있다. [릴리스와 검증 범위](../../../docs/plugins/donut-theory/releases/1.2.3.md)를 따른다.
+
 # Donut Theory
 
 **kim · v1.2.2 · UID `Krql`**
@@ -37,7 +41,7 @@ MPC standalone용 소울·힙합 신디사이저입니다. 베이스, 리드, �
 
 | 뱅크 | 1 | 2 | 3 | 4 |
 |---|---|---|---|---|
-| A SOUND / PLAY | OSC Pair | OSC Mix | Body | Drift |
+| A SOUND / PLAY | OSC Pair | OSC Mix | Sub | Drift |
 | B AMP ENVELOPE | Attack | Decay | Sustain | Release |
 | C FILTER / LFO | Filter Cutoff | Resonance | LFO Rate | LFO Depth |
 | D FX / TREMOLO | Drive | Glide | Tremolo Rate | Tremolo Depth |
@@ -90,7 +94,7 @@ SDK 버전과 컴파일러 설치: [third_party 안내](../../../third_party/REA
 python3 mpc-software/third_party/mpc-plugin-builder-sdk/tools/package.py mpc-software/plugins/public/DonutTheory
 ```
 
-출력 폴더를 USB/SD의 `VST2 Plugins`에 복사합니다. SDK 기준 MPC OS **3.10.1 이상**, Preferences → Enhancements의 **Enable Enhancements / External Plugin Support** 활성화가 필요합니다. 실제 사용 모델·OS에서 설치, 노트 연주, Q-Link, 저장/복원을 확인해야 합니다.
+출력 폴더를 내장 저장장치의 `VST2 Plugins`에 복사하는 것을 권장합니다. 연결된 드라이브에 같은 플러그인의 중복 사본을 두지 않습니다. SDK 기준 MPC OS **3.10.1 이상**, Preferences → Enhancements의 **Enable Enhancements / External Plugin Support** 활성화가 필요합니다. 실제 사용 모델·OS에서 설치, 노트 연주, Q-Link, 저장/복원을 확인해야 합니다.
 
 ## 검증과 제한
 
@@ -229,3 +233,9 @@ Native/ARM 빌드, SDK validator, 엔진/UBSan/bridge, host_sim19항목과 UI �
 ## 1.1.2 — 수동 패드 위치 안내
 
 공통 CHORD 편집의 PAD LOCATION에서 A–H 뱅크와4×4 위치를 지정한 뒤 LEARN으로 실제 패드의 MIDI 노트를 연결합니다. MAIN의 연주 패드 안에 위치명과 작은 배열을 표시하며 미등록은 숨깁니다. 위치는 자동 감지 정보가 아닙니다. CLEAR LOCATION은 위치 안내만 지우며 MIDI 연결은 유지합니다. 메인에 코드별 EDIT를 추가하지 않았습니다. 기존192개 파라미터를 보존하고 위치16개를192–207에 append했으며 Q-Link/automation에서는 제외합니다. 저장·복원 및192개 상태에서의 마이그레이션을 검사했습니다. 1.1.2 배포에 포함하며 실기기 검증 범위는 구현 기록을 따릅니다.
+
+## 1.2.3 개발 — BODY → SUB (2026-11-16)
+
+전면 A3와 Q-Link를 SUB로 변경했다. OSC1보다 정확히 한 옥타브 아래의 독립 사인파이며 0~100%로 조절한다. OSC Mix는 오실레이터 비율만 담당한다. 기존 SUB를 전면으로 올려 동일 신호가 중복 생성되지 않는다. BODY는 UI와 DSP에서 제외하되 기존 호스트/청크 ID를 보존한다. 공장64음색은 기존 바디의 믹스·서브 기여를 명시적 Mix/Sub 값으로 옮겨 유지했다. 과거 사용자 Body 자동화의 동일 음색 복원은 보장하지 않는다.
+
+Native/ARM32/ARM64, SDK 검사, 엔진/UBSan/아날로그/브리지/호스트/스킨 검사가 통과했다. 220Hz 음의110Hz 서브, 연속 레벨 및 무할당 처리를 확인했다. MPC XL 내장 NVMe에 설치했으며 실제 SUB 물리 노브·청음 확인은 별도다. 공개 Release는1.2.2를 유지한다.

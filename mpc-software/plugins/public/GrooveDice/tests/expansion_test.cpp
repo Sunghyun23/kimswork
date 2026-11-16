@@ -12,7 +12,7 @@ int main(int argc,char**argv){assert(argc>=2);std::string mode=argv[1];Host h;au
  if(mode=="both"){
   assert(l.loaded&&l.packs.size()==2&&p.numPrograms()==193&&l.entries.size()==11357&&l.factoryKits.size()==192);assert(l.categories[3].size()==4&&l.categories[4].size()==186);assert(l.packs[1].isPrivate);std::set<std::string>names;for(int n=0;n<p.numPrograms();++n)assert(names.insert(p.programName(n)).second);
   p.set(kXSample0,11262);h.ready();assert(l.active[0].load()==11262);assert(l.slots[l.current[0]].sound.numFrames()==l.entries[11261].frames);h.pulse(kPad0);
-  p.setNormalised(kQ10,1);h.block();assert(p.getInt(kXSoundSnare)==1092&&p.getInt(kXSample1)==l.soundPools[1].back().sounds[0]);
+  p.setNormalised(kXQSnare,1);h.block();assert(p.getInt(kXSoundSnare)==1092&&p.getInt(kXSample1)==l.soundPools[1].back().sounds[0]);
   h.pulse(kPackNext);assert(p.getInt(kPackFilter)==1);h.pulse(kPackNext);assert(p.getInt(kPackFilter)==2&&p.displayText(kPackInfo).find("PRIVATE")!=std::string::npos);
   p.set(kKitLock,0);p.set(kScope,0);for(int n=0;n<100;++n){h.pulse(kRoll);int k=p.getInt(kXKit);assert(k>96&&k<=192&&l.factoryKits[k-1].pack==1);}
   p.set(kKitDiceMode,1);for(int n=0;n<30;++n){h.pulse(kRoll);for(int r=0;r<8;++r)assert(l.entries[p.getInt(kXSample0+r)-1].pack==1);}

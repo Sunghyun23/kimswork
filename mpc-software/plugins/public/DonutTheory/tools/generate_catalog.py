@@ -7,12 +7,12 @@ params=[]
 def f(key,name,lo,hi,default,unit='',log=False): params.append(dict(key=key,name=name,min=lo,max=hi,default=default,unit=unit,log=log))
 def c(key,name,choices,default=0): params.append(dict(key=key,name=name,choices=choices,default=default))
 f('Volume','Volume',-60,0,-8,'dB')
-for key,default in [('Tone',45),('Body',40),('Motion',15),('Space',20),('Drive',0)]: f(key,key,0,100,default,'%')
+for key,default in [('Tone',45),('Body',40),('Motion',15),('Space',20),('Drive',0)]: f(key,'Legacy Body' if key=='Body' else key,0,100,default,'%')
 f('Glide','Glide',0,500,0,'ms');f('Vibrato','Vibrato',0,100,0,'%');f('Expression','Expression',0,100,70,'%')
 f('Mix','Osc Mix',0,100,40,'%');f('Detune','Detune',-25,25,6,'ct');f('Cutoff','Filter Cutoff',20,18000,2800,'Hz',True);f('Resonance','Resonance',0,100,18,'%')
 c('Shape','LFO Shape',['Sine','Triangle','Square','S&H']);f('Rate','LFO Rate',.05,20,1.2,'Hz',True);f('Depth','LFO Depth',0,100,12,'%');c('Target','LFO Target',['Pitch','Filter','Pulse Width','Amp'],1)
 c('Wave1','Osc 1 Wave',['Sine','Triangle','Saw','Pulse'],1);c('Wave2','Osc 2 Wave',['Sine','Triangle','Saw','Pulse'],0);c('Filter','Filter Type',['Low-pass','Band-pass','High-pass','Notch']);c('DriveType','Drive Type',['Tape','Tube','Fuzz']);c('VoiceMode','Voice Mode',['Mono','Legato','Poly'],2)
-f('Octave','Osc 2 Oct',-2,2,0,'oct');f('Pulse','Pulse Width',5,95,50,'%');f('Sub','Sub Level',0,100,10,'%');f('Noise','Noise Level',0,30,0,'%');f('FM','FM Amount',0,100,12,'%')
+f('Octave','Osc 2 Oct',-2,2,0,'oct');f('Pulse','Pulse Width',5,95,50,'%');f('Sub','Sub',0,100,10,'%');f('Noise','Noise Level',0,30,0,'%');f('FM','FM Amount',0,100,12,'%')
 for prefix,label,vals in [('Amp','Amp',[8,600,55,350]),('Filt','Filter',[6,350,25,300])]:
  for stage,d in zip(['Attack','Decay','Sustain','Release'],vals):f(prefix+stage,label+' '+stage,0 if stage=='Sustain' else 1,100 if stage=='Sustain' else 5000,d,'%' if stage=='Sustain' else 'ms',stage!='Sustain')
 f('Env','Filter Env',-100,100,25,'%');f('KeyTrack','Key Track',0,100,50,'%');f('Bend','Bend Range',0,24,2,'st');c('GlideLegato','Glide Mode',['Always','Legato only'],1);c('Sync','LFO Sync',['Off','On']);c('Division','LFO Division',['1/16','1/8','1/4','1/2','1 bar'],2)
@@ -92,7 +92,7 @@ for patch in patches:lines.append('{'+','.join(str(float(patch['values'][key]))+
 lines+=['};']
 (P/'src/Catalog.h').write_text('\n'.join(lines)+'\n')
 # Main uses four horizontal banks; custom skin generator remaps their 2x2 geometry.
-pages=[('MAIN',['OscPair','Mix','Body','Drift','Cutoff','Resonance','Drive','Space','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Rate','Depth','TremRate','TremDepth']),('OSC',['Wave1','Wave2','Mix','Detune','Octave','Pulse','Sub','Noise','FM','Tone','Body','VoiceMode','SoundPreset']),('FILTER',['Filter','Cutoff','Resonance','Env','FiltAttack','FiltDecay','FiltSustain','FiltRelease','KeyTrack']),('AMP',['AmpAttack','AmpDecay','AmpSustain','AmpRelease','Volume','Expression','VoiceMode','Glide','GlideLegato','Bend','InputMode','Trigger','Spread','ChordSlot']),('MOD',['Shape','Rate','Depth','Target','Sync','Division','Vibrato','Motion','Progression']),('FX',['DriveType','Drive','DriveMix','Chorus','Delay','Feedback','DelayDivision','Space','FXPreset','TremRate','TremDepth','LowCut','OutputTrim'])]
+pages=[('MAIN',['OscPair','Mix','Sub','Drift','Cutoff','Resonance','Drive','Space','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Rate','Depth','TremRate','TremDepth']),('OSC',['Wave1','Wave2','Mix','Detune','Octave','Pulse','Sub','Noise','FM','Tone','VoiceMode','SoundPreset']),('FILTER',['Filter','Cutoff','Resonance','Env','FiltAttack','FiltDecay','FiltSustain','FiltRelease','KeyTrack']),('AMP',['AmpAttack','AmpDecay','AmpSustain','AmpRelease','Volume','Expression','VoiceMode','Glide','GlideLegato','Bend','InputMode','Trigger','Spread','ChordSlot']),('MOD',['Shape','Rate','Depth','Target','Sync','Division','Vibrato','Motion','Progression']),('FX',['DriveType','Drive','DriveMix','Chorus','Delay','Feedback','DelayDivision','Space','FXPreset','TremRate','TremDepth','LowCut','OutputTrim'])]
 pages.append(('CHORD',[x+str(i) for i in range(1,5) for x in ['Root','Quality','Voicing']]+['Progression','Spread','InputMode','Trigger']))
 lookup={p['key']:p for p in params}
 ui={'kit':'amber','style':{'background':'ffe1d2ae','text':'ff312b20','muted':'ff514634','accent':'ffac5b2a'},'pages':[]}

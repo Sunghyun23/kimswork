@@ -1,8 +1,16 @@
 # Groove Dice
 
-`kim`의 공개 소스 MPC 드럼·그루브 플러그인. UID `KpGy`, 정식판 `1.0.0`. 검증 범위와 남은 제한은 VALIDATION.md를 따른다. source는 public이며 자체 제작 코어만 기본 포함한다. 제한된 외부 확장팩은 Git 제외이고 Donut Theory의 소리·UID·기존 릴리스는 변경하지 않는다.
+`kim`의 공개 소스 MPC 드럼·그루브 플러그인. UID `KpGy`, 정식판 `1.2.2`. 검증 범위와 남은 제한은 VALIDATION.md를 따른다. source는 public이며 자체 제작 코어만 기본 포함한다. 제한된 외부 확장팩은 Git 제외이고 Donut Theory의 소리·UID·기존 릴리스는 변경하지 않는다.
 
 승인 디자인은 `design/main-concept-v3-performance.png`, `design/fill-editor-concept-v1.png`다. 실제 MPC 사용 영역은1280×628이며 상단 호스트 바/하단 함수 키는 호스트 소유다. 이미지 시안을 작동하는 스킨이나 실기기 캡처와 혼동하지 않는다.
+
+## 1.2.2 — 레이어와 즉시 편집
+
+정식판 1.2.2에 포함한다. MAIN C는 킥·스네어·하이햇·Perc 볼륨, 새 SOUND 탭은 킥·스네어 최대 4레이어의 Sample/Level/Tune/Shift를 SCREEN Q-Link로 편집한다. ±30ms Shift를 위해 전체 30ms 보고 지연이 추가된다. 저장 호환성·상세 조작·제한은 [레이어 명세](../../../docs/plugins/groove-dice/layers.md)를 따른다.
+
+## 읽기 쉬운 이름
+
+기본96킷은 Velvet Basement / Amber Room / Dusty Sunday 같은 이름으로, 샘플은 Dry Kick01 / Round Snare03 / Crate Kick001 같은 이름으로 표시한다. 상단 공장 PRESET과 내부 킷 브라우저는 같은 이름을 사용한다. 원본 경로·SHA·킷ID·음원·파라미터는 유지한다. [이름 정책과 호환성](../../../docs/plugins/groove-dice/naming.md).
 
 ## 연주
 
@@ -21,7 +29,7 @@
 |---|---|
 | A · Timing | Swing / Snare Late / Hat Shift / Random Nudge |
 | B · Rules | Kick Rule / Snare Rule / Hat Rule / Perc Rule |
-| C · Drum Sounds | Kick / Snare / Hat / Perc |
+| C · Drum Mix | Kick Level / Snare Level / Hat Level / Perc Level |
 | D · Character | Drive / Dust / Room / Hat Rhythm |
 
 Swing은16분음표의 홀수 step 지연, Snare Late/Hat Shift는 해당 역할의 고정 이동, Random Nudge는 노트별 타이밍 흔들림 폭이다. Random Amount는 ROLL DICE의 변경 강도다. KEEP은 반복 시 랜덤 패턴을 고정한다. 노트별 Chance는 재생 확률이다. 자동 필인은Off/4/8/16마디이며 마디 말미에 실행한다. 내부 Duck은 킥으로 나머지 드럼을 낮춘다. **다른 MPC 트랙을 트리거하거나 덕킹하는 외부 사이드체인은 미구현/미검증**이다.
@@ -42,7 +50,7 @@ Swing은16분음표의 홀수 step 지연, Snare Late/Hat Shift는 해당 역할
 ## 킷·랜덤·FX
 
 - KITS에서 사용자 슬롯1–8을 선택하고 SAVE KIT/LOAD KIT를 사용한다. 샘플·레벨·튜닝·Decay·Pan·초크·출력·Pad Note와 FX 설정을 저장한다. 현재 킷 이름 변경/삭제/파일 브라우저/외부 WAV 실시간 import는 미구현이다.
-- DRUMS의 Q-Link A는 Factory Kit / Kit Dice Mode / Random Amount / Kit Lock이다. B/C/D는 킥/스네어/닫힌 하이햇의 Sample/Level/Tune/Decay다. MAIN과 필인 편집 매핑은 유지한다.
+- 1.1 개발판 SOUND의 Q-Link A–D는 각 레이어의 Sample/Level/Tune/Shift다. Decay는 DETAILS에 유지한다. 킥·스네어만4레이어이며 하이햇/Perc는 기존 역할을 유지한다. Kit Dice Mode는 KITS 아래에 유지하고 Random Amount는 GROOVE에서 조절한다.
 - ROLL DICE는 모든 Scope에서 킷도 변경한다(Kit Lock 또는 Amount0 제외). Whole Kit은96개 중 현재와 다른 킷, Mix Parts는 역할별 샘플 조합이며 최소 한 역할을 바꾼다. Scope는 Kit Only/Kit+Pattern/Kit+Groove/Kit+Fill/All/Kit+FX로 추가 변경 범위를 지정한다. 횟수와 KIT LOCKED/AMOUNT ZERO 상태를 표시한다. UNDO는 샘플 선택·레벨·튜닝·FX 및 변경한 패턴/필인을 직전 snapshot으로 복원한다. 현재1단계이며 redo는 없다.
 - Kit/Pattern Lock을 보존한다. 역할 범위를 벗어나 샘플을 섞지 않는다. 기본 하이햇 그룹1과 킥/스네어 독립성을 적용한다. 세부 사용자 초크 그룹별 잠금은 미구현이다.
 - 초크1–16/Off, 클릭 방지 Choke Time. 모든 MIDI·화면·자동 입력에 같은 초크 처리를 적용한다.
@@ -56,7 +64,9 @@ Swing은16분음표의 홀수 step 지연, Snare Late/Hat Shift는 해당 역할
 
 기본 `Content/Banks/default.gdbank`는 자체 제작 Original Workshop(약19.7MB)이다. 추가 팩은 `Content/Expansions/<id>/bank.gdbank`에 각각 보관하며 런타임 목록만 합친다. 기존1.48GB추출 뱅크는 `mpc-software/expansions/groove-dice/private/splat-to-clat/work/legacy-reference/`에 보존했고 별도 Splat Private 확장팩으로 패키징했다. 공개용 조립에서 이 팩은 제외한다. [현재 형식과 사용법](EXPANSIONS.md), [과거 포맷·출처 기록](SOUND_BANK.md)을 구분한다.
 
-## 전체 라이브러리 사용 (0.2.0)
+## 전체 라이브러리 사용 (0.2.0부터)
+
+1.1 개발판은 KITS/GROOVE의 LIBRARY를 사용한다. SOUND는 각 레이어의 역할별 Sample을 직접 선택한다. 아래의 DRUMS 명칭은 이전판 기록이다.
 
 DRUMS/KITS/GROOVE의 **LIBRARY**를 누른다. KITS/CHOPS/LOOPS→폴더→파일 순서로 탐색하고, 위의 대상 역할(Kick..Perc)을 선택한 뒤 파일을 누르면 그 역할에 배정된다. PREV/NEXT로8개씩 넘기고 FOLDERS로 돌아간다. MPC 호스트 표시의31바이트 제한 때문에 폴더는 팩번호/말단폴더명으로, 긴 파일명은 앞부분과 식별 가능한 끝부분을 함께 보여 준다. 원본 전체 이름은 뱅크에 그대로 보존한다. 샘플 준비 중에는 새 입력이 무음일 수 있으며 준비된 뒤부터 발음한다. 이전 샘플의 재생 중인 voice는 수명 종료까지 보존한다. OLD8은 선택한 역할을 기존8개 변형으로 되돌린다. 파트의 Sample1..8 노브는 OLD8 모드의 변형을 제어하며 전체 라이브러리 파일 선택은 LIBRARY에서 한다. 라이브러리 선택 상태에서 Sample노브를 바꾸면 그 역할의 기존8변형으로 돌아온다. 상세 화면 아래에 선택한 파일과 현재 비트/그루브 이름을 표시한다.
 
@@ -78,6 +88,10 @@ SDK는 루트의 고정 버전 한 벌을 사용한다. Zig cache 경로는 환�
 외부 코드·자산 출처는 [THIRD_PARTY.md](THIRD_PARTY.md)를 따른다.
 
 최신 결과·한계는 [VALIDATION.md](VALIDATION.md)를 확인한다. 시작 시 새 인스턴스는 MAIN이다. 저장된 프로젝트의 편집 컨텍스트는 복원될 수 있다. UID·파라미터 ID는 고정하고 이후 추가만 한다.
+
+## 이전 버전 설계·구현 기록
+
+아래는 과거 버전별 변경 이력이다. 1.1 개발판의 MAIN C·SOUND·레이어 동작은 위 설명과 layers.md를 우선한다.
 
 ## 공장 킷 선택 (0.3.0)
 
@@ -170,3 +184,25 @@ MAIN D의 네 번째 Q-Link는 DUCK 대신 **Hat Rhythm**이다. DUCK은 FX 상�
 기존297개 parameter정의를 유지하고 확장 카탈로그/정규화 Q-Link/8행 동적브라우저용45개를append(342)했다. 이전 고정범위 항목은 alias로 남기고, 새 카탈로그는 설치된 실제 항목을 사용한다. 기존16개MAIN역할/리듬그룹은 보존하며 C와DRUMS/KITS의 소리선택 대상은 확장 카탈로그 relay로 이동한다. Native PRESET은 설치된 모든 킷을 나열한다. 프로젝트/사용자킷의 샘플·MIDI는 SHA, 킷과필터는 packID+kitID로 복원한다. 누락 팩 상태에서 재저장해도 식별자를 보존한다. 신규 identity trailer200bytes를 append하며0.8이하로의 하위 호환은 보장하지 않는다.
 
 공통 테스트는 자체 코어만으로 실행한다. `python3 tools/test.py --with-private`는 별도 보관한 추출뱅크의 역호환/무손실 검사도 실행한다. 확장팩 합성/패키지 도구는 공개·비공개 source정책과 별개다. 공개용 ZIP작성은 외부 게시가 아니며 명시적 요청 없이GitHub/Pages에 올리지 않는다.
+
+## 2026-11-16: 예박·킷 보호 및 내장 설치
+
+FOLLOW가 켜진 음수 PPQ 예박에서 자동 패턴이 반복되던 문제를 수정했다. 첫 마디가 시작되는 블록의 원래 샘플 위치를 유지하며, PREVIEW가 켜져 있어도 예박 자동 재생은 막는다. 물리 패드/MIDI 직접 연주는 유지한다. MPC XL에서 사용자가 예박 무음→실제 녹음부터 정상 재생을 확인했다.
+
+MAIN의 LOCK KIT 버튼을 넓히고 활성 상태를 KIT FIXED로 표시한다. 잠금 시 Scope와 사이드 목록은 Pattern Only/Groove Only/Fill Only/Rhythm + FX/FX Only로 유효 대상을 표시하며 Kit Only는 No Changes다. 기존 Scope 저장값과 파라미터는 유지한다. FX 포함 범위는 FX를 바꿀 수 있지만 샘플·레이어·믹스는 보존한다.
+
+현재 소유자 기기는 MPC XL이며 기본 설치 대상은 SD가 아닌 내장 NVMe다. `/nvme/VST2 Plugins/kim - VST - Groove Dice`에 추가 뱅크까지 설치·검증했다. [검증 범위](VALIDATION.md)를 참고한다.
+
+## 1.1.1 개발 — 실제 MPC 양수 예박 자동 감지
+
+앞선 음수 PPQ 차단만으로 해결되지 않았음을 실기 로그에서 확인했다. MPC XL은 예박 때도 Playing/Recording을 켜고 임의의 양수 위치를 진행한 뒤 실제 녹음 시작점으로 돌아왔다. 이 정지→녹음 진입 패턴을 자동 감지하는 HostRecordGate를 적용했다. 설정 항목은 추가하지 않았다. 실제 예박 On/Off CSV를 재생하는 회귀 검사에서 예박 드럼14회→0회, 실제 녹음 첫 블록부터 재생을 확인했다. 원본 신호에 전용 예박 플래그는 관측되지 않았으므로 보편적인 호스트 API라고 설명하지 않는다. [검증 범위와 중간 박 진입의 한계](VALIDATION.md)를 따른다.
+
+## 1.2.0 개발 — 1마디 반복·즉시 편집·파트별 RULES
+
+MAIN을 같은1마디 루프의 반복으로 변경했다. Dice와 Division/룰 변경은 다음 오디오 블록부터 적용하며 마디마다 다른 응답 패턴을 자동 생성하지 않는다. B RULES는 파트별8종(총32선택)이며 기존 파라미터521개를 보존하고4개 스타일만 추가했다. 하단 필인 A–D는 독립 길이/녹음을 유지하고 수동 FILL은 다음 마디에1회, 자동 필인은 간격 경계에 끝나도록 전체 길이를 연주한 후 같은 메인 루프로 복귀한다.
+
+[상세 동작·RULES 목록·호환성](../../../docs/plugins/groove-dice/one-bar-loops.md). 실제 검증 결과는 [VALIDATION](VALIDATION.md)의 최신 항목을 따른다.
+
+## 1.2.2 배포
+
+MAIN은 1마디를 반복하며 Dice/Rule/Hat Rhythm 변경을 즉시 반영한다. ROOM은 스테레오 룸 리버브다. SOUND 샘플 이름·좌우 화살표·Q-Link가 연결된다. [릴리스 상세](../../../docs/plugins/groove-dice/releases/1.2.2.md)와 [사용 설명서](../../../docs/plugins/groove-dice/manual.md)를 참고한다.

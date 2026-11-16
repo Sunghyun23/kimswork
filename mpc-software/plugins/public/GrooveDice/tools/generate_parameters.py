@@ -75,6 +75,38 @@ f('PackInfo','Expansion Info',0,1,0,auto=False)
 for i in range(8):f('KitRow'+str(i),'Kit Row '+str(i+1),0,1,0,auto=False)
 for i in range(8):b('KitPick'+str(i),'Kit Pick '+str(i+1),auto=False)
 for key,name in [('XQKit','Kit Select'),('XQKick','Kick Select'),('XQSnare','Snare Select'),('XQHat','Hat Select'),('XQPerc','Perc Select')]:f(key,name,0,1,0,'',4,False)
+# 1.1 SOUND editor and mix trims: append, never reinterpret a persisted parameter ID.
+for part in ['Kick','Snare','Hat','Perc']:f('Mix'+part,part+' Mix',-48,6,0,'dB',1)
+c('SoundPart','Sound Part',['KICK','SNARE','HI-HAT','PERC'],auto=False)
+c('SoundRow','Selected Layer',['1','2','3','4'],auto=False);b('SoundDetails','Sound Details',auto=False)
+for i in range(16):f('SoundQ'+str(i),'Sound Control '+str(i+1),0,1,0,'',4,False)
+for i in range(4):f('SoundRowInfo'+str(i),'Layer Name '+str(i+1),0,1,0,auto=False)
+for field in ['On','Solo','Lock']:
+ for i in range(4):b('Sound'+field+str(i),field+' '+str(i+1),auto=False)
+b('SoundInvert','Invert Polarity',auto=False)
+for key,name in [('SoundRoll','Roll Sound'),('SoundUndo','Undo Sound'),('SoundAudition','Audition Sound')]:b(key,name,auto=False)
+# Base voices retain existing Sample/Level/Tune/Decay IDs. These fields extend every role.
+for field in ['On','Solo','Lock','Shift','Start','LowCut','HighCut','Invert']:
+ for role in range(8):
+  key='Role'+field+str(role);name=field+' Part '+str(role+1)
+  if field in ['On','Solo','Lock','Invert']:b(key,name,1 if field=='On'else 0)
+  else:
+   lo,hi,default,unit,dec={'Shift':(-30,30,0,'ms',1),'Start':(0,200,0,'ms',1),'LowCut':(0,1000,0,'Hz',0),'HighCut':(2000,20000,20000,'Hz',0)}[field];f(key,name,lo,hi,default,unit,dec)
+# Three additional layers for Kick and Snare. Slot number=(role*3+layer-1).
+for slot in range(6):
+ prefix='L'+str(slot);caption=('Kick'if slot<3 else'Snare')+' L'+str(slot%3+2)
+ f(prefix+'Sample',caption+' Sample',0,1048575,0,auto=False)
+ f(prefix+'Level',caption+' Level',-48,6,-12,'dB',1);f(prefix+'Tune',caption+' Tune',-12,12,0,'st',1)
+ f(prefix+'Shift',caption+' Shift',-30,30,0,'ms',1);f(prefix+'Decay',caption+' Decay',20,2000,500,'ms')
+ b(prefix+'On',caption+' On');b(prefix+'Lock',caption+' Lock');b(prefix+'Solo',caption+' Solo')
+ f(prefix+'Start',caption+' Start',0,200,0,'ms',1);f(prefix+'LowCut',caption+' Low Cut',0,1000,0,'Hz');f(prefix+'HighCut',caption+' High Cut',2000,20000,20000,'Hz');b(prefix+'Invert',caption+' Invert')
+# Append rule styles: preserve the original four-choice automation IDs/ranges.
+styles=[('Kick',['LOCK','BASIC','VARIED','BUSY','DOWNBEAT','OFFBEATS','SYNCOPATED','DOUBLE HIT'],1),('Snare',['LOCK','BASIC','VARIED','BUSY','SOFT','GHOST BEFORE','GHOST AFTER','DOUBLE GHOST'],1),('Hat',['LOCK','BASIC','VARIED','BUSY','SPARSE','OFFBEATS','ACCENTED','OPEN HAT'],2),('Perc',['LOCK','BASIC','VARIED','BUSY','SPARSE','OFFBEATS','ANSWER SNARE','PERC LOOP'],2)]
+for role,choices,default in styles:c('Rule'+role+'Style',role+' Style',choices,default)
+# Sample arrows are independent commands so a click always addresses its own row.
+for row in range(4):
+ b('SoundSamplePrev'+str(row),'Previous Sample '+str(row+1),auto=False)
+ b('SoundSampleNext'+str(row),'Next Sample '+str(row+1),auto=False)
 P.joinpath('parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 lines=['// Generated parameter declarations. Stable index order from parameters.json.','enum Key { '+', '.join('k'+p['key'] for p in params)+', kParamCount };','inline void declareParameters(mpc::Plugin& plugin) {']
 for p in params:
@@ -82,7 +114,7 @@ for p in params:
  else:expr='mpc::floatParam('+','.join([json.dumps(p['key']),json.dumps(p['name']),str(p['min']),str(p['max']),str(p['default']),json.dumps(p['unit']),str(p['decimals'])])+')'
  lines+=['{ auto p='+expr+'; p.automatable='+str(p['auto']).lower()+'; plugin.addParam(p); }']
 lines+=['}'];P.joinpath('src/Parameters.h').write_text('\n'.join(lines)+'\n')
-p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.0.0',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
-main=['Swing','Snare Late','Hat Shift','Rnd Nudge','Kick Rule','Snare Rule','Hat Rule','Perc Rule','Kick Select','Snare Select','Hat Select','Perc Select','Drive','Dust','Room','Hat Rhythm']
-pages=[{'name':'MAIN','controls':main},{'name':'FILL','controls':['Fill Select','Fill Length','Rec Mode','Count-in','Note Nudge','Note Velocity','Note Gate','Note Chance']},{'name':'GROOVE','controls':main[:4]+['Density','Ghost','Vel Spread','Random Amt']+['Preview BPM','Note Select','Note Nudge','Note Velocity','Fill Select','Fill Density','Fill Every','Variation']},{'name':'DRUMS','controls':['Kit Select','Dice Mode','Random Amt','Kit Lock']+[f'{n} {v}' for v in range(1,4)for n in ['Sample','Level','Tune','Decay']]},{'name':'KITS','controls':['Kit Select','Kit Lock','Pattern','Pattern Lock','User Kit','Save Kit','Load Kit','Choke Time']+[f'Choke {i}'for i in range(1,9)]},{'name':'FX','controls':['Drive','Dust','Room','Duck','Low Cut','Mod Rate','Mod Depth','Master']},{'name':'ROUTING','controls':[f'Output {i}'for i in range(1,9)]+[f'Pad Note {i}'for i in range(1,9)]}]
+p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.2.2',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
+main=['Swing','Snare Late','Hat Shift','Rnd Nudge','Kick Style','Snare Style','Hat Style','Perc Style','Kick Mix','Snare Mix','Hat Mix','Perc Mix','Drive','Dust','Room','Hat Rhythm']
+pages=[{'name':'MAIN','controls':main},{'name':'FILL','controls':['Fill Select','Fill Length','Rec Mode','Count-in','Note Nudge','Note Velocity','Note Gate','Note Chance']},{'name':'GROOVE','controls':main[:4]+['Density','Ghost','Vel Spread','Random Amt']+['Preview BPM','Note Select','Note Nudge','Note Velocity','Fill Select','Fill Density','Fill Every','Variation']},{'name':'SOUND','controls':['Sound Control '+str(i+1) for i in range(16)]},{'name':'KITS','controls':['Kit Select','Kit Lock','Pattern','Pattern Lock','User Kit','Save Kit','Load Kit','Choke Time']+[f'Choke {i}'for i in range(1,9)]},{'name':'FX','controls':['Drive','Dust','Room','Duck','Low Cut','Mod Rate','Mod Depth','Master']},{'name':'ROUTING','controls':[f'Output {i}'for i in range(1,9)]+[f'Pad Note {i}'for i in range(1,9)]}]
 P.joinpath('ui.json').write_text(json.dumps({'kit':'amber','pages':pages},indent=2)+'\n')

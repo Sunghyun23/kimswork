@@ -1,3 +1,7 @@
+## 0.2.3 maintenance — 2026-11-17
+
+No DSP/UI/preset/state changes. Native/ARM32/ARM64 builds and SDK validation pass. The full offline wrapper passes engine/UBSan, performance, all 28 effect-pair combinations, host bridge, three host-simulator configurations and skin/overlay/asset checks. Hardware evidence remains the earlier 0.2.2 record below, not fresh 0.2.3 device QA. The public preview label and its remaining hardware limits are retained.
+
 # Verification — 2026-11-16
 
 Crate Press 0.2.2 public preview. Automated verification passed; hardware verification is partial.

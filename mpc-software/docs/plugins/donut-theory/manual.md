@@ -70,7 +70,7 @@ Save a copy of any project that uses the plugin, and render or replace its track
 1. Open Donut Theory. The plugin starts on **MAIN**, without a startup tutorial popup.
 2. Tap **SOUND PRESET**, choose a category, then choose a sound. Try a Lead or Pad for an analog-style starting point.
 3. Set **INPUT** to **NOTES** to play ordinary notes from pads or a keyboard.
-4. Adjust **Filter Cutoff**, **Body** and **Drift**. Use **Attack** and **Release** to change how the sound starts and ends.
+4. Adjust **Filter Cutoff**, **Sub** and **Drift**. Use **Attack** and **Release** to change how the sound starts and ends.
 5. Press and hold a large chord pad at the bottom of MAIN. Release it to end the gate; the Amp Release and effects determine the remaining tail.
 6. To play those chords from physical MPC pads, open **CHORD**, use **LEARN** for each slot, and choose **CHORDS** or **SPLIT** input mode.
 
@@ -98,7 +98,7 @@ MAIN arranges four groups in reading order: A upper left, B upper right, C lower
 
 | Group | Control 1 | Control 2 | Control 3 | Control 4 |
 |---|---|---|---|---|
-| **A · SOUND / PLAY** | OSC Pair | OSC Mix | Body | Drift |
+| **A · SOUND / PLAY** | OSC Pair | OSC Mix | Sub | Drift |
 | **B · AMP ENVELOPE** | Attack | Decay | Sustain | Release |
 | **C · FILTER / LFO** | Filter Cutoff | Resonance | LFO Rate | LFO Depth |
 | **D · FX / TREMOLO** | Drive | Glide | Tremolo Rate | Tremolo Depth |
@@ -107,7 +107,7 @@ With the supplied column mapping, the four physical controls read top to bottom 
 
 **Q-LINK SCREEN** follows the current plugin view. On CHORD it becomes the chord editor mapping described below. Program/Track mappings retain the synth controls; they do not become chord editing controls simply because the editor is visible.
 
-OSC Mix is immediately beside OSC Pair on MAIN. Glide is in group D and also available on AMP. Space remains on FX. Body retains its existing influence on oscillator balance and sub level; the Osc Mix value is the base balance before this shaping.
+OSC Mix is immediately beside OSC Pair on MAIN. Glide is in group D and also available on AMP. Space remains on FX. SUB controls an independent sine oscillator exactly one octave below OSC1. It follows note pitch, glide and pitch modulation, shares the voice filter and amp envelope, and does not alter OSC Mix. At 0% it is silent; raise it to reinforce bass.
 
 The filter type, LFO Shape/Target and drive type have touch selectors near their controls. Drive type sits above Drive. Vibrato and Expression remain available as separate touch controls; they do not occupy the main 16 Q-Link positions.
 
@@ -116,7 +116,7 @@ The filter type, LFO Shape/Target and drive type have touch selectors near their
 | Desired change | Control |
 |---|---|
 | Different oscillator character | OSC Pair |
-| Fuller low body | Body |
+| Octave-down bass weight | Sub |
 | Slowly wandering, tape-like pitch | Drift |
 | Static beating between oscillators | Detune on OSC |
 | Sliding between notes | Glide and Glide Mode |
@@ -276,11 +276,10 @@ The engine has **16 audio voices**, not sixteen complete chords of unlimited siz
 | Detune | Static oscillator-2 offset, −25 to +25 cents. |
 | Oscillator 2 Octave | −2 to +2 octaves. |
 | Pulse Width | Pulse duty cycle, 5–95%. |
-| Sub | Sine sub-oscillator amount, 0–100%. |
+| Sub | Sine sub-oscillator level, 0–100%, exactly one octave below OSC1. Also available on MAIN group A / Q-Link 3. |
 | Noise | Noise amount, 0–30%. |
 | FM | Phase-modulation character on **Sine oscillator 1**, 0–100%; not a general multi-operator FM matrix. |
 | Tone | Harmonic/saturation character macro; separate from the stored base cutoff. |
-| Body | Thickness through oscillator balance and sub contribution. |
 | Drift | Shared slow wow and faster flutter-like pitch movement. |
 
 **Drift is not Detune.** Detune creates a steady offset between oscillators. Drift moves pitch over time for worn-tape instability, with a fine low-end taper for subtle settings. Vibrato is another distinct effect: regular periodic pitch movement. Motion, on MOD, adds its own slow movement and chorus contribution.
@@ -398,7 +397,7 @@ Selecting a different sound or changing input/voice routing clears current notes
 | Q-Link still changes synth controls in CHORD | Select Q-LINK SCREEN. Program/Track retain the synth map. |
 | An old project has an old Q-Link layout | Preserve the project and compare a fresh instance; host-side assignments can be stored independently of the current skin. |
 | Pitch sounds too unstable | Reduce Drift, Motion, Vibrato/CC1 and Pitch-target LFO depth; Detune is a separate static offset. |
-| Sound is thin after editing | Check Low-cut, main filter mode/cutoff, OSC Mix and Body. |
+| Sound is thin after editing | Check Low-cut, main filter mode/cutoff, OSC Mix and Sub. |
 
 When reporting an issue, include the package version, MPC model/OS, input mode, voice mode, sound name, active chord bank, Q-Link mode and whether it occurs in a new instance or an older project. A screenshot and a short reproducible sequence are more useful than an isolated symptom.
 
@@ -456,3 +455,9 @@ On MPC Live III / OS 3.10.1.12, a fresh instance opened MAIN and entered CHORD, 
 
 
 Hardware follow-up for 1.2.2 (2026-11-15): the user confirmed normal MAIN↔CHORD switching by repeatedly tapping the first tab directly on the MPC. This supplements the remote check; all physical Q-Link and fresh LEARN inputs remain a separate verification scope.
+
+## 1.2.3: front-panel SUB
+
+MAIN A is now **OSC Pair / OSC Mix / Sub / Drift**. The Sub knob controls the existing independent sine sub at half OSC1 frequency; it does not add a second duplicate sub. It follows pitch/glide, then goes through the same filter and amp envelope as the other oscillators. Use Notes with Mono or Legato and lower Low-cut appropriately for bass playing. Raising Sub does not change oscillator balance. Factory programs retain their previous combined mix/sub amounts by moving the former Body contributions into explicit OSC Mix and Sub values. The deprecated Body parameter ID remains for host/state compatibility but is no longer exposed in the custom pages and no longer shapes audio. Old user projects containing Body automation may therefore sound different; their IDs are retained, not their old Body-dependent sound.
+
+Native/ARM32/ARM64 builds, SDK validation, engine/UBSan, host bridge, analog-engine tests, host simulator and skin/Q-Link tests pass. An offline spectral test confirms110Hz SUB beneath220Hz OSC, silence at Sub0, increasing level at50/100 and no audio-thread allocations. These are automated tests; the new SUB hardware knob/listening behavior on MPC XL has not yet been confirmed. Version 1.2.3 publishes this change; hardware coverage remains as stated above.

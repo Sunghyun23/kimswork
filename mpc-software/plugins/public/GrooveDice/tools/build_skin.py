@@ -36,11 +36,14 @@ def art(w,h,kind):return material.plate(w,h,kind)
 counter=0
 def button(text,key,b,index=1,count=1,kind='cream',toggle=False):
  global counter
- counter+=1;x,y,w,h=map(int,b.split());a=art(w,h,kind);lit=art(w,h,'olive'if kind in('orange','red')else'orange');parts=[g.entry('button art','Button',g.button_data(lit,a,index,count),f'0 0 {w} {h}','No','Show','Always',remap=[('Data',H(key))]),label(text,f'0 0 {w} {h}',25,'fff9e9c8'if kind in('dark','red','orange','olive')else'ff38261c')]
+ counter+=1;x,y,w,h=map(int,b.split());a=art(w,h,kind);lit=art(w,h,'olive'if kind in('orange','red')else'orange');parts=[g.entry('button art','Button',g.button_data(lit,a,index,count),f'0 0 {w} {h}','No','Show','Always',remap=[('Data',H(key))]),label(text,f'0 0 {w} {h}',min(25,max(12,int((w-8)/max(1,len(text))/.62))),'fff9e9c8'if kind in('dark','red','orange','olive')else'ff38261c')]
+ if key=='KitLock':
+  put(get(parts[1],'bounds'),'additionalInvalidatingHandles',['IndexedEnabling/0/2/'+H('KitLock')]);put(get(parts[1],'bounds'),'showWhenDataModelInvalid','Hide')
+  parts.append(conditional(label('KIT FIXED',f'0 0 {w} {h}',18,'fff9e9c8'),'IndexedEnabling/1/2/'+H('KitLock')))
  if key=='Roll':
   put(get(parts[1],'bounds'),'bounds',f'52 0 {w-68} {h}');parts.append(image('dice-icon.png',f'18 {(h-32)//2} 48 32'))
  if toggle:
-  if key in ('Preview','Follow','KitLock','PatternLock','Separate'):
+  if key in ('Preview','Follow','KitLock','PatternLock','Separate','SoundDetails','SoundInvert')or key.startswith(('SoundOn','SoundSolo','SoundLock')):
    parts.append(g.entry('caption toggle hit','Button',g.button_data('hit.png','hit.png',1,1),f'0 0 {w} {h}','No','Show','Always',remap=[('Data',H(key))]));define('Btn'+str(counter),parts);return instance('Btn'+str(counter),b)
   # Independent UI-local press gate: the continuous surface owns release.
   # The engine command still toggles exactly once on Mouse Down (never on release).
@@ -61,7 +64,7 @@ def group_guide(x,y):
  return f'{x+4} {y+26} 606 110'
 def knob(key,name,x,y,w=138,physical=None):
  lcdw=min(116,w-22);lcdx=(w-lcdw)//2
- bind=H(key);children=[label({'XQKit':'Drum Kit','XQKick':'Kick','XQSnare':'Snare','XQHat':'Hat','XQPerc':'Perc Set'}.get(key,name.removesuffix(' Rule')if key.startswith('Rule')else name),f'0 0 {w} 23',22),g.entry('knob','Knob',g.knob_filmstrip_data('knob-v2.png',127,'Vertical'),f'{(w-64)//2} 20 64 64','Yes','Show','Always',remap=[('Data',bind)]),image(art(lcdw,24,'olive'),f'{lcdx} 81 {lcdw} 24'),label('',f'{lcdx} 81 {lcdw} 24',18 if key=='HatRhythm'else 20 if key in ('XQKit','XQKick','XQSnare','XQHat','XQPerc')or key.startswith('Sound')else 24,'fff7e9c7',key=key)]
+ bind=H(key);children=[label({'MixKick':'Kick','MixSnare':'Snare','MixHat':'Hat','MixPerc':'Perc','XQKit':'Drum Kit','XQKick':'Kick','XQSnare':'Snare','XQHat':'Hat','XQPerc':'Perc Set'}.get(key,name.removesuffix(' Rule')if key.startswith('Rule')else name),f'0 0 {w} 23',22),g.entry('knob','Knob',g.knob_filmstrip_data('knob-v2.png',127,'Vertical'),f'{(w-64)//2} 20 64 64','Yes','Show','Always',remap=[('Data',bind)]),image(art(lcdw,24,'olive'),f'{lcdx} 81 {lcdw} 24'),label('',f'{lcdx} 81 {lcdw} 24',18 if key=='HatRhythm'else 20 if key in ('XQKit','XQKick','XQSnare','XQHat','XQPerc')or key.startswith('Sound')else 24,'fff7e9c7',key=key)]
  if key.startswith('Sample')and key[6:].isdigit():
   library='XSample'+key[6:];conditional(children[3],'IndexedEnabling/0/1048576/'+H(library));children.append(conditional(label('LIBRARY',f'{lcdx} 81 {lcdw} 24',22,'fff7e9c7'),'RangedEnabling/1/1048575/1048576/'+H(library)))
  if key in ['XQKick','XQSnare','XQHat','XQPerc']:
@@ -97,13 +100,13 @@ def value(key,b,title=None):
 # Above the instruments: read-only context. Every MAIN action lives below the four panels.
 main=base()+[image(art(1248,40,'dark'),'16 90 1248 40'),label('KIT','24 92 64 36',20,'fff7e9c7'),label('','92 92 300 36',23,'fff7e9c7','XKit'),label('PATTERN','400 92 112 36',20,'fff7e9c7'),label('','514 92 280 36',23,'fff7e9c7','Pattern'),label('','808 92 120 36',21,'fff7e9c7','Position'),label('','934 92 130 36',21,'fff7e9c7','Status'),label('','1070 92 180 36',22,'fff7e9c7','PreviewBpm')]
 
-groups=[('A · TIMING',['Swing','SnareLate','HatShift','RndNudge'],16,136),('B · RULES',['RuleKick','RuleSnare','RuleHat','RulePerc'],650,136),('C · DRUM SOUNDS',['XQKick','XQSnare','XQHat','XQPerc'],16,278),('D · CHARACTER',['Drive','Dust','Room','HatRhythm'],650,278)]
+groups=[('A · TIMING',['Swing','SnareLate','HatShift','RndNudge'],16,136),('B · RULES',['RuleKickStyle','RuleSnareStyle','RuleHatStyle','RulePercStyle'],650,136),('C · DRUM MIX',['MixKick','MixSnare','MixHat','MixPerc'],16,278),('D · CHARACTER',['Drive','Dust','Room','HatRhythm'],650,278)]
 for group,(title,groupkeys,x,y)in enumerate(groups):
  main.append(panel(title,f'{x} {y} 614 112'))
  for j,key in enumerate(groupkeys):main.append(knob(key,meta[keys[key]]['name'],x+44+j*140,y+28,138,group*4+j))
 # Total bounds must fit628; knob panes finish425. Action row starts432.
 # Three spacious action lanes; physical pads own direct drum performance.
-main +=[label('BROWSE','16 420 88 60',17,'fff7e9c7'),button('<','KitPrev','108 420 44 60',toggle=True),value('XKit','156 420 248 60'),button('>','KitNext','408 420 44 60',toggle=True),button('LOCK','KitLock','456 420 74 60',toggle=True),button('<','PatternPrev','542 420 44 60',toggle=True),value('Pattern','590 420 250 60'),button('>','PatternNext','844 420 44 60',toggle=True),button('LOCK','PatternLock','892 420 74 60',toggle=True),button('SAVE KIT','SaveKit','982 420 282 60',kind='dark',toggle=True),
+main +=[label('BROWSE','16 420 88 60',17,'fff7e9c7'),button('<','KitPrev','108 420 44 60',toggle=True),value('XKit','156 420 212 60'),button('>','KitNext','372 420 44 60',toggle=True),button('LOCK KIT','KitLock','424 420 106 60',toggle=True),button('<','PatternPrev','542 420 44 60',toggle=True),value('Pattern','590 420 250 60'),button('>','PatternNext','844 420 44 60',toggle=True),button('LOCK','PatternLock','892 420 74 60',toggle=True),button('SAVE KIT','SaveKit','982 420 282 60',kind='dark',toggle=True),
 label('CREATE','16 488 88 60',17,'fff7e9c7'),button('ROLL DICE','Roll','108 488 288 60',kind='orange',toggle=True),value('Scope','408 488 288 60'),button('UNDO','Undo','708 488 130 60',toggle=True),button('KEEP','Keep','850 488 130 60',toggle=True),image(art(272,60,'olive'),'992 488 272 60'),label('','992 488 272 60',21,'fff7e9c7','DiceInfo'),
 label('PLAY','16 556 88 60',17,'fff7e9c7'),button('FOLLOW','Follow','108 556 150 60',toggle=True),button('PREVIEW','Preview','266 556 166 60',toggle=True),value('FillSlot','444 556 60 60'),button('FILL','Trigger','512 556 112 60',kind='orange',toggle=True),button('EDIT / REC','Editor','636 556 184 60',toggle=True),image(art(432,60,'dark'),'832 556 432 60'),label('','840 556 416 60',20,'fff7e9c7','ActionInfo')]
 
@@ -131,7 +134,7 @@ for ti,tab in enumerate(tabs[2:],1):put(tab,'fnKeyIndex',ti)
 # All detail pages use the same real native controls and approved material palette.
 for ti,tab in enumerate(tabs[2:],2):
  page=pages[ti];children=base()+[label(page.name+' · SCREEN Q-LINK','16 92 900 36',27,'fff5e5c3')]
- if page.name=='GROOVE':children.append(label('4-BAR PHRASES / SNARE 2 + 4 / KICK OFF BACKBEAT','16 126 900 18',18,'fff5e5c3'))
+ if page.name=='GROOVE':children.append(label('1-BAR LOOP / LIVE EDIT / SEPARATE FILL A-D','16 126 900 18',18,'fff5e5c3'))
  bounds=[]
  for group in range(4):
   controls=[c for c in page.controls[group*4:group*4+4] if c.param is not None]
@@ -140,16 +143,20 @@ for ti,tab in enumerate(tabs[2:],2):
   for j,ctl in enumerate(controls):
    key=meta[ctl.param.index]['key'];children.append(knob(key,meta[ctl.param.index]['name'],x+44+j*140,y+28,138))
  if page.name=='GROOVE':
-  children +=[label('HAT RHYTHM · NEXT PATTERN ROLL','16 526 664 28',21,'fff5e5c3'),value('HatRhythm','16 566 664 50')]
- if page.name=='KITS':children +=[button('<','PackPrev','650 526 54 54',toggle=True),label('','710 526 494 54',21,'fff7e8c7','PackInfo'),button('>','PackNext','1210 526 54 54',toggle=True),button('SAVE KIT','SaveKit','16 526 300 54',kind='orange',toggle=True),button('LOAD KIT','LoadKit','334 526 300 54',toggle=True)]
+  children +=[label('HAT RHYTHM · LIVE','16 526 664 28',21,'fff5e5c3'),value('HatRhythm','16 566 664 50')]
+ if page.name=='KITS':children +=[value('KitDiceMode','16 446 600 50'),button('<','PackPrev','650 526 54 54',toggle=True),label('','710 526 494 54',21,'fff7e8c7','PackInfo'),button('>','PackNext','1210 526 54 54',toggle=True),button('SAVE KIT','SaveKit','16 526 300 54',kind='orange',toggle=True),button('LOAD KIT','LoadKit','334 526 300 54',toggle=True)]
  if page.name=='ROUTING':children.append(button('SEPARATE OUT','Separate','1000 574 264 42',toggle=True))
  put(tab,'componentDefinition',g.component_definition([],children,'ffeed9b3'));put(tab,'qlinkBoundsData',bounds)
 
+from sound_skin import build_sound_skin
+build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,art,knob,value,conditional,base)
 # Custom sidebars for every choice selector, placed above current content and hiding background guides.
 for tab in tabs:
  children=get(get(tab,'componentDefinition'),'componentsData')
- allowed={'XKit','Kit','Pattern','Scope','FillSlot','FillEvery','FillLength','RecMode','CountIn','GridBar','RuleKick','RuleSnare','RuleHat','RulePerc','HatRhythm'} if get(tab,'tabName')=='MAIN' else {meta[c.param.index]['key']for page in pages if page.name==get(tab,'tabName')for c in page.controls if c.param is not None}
+ allowed={'XKit','Kit','Pattern','Scope','FillSlot','FillEvery','FillLength','RecMode','CountIn','GridBar','RuleKickStyle','RuleSnareStyle','RuleHatStyle','RulePercStyle','HatRhythm'} if get(tab,'tabName')=='MAIN' else {meta[c.param.index]['key']for page in pages if page.name==get(tab,'tabName')for c in page.controls if c.param is not None}
  if get(tab,'tabName')=='GROOVE':allowed.add('HatRhythm')
+ if get(tab,'tabName')=='SOUND':allowed.add('UserKit')
+ if get(tab,'tabName')=='KITS':allowed.add('KitDiceMode')
  for m in meta:
   if 'choices'not in m or m['key']not in allowed:continue
   key=m['key'];opened='Local/2/gdChoice'+str(keys[key]);name='GDChoice'+key
@@ -158,7 +165,11 @@ for tab in tabs:
    rows.append(g.entry('outside dismiss','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',opened)]))
    for j,text in enumerate(m['choices']):
     if key not in ('XKit','HatRhythm')and j>=8:break
-    rowName=name+'Row'+str(j);parts=[button(text,key,'0 0 414 56',j,len(m['choices']),kind='dark')]
+    rowName=name+'Row'+str(j)
+    if key=='Scope':
+     locked=['No Changes','Pattern Only','Groove Only','Fill Only','Rhythm + FX','FX Only'][j]
+     parts=[conditional(button(text,key,'0 0 414 56',j,len(m['choices']),kind='dark'),'IndexedEnabling/0/2/'+H('KitLock')),conditional(button(locked,key,'0 0 414 56',j,len(m['choices']),kind='dark'),'IndexedEnabling/1/2/'+H('KitLock'))]
+    else:parts=[button(text,key,'0 0 414 56',j,len(m['choices']),kind='dark')]
     actions=[g.action('Mouse Down','Toggle Switch',opened,'')]
     if key=='XKit':actions.append(g.action('Mouse Down','Toggle Switch',H('FactoryReload'),''))
     define(rowName,parts,actions);entry=instance(rowName,f'6 {62+(j%8)*60} 414 56')
@@ -167,7 +178,7 @@ for tab in tabs:
    if key=='XKit':rows +=[label('','6 538 414 24',20,'fff7e8c7','KitBrowserPage'),button('< PREV','KitPagePrev','6 568 202 48',kind='cream',toggle=True),button('NEXT >','KitPageNext','218 568 202 48',kind='cream',toggle=True)]
    if key=='HatRhythm':rows +=[button('PAGE 1 / 2','HatRhythmPage','6 568 202 48',0,2),button('PAGE 2 / 2','HatRhythmPage','218 568 202 48',1,2)]
    if key.startswith('Rule'):
-    for line,text in enumerate(['LOCK: Keep this part','POCKET: Core rhythm + touch','LOOSE: Small embellishments','BUSY: Bounded variations','Pattern ROLL: 4-bar phrases','Kit Lock protects sounds']):rows.append(label(text,f'12 {326+line*40} 402 34',21,'fff3dfba'))
+    rows.append(label('Live changes / LOCK holds rhythm','12 548 402 30',19,'fff3dfba'))
    # X uses a genuine native toggle on the local handle.
    hit=g.entry('Close sidebar','Button',g.button_data('hit.png','hit.png',0,2),'360 0 66 56','No','Show','Always',remap=[('Data',opened)]);rows +=[label('X','360 0 66 56',28,'fff8e4bd'),hit];define(name,rows,modal=True)
   children.append(instance(name,invalid=['IndexedEnabling/1/2/'+opened]))
@@ -181,14 +192,14 @@ for i,title in enumerate(['KITS','CHOPS','LOOPS','BEATS','GROOVE']):lib.append(b
 for i,title in enumerate(['KICK','SNARE','CL HAT','OP HAT','CLAP','TOM','CYMBAL','PERC']):lib.append(button(title,'LibraryRole',f'{6+(i%4)*104} {86+(i//4)*31} 100 29',i,8,kind='dark'))
 lib.append(label('','6 150 304 24',20,'fff7e8c7','LibraryInfo'));lib.append(button('FOLDERS','LibraryBack','314 148 106 28',kind='cream',toggle=True))
 for i in range(8):lib.append(library_row(i,f'6 {178+i*43} 414 41'))
-lib +=[button('< PREV','LibraryPrev','6 526 202 40',toggle=True),button('NEXT >','LibraryNext','216 526 204 40',toggle=True),button('CORE 8','LibraryLegacy','6 574 132 38',toggle=True),button('BEAT OFF','LibraryBeatOff','144 574 132 38',toggle=True),button('GRV OFF','GrooveOff','282 574 138 38',toggle=True)]
+lib +=[button('< PREV','LibraryPrev','6 526 202 40',toggle=True),button('NEXT >','LibraryNext','216 526 204 40',toggle=True),button('CORE SOUNDS','LibraryLegacy','6 574 132 38',toggle=True),button('BEAT OFF','LibraryBeatOff','144 574 132 38',toggle=True),button('GRV OFF','GrooveOff','282 574 138 38',toggle=True)]
 # Outside dismissal is above the entire previous tab; captions retain raw parent command hit surfaces.
 lib.append(g.entry('outside close','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',H('LibraryOpen'))]))
 define('LibraryBrowser',lib,modal=True)
 for tab in tabs:
  children=get(get(tab,'componentDefinition'),'componentsData')
  if get(tab,'tabName')in ('DRUMS','KITS','GROOVE'):
-  children.append(button('LIBRARY','LibraryOpen','1000 578 264 40',kind='orange',toggle=True));children.append(label('','16 446 1248 32',23,'fff5e5c3','LibraryCurrentSound'));children.append(label('','16 484 1248 32',19,'fff5e5c3','LibraryPlaybackInfo'))
+  children.append(button('LIBRARY','LibraryOpen','1000 578 264 40',kind='orange',toggle=True));children.append(label('','650 446 614 32',21,'fff5e5c3','LibraryCurrentSound'));children.append(label('','650 484 614 32',19,'fff5e5c3','LibraryPlaybackInfo'))
  children.append(instance('LibraryBrowser',invalid=['IndexedEnabling/1/2/'+H('LibraryOpen')]))
 # Classified role browser: eight rows, stable values; never creates thousands of native choice widgets.
 role=[image(art(426,628,'dark'),'0 0 426 628'),button('<','PackPrev','6 2 48 40',toggle=True),label('','60 2 246 40',20,'fff8e8c6','PackInfo'),button('>','PackNext','310 2 48 40',toggle=True),button('X','SoundOpen','366 2 54 40',toggle=True)]

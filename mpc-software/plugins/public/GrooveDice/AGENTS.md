@@ -58,3 +58,14 @@
 - Historical bank-work references below describe pre-migration artifacts. Current private work is at the expansion path above. Preserve legacy parameter IDs/order/captions using legacy-catalogue.json; never regenerate them from a different bank.
 
 - 1.0.0 release preserves342 parameter identities and UID KpGy. App-authored packs use GDEXP001 with optional target=groove-dice/plugin_uid=KpGy metadata; old manifests remain readable. Pack Builder UI hides its auto-generated Pack ID under Advanced; it is not an account identifier.
+
+## 1.2.2: Sound layers and live rules (user approved)
+
+- MAIN C=DRUM MIX (Kick/Snare/Hat/Perc levels), former DRUMS becomes SOUND. Kick/Snare maximum4 layers, each SCREEN group=Sample/Level/Tune/Shift; Hat remains Closed/Open and Perc four existing roles. Hat C/D are Closed/Open details. ON/SOLO/LOCK and selected-row DETAILS retained. See ../../../docs/plugins/groove-dice/layers.md.
+- First342 parameters unchanged; layers extend through index520, rules521–524, sample commands525–532 (533 total). Do not reorder. GDLY0001 extends old state and eight saved user kits; missing sample SHA survives resave/reinstall. Private bank payloads remain separate.
+- Shift ±30ms is actual onset timing, not trimming. All roles report30ms latency; do not claim zero-latency pads or hardware compensation without measurement. Same-hit layers share choke ownership; pending voices/cache refs must remain safe.
+- The user authorized public release and website publication on 2026-11-17. Publish only original core payloads; optional personal expansions remain excluded.
+- MPC 실기 ValueSlider 값 글씨는 샘플 플레이트 아래로 밀려 잘렸다. SOUND Sample은 중앙 Label+투명 FilmStrip Knob 터치층을 유지한다. Sample 부모에 Mouse Down / Q-Link / 해당 SoundQ(row*4)를 명시해 일반 노브처럼 가이드도 따라오게 한다. Details의 Hat에는 Closed/Open 두 선택기만 표시한다.
+- 새 인스턴스에서 호스트가 effSetProgram(0)을 생략해도 Init 효과가 꺼지도록 constructor에서 실제 FX값을 초기화한다. 기존342 metadata fixture/ID/순서는 바꾸지 않는다.
+
+- MAIN repeats one bar. RULE/Hat Rhythm changes are live; preserve bounded, deduplicated host notifications (no full layer/audio fanout). ROOM uses per-output stereo room reverbs. Sample arrows and SCREEN Q-Link share selection; retain the first342 fixture and fixed GDLY trailer boundary.

@@ -1,3 +1,102 @@
+# 1.2.2 local candidate — sample selection and ROOM
+
+The user confirmed the installed final candidate and authorized publication on 2026-11-17. The final owner profile was installed on MPC XL internal NVMe and the app restarted; 143 files matched. This user confirmation does not imply an exhaustive per-control listening/physical matrix.
+
+SOUND sample cells now show the current sample name, 44×44 previous/next buttons, and a drag/Q-Link hint. Transparent filmstrip input replaces the native ValueSlider text that could obscure the custom name. Existing SCREEN groups retain Sample / Level / Tune / Shift. Eight non-automatable command parameters are appended after the 525 existing parameters (533 total); fixed layer-state storage still ends at the original layer boundary. Selecting an extra-layer sound enables it; selecting None clears it. Base selection resolves the legacy source identity before stepping, so the first arrow changes the actual sound. Sample changes clear missing-kit references.
+
+ROOM now uses an original stereo diffused, damped four-line feedback-delay-network reverb instead of the former single 4096-sample feedback echo. Each of eight output buses owns independent room state. The existing ROOM parameter identity is unchanged. This deliberately changes the wet sound of saved presets. Tests at 44.1/48/96 kHz verify finite output, decaying diffuse tails, stereo decorrelation, reset silence, bus isolation and no process-time allocations. The user subsequently accepted the installed candidate; an independent exhaustive physical listening matrix was not recorded.
+
+Visible action/Dice cumulative counters were removed: labels report READY, DICE APPLIED, KIT FIXED or the last action. Internal bookkeeping is retained. Full regression and host simulation pass (19 passed, zero warnings/failures); UBSan sample-arrow, layer/state and live-rule bridge checks pass. Final native/ARM32/ARM64 assembly and SDK validation pass (zero errors/warnings). Post-edit sample-arrow, layer/state, layer-name and real VST live-rule bridge regressions pass. The owner profile was installed on MPC XL internal NVMe; all 143 files matched on remote verification. Its private expansion remains local to the owner profile. App restart was requested through the official SDK CLI. No ASan pass is claimed.
+
+# 1.2.1 candidate — physical Kick RULE shutdown investigation (2026-11-17 KST)
+
+**1.2.0 is not hardware-verified/stable.** The user reported the MPC shut down while turning the physical Kick RULE Q-Link. The device was reachable again, but the previous boot journal was not persistent, core dumps were disabled and no pstore entry remained. The exact shutdown cause cannot be claimed from those logs.
+
+A reproducible VST-side defect was found:20tiny movements within the same style emitted5040host automation notifications, including2720unrelated layer notifications. A semantic style change emitted252notifications including136layer notifications. Live pattern refresh had called the full audio/kit notification fanout, and discrete settings were rebuilt even without a new choice. Kit-row selection flags were also marked dirty on every block.
+
+The candidate deduplicates style changes by integer choice, refreshes only necessary loop metadata and only dirties actual kit-row changes. Under the initial matched bridge test,20same-style movements now emit0notifications/0layer writes; a style change emits3notifications/0layer writes. The expanded test includes actual VST setters/getters, a separate playing audio thread, all4x8relay/direct style selections,4004small normalized inputs and reentrant host reads/rule-value echoes. Notifications remain bounded. Full regression and host_sim19PASS/0WARN/0FAIL pass. Native/ARM32/ARM64 and SDK validator pass (0errors/0warnings).
+
+AddressSanitizer cannot run in this macOS environment: an empty standalone ASan executable fails during sanitizer initialization with the same sanitizer_malloc_mac.inc assertion as the instrumented test. No ASan memory-safety pass is claimed; UBSan and allocation guards pass.
+
+The user physically retested the Kick RULE Q-Link and confirmed the device stayed running. Device trace records also showed completed style transitions with exactly three notifications per change. This verifies the reported input path on the candidate; it does not establish the exact original reboot cause. Temporary trace code and files were removed from the normal build.
+
+# 1.2.0 one-bar/live edit development — 2026-11-16
+
+User-approved: one repeating MAIN bar; immediate Dice and live Division/rule editing; separate recorded Fill A–D; more rule choices. Four appended style parameters give eight choices per part without changing legacy rule ranges. The fixed layer trailer excludes these parameters. See../../../docs/plugins/groove-dice/one-bar-loops.md.
+
+Targeted tests pass for100one-bar generations and six identical repeated scheduled bars, mid-bar16th-note delivery, per-part Q-Link edits preserving other parts,32styles, factory/user kit independence, old521-parameter/current state restore, Dice/Undo and recorded1beat..4bar fills. A two-bar automatic fill plays in full and MAIN resumes. Native/ARM32/ARM64 builds and SDK validation passed (0errors/0warnings). Full engine/UBSan/state/layer/expansion/skin regressions and actual-host count-in fixtures passed; host simulator19PASS/0WARN/0FAIL. Device installation/retest follows when completed.
+
+# 1.1.1 automatic positive-position record pre-roll — 2026-11-16
+
+## Actual-device findings
+
+MPC XL / OS3.10.1.12; the captured tempo/sample-position relation is98BPM and44100Hz,128-frame render blocks. Four captured one-bar record count-ins began at PPQ2.14585185,0.64481481,7.73125926 and8.22940741. All advanced for842blocks (about4beats) and then reset PPQ/sample position to0 at actual recording start. FOLLOW=On, PREVIEW=Off. The three original captured rolls each produced14automatic hits during count-in.
+
+The controlled test with count-in Off began directly at PPQ0. Raw VST flags were32719 on entering either record mode and32718 thereafter, including both before and after the count-in seek; SMPTE position followed the same free-running PPQ and next-clock was0. No independent count-in flag was observed. This replaces the earlier unverified assumption that MPC necessarily uses negative PPQ.
+
+## Implementation and bounded claims
+
+HostRecordGate watches transport transitions without new user parameters. When recording starts from stopped at a positive position beyond the host's announced bar start, it quarantines automatic playback until the host seeks back to its real starting point or advances the musical bar anchor. Ordinary playback and punch-in on an already running transport bypass this guard. Negative-PPQ hosts remain supported. Preview cannot bypass an active guard and direct MIDI/pad monitoring remains playable.
+
+This is an inference from the measured MPC transport sequence, not a standardized pre-roll signal. Deliberately starting a stopped recording strictly inside an existing bar can be indistinguishable from that sequence in the available transport data; automatic playback can then wait for the next bar/seek. Such off-bar direct starts and other firmware/models are not certified. Aligned nonzero-bar starts and punching into an already playing sequence are covered by automated tests.
+
+## Regression evidence
+
+- Three checked-in, audio-free device fixtures: two positive-PPQ count-in captures and the controlled count-in-Off capture.842count-in blocks are silent; each actual recording starts with an event in its first block. The old binary reproduced14hits; the new scheduler reproduces0.
+- UBSan and allocation guard;32/128/512frames × Preview on/off; MIDI monitoring; count-in cancel/retry; Follow toggles; normal loops; aligned nonzero-bar start; punch-in; gate reset and leaving record.
+- Native/ARM32/ARM64 build and SDK validator0errors/0warnings passed. Full regression (including engine/UBSan, actual-host fixtures, layers/state, music/rules, UI, expansions) passed; host simulator19PASS/0WARN/0FAIL. Final user device retest passed: the user explicitly confirmed both count-in On and Off work normally on MPC XL after the automatic fix.
+- Installation on MPC XL internal NVMe passed140-file verification. Engine10101, manifest1.1.1 and content1.1.1.0 are synchronized; personal banks retained. The plugin app was restarted remotely.
+- The normal1.1.1ARM64 binary was checked for absence of diagnostic writer strings; it does not run the diagnostic writer thread. After device confirmation the compile-time-only tracer source/hooks were also removed (no change to the already installed normal binary). Personal expansion payloads remain separate and unchanged.
+
+# Reopened: host record count-in — 2026-11-16
+
+The user reports sound during count-in again after the earlier positive test. The previous negative-PPQ regression passes but does not establish every real MPC count-in behavior. The earlier hardware-success entry below is historical, not a current resolution claim. A compile-time-only transport tracer is being used to capture playing/recording/PPQ/sample position and Follow/Preview/scheduled hits on the actual MPC XL. Default production builds contain no tracer, file I/O or extra thread from this diagnostic.
+
+# Count-in, kit lock and internal installation — 2026-11-16
+
+- Reproduced automatic events while host transport is playing at negative PPQ. The scheduler had wrapped those positions into previous pattern cycles. FOLLOW now suppresses automatic playback throughout negative-PPQ blocks, including when Preview remains enabled, and suppresses negative-time events in the zero-crossing block. The original block origin preserves the first downbeat's exact sample offset. Direct MIDI/pad monitoring remains enabled.
+- Regression: eight-beat pre-roll, Preview on/off, 32/128/512 frames, first downbeat at sample 17, no duplicate onset, finite output and no audio-thread allocations. This verifies negative-PPQ count-in; no unsupported separate host pre-roll flag is inferred.
+- Existing KitLock is retained. MAIN now has a wider LOCK KIT button with KIT FIXED active caption. Locked scope labels are No Changes / Pattern Only / Groove Only / Fill Only / Rhythm + FX / FX Only, including the touch sidebar. The six stored Scope values, parameter IDs and defaults remain unchanged. No Changes intentionally makes no random changes; explicit FX scopes can still change FX.
+- Kit lock matrix: 6 scopes × 2 dice modes × 10 rolls retain factory/custom sample selections, role controls, layers and mix trims. Saved lock and effective caption restore correctly. Whole-kit and mixed-part paths are covered.
+- Native/ARM32/ARM64 builds, validator (0 errors/0 warnings), full engine/UBSan/layer/state/rules/skin/expansion tests and host_sim (19 passed/0 warnings/0 failures) passed. UI generation tests include conditional scope rows and the larger lock caption. Physical lock-button/Q-Link interaction on the new MPC XL was not independently inspected.
+- Installed on MPC XL / OS 3.10.1.12 internal NVMe at `/nvme/VST2 Plugins/kim - VST - Groove Dice`; all 140 files matched installer verification. Personal expansion packages were retained. The new device initially had no plugins on NVMe or attached SSD. The previous device's SD contents were not deleted.
+- User explicitly confirmed on the new MPC XL after installation: “예박은 조용하고 녹음부터 정상 재생”. This is a physical count-in/playback confirmation, not a remote screenshot or an all-controls hardware certification.
+- Local logs: `/private/tmp/gd-countin-before.log`, `gd-countin-after.log`, `gd-countin-build.log`, `gd-countin-tests.log`, `gd-countin-skin.log`, `mpc-xl-groove-install.log`, `mpc-xl-internal-after.log`. Logs are local evidence, not release payloads. No public Release or website deployment was performed.
+
+# Display-name revision — 1.1 development
+
+-96 core factory kit titles replaced by readable aliases; optional imported code-style kits use a separate title palette. Public factory list97 programs and installed personal profile201 programs/11199 WAV aliases pass uniqueness,31-byte native title limits and source ID/path preservation tests.
+- Native/ARM32/ARM64 builds and SDK validation pass (0errors/0warnings); full regression suite passes. Host simulator32/128/512:19PASS/0WARN/0FAIL each. Display-only table rebuild and state load/resave are byte-identical; bank payloads and521 parameter declarations are unchanged by this revision.
+- Sample names, core fallback labels, kit browser rows, native programs and pack captions share the display-name layer. Existing readable MIDI titles and user-authored .xpl filenames are retained. Full policy/title list:../../../docs/plugins/groove-dice/naming.md.
+- This revision has not yet been visually rechecked on MPC. Existing device captures below document the preceding layer build and therefore still contain the old names. Final device transfer completed on SD drive 2 (36C7-1ACA): all 138 files matched verification. Existing public and personal expansion payloads were retained. The app was not restarted; the running instance needs restart/reload to construct new display tables.
+
+# Development verification — 1.1.0 Sound layers (unreleased)
+
+User-approved implementation: MAIN C drum mix, Kick/Snare four-layer SOUND editor, Sample/Level/Tune/Shift SCREEN controls, ON/SOLO/LOCK, selected-row detail context and saved user kits. Public release remains1.0.0. See [layer specification](../../../docs/plugins/groove-dice/layers.md).
+
+## Automated checks — 2026-11-16
+
+- Native, ARM32 and ARM64 builds pass. SDK validator:0 errors/0 warnings. Compiler retains16 existing style/sign warnings; validator results do not imply a warning-free compiler.
+- Full regression suite passes: engine and UBSan, bank integrity,97 factory programs/96 kits, groove/rules/usability/musical/15 Hat Rhythm modes, original bank, layer tests, skin bounds/press visuals and expansion manager. First342 parameter declarations compare exactly with the1.0.0 fixture;521 total, append-only.
+- Final host simulator at32/128/512 frames:19 PASS,0 WARN,0 FAIL each. Actual byte-identical chunk resave, random parameter sweep, finite output, no clipping/denormals and teardown pass. No SDK source modification was used; diagnostic hosts were temporary local copies.
+- Layer tests with UBSan and guarded process() allocation: signed onset at44.1/48/96kHz ×31/128/511-frame blocks ×−30/−15/0/+30ms; exact incoming MIDI offset preserved. Reported latency matches30ms at each rate. All16 relays across four parts, detail fields/polarity, four voices sharing one logical hit without self-choke, Solo, role stereo routing, pending older-hit choke, locked ROLL, Undo and asynchronous sample changes pass.
+- Current/eight saved-kit state roundtrip,342-parameter legacy chunks, missing pack identity→resave→reinstallation, inactive detail relay and unavailable index byte stability pass. Host parameter notification remains outside render callbacks.
+- Own-core layered audio render:7.999s mono preview, peak−6.29dBFS/RMS−25.09dBFS, finite and unclipped. Local audition artifact:build/layer-audition.wav. This is rendered output evidence, not a claim of a listening assessment.
+- Fixed30ms baseline latency is an intentional cost of negative live Shift; MPC delay compensation/physical feel and worst-case hardware CPU remain separate checks.
+
+## Hardware observations — MPC Live III / OS3.10.1.12
+
+- Official SDK update verifies138 files; source banks and both installed Workshop Sessions/Splat Private packs are retained. Inventory11199 WAV/192 MIDI includes optional packs, not the public base inventory. Old plugin folder was exported first; private payloads remain ignored local build material.
+- Saved pre-update settings as gdlayersbefore.xpl. Fresh new instance opens MAIN, shows four0dB mix trims and Init effectsOff. Native PRESET/name remains host-owned.
+- Actual six tabs inspected: MAIN/GROOVE/SOUND/KITS/FX/ROUTING. All four SOUND parts display their intended rows; Hat DETAILS shows only Closed/Open. Layer sample text clipping found on the first device pass was fixed with an inset centred Label and transparent editable surface. Text is readable in the final on-device captures.
+- Touch adjusts samples/Shift/Low Cut and changes selected-row detail values independently. SAVE KIT at Shift+27.2ms → manual−16.9ms → LOAD KIT restores+27.2ms. Saved gdlayersqa.xpl, restarted the app and loaded it: sample identity, ON, level−12dB, Shift+27.2ms and another layer's Low Cut593Hz restored.
+- SOLO can isolate either voice. ROLL SOUND changes enabled unlocked voices while Layer3 LOCK keeps its sample; UNDO restores CORE1/previous Layer2 sample and retains timing/lock. Captures are in design/device-1.1.0.
+- Q-Link outline follows rotary focus; library/detail overlays hide background bounds and closing restores them. Sample-only selector focus was missing and corrected. Final device recheck: dragging Sample rows2→3→4→1 moves the native Q-Link outline B→C→D→A, updates the correct sample and enables new layers. All four Kick layers are enabled in the final capture.
+- Recorded92.839s stereo44.1kHz via the official Remote Screen Viewer. Three isolated audition groups correspond to combined voices, Layer2Solo and Layer1Solo; peak−16.29dBFS, finite/unclipped PCM. Viewer reported2 stream dropouts. This does not locate the cause or certify worst-case plugin CPU/latency. Audio/video evidence stays local in build/Desktop because it can contain optional personal samples.
+- Physical Q-Link rotation across every group, pad timing feel, hardware PDC and worst-case CPU are not certified.30ms baseline delay remains explicit. Screen drag/focus and automated mapping checks are not substituted for a physical-knob test.
+
+---
+
 # Current verification — 1.0.0
 
 Includes Original Workshop only:128 original synthesized WAV,96 kit configurations,two authored beats and93 timing templates. The base package contains no private third-party bank. Main timing/rule/sound/character groups,15 Hat Rhythm modes, fill recording, user-kit state and independent .gdexp expansions are included. Vendor kim, UID KpGy and342 parameter identities are unchanged from0.9.

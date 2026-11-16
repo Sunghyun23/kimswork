@@ -3666,5 +3666,1943 @@
     "unit": "",
     "decimals": 4,
     "auto": false
+  },
+  {
+    "key": "MixKick",
+    "name": "Kick Mix",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "MixSnare",
+    "name": "Snare Mix",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "MixHat",
+    "name": "Hat Mix",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "MixPerc",
+    "name": "Perc Mix",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "SoundPart",
+    "name": "Sound Part",
+    "choices": [
+      "KICK",
+      "SNARE",
+      "HI-HAT",
+      "PERC"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow",
+    "name": "Selected Layer",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundDetails",
+    "name": "Sound Details",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundQ0",
+    "name": "Sound Control 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ1",
+    "name": "Sound Control 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ2",
+    "name": "Sound Control 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ3",
+    "name": "Sound Control 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ4",
+    "name": "Sound Control 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ5",
+    "name": "Sound Control 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ6",
+    "name": "Sound Control 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ7",
+    "name": "Sound Control 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ8",
+    "name": "Sound Control 9",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ9",
+    "name": "Sound Control 10",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ10",
+    "name": "Sound Control 11",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ11",
+    "name": "Sound Control 12",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ12",
+    "name": "Sound Control 13",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ13",
+    "name": "Sound Control 14",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ14",
+    "name": "Sound Control 15",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ15",
+    "name": "Sound Control 16",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundRowInfo0",
+    "name": "Layer Name 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRowInfo1",
+    "name": "Layer Name 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRowInfo2",
+    "name": "Layer Name 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRowInfo3",
+    "name": "Layer Name 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOn0",
+    "name": "On 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOn1",
+    "name": "On 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOn2",
+    "name": "On 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOn3",
+    "name": "On 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSolo0",
+    "name": "Solo 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSolo1",
+    "name": "Solo 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSolo2",
+    "name": "Solo 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSolo3",
+    "name": "Solo 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundLock0",
+    "name": "Lock 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundLock1",
+    "name": "Lock 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundLock2",
+    "name": "Lock 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundLock3",
+    "name": "Lock 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundInvert",
+    "name": "Invert Polarity",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRoll",
+    "name": "Roll Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundUndo",
+    "name": "Undo Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundAudition",
+    "name": "Audition Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "RoleOn0",
+    "name": "On Part 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn1",
+    "name": "On Part 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn2",
+    "name": "On Part 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn3",
+    "name": "On Part 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn4",
+    "name": "On Part 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn5",
+    "name": "On Part 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn6",
+    "name": "On Part 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn7",
+    "name": "On Part 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo0",
+    "name": "Solo Part 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo1",
+    "name": "Solo Part 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo2",
+    "name": "Solo Part 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo3",
+    "name": "Solo Part 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo4",
+    "name": "Solo Part 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo5",
+    "name": "Solo Part 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo6",
+    "name": "Solo Part 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo7",
+    "name": "Solo Part 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock0",
+    "name": "Lock Part 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock1",
+    "name": "Lock Part 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock2",
+    "name": "Lock Part 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock3",
+    "name": "Lock Part 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock4",
+    "name": "Lock Part 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock5",
+    "name": "Lock Part 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock6",
+    "name": "Lock Part 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock7",
+    "name": "Lock Part 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleShift0",
+    "name": "Shift Part 1",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift1",
+    "name": "Shift Part 2",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift2",
+    "name": "Shift Part 3",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift3",
+    "name": "Shift Part 4",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift4",
+    "name": "Shift Part 5",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift5",
+    "name": "Shift Part 6",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift6",
+    "name": "Shift Part 7",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift7",
+    "name": "Shift Part 8",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart0",
+    "name": "Start Part 1",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart1",
+    "name": "Start Part 2",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart2",
+    "name": "Start Part 3",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart3",
+    "name": "Start Part 4",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart4",
+    "name": "Start Part 5",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart5",
+    "name": "Start Part 6",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart6",
+    "name": "Start Part 7",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart7",
+    "name": "Start Part 8",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut0",
+    "name": "LowCut Part 1",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut1",
+    "name": "LowCut Part 2",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut2",
+    "name": "LowCut Part 3",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut3",
+    "name": "LowCut Part 4",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut4",
+    "name": "LowCut Part 5",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut5",
+    "name": "LowCut Part 6",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut6",
+    "name": "LowCut Part 7",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut7",
+    "name": "LowCut Part 8",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut0",
+    "name": "HighCut Part 1",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut1",
+    "name": "HighCut Part 2",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut2",
+    "name": "HighCut Part 3",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut3",
+    "name": "HighCut Part 4",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut4",
+    "name": "HighCut Part 5",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut5",
+    "name": "HighCut Part 6",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut6",
+    "name": "HighCut Part 7",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut7",
+    "name": "HighCut Part 8",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert0",
+    "name": "Invert Part 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert1",
+    "name": "Invert Part 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert2",
+    "name": "Invert Part 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert3",
+    "name": "Invert Part 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert4",
+    "name": "Invert Part 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert5",
+    "name": "Invert Part 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert6",
+    "name": "Invert Part 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert7",
+    "name": "Invert Part 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Sample",
+    "name": "Kick L2 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L0Level",
+    "name": "Kick L2 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L0Tune",
+    "name": "Kick L2 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L0Shift",
+    "name": "Kick L2 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L0Decay",
+    "name": "Kick L2 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L0On",
+    "name": "Kick L2 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Lock",
+    "name": "Kick L2 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Solo",
+    "name": "Kick L2 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Start",
+    "name": "Kick L2 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L0LowCut",
+    "name": "Kick L2 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L0HighCut",
+    "name": "Kick L2 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Invert",
+    "name": "Kick L2 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Sample",
+    "name": "Kick L3 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L1Level",
+    "name": "Kick L3 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L1Tune",
+    "name": "Kick L3 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L1Shift",
+    "name": "Kick L3 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L1Decay",
+    "name": "Kick L3 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L1On",
+    "name": "Kick L3 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Lock",
+    "name": "Kick L3 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Solo",
+    "name": "Kick L3 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Start",
+    "name": "Kick L3 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L1LowCut",
+    "name": "Kick L3 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L1HighCut",
+    "name": "Kick L3 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Invert",
+    "name": "Kick L3 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Sample",
+    "name": "Kick L4 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L2Level",
+    "name": "Kick L4 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L2Tune",
+    "name": "Kick L4 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L2Shift",
+    "name": "Kick L4 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L2Decay",
+    "name": "Kick L4 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L2On",
+    "name": "Kick L4 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Lock",
+    "name": "Kick L4 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Solo",
+    "name": "Kick L4 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Start",
+    "name": "Kick L4 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L2LowCut",
+    "name": "Kick L4 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L2HighCut",
+    "name": "Kick L4 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Invert",
+    "name": "Kick L4 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Sample",
+    "name": "Snare L2 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L3Level",
+    "name": "Snare L2 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L3Tune",
+    "name": "Snare L2 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L3Shift",
+    "name": "Snare L2 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L3Decay",
+    "name": "Snare L2 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L3On",
+    "name": "Snare L2 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Lock",
+    "name": "Snare L2 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Solo",
+    "name": "Snare L2 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Start",
+    "name": "Snare L2 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L3LowCut",
+    "name": "Snare L2 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L3HighCut",
+    "name": "Snare L2 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Invert",
+    "name": "Snare L2 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Sample",
+    "name": "Snare L3 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L4Level",
+    "name": "Snare L3 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L4Tune",
+    "name": "Snare L3 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L4Shift",
+    "name": "Snare L3 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L4Decay",
+    "name": "Snare L3 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L4On",
+    "name": "Snare L3 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Lock",
+    "name": "Snare L3 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Solo",
+    "name": "Snare L3 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Start",
+    "name": "Snare L3 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L4LowCut",
+    "name": "Snare L3 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L4HighCut",
+    "name": "Snare L3 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Invert",
+    "name": "Snare L3 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Sample",
+    "name": "Snare L4 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L5Level",
+    "name": "Snare L4 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L5Tune",
+    "name": "Snare L4 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L5Shift",
+    "name": "Snare L4 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L5Decay",
+    "name": "Snare L4 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L5On",
+    "name": "Snare L4 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Lock",
+    "name": "Snare L4 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Solo",
+    "name": "Snare L4 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Start",
+    "name": "Snare L4 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L5LowCut",
+    "name": "Snare L4 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L5HighCut",
+    "name": "Snare L4 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Invert",
+    "name": "Snare L4 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RuleKickStyle",
+    "name": "Kick Style",
+    "choices": [
+      "LOCK",
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "DOWNBEAT",
+      "OFFBEATS",
+      "SYNCOPATED",
+      "DOUBLE HIT"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RuleSnareStyle",
+    "name": "Snare Style",
+    "choices": [
+      "LOCK",
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SOFT",
+      "GHOST BEFORE",
+      "GHOST AFTER",
+      "DOUBLE GHOST"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RuleHatStyle",
+    "name": "Hat Style",
+    "choices": [
+      "LOCK",
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SPARSE",
+      "OFFBEATS",
+      "ACCENTED",
+      "OPEN HAT"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "RulePercStyle",
+    "name": "Perc Style",
+    "choices": [
+      "LOCK",
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SPARSE",
+      "OFFBEATS",
+      "ANSWER SNARE",
+      "PERC LOOP"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "SoundSamplePrev0",
+    "name": "Previous Sample 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSampleNext0",
+    "name": "Next Sample 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSamplePrev1",
+    "name": "Previous Sample 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSampleNext1",
+    "name": "Next Sample 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSamplePrev2",
+    "name": "Previous Sample 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSampleNext2",
+    "name": "Next Sample 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSamplePrev3",
+    "name": "Previous Sample 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSampleNext3",
+    "name": "Next Sample 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
   }
 ]

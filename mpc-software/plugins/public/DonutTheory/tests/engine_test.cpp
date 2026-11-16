@@ -33,14 +33,20 @@ int main(){
   assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();for(int slot=0;slot<16;++slot)assert(r.p->getInt(kPadPosition1+slot)==0);assert(r.p->getInt(kPadNote1)==75);
  }
  std::cout<<"PASS: manual pad locations, LEARN and sound independence, 208-param round-trip and 192-param migration\n";
- // Osc Mix endpoints isolate the other oscillator at neutral Body shaping.
+ // Osc Mix endpoints isolate the other oscillator independently of SUB.
  {for(float mix:{0.f,100.f}){Rig a,b;
    for(auto* m:{&a,&b}){m->p->setProgram(0);m->p->set(kBody,40);m->p->set(kMix,mix);m->p->set(kWave1,0);m->p->set(kWave2,2);m->p->set(kAmpAttack,1);m->p->set(kAmpSustain,100);m->p->set(kCutoff,18000);m->p->reset();}
    b.p->set(mix==0?kWave2:kWave1,1);a.block();b.block();
    a.block({mpc::MidiEvent::noteOn(0,60,100)});b.block({mpc::MidiEvent::noteOn(0,60,100)});
    for(int block=0;block<120;++block){a.block();b.block();for(int i=0;i<128;++i)assert(std::abs(a.l[i]-b.l[i])<1e-6f);}
   }}
- std::cout<<"PASS: OSC Mix endpoints isolate OSC1/OSC2 at neutral Body, with finite stable output\n";
+ std::cout<<"PASS: OSC Mix endpoints isolate OSC1/OSC2 independent of SUB, with finite stable output\n";
+ // SUB is a true -12-semitone sine; the retired Body must not alter it or OSC mix.
+ {auto spectral=[](float sub,float body){Rig m;m.p->setProgram(0);m.p->set(kSub,sub);m.p->set(kBody,body);m.p->set(kWave1,0);m.p->set(kWave2,0);m.p->set(kMix,0);m.p->set(kTone,0);m.p->set(kCutoff,18000);m.p->set(kAmpAttack,1);m.p->set(kAmpSustain,100);m.p->set(kAmpDecay,1);m.p->reset();m.block({mpc::MidiEvent::noteOn(0,57,100)});for(int b=0;b<100;++b)m.block();
+   std::array<double,2> projection{};std::vector<float> audio;for(int b=0;b<345;++b){m.block();audio.insert(audio.end(),m.l,m.l+128);}for(size_t n=0;n<audio.size();++n){double phase=6.283185307179586*110*n/44100.;projection[0]+=audio[n]*std::sin(phase);projection[1]+=audio[n]*std::cos(phase);}return std::make_pair(std::hypot(projection[0],projection[1])/audio.size(),audio);};
+  auto off=spectral(0,0),half=spectral(50,0),full=spectral(100,0),oldBody=spectral(100,100);assert(full.first>off.first*10&&half.first>off.first*5&&full.first>half.first*1.2);assert(full.second==oldBody.second);
+  std::cout<<"PASS: SUB adds110Hz beneath220Hz OSC, continuous level, retired Body inert, no RT allocations\n";
+ }
  // Sixteen slots, view-independent MIDI, count/page safety and old-state migration.
  {Rig m;m.p->set(kSlotCount,3);m.p->set(kInputMode,1);m.p->set(kPadMap,1);m.p->set(kAmpRelease,1);
   for(int slot=0;slot<16;++slot)m.p->set(kChordPadNotes[slot],80+slot);m.block();

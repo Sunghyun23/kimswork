@@ -38,7 +38,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10202;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10203;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -256,8 +256,9 @@ public:
                 }
                 const float fm=v.fm.process()*p_[kFM]*.004f*(.3f+env*.7f);
                 const float a=int(std::lround(raw_[kWave1]))==0?v.sineA.process(fm):v.a.process();
-                const float b=int(std::lround(raw_[kWave2]))==0?v.sineB.process():v.b.process();const float mix=std::clamp(p_[kMix]*.01f+(p_[kBody]-40)*.002f,0.f,1.f);
-                const float sub=v.sub.process()*(p_[kSub]*.006f+p_[kBody]*.0015f);
+                const float b=int(std::lround(raw_[kWave2]))==0?v.sineB.process():v.b.process();const float mix=std::clamp(p_[kMix]*.01f,0.f,1.f);
+                // Independent sine sub, exactly one octave below OSC1, follows its pitch/glide.
+                const float sub=v.sub.process()*p_[kSub]*.006f;
                 float x=a*(1-mix)+b*mix+sub+noise_.nextBipolar()*p_[kNoise]*.003f;
                 // Tone adds harmonics while leaving the base Filter Cutoff parameter intact.
                 x=donut::analogMixer(x,p_[kTone]);

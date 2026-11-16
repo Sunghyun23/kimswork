@@ -3,7 +3,7 @@ from pathlib import Path
 P=Path(__file__).resolve().parents[1];skin=P/'skins'
 t=json.loads((skin/'TUI.json').read_text())['pageData'];q=json.loads((skin/'Q-Links.json').read_text());params=json.loads((P/'parameters.json').read_text())
 index={p['key']:i for i,p in enumerate(params)}
-expected=['OscPair','Mix','Body','Drift','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Cutoff','Resonance','Rate','Depth','Drive','Glide','TremRate','TremDepth']
+expected=['OscPair','Mix','Sub','Drift','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Cutoff','Resonance','Rate','Depth','Drive','Glide','TremRate','TremDepth']
 main=q['Screen Mode Q-Links']['map'][0];assert main['Bank Direction']=='Column'
 # SDK hardware banks are columns read top-to-bottom, not Q-Link 1..4.
 physical_banks=((13,9,5,1),(14,10,6,2),(15,11,7,3),(16,12,8,4))
@@ -122,7 +122,7 @@ assert box('AmpAttack')[1] < box('Cutoff')[1]
 assert box('OscPair')[0] < box('AmpAttack')[0] and box('Cutoff')[0] < box('Drive')[0]
 assert box('Vibrato')[1]+box('Vibrato')[3] <= box('OscPair')[1]
 assert box('Expression')[1]+box('Expression')[3] <= box('Drift')[1]
-assert [box(k)[0] for k in ('OscPair','Mix','Body','Drift')]==sorted(box(k)[0] for k in ('OscPair','Mix','Body','Drift'))
+assert [box(k)[0] for k in ('OscPair','Mix','Sub','Drift')]==sorted(box(k)[0] for k in ('OscPair','Mix','Sub','Drift'))
 assert box('Glide')[1]==box('Drive')[1] and 'Space' not in byname
 assert any(c['componentData']['name']=='Space' for c in t['tabs'][5]['componentDefinition']['componentsData'])
 for i in range(4):

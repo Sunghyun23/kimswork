@@ -26,7 +26,7 @@ def render(entries,ox=0,oy=0):
     text=m['choices'][int(value)]if'choices'in m else f'{value:.{m.get("decimals",0)}f}'+(' '+m['unit']if m.get('unit')else'')
     if m['key']=='BankInfo':text='LIBRARY · 11,039 WAV / 95 MIDI'
     if m['key']=='Status':text='READY'
-    if m['key']=='Position':text='BAR 1'
+    if m['key']=='Position':text='LOOP 1/1'
     if m['key']=='PreviewBpm':text='92 BPM'
    f=ImageFont.truetype(fontpath,max(10,size));d=ImageDraw.Draw(canvas);box=d.textbbox((0,0),text,font=f);d.text((x+(0 if 'left' in style['justification'] else (w-(box[2]-box[0]))/2),y+(h-(box[3]-box[1]))/2-box[1]),text,font=f,fill=color)
 render(defs['GDMain']['componentsData']);P.joinpath('build/qa').mkdir(exist_ok=True,parents=True);canvas.convert('RGB').save(P/'build/qa/main-runtime-composition-v2.png')

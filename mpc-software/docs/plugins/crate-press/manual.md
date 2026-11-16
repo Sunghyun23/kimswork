@@ -1,6 +1,6 @@
 # Crate Press user manual
 
-Version 0.2.2 · Public preview · Stereo effect for MPC standalone.
+Version 0.2.3 · Public preview · Stereo effect for MPC standalone.
 
 ## Install and open
 
@@ -88,3 +88,7 @@ Actual MPC checks cover master-insert loading, project save/reload, corrected MA
 ## Credits
 
 Independent project implementation by kim. Built with the unmodified MIT-licensed MPC Plugin Builder SDK at commit febd2ca5bd9eb16c4a412837196e145566bc981b. Concept art and derived runtime lettering/material assets were generated for this project. No private drum bank or third-party compressor code is bundled. This is not an endorsed artist product or a proprietary compressor circuit model.
+
+## 0.2.3 maintenance update
+
+This update refreshes package metadata and installation documentation. DSP, presets, UI, parameter identities and performance behavior are unchanged from 0.2.2. Prefer internal storage: place the complete `kim - VST - Crate Press` folder under `VST2 Plugins`. Keep one installed copy across attached drives, preserve current work, then restart the MPC application. The previously documented partial hardware verification still applies; this update does not claim new physical Q-Link, multi-touch or audio-routing coverage.

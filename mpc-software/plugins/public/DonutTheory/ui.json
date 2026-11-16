@@ -20,7 +20,7 @@
           "widget": "knob"
         },
         {
-          "param": "Body",
+          "param": "Sub",
           "widget": "knob"
         },
         {
@@ -107,7 +107,7 @@
           "widget": "knob"
         },
         {
-          "param": "Sub Level",
+          "param": "Sub",
           "widget": "knob"
         },
         {
@@ -120,10 +120,6 @@
         },
         {
           "param": "Tone",
-          "widget": "knob"
-        },
-        {
-          "param": "Body",
           "widget": "knob"
         },
         {
