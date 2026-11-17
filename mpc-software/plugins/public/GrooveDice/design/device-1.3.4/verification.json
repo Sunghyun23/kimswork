@@ -1,0 +1,81 @@
+{
+  "version": "1.3.4",
+  "device": "MPC XL",
+  "os": "3.10.1.12",
+  "resolution": [
+    1280,
+    800
+  ],
+  "source": "Direct authenticated MPC Remote Screen RSCR v2 framebuffer stream",
+  "capture": "Raw BGRA rectangles decoded using advertised pixel format and per-rectangle transport quantization expansion, equivalent to the viewer decoder. No UI composition, retouching or synthetic labels.",
+  "profile": "Owner installation, original core plus four optional expansions; library totals reflect optional packs, not the public ZIP.",
+  "input": "Remote input-service mouse events; not physical finger/encoder input.",
+  "verified": [
+    "Actual plugin UI loads on MAIN",
+    "SOUND next and previous arrows switch page1->2->1",
+    "Visible page counter and all row labels switch together",
+    "REV turns orange and persists across page changes",
+    "Polarity \u00d8 toggles independently on page2",
+    "Page survives Kick/Snare/Hi-Hat/Perc/Cymbals category changes",
+    "No extra Hat C/D or Cymbal D controls are shown"
+  ],
+  "unverified": [
+    "Physical Q-Link encoder operation",
+    "Audible hardware reverse/polarity performance",
+    "Guide behavior under every physical Q-Link mode"
+  ],
+  "files": [
+    {
+      "file": "sound-page-1-initial.png",
+      "sha256": "c21f6b795a33b0e2731acc5f289910224b80a13032cd1d5fa4b0338830ab6da6"
+    },
+    {
+      "file": "sound-page-1-rev-on.png",
+      "sha256": "9b9354ce2f84851d8e71ad2b9abda671c34a14d761dcf068151361e5dd40fa1d"
+    },
+    {
+      "file": "sound-page-2-initial.png",
+      "sha256": "d16273cd3ae5707208d9f0f062f07d862835bdbf5b485329061972c6923794f2"
+    },
+    {
+      "file": "sound-page-2-polarity-on.png",
+      "sha256": "3f5307927a5672ab84ddfb1dcabbb3bb2b8ed5bd49ccdd0d172b44aafaf06235"
+    },
+    {
+      "file": "sound-page-2-focused.png",
+      "sha256": "3f5307927a5672ab84ddfb1dcabbb3bb2b8ed5bd49ccdd0d172b44aafaf06235"
+    },
+    {
+      "file": "sound-page-1-returned.png",
+      "sha256": "01411b8095a5441bcbd2ca6c5fc5f555fac1aa42e45ff91d0e4d0391da7e6293"
+    },
+    {
+      "file": "hat-page-2.png",
+      "sha256": "267607c46fcb7d7b5b1db0d5214c80832e98b4fe32971c194dd8bf5e7f013d98"
+    },
+    {
+      "file": "perc-page-2.png",
+      "sha256": "fda72c89839c12676a7de95ad797a0073c8509c13dc8b8954cbec74397de3016"
+    },
+    {
+      "file": "cymbals-page-1.png",
+      "sha256": "d57217df256b933296c23875d8b0f4209122b0df7df25fdc0de550ad17fa8346"
+    },
+    {
+      "file": "cymbals-page-2.png",
+      "sha256": "26d1d71b2e3d9b68d86a183808624a81787f65298e6e4bfe5cf957c13153c39d"
+    },
+    {
+      "file": "snare-page-1.png",
+      "sha256": "f19c2852910503960b9ba91b90b6660276aff5c1508d36029961d02983e16cb1"
+    },
+    {
+      "file": "snare-page-2.png",
+      "sha256": "de6728ef9fd03fc0af340533d3d91a7db323710c12f62ad3070e9880be8bdc02"
+    },
+    {
+      "file": "sound-page-1-final.png",
+      "sha256": "f8f3c0cccaa48c8ea253d1d6273579ed0b23f5c1f03fe247fe090f6de9763cc8"
+    }
+  ]
+}
