@@ -1,3 +1,4 @@
+// Fixed-control fixture: Dice locks preserve selected timing/style/division under test.
 #define GROOVE_DICE_TEST
 #include "../src/GrooveDice.cpp"
 #include <cassert>
@@ -10,14 +11,14 @@ void* operator new(size_t n){if(guarded)std::abort();if(auto*p=std::malloc(n))re
 void operator delete(void*p)noexcept{std::free(p);}void operator delete(void*p,size_t)noexcept{std::free(p);}
 struct RuleProbe{static auto events(GrooveDice&p,double start,double step){std::vector<std::tuple<double,int,int>>v;for(int i=0;i<p.eventCount;++i){auto&e=p.events[i];v.emplace_back(start+e.offset*step,e.role,e.velocity);}return v;}static bool phrase(GrooveDice&p){return p.phraseBank(4);}};
 struct Host{std::unique_ptr<GrooveDice>p=std::make_unique<GrooveDice>();float data[16][512]{},*out[16];double ppq=0,bpm=120;bool playing=false;int frames=128;
- Host(){for(int i=0;i<16;++i)out[i]=data[i];p->prepare(44100,512);p->reset();p->set(kKitLock,1);p->set(kScope,1);p->set(kFillEvery,0);p->set(kSwing,50);p->set(kSnareLate,0);p->set(kHatShift,0);p->set(kRndNudge,0);p->set(kVelSpread,0);p->set(kGhost,0);block();}
+ Host(){for(int i=0;i<16;++i)out[i]=data[i];p->prepare(44100,512);p->reset();for(int n=0;n<16;++n)p->set(kDiceLock0+n,1);p->set(kKitLock,1);p->set(kScope,1);p->set(kFillEvery,0);p->set(kSwing,50);p->set(kSnareLate,0);p->set(kHatShift,0);p->set(kRndNudge,0);p->set(kVelSpread,0);p->set(kGhost,0);block();}
  void block(){for(auto&a:data)std::fill(a,a+512,0);mpc::ProcessContext c;c.outputs=out;c.numOutputs=16;c.numFrames=frames;c.sampleRate=44100;c.transport.playing=playing;c.transport.ppqValid=c.transport.tempoValid=true;c.transport.ppqPos=ppq;c.transport.bpm=bpm;guarded=true;p->process(c);guarded=false;for(auto&a:data)for(int i=0;i<frames;++i)assert(std::isfinite(a[i]));if(playing)ppq+=frames*bpm/(60*44100);}
  void pulse(int key){p->set(key,p->getBool(key)?0:1);block();}
  auto phrase(){playing=true;ppq=0;p->reset();while(ppq<16)block();std::vector<std::tuple<double,int,int>>v;while(ppq<32){double start=ppq;block();for(auto e:RuleProbe::events(*p,start,bpm/(60*44100)))if(std::get<0>(e)>=16&&std::get<0>(e)<32)v.push_back(e);}playing=false;block();return v;}
 };
 static auto notes(GrooveDice&p){std::vector<std::tuple<int,int,int,int,int>>v;for(auto&c:p.notes[4])if(c.valid()){auto n=c.read();v.emplace_back(n.tick,n.role,n.velocity,n.chance,n.gate);}return v;}
 int main(){
- {Host h;auto&p=*h.p;assert(kHatGrid==292&&kPhraseState==293&&kMixKick==342&&kParamCount==533);std::vector<std::vector<std::tuple<int,int,int,int,int>>>unique;
+ {Host h;auto&p=*h.p;assert(kHatGrid==292&&kPhraseState==293&&kMixKick==342&&kParamCount==643);std::vector<std::vector<std::tuple<int,int,int,int,int>>>unique;
   for(int grid=0;grid<4;++grid){p.set(kHatGrid,grid);for(int g=0;g<4;++g)p.set(kRuleKick+g,1);for(int attempt=0;attempt<80;++attempt){p.set(kRandomAmt,attempt%2?100:10);h.pulse(kRoll);assert(p.lengths[4].load()==3840&&RuleProbe::phrase(p));int snare[4]{},kick[4]{},hat[4]{};for(auto&c:p.notes[4])if(c.valid()){auto n=c.read();int bar=n.tick/3840,t=n.tick%3840;assert(bar==0);if(n.role==0){assert(t!=960&&t!=2880);++kick[bar];}if(n.role==1){assert(t==960||t==2880);++snare[bar];}if(n.role==2)++hat[bar];}for(int bar=0;bar<1;++bar){assert(snare[bar]==2&&kick[bar]>=2&&kick[bar]<=4);assert(hat[bar]==(grid==0?4:grid==1?8:grid==2?16:18));}unique.push_back(notes(p));}}
   bool variation=false;for(size_t i=1;i<unique.size();++i)if(unique[i]!=unique[0])variation=true;assert(variation);std::cout<<"PASS320 phraseROLLs: one repeated bar, snare2/4, kick excludes2/4, all4hatgrids, bounded notes, actual variation; no audio allocations\n";
  }

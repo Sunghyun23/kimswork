@@ -63,9 +63,9 @@ int main(){
   Host h;auto&p=*h.p;p.set(kKitLock,1);p.set(kKitDiceMode,mode);p.set(kScope,scope);p.set(kRandomAmt,100);p.set(kL0Sample,p.layerAll[0][0]);p.set(kL0Level,-12);p.set(kL0Shift,-7);h.block();
   std::vector<std::pair<int,float>> saved;auto remember=[&](int k){saved.emplace_back(k,p.get(k));};remember(kXKit);
   for(int r=0;r<8;++r){remember(kXSample0+r);for(int n=1;n<=6;++n)remember(kPad0+r*9+n);}
-  for(int k=kRoleOn0;k<kParamCount;++k)remember(k);for(int k=kMixKick;k<=kMixPerc;++k)remember(k);
+  for(int k=kRoleOn0;k<=kL5Invert;++k)remember(k);for(int k=kCym0Sample;k<=kCym2Invert;++k)remember(k);for(int k=kMixKick;k<=kMixPerc;++k)remember(k);
   for(int n=0;n<10;++n){h.pulse(kRoll);for(auto kv:saved)assert(p.get(kv.first)==kv.second);}
-  static const char* titles[]={"No Changes","Pattern Only","Groove Only","Fill Only","Rhythm + FX","FX Only"};assert(p.displayText(kScope)==titles[scope]);
+  static const char* titles[]={"Extra: None","Extra: Pattern","Extra: Groove","Extra: Fill","Extra: All","Extra: FX"};assert(p.displayText(kScope)==titles[scope]);
   if(scope==1)assert(p.countNotes(4)>0);
   auto state=p.internalSaveState();Host restored;assert(restored.p->internalLoadState(state.data(),state.size()));assert(restored.p->getBool(kKitLock));assert(restored.p->displayText(kScope)==titles[scope]);
  }

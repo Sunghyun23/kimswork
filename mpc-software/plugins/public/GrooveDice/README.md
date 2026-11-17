@@ -1,6 +1,6 @@
 # Groove Dice
 
-`kim`의 공개 소스 MPC 드럼·그루브 플러그인. UID `KpGy`, 정식판 `1.2.2`. 검증 범위와 남은 제한은 VALIDATION.md를 따른다. source는 public이며 자체 제작 코어만 기본 포함한다. 제한된 외부 확장팩은 Git 제외이고 Donut Theory의 소리·UID·기존 릴리스는 변경하지 않는다.
+`kim`의 공개 소스 MPC 드럼·그루브 플러그인. UID `KpGy`, 정식판 `1.3.3`. 검증 범위와 남은 제한은 VALIDATION.md를 따른다. source는 public이며 자체 제작 코어만 기본 포함한다. 제한된 외부 확장팩은 Git 제외이고 Donut Theory의 소리·UID·기존 릴리스는 변경하지 않는다.
 
 승인 디자인은 `design/main-concept-v3-performance.png`, `design/fill-editor-concept-v1.png`다. 실제 MPC 사용 영역은1280×628이며 상단 호스트 바/하단 함수 키는 호스트 소유다. 이미지 시안을 작동하는 스킨이나 실기기 캡처와 혼동하지 않는다.
 
@@ -206,3 +206,27 @@ MAIN을 같은1마디 루프의 반복으로 변경했다. Dice와 Division/룰 
 ## 1.2.2 배포
 
 MAIN은 1마디를 반복하며 Dice/Rule/Hat Rhythm 변경을 즉시 반영한다. ROOM은 스테레오 룸 리버브다. SOUND 샘플 이름·좌우 화살표·Q-Link가 연결된다. [릴리스 상세](../../../docs/plugins/groove-dice/releases/1.2.2.md)와 [사용 설명서](../../../docs/plugins/groove-dice/manual.md)를 참고한다.
+
+## 1.2.3 로컬 변경 — 박자별 강약
+
+자동 패턴 하이햇을 강·약·중·약(90/45/68/40), 킥을 중심박/연결음으로 구분한다. Vel Spread는 구조를 유지하는 작은 편차로 제한한다. 직접 패드·녹음 필인의 입력 강약과 저장 노트는 보존한다. 새로 생성하는 패턴부터 적용하며 [상세 명세](../../../docs/plugins/groove-dice/velocity-patterns.md)를 따른다. MPC XL 내장 설치와 자동 검증을 완료했고 공개 Release/웹사이트는 1.2.2 그대로다. 개인용 팩과 그 변환물은 Git 제외 경로에만 보관한다.
+
+## 1.3.0 로컬 변경 — HATS / CYMBALS
+
+MAIN D=Hat Rhythm/Open Hat/Ride/Crash. Drive/Dust/Room은 기존 FX 탭에서 조절한다. 오픈햇은 CH 대체·기본 초크, 라이드는 자동 햇 대체, 크래시는 시작/필인 뒤/4·8·16마디 경계다. Dice는 이 선택을 유지한다. Ride/Bell은 Hat Mix, Crash는 Perc Mix를 따르며 출력은 기존 Cymbal 경로를 공유한다. [전체 동작·호환성·한계](../../../docs/plugins/groove-dice/hats-and-cymbals.md). 공개 릴리스와 웹사이트는 별도 요청 전까지 그대로다.
+
+## 1.3.1 local QA: sound selection and kit range
+
+Tap-to-list sample selection, synchronized arrows/Q-Link, isolated PREVIEW, independent Ride/Crash/Bell sound controls, selected-kit Dice pools and all-eight-role fill editing. See [workflow details](../../../docs/plugins/groove-dice/sound-browser-and-kit-pool.md). Released in1.3.3 following owner confirmation.
+
+## 1.3.2 local QA: visible Dice and individual locks
+
+MAIN now has 16 persistent padlocks. Roll Dice updates eligible visible Timing / Rules / Mix / Hats-Cymbals controls, with musical bounds; locked values stay fixed and remain manually editable. Scope is labelled Extra changes for supplementary pattern/fill/FX operations. See [workflow details](../../../docs/plugins/groove-dice/sound-browser-and-kit-pool.md). Included in1.3.3.
+
+## 1.3.3 local QA: one lock mechanism in RULES
+
+RULES exposes seven playable styles with no LOCK choice, via touch and Q-Link. Use the adjacent padlock for Dice protection. Old LOCK projects retain their held rhythm and display BASIC with a closed padlock until released.
+
+## 1.3.3 공개 배포
+
+16개 전면 자물쇠와 실제 표시값 Dice, LOCK을 제외한7개 RULE 스타일, 모든 사운드의 Sample/Level/Decay/Shift, 왼쪽 샘플 브라우저·개별 미리듣기, 독립 Ride/Crash/Bell, 최대64개 선택 킷 풀을 포함한다.643개 파라미터와 구버전 상태를 유지한다. 사용자가 MPC XL에서 정상 동작을 확인하고 공개 배포를 승인했다. 과거0.x–1.3.2 단락은 이력이며 최신 동작은 [매뉴얼](../../../docs/plugins/groove-dice/manual.md)과 [1.3.3 릴리스](../../../docs/plugins/groove-dice/releases/1.3.3.md)를 따른다. 실제 MPC 캡처로 웹 소개 이미지를 교체한다.

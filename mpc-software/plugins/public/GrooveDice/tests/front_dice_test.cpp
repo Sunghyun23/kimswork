@@ -1,0 +1,16 @@
+#define main oldLayerTests
+#include "layers_test.cpp"
+#undef main
+static auto front(G&p){std::array<float,16>x{};for(int n=0;n<16;++n)x[n]=p.getNormalised(p.frontDiceTarget(n));return x;}
+int main(){
+ {Host h;auto&p=*h.p;assert(kDiceLock0==623&&kParamCount==643);p.set(kRandomAmt,100);p.set(kScope,0);auto before=front(p);h.pulse(kRoll);auto after=front(p);for(int n=0;n<12;++n)assert(before[n]!=after[n]);for(int n=0;n<16;++n)assert(p.getNormalised(kQ1+n)==after[n]);std::cout<<"PASS Dice changes visible timing/styles/mix and synchronises all16SCREEN relays\n";}
+ for(int lock=0;lock<16;++lock){Host h;auto&p=*h.p;p.set(kRandomAmt,100);p.set(kScope,4);p.set(kDiceLock0+lock,1);float held=p.getNormalised(p.frontDiceTarget(lock));for(int n=0;n<25;++n){h.pulse(kRoll);assert(p.getNormalised(p.frontDiceTarget(lock))==held);}p.setNormalised(kQ1+lock,.73f);assert(p.getNormalised(p.frontDiceTarget(lock))!=held);}
+ std::cout<<"PASS each of16locks survives25AllDice rolls and still allows manual Q-Link editing\n";
+ {Host h;auto&p=*h.p;p.set(kRandomAmt,100);for(int n=0;n<16;++n)p.set(kDiceLock0+n,1);auto held=front(p);for(int scope=0;scope<6;++scope){p.set(kScope,scope);for(int n=0;n<10;++n)h.pulse(kRoll);assert(front(p)==held);}auto state=p.internalSaveState();Host restored;assert(restored.p->internalLoadState(state.data(),state.size()));for(int n=0;n<16;++n)assert(restored.p->getBool(kDiceLock0+n));std::cout<<"PASS all-lock across6scopes, persisted lock state and prior parameter definitions\n";}
+ {Host h;auto&p=*h.p;p.set(kRandomAmt,100);p.set(kScope,4);p.set(kDiceLock3,1);auto before=front(p);h.pulse(kRoll);assert(front(p)!=before);h.pulse(kUndo);assert(front(p)==before&&p.getBool(kDiceLock3));assert(p.getInt(kHatRhythmPage)==p.getInt(kHatRhythm)/8);std::cout<<"PASS Undo restores all16values and rhythm drawer page without reverting locks\n";}
+ {Host h;auto&p=*h.p;p.set(kRandomAmt,100);p.set(kKitLock,1);p.set(kPatternLock,1);auto held=front(p);for(int n=0;n<30;++n)h.pulse(kRoll);auto actual=front(p);for(int n=4;n<16;++n)assert(actual[n]==held[n]);assert(actual[0]!=held[0]||actual[1]!=held[1]);}
+ {Host h;auto&p=*h.p;p.set(kRandomAmt,100);p.set(kRandomAmt,0);auto held=front(p);h.pulse(kRoll);assert(front(p)==held);}
+ {Host h;auto&p=*h.p;p.set(kRandomAmt,100);for(int roll=0;roll<300;++roll){h.pulse(kRoll);assert(p.get(kSwing)>=50&&p.get(kSwing)<=66&&p.get(kRndNudge)<=6);for(int g=0;g<4;++g){int style=p.getInt(kRuleKickStyle+g);assert(style>=1&&style<=(g==2?6:7));}int backbeats=0;for(auto&cell:p.notes[4])if(cell.valid()){auto note=cell.read();if(note.role==0)assert(note.tick!=960&&note.tick!=2880);if(note.role==1&&note.velocity>=60){assert(note.tick==960||note.tick==2880);++backbeats;}}assert(backbeats==2);assert(p.get(kMixKick)>=-2&&p.get(kMixKick)<=.01f&&p.get(kMixHat)<=-1.99f&&p.get(kMixPerc)<=-3.99f);}}
+ for(float amount:{10.f,35.f,80.f}){Host h;auto&p=*h.p;p.set(kRandomAmt,amount);for(int i=0;i<50;++i){h.pulse(kRoll);float centre[]={58,13,-2,3},low[]={50,-2,-12,0},high[]={66,28,8,6};for(int n=0;n<4;++n){float value=p.get(kSwing+n);assert(value>=low[n]&&value<=high[n]);assert(std::abs(value-centre[n])<=std::max(1.f,(high[n]-low[n])*.5f*amount*.01f)+.001f);}}}
+ std::cout<<"PASS musical timing/mix bounds, no random LOCK styles, sparse cymbal choices, Kit/Pattern lock overrides, Amount0 and RT allocation guard\n";
+}

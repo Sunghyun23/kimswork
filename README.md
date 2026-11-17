@@ -13,7 +13,7 @@ site/                                      Astro catalog, manuals, GitHub Pages
 mpc-software/
   plugins/public/DonutTheory/               Released synth (1.2.3)
   plugins/public/CratePress/                Stereo effect (0.2.3 public preview)
-  plugins/public/GrooveDice/                Drum instrument (1.2.2 stable)
+  plugins/public/GrooveDice/                Drum instrument (1.3.3 stable)
   plugins/private/                         Other local-only plugin projects
   apps/public/GrooveDicePackBuilder/        Standalone desktop pack authoring app
   expansions/groove-dice/
@@ -25,7 +25,7 @@ mpc-software/
   third_party/mpc-plugin-builder-sdk/       One pinned, unmodified SDK checkout
 ```
 
-Private projects and expansion payloads are Git-ignored and excluded from public packages. A `private` directory is not a GitHub access-control mechanism. Groove Dice public packages use the independently created Original Workshop core only. Groove Dice 1.2.2 ships only the original core; optional personal packs remain private.
+Private projects and expansion payloads are Git-ignored and excluded from public packages. A `private` directory is not a GitHub access-control mechanism. Groove Dice public packages use the independently created Original Workshop core only. Groove Dice 1.3.3 ships only the original core; optional personal packs remain private.
 
 ## Development
 
@@ -47,7 +47,9 @@ Install developer dependencies from `mpc-software/requirements-dev.txt`. Follow 
 |---|---|---|
 | Donut Theory | [1.2.3 release](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.2.3) | [Handoff](mpc-software/docs/plugins/donut-theory/handoff.md), [manual](mpc-software/docs/plugins/donut-theory/manual.md) |
 | Crate Press | 0.2.3 public preview, partial hardware verification | [Manual](mpc-software/docs/plugins/crate-press/manual.md), [verification](mpc-software/docs/plugins/crate-press/validation.md) |
-| Groove Dice | 1.2.2 stable, public source with original core | [README](mpc-software/plugins/public/GrooveDice/README.md), [verification](mpc-software/plugins/public/GrooveDice/VALIDATION.md) |
+| Groove Dice | 1.3.3 stable, public source with original core | [README](mpc-software/plugins/public/GrooveDice/README.md), [verification](mpc-software/plugins/public/GrooveDice/VALIDATION.md) |
 | Groove Dice Pack Builder | 1.0.0 standalone macOS/Windows app | [Project](mpc-software/apps/public/GrooveDicePackBuilder/README.md) |
 
-MPC installation requires standalone OS 3.10.1+ and Enable Enhancements / External Plugin Support. Owner-device installs now target the internal NVMe, not SD or USB. Latest verified owner installs: Crate Press 0.2.2 (0.2.3 changes metadata/docs only), Donut Theory 1.2.3 and Groove Dice 1.2.2 (including personal expansions) are installed in `/nvme/VST2 Plugins/` on the MPC XL. Re-read device drives after a hardware change; numeric drive selections are not portable. Actual device verification and remaining limits are recorded per product. Pages uses the existing `site/` project and `kimswork.app`; local restructuring does not itself publish a new site or Release.
+MPC installation requires standalone OS 3.10.1+ and Enable Enhancements / External Plugin Support. Owner-device installs now target the internal NVMe, not SD or USB. Latest verified owner installs: Crate Press 0.2.2 (0.2.3 changes metadata/docs only), Donut Theory 1.2.3 and Groove Dice 1.3.3 (including four owner-profile expansions) are installed in `/nvme/VST2 Plugins/` on the MPC XL. Re-read device drives after a hardware change; numeric drive selections are not portable. Actual device verification and remaining limits are recorded per product. Pages uses the existing `site/` project and `kimswork.app`; local restructuring does not itself publish a new site or Release.
+
+Groove Dice 1.3.3 adds visible MAIN randomisation and16 persistent Dice locks, seven playable RULE selectors without a LOCK value, HATS/CYMBALS, tap-to-browse sample selection, isolated preview and Decay-first SOUND controls. Native/ARM builds, SDK validation and regressions pass; host simulator19 PASS /0 WARN /0 FAIL. The owner confirmed locks/Dice/RULE operation on MPC XL OS3.10.1.12. Public packages contain only Original Workshop. Release notes, manual and actual-device screenshots document remaining hardware limits.

@@ -8,7 +8,7 @@ static thread_local bool guarded=false;
 void*operator new(size_t n){if(guarded)std::abort();if(auto*p=std::malloc(n))return p;throw std::bad_alloc();}
 void operator delete(void*p)noexcept{std::free(p);}
 struct Rig{
- GrooveDice p;float data[16][512]{},*out[16];Rig(){for(int i=0;i<16;++i)out[i]=data[i];p.prepare(44100,512);p.reset();}
+ GrooveDice p;float data[16][512]{},*out[16];Rig(){for(int i=0;i<16;++i)out[i]=data[i];p.prepare(44100,512);p.reset();p.set(kRideRule,4);p.set(kCrashRule,1);p.set(kOpenHatRule,2);}
  void process(mpc::Transport t,int frames=128,const mpc::MidiEvent*midi=nullptr){for(auto&c:data)std::fill(c,c+512,0);mpc::ProcessContext c{};c.outputs=out;c.numOutputs=16;c.numFrames=frames;c.sampleRate=44100;c.transport=t;c.midi=midi;c.numMidiEvents=midi?1:0;guarded=true;p.process(c);guarded=false;for(auto&ch:data)for(int i=0;i<frames;++i)assert(std::isfinite(ch[i]));}
 };
 mpc::Transport transportAt(double ppq,bool recording=true,double bar=0){mpc::Transport t;t.valid=t.ppqValid=t.tempoValid=t.playing=true;t.bpm=98;t.ppqPos=ppq;t.barStartPpq=bar;return t.recording=recording,t;}

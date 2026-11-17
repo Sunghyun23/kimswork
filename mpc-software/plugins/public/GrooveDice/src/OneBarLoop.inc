@@ -5,7 +5,9 @@ void syncRuleStyle(int group){
  bool old=internal;internal=true;set(kRuleKick+group,intensity[style]);internal=old;
  // Physical Q-Link sends fine increments within one discrete choice. Those
  // are not new musical settings and must not rebuild MAIN or echo all audio.
- if(lastRuleStyle[group].exchange(style)!=style){changed[kRuleKickStyle+group].store(true);liveDirty.fetch_or(1u<<group);displayPending.store(true);}
+ if(style==0)layerSet(kDiceLock4+group,1);
+ syncRuleSelector(group);
+ if(lastRuleStyle[group].exchange(style)!=style){if(group==2&&style==7&&!restoring.load()){bool before=internal;internal=true;set(kOpenHatRule,2);internal=before;changed[kOpenHatRule].store(true);}changed[kRuleKickStyle+group].store(true);liveDirty.fetch_or(1u<<group);displayPending.store(true);}
 }
 bool refreshMain(unsigned mask){
  bool old=internal;internal=true;bool ok=makePhrase(4+getInt(kPattern),get(kRandomAmt)*.01f,mask);
@@ -37,7 +39,7 @@ bool makePhrase(int b,float amount,unsigned mask=15){
   int retained[6]={0,-1,-1,-1,-1,-1},retainedCount=1;
   if(style<=3&&amount<=.5f)source([&](Note n){int step=int(std::lround(n.tick/240.));if(n.role!=0||step<=0||step>=16||step==4||step==12)return;for(int j=0;j<retainedCount;++j)if(retained[j]==step)return;if(retainedCount<5)retained[retainedCount++]=step;});
   if(retainedCount>=3)motif=retained;
-  int cap=rule==1?4:5;for(int j=0;j<6&&j<cap&&motif[j]>=0;++j){int step=motif[j];if(step==4||step==12)continue;put(step*240,0,step==0?105:90+int(draw(0)%15));}
+  int cap=rule==1?4:5;for(int j=0;j<6&&j<cap&&motif[j]>=0;++j){int step=motif[j];if(step==4||step==12)continue;put(step*240,0,groove::kickAccent(step*240));}
  }
  if(edit(1)){
   int style=getInt(kRuleSnareStyle),rule=getInt(kRuleSnare),velocity=style==4?68:100;
@@ -49,19 +51,19 @@ bool makePhrase(int b,float amount,unsigned mask=15){
  if(edit(2)){
   int style=getInt(kRuleHatStyle),step=stride*(style==4?2:1),offset=style==5?stride/2:0;
   for(int tick=offset;tick<length;tick+=step){if(ornament==2&&tick>=3360)continue;
-   int velocity=tick%960==0?78:tick%480==0?58:46;if(style==6)velocity=tick%960==0?95:42;
-   int role=style==7&&tick>=length-step?3:2;put(tick,role,velocity+int(draw(2)%7)-3,role==3?160:50);
+   int velocity=groove::hatAccent(tick,style==6);
+   int role=style==7&&tick>=length-step?3:2;put(tick,role,velocity,role==3?160:50);
   }
-  if(ornament==2){for(int j=0;j<4;++j)put(3360+j*120,2,50+j*4,35);}
-  else if(ornament==1){int tick=3600;if(tick%step==offset)tick=3720;put(tick,2,52+int(draw(2)%9),45);}
+  if(ornament==2){for(int j=0;j<4;++j)put(3360+j*120,2,groove::hatAccent(3360+j*120,style==6),35);}
+  else if(ornament==1){int tick=3600;if(tick%step==offset)tick=3720;put(tick,2,groove::hatAccent(tick,style==6),45);}
  }
  if(edit(3)){
   int style=getInt(kRulePercStyle),rule=getInt(kRulePerc);
   if(style==4)put(3360,7,49);
   else if(style==5){put(480,7,57);put(1440,5,52);put(2400,7,56);put(3360,4,48);}
   else if(style==6){put(1440,7,59);put(3360,5,54);}
-  else if(style==7){put(720,7,56);put(1680,4,49);put(2640,5,58);put(3600,6,44);}
-  else {int hits=rule==1?1:rule==2?2:4;int steps[]={3,7,11,14,15};for(int j=0;j<hits;++j){if(draw(3)%100>=unsigned((rule==1?45:rule==2?65:85)*std::max(.25f,amount)))continue;int role=j==0?7:j==1?5:j==2?4:6;put(steps[draw(3)%5]*240,role,45+int(draw(3)%21));}}
+  else if(style==7){put(720,7,56);put(1680,4,49);put(2640,5,58);put(3600,7,44);}
+  else {int hits=rule==1?1:rule==2?2:4;int steps[]={3,7,11,14,15};for(int j=0;j<hits;++j){if(draw(3)%100>=unsigned((rule==1?45:rule==2?65:85)*std::max(.25f,amount)))continue;int role=j==0?7:j==1?5:j==2?4:7;int tick=steps[draw(3)%5]*240;put(tick,role,groove::percAccent(tick));}}
  }
  if(overflow){diceResult.store(3);return false;}
  for(int i=1;i<count;++i){Note n=next[i];int j=i;while(j>0&&(next[j-1].tick>n.tick||(next[j-1].tick==n.tick&&next[j-1].role>n.role))){next[j]=next[j-1];--j;}next[j]=n;}

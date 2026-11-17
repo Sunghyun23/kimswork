@@ -18,7 +18,7 @@ struct Library {
  struct Pack{std::string id,name;bool isPrivate=false;std::array<std::vector<int>,5> categories;std::array<std::vector<int>,3> folders;std::array<std::vector<int>,4> sounds;std::vector<int> kits;};
  std::vector<Pack> packs;int expansionErrors=0;
  std::vector<Entry> entries;std::array<std::vector<int>,5> categories;std::vector<Midi> midi;
- std::array<Slot,64> slots;static constexpr int Channels=14;
+ std::array<Slot,64> slots;static constexpr int Channels=17;
  std::array<std::atomic<int>,Channels> request{},ready,failed{},active{},serial{};std::array<int,Channels> current,desiredSeen{};
  std::atomic<bool> quit{false};std::thread worker;std::string path;bool loaded=false;
  Library(){current.fill(-1);for(auto& r:ready)r.store(-1);}

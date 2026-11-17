@@ -15,7 +15,7 @@ def put(o,k,v):
  for i,(a,_)in enumerate(o):
   if a==k:o[i]=(k,v);return
  o.append((k,v))
-pd=get(tui,'pageData');put(pd,'replacementStrings',[O(('key','Parameter '+str(i)),('value',m['choices']))for i,m in enumerate(meta)if 'choices'in m]);defs=get(get(pd,'componentDefinitions'),'localComponentDefinitions');tabs=get(pd,'tabs')
+pd=get(tui,'pageData');put(pd,'replacementStrings',[O(('key','Parameter '+str(i)),('value',m['choices']))for i,m in enumerate(meta)if 'choices'in m and m['key']!='Scope']);defs=get(get(pd,'componentDefinitions'),'localComponentDefinitions');tabs=get(pd,'tabs')
 # Native Image scales; native Button does not. Generate every button at exact runtime size.
 # Mechanical compile-time sizing; MPC Image widget cropped the production source on device.
 Image.open(P/'assets/background-branded-source-v2.png').convert('RGB').resize((1280,628),Image.Resampling.LANCZOS).save(out/'background.png')
@@ -32,18 +32,30 @@ def define(name,children,actions=None,bg='00000000',modal=False):
  defs.append(O(('key',name),('value',comp)))
 def instance(name,b='0 0 1280 628',invalid=None):return g.entry(name,name,O(('version',1),('handleName','Data')),b,'Children','Hide'if invalid else'Show','Always',remap=[('Data','Parameter 0')],invalidating=invalid)
 material=Material(P,out);material.knobs()
+# Small, native-sized padlock art; the whole 44px square is the touch target.
+for locked in (False,True):
+ im=Image.open(out/material.plate(44,44,'orange' if locked else 'cream')).convert('RGBA');draw=ImageDraw.Draw(im)
+ colour='#39271d';draw.rounded_rectangle((12,20,32,35),radius=3,fill=colour)
+ if locked:draw.arc((15,9,29,29),180,360,fill=colour,width=3);draw.line((15,18,15,23),fill=colour,width=3);draw.line((29,18,29,23),fill=colour,width=3)
+ else:draw.arc((19,6,33,25),180,360,fill=colour,width=3);draw.line((19,15,19,23),fill=colour,width=3)
+ draw.ellipse((21,25,23,27),fill='#f4dfb8');draw.line((22,27,22,30),fill='#f4dfb8',width=2)
+ im.save(out/('dice-locked.png' if locked else 'dice-unlocked.png'))
 def art(w,h,kind):return material.plate(w,h,kind)
 counter=0
 def button(text,key,b,index=1,count=1,kind='cream',toggle=False):
  global counter
  counter+=1;x,y,w,h=map(int,b.split());a=art(w,h,kind);lit=art(w,h,'olive'if kind in('orange','red')else'orange');parts=[g.entry('button art','Button',g.button_data(lit,a,index,count),f'0 0 {w} {h}','No','Show','Always',remap=[('Data',H(key))]),label(text,f'0 0 {w} {h}',min(25,max(12,int((w-8)/max(1,len(text))/.62))),'fff9e9c8'if kind in('dark','red','orange','olive')else'ff38261c')]
+ # Captionless hit targets must not emit an empty fixed-Text widget.
+ if not text:parts=parts[:1]
+ if key.startswith('DiceLock'):put(get(parts[0],'componentData'),'data',g.button_data('dice-locked.png','dice-unlocked.png',1,1))
  if key=='KitLock':
+  put(get(parts[1],'bounds'),'version',2)
   put(get(parts[1],'bounds'),'additionalInvalidatingHandles',['IndexedEnabling/0/2/'+H('KitLock')]);put(get(parts[1],'bounds'),'showWhenDataModelInvalid','Hide')
   parts.append(conditional(label('KIT FIXED',f'0 0 {w} {h}',18,'fff9e9c8'),'IndexedEnabling/1/2/'+H('KitLock')))
  if key=='Roll':
   put(get(parts[1],'bounds'),'bounds',f'52 0 {w-68} {h}');parts.append(image('dice-icon.png',f'18 {(h-32)//2} 48 32'))
  if toggle:
-  if key in ('Preview','Follow','KitLock','PatternLock','Separate','SoundDetails','SoundInvert')or key.startswith(('SoundOn','SoundSolo','SoundLock')):
+  if key in ('Preview','Follow','KitLock','PatternLock','Separate','SoundDetails','SoundInvert','CymbalView','SampleBrowserOpen','FillGridPage','PoolOpen')or key.startswith(('SoundOn','SoundSolo','SoundLock','DiceLock')):
    parts.append(g.entry('caption toggle hit','Button',g.button_data('hit.png','hit.png',1,1),f'0 0 {w} {h}','No','Show','Always',remap=[('Data',H(key))]));define('Btn'+str(counter),parts);return instance('Btn'+str(counter),b)
   # Independent UI-local press gate: the continuous surface owns release.
   # The engine command still toggles exactly once on Mouse Down (never on release).
@@ -62,9 +74,12 @@ def panel(title,b):
 def group_guide(x,y):
  # Header/badge ends at y+25; native Q badge needs a left gutter beside labels.
  return f'{x+4} {y+26} 606 110'
-def knob(key,name,x,y,w=138,physical=None):
+def knob(key,name,x,y,w=138,physical=None,dice_lock=None):
  lcdw=min(116,w-22);lcdx=(w-lcdw)//2
- bind=H(key);children=[label({'MixKick':'Kick','MixSnare':'Snare','MixHat':'Hat','MixPerc':'Perc','XQKit':'Drum Kit','XQKick':'Kick','XQSnare':'Snare','XQHat':'Hat','XQPerc':'Perc Set'}.get(key,name.removesuffix(' Rule')if key.startswith('Rule')else name),f'0 0 {w} 23',22),g.entry('knob','Knob',g.knob_filmstrip_data('knob-v2.png',127,'Vertical'),f'{(w-64)//2} 20 64 64','Yes','Show','Always',remap=[('Data',bind)]),image(art(lcdw,24,'olive'),f'{lcdx} 81 {lcdw} 24'),label('',f'{lcdx} 81 {lcdw} 24',18 if key=='HatRhythm'else 20 if key in ('XQKit','XQKick','XQSnare','XQHat','XQPerc')or key.startswith('Sound')else 24,'fff7e9c7',key=key)]
+ bind=H(key);children=[label({'MixKick':'Kick','MixSnare':'Snare','MixHat':'Hat','MixPerc':'Perc','XQKit':'Drum Kit','XQKick':'Kick','XQSnare':'Snare','XQHat':'Hat','XQPerc':'Perc Set'}.get(key,name.removesuffix(' Picker') if key.startswith('RulePick') else name.removesuffix(' Rule')if key.startswith('Rule')else name),f'0 0 {w} 23',22),g.entry('knob','Knob',g.knob_filmstrip_data('knob-v2.png',127,'Vertical'),f'{(w-64)//2} 20 64 64','Yes','Show','Always',remap=[('Data',bind)]),image(art(lcdw,24,'olive'),f'{lcdx} 81 {lcdw} 24'),label('',f'{lcdx} 81 {lcdw} 24',18 if key.startswith('RulePick')or key in ('HatRhythm','OpenHatRule','RideRule','CrashRule')else 20 if key in ('XQKit','XQKick','XQSnare','XQHat','XQPerc')or key.startswith('Sound')else 24,'fff7e9c7',key=key)]
+ if dice_lock is not None:
+  put(get(children[1],'bounds'),'bounds',f'{(w-64)//2-16} 20 64 64')
+  children.append(button('','DiceLock'+str(dice_lock),f'{w-44} 26 44 44',toggle=True))
  if key.startswith('Sample')and key[6:].isdigit():
   library='XSample'+key[6:];conditional(children[3],'IndexedEnabling/0/1048576/'+H(library));children.append(conditional(label('LIBRARY',f'{lcdx} 81 {lcdw} 24',22,'fff7e9c7'),'RangedEnabling/1/1048575/1048576/'+H(library)))
  if key in ['XQKick','XQSnare','XQHat','XQPerc']:
@@ -84,10 +99,10 @@ def pads(y):
 main=base()+[button('KIT','Kit','16 92 90 42',index=0,count=3),button('<','KitPrev','110 92 44 42')if'KitPrev'in keys else label('','110 92 1 1')]
 # Value sliders use standard native knob overlay; choice lists receive custom sidebars below.
 def value(key,b,title=None):
- x,y,w,h=map(int,b.split());name='Value'+key+str(x)+str(y);children=[image(art(w,h,'olive'),f'0 0 {w} {h}'),label('',f'4 0 {w-8} {h}',25,'fff8ebc9',key)]
+ x,y,w,h=map(int,b.split());name='Value'+key+str(x)+str(y);children=[image(art(w,h,'olive'),f'0 0 {w} {h}'),label('',f'4 0 {w-8} {h}',18 if key=='Scope' and w<288 else 25,'fff8ebc9',key)]
  if key=='Pattern':
   conditional(children[1],'IndexedEnabling/0/131072/'+H('XBeat'));children.append(conditional(label('',f'4 0 {w-8} {h}',20,'fff8ebc9','LibraryBeat'),'RangedEnabling/1/131071/131072/'+H('XBeat')))
- if key=='Scope':
+ if key=='Scope' and w>=288:
   put(get(children[1],'bounds'),'bounds',f'100 0 {w-108} {h}');children.append(label('SCOPE',f'8 0 90 {h}',20,'fff8ebc9'))
  if key=='XKit':
   define(name,children,[g.action('Mouse Down','Toggle Switch',H('KitOpen'),'')])
@@ -100,15 +115,18 @@ def value(key,b,title=None):
 # Above the instruments: read-only context. Every MAIN action lives below the four panels.
 main=base()+[image(art(1248,40,'dark'),'16 90 1248 40'),label('KIT','24 92 64 36',20,'fff7e9c7'),label('','92 92 300 36',23,'fff7e9c7','XKit'),label('PATTERN','400 92 112 36',20,'fff7e9c7'),label('','514 92 280 36',23,'fff7e9c7','Pattern'),label('','808 92 120 36',21,'fff7e9c7','Position'),label('','934 92 130 36',21,'fff7e9c7','Status'),label('','1070 92 180 36',22,'fff7e9c7','PreviewBpm')]
 
-groups=[('A · TIMING',['Swing','SnareLate','HatShift','RndNudge'],16,136),('B · RULES',['RuleKickStyle','RuleSnareStyle','RuleHatStyle','RulePercStyle'],650,136),('C · DRUM MIX',['MixKick','MixSnare','MixHat','MixPerc'],16,278),('D · CHARACTER',['Drive','Dust','Room','HatRhythm'],650,278)]
+groups=[('A · TIMING',['Swing','SnareLate','HatShift','RndNudge'],16,136),('B · RULES',['RulePickKick','RulePickSnare','RulePickHat','RulePickPerc'],650,136),('C · DRUM MIX',['MixKick','MixSnare','MixHat','MixPerc'],16,278),('D · HATS / CYMBALS',['HatRhythm','OpenHatRule','RideRule','CrashRule'],650,278)]
 for group,(title,groupkeys,x,y)in enumerate(groups):
  main.append(panel(title,f'{x} {y} 614 112'))
- for j,key in enumerate(groupkeys):main.append(knob(key,meta[keys[key]]['name'],x+44+j*140,y+28,138,group*4+j))
+ for j,key in enumerate(groupkeys):main.append(knob(key,meta[keys[key]]['name'],x+44+j*140,y+28,138,group*4+j,dice_lock=group*4+j))
+main.append(conditional(label('HATS REST ON RIDE','1036 279 216 22',16,'ff6a4930'),'RangedEnabling/1/4/5/'+H('RideRule')))
 # Total bounds must fit628; knob panes finish425. Action row starts432.
 # Three spacious action lanes; physical pads own direct drum performance.
-main +=[label('BROWSE','16 420 88 60',17,'fff7e9c7'),button('<','KitPrev','108 420 44 60',toggle=True),value('XKit','156 420 212 60'),button('>','KitNext','372 420 44 60',toggle=True),button('LOCK KIT','KitLock','424 420 106 60',toggle=True),button('<','PatternPrev','542 420 44 60',toggle=True),value('Pattern','590 420 250 60'),button('>','PatternNext','844 420 44 60',toggle=True),button('LOCK','PatternLock','892 420 74 60',toggle=True),button('SAVE KIT','SaveKit','982 420 282 60',kind='dark',toggle=True),
-label('CREATE','16 488 88 60',17,'fff7e9c7'),button('ROLL DICE','Roll','108 488 288 60',kind='orange',toggle=True),value('Scope','408 488 288 60'),button('UNDO','Undo','708 488 130 60',toggle=True),button('KEEP','Keep','850 488 130 60',toggle=True),image(art(272,60,'olive'),'992 488 272 60'),label('','992 488 272 60',21,'fff7e9c7','DiceInfo'),
-label('PLAY','16 556 88 60',17,'fff7e9c7'),button('FOLLOW','Follow','108 556 150 60',toggle=True),button('PREVIEW','Preview','266 556 166 60',toggle=True),value('FillSlot','444 556 60 60'),button('FILL','Trigger','512 556 112 60',kind='orange',toggle=True),button('EDIT / REC','Editor','636 556 184 60',toggle=True),image(art(432,60,'dark'),'832 556 432 60'),label('','840 556 416 60',20,'fff7e9c7','ActionInfo')]
+define('SelectPoolButton',[g.entry('selected pool','Button',g.button_data(art(192,40,'orange'),art(192,40,'cream'),2,3),'0 0 192 40','No','Show','Always',remap=[('Data',H('DicePool'))]),label('SELECT KITS','0 0 192 40',22)], [g.action('Mouse Down','Toggle Switch',H('PoolOpen'),'')])
+main +=[label('SOUNDS','16 420 88 60',17,'fff7e9c7'),button('<','KitPrev','108 420 48 60',toggle=True),value('XKit','164 420 252 60'),button('>','KitNext','424 420 48 60',toggle=True),button('LOCK KIT','KitLock','484 420 130 60',toggle=True),button('<','PackPrev','626 420 48 60',toggle=True),label('','682 420 290 60',21,'fff7e9c7','PackInfo'),button('>','PackNext','980 420 48 60',toggle=True),button('SAVE KIT','SaveKit','1040 420 224 60',kind='dark',toggle=True),
+label('DICE','16 488 88 60',17,'fff7e9c7'),button('ROLL DICE','Roll','108 488 264 60',kind='orange',toggle=True),label('USE SOUNDS FROM','384 484 560 22',17,'fff7e9c7'),button('THIS PACK','DicePool','384 508 176 40',0,3),button('ALL PACKS','DicePool','568 508 176 40',1,3),instance('SelectPoolButton','752 508 192 40'),button('UNDO','Undo','956 488 112 60',toggle=True),value('Scope','1080 488 184 60'),
+label('PLAY','16 556 88 60',17,'fff7e9c7'),button('MPC SYNC','Follow','108 556 156 60',toggle=True),button('PLAY LOOP','Preview','272 556 168 60',toggle=True),value('FillSlot','448 556 72 60'),button('PLAY FILL','Trigger','528 556 156 60',kind='orange',toggle=True),button('EDIT FILL','Editor','692 556 176 60',toggle=True),label('','880 556 384 60',20,'fff7e9c7','ActionInfo')]
+
 
 # Fill editor is an engine-backed context panel. Fixed SCREEN relay params map to its real parameters.
 editor=base()+[label('FILL EDIT / REC · Q-LINK SCREEN','16 92 1000 42',26,'fff5e5c3')]
@@ -119,9 +137,10 @@ for title,ks,x in [('A · RECORD SETUP',['FillSlot','FillLength','RecMode','Coun
  editor.append(panel(title,f'{x} 186 614 128'))
  for j,key in enumerate(ks):editor.append(knob(key,meta[keys[key]]['name'],x+44+j*140,214,138,([ 'FillSlot','FillLength','RecMode','CountIn','NoteNudge','NoteVelocity','NoteGate','NoteChance'].index(key))))
 # Native touch grid: each visible step selects or creates a real recorded event.
-editor +=[label('FILL NOTE EDITOR','16 326 260 28',23,'fff5e5c3'),value('NoteSelect','290 326 400 30'),label('','710 326 180 30',23,'fff5e5c3',key='RecordedCount')]
-for row,caption in enumerate(['KICK','SNARE','CLOSED HAT','OPEN HAT']):
- y=358+row*40;editor.append(label(caption,f'16 {y} 180 40',20,'fff5e5c3'))
+editor +=[button('PERC / DRUMS','FillGridPage','16 326 260 28',toggle=True),value('NoteSelect','290 326 400 30'),label('','710 326 180 30',23,'fff5e5c3',key='RecordedCount')]
+for row in range(4):
+ y=358+row*40
+ for page,captions in enumerate([['SNARE','TOM','PERC','CLAP'],['KICK','CLOSED HAT','OPEN HAT','CYMBAL']]):editor.append(conditional(label(captions[row],f'16 {y} 180 40',20,'fff5e5c3'),'IndexedEnabling/'+str(page)+'/2/'+H('FillGridPage')))
  for step in range(16):
   x=200+step*66;cell=row*16+step;children=[g.entry('cell state','Button',g.button_data(art(60,38,'orange'),art(60,38,'dark'),1,1),'0 0 60 38','No','Show','Always',remap=[('Data',H('Grid'+str(cell)))]),g.entry('select note','Button',g.button_data('hit.png','hit.png',cell+1,65),'0 0 60 38','No','Show','Always',remap=[('Data',H('GridSelect'))])];define('Cell'+str(cell),children,[g.action('Mouse Down','Toggle Switch',H('GridTap'),'')]);editor.append(instance('Cell'+str(cell),f'{x} {y} 60 38'))
 editor +=[button('MAIN','Editor','16 520 176 42',index=0,count=2,toggle=True),button('REC FILL','Record','202 520 216 42',kind='red',toggle=True),button('AUDITION','Trigger','428 520 180 42',kind='orange',toggle=True),button('CANCEL','Cancel','618 520 130 42',toggle=True),button('DELETE','NoteDelete','758 520 130 42',toggle=True),button('UNDO','Undo','898 520 110 42',toggle=True),label('','1018 520 246 42',25,'fff5e5c3',key='Status')]+[image(art(1248,48,'dark'),'16 570 1248 48'),label('','28 570 1224 48',23,'fff7e9c7','ActionInfo')]
@@ -153,7 +172,7 @@ build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,art,
 # Custom sidebars for every choice selector, placed above current content and hiding background guides.
 for tab in tabs:
  children=get(get(tab,'componentDefinition'),'componentsData')
- allowed={'XKit','Kit','Pattern','Scope','FillSlot','FillEvery','FillLength','RecMode','CountIn','GridBar','RuleKickStyle','RuleSnareStyle','RuleHatStyle','RulePercStyle','HatRhythm'} if get(tab,'tabName')=='MAIN' else {meta[c.param.index]['key']for page in pages if page.name==get(tab,'tabName')for c in page.controls if c.param is not None}
+ allowed={'XKit','Kit','Pattern','Scope','FillSlot','FillEvery','FillLength','RecMode','CountIn','GridBar','RulePickKick','RulePickSnare','RulePickHat','RulePickPerc','HatRhythm','OpenHatRule','RideRule','CrashRule'} if get(tab,'tabName')=='MAIN' else {meta[c.param.index]['key']for page in pages if page.name==get(tab,'tabName')for c in page.controls if c.param is not None}
  if get(tab,'tabName')=='GROOVE':allowed.add('HatRhythm')
  if get(tab,'tabName')=='SOUND':allowed.add('UserKit')
  if get(tab,'tabName')=='KITS':allowed.add('KitDiceMode')
@@ -161,15 +180,13 @@ for tab in tabs:
   if 'choices'not in m or m['key']not in allowed:continue
   key=m['key'];opened='Local/2/gdChoice'+str(keys[key]);name='GDChoice'+key
   if not any(get(d,'key')==name for d in defs):
-   rows=[image(art(426,628,'dark'),'0 0 426 628'),label(m['name'].upper(),'12 8 340 44',28,'fff3dfba')]
+   rows=[image(art(426,628,'dark'),'0 0 426 628'),label('EXTRA CHANGES' if key=='Scope' else m['name'].upper(),'12 8 340 44',28,'fff3dfba')]
    rows.append(g.entry('outside dismiss','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',opened)]))
    for j,text in enumerate(m['choices']):
     if key not in ('XKit','HatRhythm')and j>=8:break
     rowName=name+'Row'+str(j)
-    if key=='Scope':
-     locked=['No Changes','Pattern Only','Groove Only','Fill Only','Rhythm + FX','FX Only'][j]
-     parts=[conditional(button(text,key,'0 0 414 56',j,len(m['choices']),kind='dark'),'IndexedEnabling/0/2/'+H('KitLock')),conditional(button(locked,key,'0 0 414 56',j,len(m['choices']),kind='dark'),'IndexedEnabling/1/2/'+H('KitLock'))]
-    else:parts=[button(text,key,'0 0 414 56',j,len(m['choices']),kind='dark')]
+    if key=='Scope':text=['No extras','New Pattern','Groove Variation','Recorded Fill','Pattern + Fill + FX','FX'][j]
+    parts=[button(text,key,'0 0 414 56',j,len(m['choices']),kind='dark')]
     actions=[g.action('Mouse Down','Toggle Switch',opened,'')]
     if key=='XKit':actions.append(g.action('Mouse Down','Toggle Switch',H('FactoryReload'),''))
     define(rowName,parts,actions);entry=instance(rowName,f'6 {62+(j%8)*60} 414 56')
@@ -218,6 +235,12 @@ for row in range(8):
 kitrows +=[button('< PREV','KitPagePrev','6 560 202 48',toggle=True),button('NEXT >','KitPageNext','218 560 202 48',toggle=True),g.entry('outside kit close','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',H('KitOpen'))])]
 define('ExpansionKitBrowser',kitrows,modal=True)
 for tab in tabs:get(get(tab,'componentDefinition'),'componentsData').append(instance('ExpansionKitBrowser',invalid=['IndexedEnabling/1/2/'+H('KitOpen')]))
+pool=[image(art(426,628,'dark'),'0 0 426 628'),button('<','PackPrev','6 2 48 40',toggle=True),label('','60 2 246 40',20,'fff8e8c6','PackInfo'),button('>','PackNext','310 2 48 40',toggle=True),button('X','PoolOpen','366 2 54 40',toggle=True),label('','6 48 414 40',23,'fff8e8c6','PoolInfo')]
+for row in range(8):
+ y=96+row*49;pool.extend([button('','PoolPick'+str(row),f'6 {y} 414 46',kind='olive',toggle=True),label('',f'12 {y} 402 46',21,'fff8e8c6','PoolRow'+str(row))])
+pool.extend([button('< PREV','KitPagePrev','6 496 202 46',toggle=True),button('NEXT >','KitPageNext','218 496 202 46',toggle=True),button('CLEAR','PoolClear','6 552 202 60',toggle=True),button('DONE','PoolOpen','218 552 202 60',toggle=True),g.entry('outside pool close','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',H('PoolOpen'))])])
+define('SelectedKitBrowser',pool,modal=True)
+for tab in tabs:get(get(tab,'componentDefinition'),'componentsData').append(instance('SelectedKitBrowser',invalid=['IndexedEnabling/1/2/'+H('PoolOpen')]))
 # SCREEN MAIN uses fixed16 relay parameters; native FILL uses actual note/record parameters.
 entries=get(get(ql,'Screen Mode Q-Links'),'map')
 for ti,e in enumerate(entries):

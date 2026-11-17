@@ -69,3 +69,18 @@
 - 새 인스턴스에서 호스트가 effSetProgram(0)을 생략해도 Init 효과가 꺼지도록 constructor에서 실제 FX값을 초기화한다. 기존342 metadata fixture/ID/순서는 바꾸지 않는다.
 
 - MAIN repeats one bar. RULE/Hat Rhythm changes are live; preserve bounded, deduplicated host notifications (no full layer/audio fanout). ROOM uses per-output stereo room reverbs. Sample arrows and SCREEN Q-Link share selection; retain the first342 fixture and fixed GDLY trailer boundary.
+
+## 1.3.0 local development — HATS / CYMBALS
+
+- MAIN D=Hat Rhythm/Open Hat/Ride/Crash; Drive/Dust/Room stay on FX. First533 declarations unchanged; three selectors append=536. Existing GDLY trailer boundary and bank format stay fixed.
+- Dice preserves these rules. OpenHat replaces an eligible closed hit; Ride replaces generated MAIN hats, pauses for recorded fills; Crash is structural. Respect count-in gate, existing user choke groups and finite/allocation-free rendering.
+- Ride/Crash/Bell have separate cache lanes/voices and same-pack classified samples or original procedural fallbacks. They share the existing Cymbal output; Ride/Bell follow Hat Mix, Crash Perc Mix. See ../../../docs/plugins/groove-dice/hats-and-cymbals.md.
+- This local update does not publish a new release/site. Preserve personal expansions and install on current MPC internal storage. Record actual-device versus automated verification honestly.
+
+## 1.3.3 current release
+
+- User confirmed installed locks/Dice/RULE operation and authorized release/site updates with direct MPC screenshots. Earlier local-only publication notes above are historical.
+- MAIN16 DiceLock0–15(623–638) are persistent non-automatable controls. Roll changes eligible visible MAIN values within musical bounds. Extra controls supplementary changes; Kit Fixed also protects MAIN mix. Seven-style RulePickKick/Snare/Hat/Perc append639–642; no LOCK in current knob/list/Screen/Program range. Preserve legacy0–638 IDs and saved legacy LOCK migration.
+- SOUND and CYMBALS rows use Sample/Level/Decay/Shift. Details use Start/Tune/LowCut/HighCut. Tap sample names for a left browser; arrows/Q-Link share the catalogue. PREVIEW is isolated to the selected layer and cannot record a fill or choke performance voices. Preserve eight-role fill access and selected-kit pool identities.
+- Captionless targets must not create empty fixed-Text widgets: they blanked the entire MPC UI. Conditional label bounds need version2; otherwise LOCK KIT and KIT FIXED overlap. Keep native ordered/duplicate-key serialization and modal guide suppression.
+- Public ZIP contains only original default.gdbank; owner expansion registries/banks must be preserved and excluded from Git/Release. Device images must be direct MPC captures, with model/version provenance. A build or rendered mockup is not hardware QA.

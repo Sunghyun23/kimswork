@@ -1,3 +1,4 @@
+// Fixed-control fixture: Dice locks preserve selected timing/style/division under test.
 #define GROOVE_DICE_TEST
 #include "../src/GrooveDice.cpp"
 #include <cassert>
@@ -7,7 +8,7 @@ static thread_local bool guarded=false;
 void* operator new(size_t n){if(guarded)std::abort();if(void*p=std::malloc(n))return p;throw std::bad_alloc();}
 void operator delete(void*p)noexcept{std::free(p);}void operator delete(void*p,size_t)noexcept{std::free(p);}
 struct Host{std::unique_ptr<GrooveDice>p=std::make_unique<GrooveDice>();float data[16][128]{},*out[16];double ppq=0;bool playing=false;
- Host(){for(int i=0;i<16;++i)out[i]=data[i];p->prepare(44100,128);p->reset();block();}
+ Host(){for(int i=0;i<16;++i)out[i]=data[i];p->prepare(44100,128);p->reset();for(int n=0;n<16;++n)p->set(kDiceLock0+n,1);block();}
  void block(){for(auto&a:data)std::fill(a,a+128,0);mpc::ProcessContext c;c.outputs=out;c.numOutputs=16;c.numFrames=128;c.sampleRate=44100;c.transport.valid=c.transport.tempoValid=c.transport.ppqValid=true;c.transport.bpm=120;c.transport.playing=playing;c.transport.ppqPos=ppq;guarded=true;p->process(c);guarded=false;for(auto&a:data)for(auto x:a)assert(std::isfinite(x));if(playing)ppq+=128.*120/(60*44100);}
  void pulse(int key){p->set(key,p->getBool(key)?0:1);block();}
  void until(double beat){while(ppq<beat)block();}
@@ -27,6 +28,6 @@ int main(){
 
  {Host h;auto&p=*h.p;for(int i=0;i<128;++i)p.notes[4][i].write({i*30,i%8,110,100,80});auto old=p.internalSaveState();size_t pos=12;for(int i=0;i<kParamCount;++i)pos+=1+old[pos]+8;constexpr size_t extra=4+7*(8+128*8)+4+16+84+200+GrooveDice::LayerTrailerSize;uint32_t n=uint32_t(old[pos])|(uint32_t(old[pos+1])<<8)|(uint32_t(old[pos+2])<<16)|(uint32_t(old[pos+3])<<24);n-=extra;for(int k=0;k<4;++k)old[pos+k]=uint8_t(n>>(k*8));old.resize(old.size()-extra);assert(p.internalLoadState(old.data(),old.size()));p.reset();for(int warm=0;warm<180;++warm)h.block();assert(p.countNotes(4)==128);p.set(kKitLock,1);p.set(kScope,1);p.set(kRandomAmt,100);h.pulse(kRoll);assert(p.countNotes(4)<=72&&p.lengths[4].load()==3840);std::cout<<"PASS legacy over-randomised pattern restarts from immutable factory beat; recorded banks remain separate\n";}
 
- {Host h;auto&p=*h.p;p.set(kPattern,1);p.set(kPreview,0);for(int key:{kRoll,kRecord,kPatternNext,kKitNext})p.set(key,1);auto state=p.internalSaveState();std::array<float,kParamCount>v;for(int i=0;i<kParamCount;++i)v[i]=p.getNormalised(i);v[kQ9]=1;v[kQ5]=1;for(int key:{kRoll,kRecord,kPatternNext,kKitNext})v[key]=0;assert(p.internalLoadState(state.data(),state.size()));p.reset();for(int i=0;i<kParamCount;++i){p.setNormalised(i,v[i]);if(i%8==0)h.block();}for(int warm=0;warm<180;++warm)h.block();assert(p.getNormalised(kQ9)==p.getNormalised(kMixKick));assert(p.getNormalised(kQ5)==p.getNormalised(kRuleKickStyle));assert(p.diceRolls.load()==0&&!p.getBool(kPreview)&&p.getInt(kPattern)==1&&p.getInt(kFactoryKit)==0&&p.recordState.load()==0);h.pulse(kRoll);assert(p.diceRolls.load()==1);std::cout<<"PASS MPC-style late parameter replay after chunk load cannot retrigger saved commands; userROLL works after settle\n";}
+ {Host h;auto&p=*h.p;p.set(kPattern,1);p.set(kPreview,0);for(int key:{kRoll,kRecord,kPatternNext,kKitNext})p.set(key,1);auto state=p.internalSaveState();std::array<float,kParamCount>v;for(int i=0;i<kParamCount;++i)v[i]=p.getNormalised(i);v[kQ9]=1;v[kQ5]=1;for(int key:{kRoll,kRecord,kPatternNext,kKitNext})v[key]=0;assert(p.internalLoadState(state.data(),state.size()));p.reset();for(int i=0;i<kParamCount;++i){p.setNormalised(i,v[i]);if(i%8==0)h.block();}for(int warm=0;warm<180;++warm)h.block();assert(p.getNormalised(kQ9)==p.getNormalised(kMixKick));assert(p.getNormalised(kQ5)==p.getNormalised(kRulePickKick));assert(p.diceRolls.load()==0&&!p.getBool(kPreview)&&p.getInt(kPattern)==1&&p.getInt(kFactoryKit)==0&&p.recordState.load()==0);h.pulse(kRoll);assert(p.diceRolls.load()==1);std::cout<<"PASS MPC-style late parameter replay after chunk load cannot retrigger saved commands; userROLL works after settle\n";}
 
 }

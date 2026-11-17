@@ -24,7 +24,7 @@ static std::vector<uint8_t>legacy(const std::vector<uint8_t>&src){
  auto u32=[&](size_t at){return uint32_t(src[at])|uint32_t(src[at+1])<<8|uint32_t(src[at+2])<<16|uint32_t(src[at+3])<<24;};
  std::vector<uint8_t>out(src.begin(),src.begin()+12);out[8]=342&255;out[9]=342>>8;out[10]=out[11]=0;size_t pos=12;
  for(int i=0;i<kParamCount;++i){size_t n=1+src[pos]+8;if(i<342)out.insert(out.end(),src.begin()+pos,src.begin()+pos+n);pos+=n;}
- uint32_t n=u32(pos)-G::LayerTrailerSize;for(int k=0;k<4;++k)out.push_back(uint8_t(n>>(k*8)));out.insert(out.end(),src.begin()+pos+4,src.begin()+pos+4+n);return out;
+ uint32_t n=u32(pos)-G::LayerTrailerSize-G::CymbalTrailerSize-G::PoolTrailerSize;for(int k=0;k<4;++k)out.push_back(uint8_t(n>>(k*8)));out.insert(out.end(),src.begin()+pos+4,src.begin()+pos+4+n);return out;
 }
 int main(){
  for(double rate:{44100.,48000.,96000.})for(int size:{31,128,511})for(float shift:{-30.f,-15.f,0.f,30.f}){
@@ -33,7 +33,7 @@ int main(){
  std::cout<<"PASS signed Shift exact onset at3rates x3variable blocks x4offsets;30ms reported latency\n";
  {Host h;auto&p=*h.p;for(int n=0;n<4;++n)assert(p.proxyTarget(8+n)==kMixKick+n);float sample=p.get(kXSample0);p.setNormalised(kQ9,.5f);assert(std::abs(p.get(kMixKick)+21)<.001&&p.get(kXSample0)==sample);
   for(int part=0;part<4;++part){p.set(kSoundPart,part);for(int n=0;n<16;++n){int key=p.soundTarget(n);assert(key>=0);p.setNormalised(kSoundQ0+n,.6f);if(n%4==1&&!(part==2&&n>=8))assert(std::abs(p.get(key)-p.param(key).toPlain(.6f))<.001f);}}
-  p.set(kSoundPart,0);p.setNormalised(kSoundQ4,1);assert(p.getInt(kL0Sample)==p.layerAll[0].back()&&p.getBool(kL0On));p.set(kSoundDetails,1);assert(p.soundTarget(0)==kL0Start&&p.soundTarget(3)==kL0Decay&&p.soundTarget(4)<0);p.setNormalised(kSoundQ3,.7f);assert(std::abs(p.get(kL0Decay)-p.param(kL0Decay).toPlain(.7f))<.001);p.set(kSoundInvert,1);assert(p.getBool(kL0Invert));
+  p.set(kSoundPart,0);p.setNormalised(kSoundQ4,1);assert(p.getInt(kL0Sample)==p.layerAll[0].back()&&p.getBool(kL0On));p.set(kSoundDetails,1);assert(p.soundTarget(0)==kL0Start&&p.soundTarget(1)==kL0Tune&&p.soundTarget(3)==kL0HighCut&&p.soundTarget(4)<0);p.setNormalised(kSoundQ3,.7f);assert(std::abs(p.get(kL0HighCut)-p.param(kL0HighCut).toPlain(.7f))<.001);p.set(kSoundInvert,1);assert(p.getBool(kL0Invert));
   std::cout<<"PASS MAIN mix relays, all16SOUND controls across4parts, sample selection, detail context and invert\n";
  }
  {Host a,b;a.impulse(true);b.impulse(true);for(int layer=1;layer<4;++layer){a.pin(0,layer,true);b.pin(0,layer,true);a.p->set(a.p->layerKey(0,layer,G::LShift),layer*5);b.p->set(b.p->layerKey(0,layer,G::LShift),layer*5);}a.p->set(kChoke0,0);b.p->set(kChoke0,2);a.play();b.play();assert(a.audio==b.audio);assert(a.p->fired.load()==1&&b.p->fired.load()==1);

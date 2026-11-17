@@ -107,6 +107,39 @@ for role,choices,default in styles:c('Rule'+role+'Style',role+' Style',choices,d
 for row in range(4):
  b('SoundSamplePrev'+str(row),'Previous Sample '+str(row+1),auto=False)
  b('SoundSampleNext'+str(row),'Next Sample '+str(row+1),auto=False)
+# Independent timekeeper/transition rules; keep all 533 previous declarations unchanged.
+c('OpenHatRule','Open Hat',['OFF','OFFBEAT','BAR END','FILL END'])
+c('RideRule','Ride',['OFF','1/4','1/8','1/4 + BELL','1/8 + BELL'])
+c('CrashRule','Crash',['OFF','START','AFTER FILL','EVERY 4','EVERY 8','EVERY 16'])
+# Append-only source browser and independent cymbal sound controls.
+b('CymbalView','Cymbal Sounds',auto=False)
+for slot,caption in enumerate(['Ride','Crash','Bell']):
+ prefix='Cym'+str(slot)
+ f(prefix+'Sample',caption+' Sample',-1,1048575,0,auto=False)
+ f(prefix+'Level',caption+' Level',-48,6,0,'dB',1);f(prefix+'Tune',caption+' Tune',-12,12,0,'st',1)
+ f(prefix+'Shift',caption+' Shift',-30,30,0,'ms',1);f(prefix+'Decay',caption+' Decay',20,4000,800,'ms')
+ b(prefix+'On',caption+' On',1);b(prefix+'Lock',caption+' Lock');b(prefix+'Solo',caption+' Solo')
+ f(prefix+'Start',caption+' Start',0,200,0,'ms',1);f(prefix+'LowCut',caption+' Low Cut',0,1000,0,'Hz');f(prefix+'HighCut',caption+' High Cut',2000,20000,20000,'Hz');b(prefix+'Invert',caption+' Invert')
+for row in range(4):
+ b('SoundBrowse'+str(row),'Browse Sample '+str(row+1),auto=False)
+ b('SoundPreview'+str(row),'Preview Sample '+str(row+1),auto=False)
+b('SampleBrowserOpen','Sample Browser',auto=False)
+f('SampleBrowserPage','Sample Page',0,131071,0,auto=False)
+for name in ['SamplePrev','SampleNext']:b(name,name,auto=False)
+f('SampleInfo','Sample List',0,1,0,auto=False)
+for row in range(8):f('SampleRow'+str(row),'Sample Row '+str(row+1),0,1,0,auto=False)
+for row in range(8):b('SamplePick'+str(row),'Pick Sample '+str(row+1),auto=False)
+c('FillGridPage','Fill Instruments',['SNARE / TOM / PERC / CLAP','KICK / HATS / CYMBAL'],auto=False)
+c('DicePool','Use Sounds From',['THIS PACK','ALL PACKS','SELECTED KITS'],auto=False)
+b('PoolOpen','Select Kits',auto=False);b('PoolClear','Clear Selected Kits',auto=False)
+f('PoolInfo','Selected Kits',0,1,0,auto=False)
+for row in range(8):b('PoolPick'+str(row),'Toggle Kit '+str(row+1),auto=False)
+for row in range(8):f('PoolRow'+str(row),'Pool Kit '+str(row+1),0,1,0,auto=False)
+# Per-control Dice protection; locks affect randomisation, not manual editing.
+for n in range(16):b('DiceLock'+str(n),'Dice Lock '+str(n+1),auto=False)
+# Seven playable styles; legacy eight-choice IDs stay intact for saved projects.
+short_styles={'GHOST BEFORE':'PRE GHOST','GHOST AFTER':'POST GHOST','DOUBLE GHOST':'2 GHOSTS','ANSWER SNARE':'ANSWER','SYNCOPATED':'SYNCOPATE'}
+for role,choices,default in styles:c('RulePick'+role,role+' Style Picker',[short_styles.get(x,x)for x in choices[1:]],default-1)
 P.joinpath('parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 lines=['// Generated parameter declarations. Stable index order from parameters.json.','enum Key { '+', '.join('k'+p['key'] for p in params)+', kParamCount };','inline void declareParameters(mpc::Plugin& plugin) {']
 for p in params:
@@ -114,7 +147,7 @@ for p in params:
  else:expr='mpc::floatParam('+','.join([json.dumps(p['key']),json.dumps(p['name']),str(p['min']),str(p['max']),str(p['default']),json.dumps(p['unit']),str(p['decimals'])])+')'
  lines+=['{ auto p='+expr+'; p.automatable='+str(p['auto']).lower()+'; plugin.addParam(p); }']
 lines+=['}'];P.joinpath('src/Parameters.h').write_text('\n'.join(lines)+'\n')
-p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.2.2',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
+p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.3.3',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
 main=['Swing','Snare Late','Hat Shift','Rnd Nudge','Kick Style','Snare Style','Hat Style','Perc Style','Kick Mix','Snare Mix','Hat Mix','Perc Mix','Drive','Dust','Room','Hat Rhythm']
 pages=[{'name':'MAIN','controls':main},{'name':'FILL','controls':['Fill Select','Fill Length','Rec Mode','Count-in','Note Nudge','Note Velocity','Note Gate','Note Chance']},{'name':'GROOVE','controls':main[:4]+['Density','Ghost','Vel Spread','Random Amt']+['Preview BPM','Note Select','Note Nudge','Note Velocity','Fill Select','Fill Density','Fill Every','Variation']},{'name':'SOUND','controls':['Sound Control '+str(i+1) for i in range(16)]},{'name':'KITS','controls':['Kit Select','Kit Lock','Pattern','Pattern Lock','User Kit','Save Kit','Load Kit','Choke Time']+[f'Choke {i}'for i in range(1,9)]},{'name':'FX','controls':['Drive','Dust','Room','Duck','Low Cut','Mod Rate','Mod Depth','Master']},{'name':'ROUTING','controls':[f'Output {i}'for i in range(1,9)]+[f'Pad Note {i}'for i in range(1,9)]}]
 P.joinpath('ui.json').write_text(json.dumps({'kit':'amber','pages':pages},indent=2)+'\n')

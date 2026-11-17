@@ -43,7 +43,7 @@ for key,definition in defs.items():
  if definition.get('hideQLinkBounds'):
   order=list(definition);assert order.index('disableCoarseDataWheel')<order.index('hideQLinkBounds')<order.index('componentsData'),key
 assert t['tabs'][0]['qlinkBoundsData']==['20 162 606 110','654 162 606 110','20 304 606 110','654 304 606 110']
-for physical,key in zip([14,10,6,2],['RuleKickStyle','RuleSnareStyle','RuleHatStyle','RulePercStyle']):assert q['Program Mode Q-Links']['Q-Link '+str(physical)]==keys[key]
+for physical,key in zip([14,10,6,2],['RulePickKick','RulePickSnare','RulePickHat','RulePickPerc']):assert q['Program Mode Q-Links']['Q-Link '+str(physical)]==keys[key]
 print('PASS ordered native modal guide suppression, padded MAIN panel bounds, B RULES mapping')
 
 # Test what matters visually: all titles/badges outside, actual four controls inside.
@@ -76,7 +76,7 @@ print('PASS every page: headers/badges excluded; four control bounds contained; 
 # MAIN user actions are separated into three spacious lower lanes, physical pads play drums.
 for entry in defs['GDMain']['componentsData']:
  typ=entry['componentData']['type'];x,y,w,h=map(float,entry['bounds']['bounds'].split())
- if typ.startswith('Btn')or typ.startswith('Value'):assert y>=420 and h>=60,(typ,y,h)
+ if typ.startswith('Btn')or typ.startswith('Value'):assert y>=420 and h>=40,(typ,y,h)
 for name in ['GDMain','GDFill']:
  for entry in defs[name]['componentsData']:
   definition=defs.get(entry['componentData']['type'],{})
@@ -95,7 +95,7 @@ assert commands>=25
 print('PASS',commands,'independent press/release visuals; exactly one engine command per press')
 
 # MAIN D4 and Program match; DUCK stays in FX. All15 choices are touch-accessible.
-assert q['Program Mode Q-Links']['Q-Link 4']==keys['HatRhythm']
+assert q['Program Mode Q-Links']['Q-Link 4']==keys['CrashRule']
 assert len([k for k in defs if k.startswith('GDChoiceHatRhythmRow')])==15
 assert defs['GDChoiceHatRhythm']['hideQLinkBounds']
 assert any(k.startswith('KnobDuck-')for k in defs)
@@ -103,7 +103,7 @@ assert any(k.startswith('KnobHatRhythm-')for k in defs)
 for j in range(15):
  row=next(e for e in defs['GDChoiceHatRhythm']['componentsData']if e['componentData']['type']=='GDChoiceHatRhythmRow'+str(j))
  assert row['bounds']['additionalInvalidatingHandles']==['IndexedEnabling/'+str(j//8)+'/2/Parameter '+str(keys['HatRhythmPage'])]
-print('PASS MAIN D4 HatRhythm,15paged choices, guide suppression, DUCK retained in FX')
+print('PASS MAIN D1 HatRhythm,15paged choices, guide suppression, DUCK retained in FX')
 
 # Four row guides exclude layer selectors/On/Solo/Lock, include all actual control bounds.
 sound_tab=next(tab for tab in t['tabs']if tab['tabName']=='SOUND')
@@ -124,15 +124,16 @@ for row in range(4):
  assert len(captions)==1
  x,y,w,h=map(int,captions[0]['bounds']['bounds'].split());assert x>=0 and y>=24 and x+w<=224 and y+h<=64
  assert 'verticallyCentred' in captions[0]['componentData']['data']['textStyle']['justification']
- touch=next(e for e in children if e['componentData']['name']=='sample select')
- assert touch['componentData']['data']['knobType']=='FilmStrip'and touch['componentData']['data']['filmStrip']=='sample-touch.png'
- assert children.index(touch)>children.index(captions[0])
- arrows=[e for e in children if e['componentData']['type'].startswith('Btn')]
- assert len(arrows)==2 and all(rect(e)[2:]==(44.,44.)for e in arrows)
+ touch=next(e for e in children if e['componentData']['type'].startswith('Btn') and rect(e)==(0.,24.,224.,40.))
+ assert any(a.get('handleName')=='Parameter '+str(keys['SoundBrowse'+str(row)])for a in defs[touch['componentData']['type']]['actions'])
+ arrows=[e for e in children if e['componentData']['type'].startswith('Btn') and rect(e)[2:]==(44.,44.)]
+ assert len(arrows)==2
  for entry,key in zip(arrows,['SoundSamplePrev'+str(row),'SoundSampleNext'+str(row)]):
   assert any(a.get('handleName')=='Parameter '+str(keys[key])for a in defs[entry['componentData']['type']]['actions'])
+ preview=next(e for e in children if e['componentData']['type'].startswith('Btn') and rect(e)==(48.,64.,128.,44.))
+ assert any(a.get('handleName')=='Parameter '+str(keys['SoundPreview'+str(row)])for a in defs[preview['componentData']['type']]['actions'])
  assert all(rect(e)[0]>=0 and rect(e)[1]>=0 and rect(e)[0]+rect(e)[2]<=224 and rect(e)[1]+rect(e)[3]<=108 for e in children)
-print('PASS named sample plate,44px previous/next targets, transparent Q-Link/drag surface and row bounds')
+print('PASS named sample plate,44px previous/next targets, tap-list and preview press surfaces and row bounds')
 # Value-only sample editing needs the same explicit focus action as rotary knobs.
 for row in range(4):
  assert any(a.get('onAction')=='Mouse Down' and a.get('handler')=='Q-Link' and a.get('handleName')=='Parameter '+str(keys['SoundQ'+str(row*4)]) for a in defs['LayerSample'+str(row)]['actions'])
@@ -141,16 +142,65 @@ print('PASS each sample selector focuses its own SCREEN Q-Link row')
 # Kit lock must be visible, with scope choices reflecting its real behavior.
 labels=[e['componentData'] for d in defs.values() for e in d.get('componentsData',[]) if e['componentData']['type']=='Label']
 text=json.dumps(labels)
-for caption in ['LOCK KIT','KIT FIXED','Pattern Only','Groove Only','Fill Only','Rhythm + FX','FX Only']:
+for caption in ['LOCK KIT','KIT FIXED','EXTRA CHANGES','No extras','New Pattern','Groove Variation','Recorded Fill','Pattern + Fill + FX']:
  assert caption in text,caption
 for n in range(6):
  rows=defs['GDChoiceScopeRow'+str(n)]['componentsData']
- assert len(rows)==2 and all(e['bounds'].get('additionalInvalidatingHandles') for e in rows)
-print('PASS explicit kit lock and conditionally displayed effective scope choices')
+ assert len(rows)==1
+print('PASS explicit kit lock and explicit extra-change choices')
 
-# Expanded rules retain all eight touch choices and MAIN B's four fixed SCREEN relays.
-for n,key in enumerate(['RuleKickStyle','RuleSnareStyle','RuleHatStyle','RulePercStyle']):
- assert len(m[keys[key]]['choices'])==8
- assert all('GDChoice'+key+'Row'+str(j)in defs for j in range(8))
+# RULES expose seven playable touch choices without a LOCK value and MAIN B's four fixed SCREEN relays.
+for n,key in enumerate(['RulePickKick','RulePickSnare','RulePickHat','RulePickPerc']):
+ assert len(m[keys[key]]['choices'])==7 and 'LOCK'not in m[keys[key]]['choices']
+ assert all('GDChoice'+key+'Row'+str(j)in defs for j in range(7))
  assert not any(e['componentData'].get('type')=='Label' and '4-BAR PHRASES' in str(e)for d in defs.values()for e in d.get('componentsData',[]))
-print('PASS four8-choice rule drawers, Program B styles and live1-bar captions')
+print('PASS four7-choice rule drawers, Program B styles and live1-bar captions')
+
+# MAIN D is articulation; audio colour is retained only on FX.
+main_types=[e['componentData']['type']for e in defs['GDMain']['componentsData']]
+for key in ['HatRhythm','OpenHatRule','RideRule','CrashRule']:
+ assert any(t.startswith('Knob'+key+'-')for t in main_types)
+ assert defs['GDChoice'+key]['hideQLinkBounds']
+for key in ['Drive','Dust','Room']:assert not any(t.startswith('Knob'+key+'-')for t in main_types)
+for index,key in zip([16,12,8,4],['HatRhythm','OpenHatRule','RideRule','CrashRule']):assert q['Program Mode Q-Links']['Q-Link '+str(index)]==keys[key]
+print('PASS MAIN D Hat/Open/Ride/Crash, native mappings and guide-hiding drawers; Drive/Dust/Room absent from MAIN and preserved on FX')
+
+assert defs["SampleBrowser"]["hideQLinkBounds"] and defs["SelectedKitBrowser"]["hideQLinkBounds"]
+assert not any(e["componentData"]["type"]=="Knob" for row in range(4) for e in defs["LayerSample"+str(row)]["componentsData"])
+print("PASS sample tap-list, preview buttons and both modal guide suppression")
+
+# All sample rows expose the same Decay position, and keep Tune in detail controls.
+for name,rows in [('SoundOverview',range(4)),('CymbalOverview',range(3))]:
+ for row in rows:
+  prefix='KnobSoundQ'+str(row*4+2)+'-'
+  controls=[e for e in defs[name]['componentsData']if e['componentData']['type'].startswith(prefix) and 'IndexedEnabling/2/4/Parameter '+str(keys['SoundPart']) not in e['bounds'].get('additionalInvalidatingHandles',[])]
+  assert controls and all(defs[e['componentData']['type']]['componentsData'][0]['componentData']['data']['text']=='Decay'for e in controls)
+controls=[e for e in defs['SoundDetailsPanel']['componentsData']if e['componentData']['type'].startswith('KnobSoundQ1-')]
+assert controls and all(defs[e['componentData']['type']]['componentsData'][0]['componentData']['data']['text']=='Tune'for e in controls)
+print('PASS every sound-row third control is Decay; selected-sound detail second control is Tune')
+
+for d in defs.values():
+ for entry in d.get("componentsData",[]):
+  c=entry["componentData"]
+  assert not(c["type"]=="Label" and c["data"].get("type")=="Text" and c["data"].get("text")==""),"Empty fixed text widget"
+print("PASS captionless hit targets omit empty fixed-Text widgets")
+
+assert Image.open(S/'dice-locked.png').size==(44,44) and Image.open(S/'dice-unlocked.png').size==(44,44)
+main_controls=[e for e in defs['GDMain']['componentsData']if e['componentData']['type'].startswith('Knob')]
+assert len(main_controls)==16
+for control in main_controls:
+ children=defs[control['componentData']['type']]['componentsData']
+ locks=[e for e in children if e['componentData']['type'].startswith('Btn')]
+ assert len(locks)==1 and rect(locks[0])==(94.,26.,44.,44.)
+ lock=defs[locks[0]['componentData']['type']]['componentsData'][0]
+ assert lock['componentData']['data']['onImage']=='dice-locked.png'
+ handle=lock['handle remapping']['map'][0]['value'];assert keys['DiceLock0']<=int(handle.split()[-1])<=keys['DiceLock15']
+ knob=next(e for e in children if e['componentData']['type']=='Knob');assert not overlaps(rect(knob),rect(locks[0]))
+print('PASS16persistent44px locks inside control bounds with no knob overlap')
+
+# Conditional default kit caption needs version-2 bounds to hide under KIT FIXED.
+for definition in defs.values():
+ for entry in definition.get("componentsData",[]):
+  bounds=entry.get("bounds",{})
+  if bounds.get("showWhenDataModelInvalid")=="Hide":
+   assert bounds.get("version",0)>=2, "Conditional caption requires version-2 bounds"

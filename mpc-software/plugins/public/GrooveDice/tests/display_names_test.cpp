@@ -5,7 +5,7 @@
 #include <iostream>
 int main(){
  GrooveDice p;auto&lib=p.library;
- assert(p.numParams()==533&&p.numPrograms()>96);
+ assert(p.numParams()==kParamCount&&p.numPrograms()>96);
  assert(std::string(p.programName(0))=="Init");
  std::set<std::string>names;
  for(int n=1;n<p.numPrograms();++n){std::string name=p.programName(n);assert(!name.empty()&&name.size()<=31&&names.insert(name).second);assert(!groove::DisplayNames::codedKit(name)&&name.find('~')==std::string::npos);}
