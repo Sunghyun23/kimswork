@@ -20,7 +20,8 @@ print('PASS6tabs,16MAIN relay Q-Links,64px native knobs,1280x628background,grid6
 sound=next(e for e in q['Screen Mode Q-Links']['map']if e['Tab']==3)
 for row in range(4):
  for knob in range(4):assert sound['Q-Links']['Q-Link '+str(13+row-4*knob)]==keys['SoundQ'+str(row*4+knob)]
-assert defs['SoundDetailsPanel']['hideQLinkBounds']
+assert 'SoundDetailsPanel' not in defs
+assert not defs['SoundDetailPage'].get('hideQLinkBounds',False)
 assert any(k.startswith('ValueKitDiceMode')for k in defs),'Dice Mode must remain reachable in KITS'
 assert sum(k.startswith('DynamicKitRow')for k in defs)==8
 assert defs['ExpansionKitBrowser']['hideQLinkBounds']
@@ -107,16 +108,16 @@ print('PASS MAIN D1 HatRhythm,15paged choices, guide suppression, DUCK retained 
 
 # Four row guides exclude layer selectors/On/Solo/Lock, include all actual control bounds.
 sound_tab=next(tab for tab in t['tabs']if tab['tabName']=='SOUND')
-assert sound_tab['qlinkBoundsData']==[f'196 {136+row*110} 1068 108'for row in range(4)]
+assert sound_tab['qlinkBoundsData']==[f'212 {132+row*110} 1052 108'for row in range(4)]
 for row in range(4):
  guide=tuple(map(float,sound_tab['qlinkBoundsData'][row].split()))
- controls=[e for e in defs['SoundOverview']['componentsData']if e['componentData']['type'].startswith(('LayerSample','KnobSoundQ'))and abs(rect(e)[1]-(136+row*110))<.01]
+ controls=[e for e in defs['SoundOverview']['componentsData']if e['componentData']['type'].startswith(('LayerSample','KnobSoundQ'))and abs(rect(e)[1]-(132+row*110))<.01]
  assert len(controls)>=4 and all(inside(rect(e),guide)for e in controls)
  assert min(rect(e)[0]for e in controls)-guide[0]>=40
-for name in ['SoundOverview','SoundDetailsPanel']:
+for name in ['SoundOverview','SoundDetailPage','CymbalOverview','CymbalDetailPage']:
  for e in defs[name]['componentsData']:
   x,y,w,h=rect(e);assert min(x,y,w,h)>=0 and x+w<=1280 and y+h<=628,(name,e['componentData']['name'],(x,y,w,h))
-print('PASS MAIN C mix,16 SOUND relays,4 row guides with native-Q gutter, details modal and bounds')
+print('PASS MAIN C mix,16 SOUND relays,4 row guides with native-Q gutter, two editing pages and bounds')
 # Sample names are separate native Labels. A transparent filmstrip has no intrinsic text/background.
 for row in range(4):
  children=defs['LayerSample'+str(row)]['componentsData']
@@ -169,15 +170,14 @@ assert defs["SampleBrowser"]["hideQLinkBounds"] and defs["SelectedKitBrowser"]["
 assert not any(e["componentData"]["type"]=="Knob" for row in range(4) for e in defs["LayerSample"+str(row)]["componentsData"])
 print("PASS sample tap-list, preview buttons and both modal guide suppression")
 
-# All sample rows expose the same Decay position, and keep Tune in detail controls.
-for name,rows in [('SoundOverview',range(4)),('CymbalOverview',range(3))]:
+# Labels and fixed relay positions match the approved two-page layout in every row.
+for name,rows,columns in [('SoundOverview',range(4),{1:'Level',2:'Tune',3:'Shift'}),('CymbalOverview',range(3),{1:'Level',2:'Tune',3:'Shift'}),('SoundDetailPage',range(4),{0:'Start',1:'Decay',2:'Low Cut',3:'High Cut'}),('CymbalDetailPage',range(3),{0:'Start',1:'Decay',2:'Low Cut',3:'High Cut'})]:
  for row in rows:
-  prefix='KnobSoundQ'+str(row*4+2)+'-'
-  controls=[e for e in defs[name]['componentsData']if e['componentData']['type'].startswith(prefix) and 'IndexedEnabling/2/4/Parameter '+str(keys['SoundPart']) not in e['bounds'].get('additionalInvalidatingHandles',[])]
-  assert controls and all(defs[e['componentData']['type']]['componentsData'][0]['componentData']['data']['text']=='Decay'for e in controls)
-controls=[e for e in defs['SoundDetailsPanel']['componentsData']if e['componentData']['type'].startswith('KnobSoundQ1-')]
-assert controls and all(defs[e['componentData']['type']]['componentsData'][0]['componentData']['data']['text']=='Tune'for e in controls)
-print('PASS every sound-row third control is Decay; selected-sound detail second control is Tune')
+  for column,caption in columns.items():
+   prefix='KnobSoundQ'+str(row*4+column)+'-'
+   controls=[e for e in defs[name]['componentsData']if e['componentData']['type'].startswith(prefix)]
+   assert controls and all(defs[e['componentData']['type']]['componentsData'][0]['componentData']['data']['text']==caption for e in controls),(name,row,column)
+print('PASS all rows: page1 Sample/Level/Tune/Shift; page2 Start/Decay/LowCut/HighCut')
 
 for d in defs.values():
  for entry in d.get("componentsData",[]):
@@ -204,3 +204,39 @@ for definition in defs.values():
   bounds=entry.get("bounds",{})
   if bounds.get("showWhenDataModelInvalid")=="Hide":
    assert bounds.get("version",0)>=2, "Conditional caption requires version-2 bounds"
+
+# Every sound row has a separate stateful REV button, without touching its sample hit.
+reverse_counts={}
+for name in ['SoundOverview','CymbalOverview']:
+ entries=defs[name]['componentsData'];found=[]
+ for entry in entries:
+  definition=defs.get(entry['componentData']['type'],{})
+  children=definition.get('componentsData',[])
+  arts=[c for c in children if c['componentData']['type']=='Button' and c.get('handle remapping',{}).get('map')]
+  if not arts:continue
+  handles=[m.get('value','')for c in arts for m in c['handle remapping']['map']]
+  if any('Parameter '+str(keys['SoundRev'+str(row)])in handles for row in range(4)):
+   x,y,w,h=rect(entry);assert w>=44 and h>=44 and x+w<=244
+   found.append(entry)
+ reverse_counts[name]=len(found)
+assert reverse_counts=={'SoundOverview':6,'CymbalOverview':3},reverse_counts
+print('PASS REV44px toggles for all sound rows; Hat detail rows exclude duplicate buttons')
+
+# The page controls remain on both views; 48px arrows and a visible page indicator.
+for name in ['SoundOverview','SoundDetailPage','CymbalOverview','CymbalDetailPage']:
+ children=defs[name]['componentsData'];buttons=[e for e in children if rect(e)[1]==574 and rect(e)[2:]==(48.,48.)]
+ assert len(buttons)==2,(name,'page arrows')
+ assert sorted(rect(e)[0]for e in buttons)==[16.,220.]
+ assert all(e['componentData']['type']!='SoundDetailsPanel'for e in children)
+assert t['tabs'][2]['qlinkBoundsData']==[f'212 {132+r*110} 1052 108'for r in range(4)]
+print('PASS SOUND page1/2 explicit 48px previous/next arrows, fixed page display and retained native guides')
+
+# Keep the expanded SOUND tree bounded; hidden pages must not explode native widget count.
+def expanded_count(entries,path=()):
+ count=0
+ for entry in entries:
+  name=entry['componentData']['type'];assert name not in path,'Recursive skin definition'
+  count+=1+expanded_count(defs.get(name,{}).get('componentsData',[]),path+(name,))
+ return count
+assert expanded_count(t['tabs'][2]['componentDefinition']['componentsData'])<2000
+print('PASS SOUND expanded widget tree below2000 including hidden pages/browser')

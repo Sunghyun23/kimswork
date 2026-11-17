@@ -84,3 +84,13 @@
 - SOUND and CYMBALS rows use Sample/Level/Decay/Shift. Details use Start/Tune/LowCut/HighCut. Tap sample names for a left browser; arrows/Q-Link share the catalogue. PREVIEW is isolated to the selected layer and cannot record a fill or choke performance voices. Preserve eight-role fill access and selected-kit pool identities.
 - Captionless targets must not create empty fixed-Text widgets: they blanked the entire MPC UI. Conditional label bounds need version2; otherwise LOCK KIT and KIT FIXED overlap. Keep native ordered/duplicate-key serialization and modal guide suppression.
 - Public ZIP contains only original default.gdbank; owner expansion registries/banks must be preserved and excluded from Git/Release. Device images must be direct MPC captures, with model/version provenance. A build or rendered mockup is not hardware QA.
+
+## 1.3.4 reverse controls
+
+- All17sound sources have independent44px REV switches beside ON/SOLO/LOCK. REV means reverse playback, separate from polarity inversion. It latches direction per new voice; Start trims from the playback end, Decay/Shift remain independent. Do not reuse Invert or change LayerFields/old GDLY/GDCY layouts.
+- First643parameter declarations remain fixed. Reverse0–16 append643–659; SoundRev0–3 append660–663. GDRV0001 stores eight user-kit reverse sets; old states default forward. Factory selection resets reverse; sound browsing/roll preserve direction.
+- Automatic engine/build/skin verification and internal-NVMe file installation do not prove physical REV button operation. Record captures and device-touch checks separately.
+
+- Per-row Tune is visible on SOUND/CYMBALS as a fifth touch control beside Sample. Keep16fixed Q-Link relays Sample/Level/Decay/Shift; SoundTune0–3 append664–667 as non-automatable editing relays for existing Tune targets. Do not remove Shift/Decay or add a fifth hardware Q-Link.
+
+- Latest approved SOUND mapping supersedes the prior Decay-first and five-column/Tune proposals: page1 Sample/Level/Tune/Shift; page2 Start/Decay/LowCut/HighCut for every row. Existing SoundDetails is the two-page selector, not a modal. Preserve page across categories/cymbals. Footer previous/next each48×48 and centered SOUND1/2 indicator. REV stays in each row; page2 adds approved Ø using SoundPolarity0–3 at668–671. Inactive HatC/D and CymbalD targets return -1; never write another sound through them.

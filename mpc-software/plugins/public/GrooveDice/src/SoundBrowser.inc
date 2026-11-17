@@ -1,5 +1,5 @@
 // Fixed-size paged list: selection, arrows and SCREEN Q-Link use one source mapping.
-bool soundIsSample(int n)const{return getBool(kSampleBrowserOpen)?n==0:!getBool(kSoundDetails)&&n%4==0&&(getBool(kCymbalView)?n<12:!(getInt(kSoundPart)==2&&n>=8));}
+bool soundIsSample(int n)const{return getBool(kSampleBrowserOpen)?n==0:!getBool(kSoundDetails)&&n%4==0&&soundRole(n/4)>=0;}
 const std::vector<int>& sampleItems(int row)const{return getBool(kCymbalView)?cymbalItems(row):layerItems(soundRole(row));}
 int sampleCount(int row)const{return soundRole(row)<0?0:int(sampleItems(row).size())+(getBool(kCymbalView)?2:1);}
 int sampleId(int row,int position)const{int extra=getBool(kCymbalView)?2:1;if(position<extra)return position==1?-1:0;const auto&list=sampleItems(row);return position-extra<int(list.size())?list[position-extra]:0;}

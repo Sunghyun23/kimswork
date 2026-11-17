@@ -230,3 +230,13 @@ RULES exposes seven playable styles with no LOCK choice, via touch and Q-Link. U
 ## 1.3.3 공개 배포
 
 16개 전면 자물쇠와 실제 표시값 Dice, LOCK을 제외한7개 RULE 스타일, 모든 사운드의 Sample/Level/Decay/Shift, 왼쪽 샘플 브라우저·개별 미리듣기, 독립 Ride/Crash/Bell, 최대64개 선택 킷 풀을 포함한다.643개 파라미터와 구버전 상태를 유지한다. 사용자가 MPC XL에서 정상 동작을 확인하고 공개 배포를 승인했다. 과거0.x–1.3.2 단락은 이력이며 최신 동작은 [매뉴얼](../../../docs/plugins/groove-dice/manual.md)과 [1.3.3 릴리스](../../../docs/plugins/groove-dice/releases/1.3.3.md)를 따른다. 실제 MPC 캡처로 웹 소개 이미지를 교체한다.
+
+## 1.3.4 로컬 후보 — 전체 사운드 REV
+
+SOUND의 모든 사운드 행에44×44 REV 버튼을 ON/SOLO/LOCK 옆에 추가한다.8개 기본역할+6개 추가레이어+Ride/Crash/Bell=17개 독립 역재생이다. 다음 발음/미리듣기부터 적용하며 Start는 역재생 시작 끝부분에서 잘라낸다. Decay/Shift·극성반전은 독립이다. 기존643개 ID/순서와 고정트레일러를 유지하고25개 파라미터를 끝에 추가해668개가 된다. 사용자킷8개와프로젝트에 저장한다. 공식 공개판은1.3.3이며 신규 실기 캡처/터치 검증 전에는1.3.4 검증 완료로 표시하지 않는다.
+
+Tune은 SOUND/CYMBALS의 각 행 Sample 옆에 별도 터치 노브로 표시한다. Screen의 네 Q-Link는 Sample/Level/Decay/Shift를 유지하며 Tune은 DETAILS 진입 없이 조절한다.
+
+## 승인된 SOUND 2페이지 구성
+
+1페이지 Sample/Level/Tune/Shift,2페이지 Start/Decay/LowCut/HighCut. 아래의48×48 이전/다음 화살표와 SOUND1/2표시로 모든 행을 함께 전환하며 Q-Link A–D는 각 사운드 행을 유지한다. 별도 DETAIL 모달을 없애고2페이지 이름 옆에 Ø(극성반전)를 보존한다. REV는 두 페이지에서 유지한다. Hat의C/D와Cymbals의D는 미할당이다. SoundDetails 기존값을 페이지선택으로 사용해 새 페이지파라미터를 만들지 않는다. 현재 총672개 파라미터다.

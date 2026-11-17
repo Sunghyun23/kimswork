@@ -1,8 +1,8 @@
 // SOUND editor, append-only layer controls and state. Included inside GrooveDice.
 // All catalogue construction/state serialization is non-render. Rendering pins immutable cache slots.
 enum LayerField { LSample, LLevel, LTune, LShift, LDecay, LOn, LLock, LSolo, LStart, LLowCut, LHighCut, LInvert, LayerFields };
-static constexpr int SoundOverviewFields[]={LSample,LLevel,LDecay,LShift};
-static constexpr int SoundDetailFields[]={LStart,LTune,LLowCut,LHighCut};
+static constexpr int SoundOverviewFields[]={LSample,LLevel,LTune,LShift};
+static constexpr int SoundDetailFields[]={LStart,LDecay,LLowCut,LHighCut};
 static constexpr int LayerStoredCount=4+kL5Invert+1-kRoleOn0;
 static constexpr size_t LayerTrailerSize=16+54*64+8*LayerStoredCount*4;
 std::array<std::vector<int>,8> layerAll;std::array<std::array<int,8>,8>legacyLayerIds{};
@@ -31,12 +31,8 @@ int soundLayer(int row)const{if(getBool(kCymbalView))return 0;return getInt(kSou
 int soundTarget(int n)const{
  if(getBool(kPoolOpen))return -1;
  if(getBool(kSampleBrowserOpen))return n==0?soundKey(getInt(kSoundRow),LSample):-1;
- if(getBool(kCymbalView)){if(getBool(kSoundDetails))return n<4?soundKey(getInt(kSoundRow),SoundDetailFields[n]):-1;if(n>=12)return soundKey(getInt(kSoundRow),SoundDetailFields[n%4]);return soundKey(n/4,SoundOverviewFields[n%4]);}
- if(getBool(kSoundDetails)){
-  int row=getInt(kSoundRow),role=soundRole(row);return role>=0&&n<4?soundKey(row,SoundDetailFields[n]):-1;
- }
- if(getInt(kSoundPart)==2&&n>=8)return layerKey(2+n/4-2,0,SoundDetailFields[n%4]);
- int row=n/4,role=soundRole(row);return role<0?-1:layerKey(role,soundLayer(row),SoundOverviewFields[n%4]);
+ int row=n/4;if(n<0||n>=16||soundRole(row)<0)return -1;
+ return soundKey(row,getBool(kSoundDetails)?SoundDetailFields[n%4]:SoundOverviewFields[n%4]);
 }
 static int layerStoredKey(int n){return n<4?kMixKick+n:kRoleOn0+n-4;}
 static bool extraSampleKey(int key){return key>=kL0Sample&&key<=kL5Invert&&(key-kL0Sample)%LayerFields==LSample;}
@@ -69,18 +65,19 @@ void syncLayerUi(bool force=false){
  }
  for(int r=0;r<4;++r){int role=soundRole(r),layer=soundLayer(r);for(int field:{LOn,LSolo,LLock}){int relay=(field==LOn?kSoundOn0:field==LSolo?kSoundSolo0:kSoundLock0)+r;float next=role<0?0:get(soundKey(r,field));if(get(relay)!=next){set(relay,next);changed[relay].store(true);}}}
  int role=soundRole(row);float invert=role<0?0:get(soundKey(row,LInvert));if(get(kSoundInvert)!=invert){set(kSoundInvert,invert);changed[kSoundInvert].store(true);}
- internal=before;
+ syncReverseUi();internal=before;
 }
 bool layerParameter(int key,float value){
- if(key==kCymbalView){layerSet(kSoundRow,0);layerSet(kSoundDetails,0);layerSet(kSampleBrowserOpen,0);syncLayerUi(true);queueLayerUi();return true;}
+ if(reverseParameter(key,value))return true;
+ if(key==kCymbalView){layerSet(kSoundRow,0);layerSet(kSampleBrowserOpen,0);syncLayerUi(true);queueLayerUi();return true;}
  if(key==kSampleBrowserOpen){syncLayerUi(true);queueLayerUi();return true;}
  if(key>=kCym0Sample&&key<=kCym2Invert){if((key-kCym0Sample)%LayerFields==0)cymbalMissing[(key-kCym0Sample)/LayerFields].store(0);queueLayerUi();return false;}
- if(key==kSoundPart){layerSet(kCymbalView,0);layerSet(kSampleBrowserOpen,0);if(getInt(kSoundPart)==2&&getInt(kSoundRow)>1)layerSet(kSoundRow,0);layerSet(kSoundDetails,0);syncLayerUi(true);queueLayerUi();return true;}
+ if(key==kSoundPart){layerSet(kCymbalView,0);layerSet(kSampleBrowserOpen,0);if(getInt(kSoundPart)==2&&getInt(kSoundRow)>1)layerSet(kSoundRow,0);syncLayerUi(true);queueLayerUi();return true;}
  if(key==kSoundRow&&!getBool(kCymbalView)&&getInt(kSoundPart)==2&&getInt(kSoundRow)>1)layerSet(kSoundRow,getInt(kSoundRow)-2);
  if(key==kSoundDetails||key==kSoundRow||key==kPackFilter){if(key==kPackFilter)layerSet(kSampleBrowserPage,0);syncLayerUi(true);queueLayerUi();if(key!=kPackFilter)return true;}
  if(key>=kSoundQ0&&key<=kSoundQ15){int n=key-kSoundQ0,target=soundTarget(n);if(target<0)return true;
-  int row=getBool(kSampleBrowserOpen)?getInt(kSoundRow):getBool(kSoundDetails)?getInt(kSoundRow):getBool(kCymbalView)&&n>=12?getInt(kSoundRow):getInt(kSoundPart)==2&&n>=8&&!getBool(kCymbalView)?n/4-2:n/4;
-  if(!getBool(kSampleBrowserOpen)&&!getBool(kSoundDetails))layerSet(kSoundRow,row);
+  int row=getBool(kSampleBrowserOpen)?getInt(kSoundRow):n/4;
+  if(!getBool(kSampleBrowserOpen))layerSet(kSoundRow,row);
   float old=getNormalised(target);
   if(soundIsSample(n)){int count=sampleCount(row);selectSample(row,mpc::clamp(int(std::lround(value*(count-1))),0,count-1));if(getBool(kSampleBrowserOpen))layerSet(kSampleBrowserPage,samplePosition(row)/8);}
   else layerSet(target,param(target).toPlain(value));
@@ -157,6 +154,7 @@ void triggerLayers(int role,int velocity,int gateMs,int onlyLayer=-1,bool previe
   v->preview=preview;v->role=role;v->layer=layer;v->articulation=0;v->hit=hit;v->started=false;v->delay=std::max(0,int(std::llround(sr*(30.+get(layerKey(role,layer,LShift)))*.001)));
   v->pos=get(layerKey(role,layer,LStart))*sound.sampleRate*.001;
   v->step=sound.sampleRate/sr*std::pow(2.,get(layerKey(role,layer,LTune))/12.);
+  setReversePlayback(*v,sound,reverseSlot(role,layer));
   v->gain=velocity/127.f;v->levelGain=std::pow(10.f,get(layerKey(role,layer,LLevel))/20.f);v->polarity=getBool(layerKey(role,layer,LInvert))?-1.f:1.f;
   v->env=1;v->decay=float(std::exp(-6.9/(sr*get(layerKey(role,layer,LDecay))*.001)));v->choke=1;v->gate=int(sr*gateMs*.001);v->active=true;
   float lowCut=get(layerKey(role,layer,LLowCut)),highCut=get(layerKey(role,layer,LHighCut));v->hpAlpha=lowCut<1?0:float(1-std::exp(-6.283185307*std::min(double(lowCut),sr*.4)/sr));v->lpAlpha=highCut>=19500?1:float(1-std::exp(-6.283185307*std::min(double(highCut),sr*.45)/sr));v->hp={0,0};v->lp={0,0};firedHit=true;

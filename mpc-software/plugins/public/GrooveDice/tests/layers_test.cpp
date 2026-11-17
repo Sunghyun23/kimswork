@@ -24,7 +24,7 @@ static std::vector<uint8_t>legacy(const std::vector<uint8_t>&src){
  auto u32=[&](size_t at){return uint32_t(src[at])|uint32_t(src[at+1])<<8|uint32_t(src[at+2])<<16|uint32_t(src[at+3])<<24;};
  std::vector<uint8_t>out(src.begin(),src.begin()+12);out[8]=342&255;out[9]=342>>8;out[10]=out[11]=0;size_t pos=12;
  for(int i=0;i<kParamCount;++i){size_t n=1+src[pos]+8;if(i<342)out.insert(out.end(),src.begin()+pos,src.begin()+pos+n);pos+=n;}
- uint32_t n=u32(pos)-G::LayerTrailerSize-G::CymbalTrailerSize-G::PoolTrailerSize;for(int k=0;k<4;++k)out.push_back(uint8_t(n>>(k*8)));out.insert(out.end(),src.begin()+pos+4,src.begin()+pos+4+n);return out;
+ uint32_t n=u32(pos)-G::LayerTrailerSize-G::CymbalTrailerSize-G::PoolTrailerSize-G::ReverseTrailerSize;for(int k=0;k<4;++k)out.push_back(uint8_t(n>>(k*8)));out.insert(out.end(),src.begin()+pos+4,src.begin()+pos+4+n);return out;
 }
 int main(){
  for(double rate:{44100.,48000.,96000.})for(int size:{31,128,511})for(float shift:{-30.f,-15.f,0.f,30.f}){
@@ -32,8 +32,8 @@ int main(){
  }
  std::cout<<"PASS signed Shift exact onset at3rates x3variable blocks x4offsets;30ms reported latency\n";
  {Host h;auto&p=*h.p;for(int n=0;n<4;++n)assert(p.proxyTarget(8+n)==kMixKick+n);float sample=p.get(kXSample0);p.setNormalised(kQ9,.5f);assert(std::abs(p.get(kMixKick)+21)<.001&&p.get(kXSample0)==sample);
-  for(int part=0;part<4;++part){p.set(kSoundPart,part);for(int n=0;n<16;++n){int key=p.soundTarget(n);assert(key>=0);p.setNormalised(kSoundQ0+n,.6f);if(n%4==1&&!(part==2&&n>=8))assert(std::abs(p.get(key)-p.param(key).toPlain(.6f))<.001f);}}
-  p.set(kSoundPart,0);p.setNormalised(kSoundQ4,1);assert(p.getInt(kL0Sample)==p.layerAll[0].back()&&p.getBool(kL0On));p.set(kSoundDetails,1);assert(p.soundTarget(0)==kL0Start&&p.soundTarget(1)==kL0Tune&&p.soundTarget(3)==kL0HighCut&&p.soundTarget(4)<0);p.setNormalised(kSoundQ3,.7f);assert(std::abs(p.get(kL0HighCut)-p.param(kL0HighCut).toPlain(.7f))<.001);p.set(kSoundInvert,1);assert(p.getBool(kL0Invert));
+  for(int part=0;part<4;++part){p.set(kSoundPart,part);for(int n=0;n<16;++n){int key=p.soundTarget(n);if(key<0)continue;p.setNormalised(kSoundQ0+n,.6f);if(n%4==1&&!(part==2&&n>=8))assert(std::abs(p.get(key)-p.param(key).toPlain(.6f))<.001f);}}
+  p.set(kSoundPart,0);p.setNormalised(kSoundQ4,1);assert(p.getInt(kL0Sample)==p.layerAll[0].back()&&p.getBool(kL0On));p.set(kSoundDetails,1);assert(p.soundTarget(4)==kL0Start&&p.soundTarget(5)==kL0Decay&&p.soundTarget(7)==kL0HighCut&&p.soundTarget(0)==kRoleStart0);p.setNormalised(kSoundQ7,.7f);assert(std::abs(p.get(kL0HighCut)-p.param(kL0HighCut).toPlain(.7f))<.001);p.set(kSoundInvert,1);assert(p.getBool(kL0Invert));
   std::cout<<"PASS MAIN mix relays, all16SOUND controls across4parts, sample selection, detail context and invert\n";
  }
  {Host a,b;a.impulse(true);b.impulse(true);for(int layer=1;layer<4;++layer){a.pin(0,layer,true);b.pin(0,layer,true);a.p->set(a.p->layerKey(0,layer,G::LShift),layer*5);b.p->set(b.p->layerKey(0,layer,G::LShift),layer*5);}a.p->set(kChoke0,0);b.p->set(kChoke0,2);a.play();b.play();assert(a.audio==b.audio);assert(a.p->fired.load()==1&&b.p->fired.load()==1);
@@ -54,6 +54,6 @@ int main(){
  }
  {Host h;h.impulse(true);auto&p=*h.p;for(int l=1;l<4;++l)h.pin(0,l,true);p.set(kSeparate,1);p.set(kRoute0,3);p.set(kMixKick,-6);for(int i=0;i<200;++i)h.render();h.play();assert(std::abs(h.data[6][h.block-1])>.0001f);for(int c=0;c<16;++c)if(c!=6&&c!=7)for(int f=0;f<h.block;++f)assert(h.data[c][f]==0);std::cout<<"PASS all four layers follow the role stereo route and MAIN trim without leaking to main\n";}
  {Host h;h.impulse(true);auto&p=*h.p;p.set(kChoke0,2);p.set(kRoleShift0,30);auto e=mpc::MidiEvent::noteOn(0,24,100,0);h.render(&e,1);uint64_t old=p.hitCounter;p.set(kRoleShift0,-30);h.render(&e,1);assert(p.hitCounter==old+1);for(auto&v:p.voices)if(v.active)assert(v.hit!=old);std::cout<<"PASS a newer hit chokes older pending voices at its actual onset\n";}
- {Host h;auto&p=*h.p;p.set(kSoundDetails,1);p.setNormalised(kSoundQ6,.40361154f);p.set(kL0Sample,1000000);h.render();auto state=p.internalSaveState();assert(p.internalLoadState(state.data(),state.size()));h.render();assert(p.internalSaveState()==state);std::cout<<"PASS inactive detail relays and unavailable catalogue indices preserve byte-identical host chunks\n";}
+ {Host h;auto&p=*h.p;p.set(kSoundDetails,1);p.setNormalised(kSoundQ6,.40361154f);p.set(kL0Sample,1000000);h.render();auto state=p.internalSaveState();assert(p.internalLoadState(state.data(),state.size()));h.render();assert(p.internalSaveState()==state);std::cout<<"PASS per-row detail relays and unavailable catalogue indices preserve byte-identical host chunks\n";}
  std::cout<<"ALL LAYER TESTS PASSED\n";return 0;
 }

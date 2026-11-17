@@ -1,0 +1,6738 @@
+[
+  {
+    "key": "Master",
+    "name": "Master",
+    "min": 0,
+    "max": 1,
+    "default": 0.7,
+    "unit": "",
+    "decimals": 2,
+    "auto": true
+  },
+  {
+    "key": "Q1",
+    "name": "Screen 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q2",
+    "name": "Screen 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q3",
+    "name": "Screen 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q4",
+    "name": "Screen 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q5",
+    "name": "Screen 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q6",
+    "name": "Screen 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q7",
+    "name": "Screen 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q8",
+    "name": "Screen 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q9",
+    "name": "Screen 9",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q10",
+    "name": "Screen 10",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q11",
+    "name": "Screen 11",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q12",
+    "name": "Screen 12",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q13",
+    "name": "Screen 13",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q14",
+    "name": "Screen 14",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q15",
+    "name": "Screen 15",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Q16",
+    "name": "Screen 16",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "Swing",
+    "name": "Swing",
+    "min": 50,
+    "max": 75,
+    "default": 54,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "SnareLate",
+    "name": "Snare Late",
+    "min": -40,
+    "max": 60,
+    "default": 12,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "HatShift",
+    "name": "Hat Shift",
+    "min": -40,
+    "max": 40,
+    "default": -4,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RndNudge",
+    "name": "Rnd Nudge",
+    "min": 0,
+    "max": 30,
+    "default": 4,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Density",
+    "name": "Density",
+    "min": 0,
+    "max": 100,
+    "default": 100,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Ghost",
+    "name": "Ghost",
+    "min": 0,
+    "max": 100,
+    "default": 15,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "VelSpread",
+    "name": "Vel Spread",
+    "min": 0,
+    "max": 50,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RandomAmt",
+    "name": "Random Amt",
+    "min": 0,
+    "max": 100,
+    "default": 35,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "FillSlot",
+    "name": "Fill Select",
+    "choices": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "FillDensity",
+    "name": "Fill Density",
+    "min": 0,
+    "max": 100,
+    "default": 100,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "FillEvery",
+    "name": "Fill Every",
+    "choices": [
+      "Off",
+      "4 Bars",
+      "8 Bars",
+      "16 Bars"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Variation",
+    "name": "Variation",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Drive",
+    "name": "Drive",
+    "min": 0,
+    "max": 100,
+    "default": 10,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Dust",
+    "name": "Dust",
+    "min": 0,
+    "max": 100,
+    "default": 10,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Room",
+    "name": "Room",
+    "min": 0,
+    "max": 100,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Duck",
+    "name": "Duck",
+    "min": 0,
+    "max": 100,
+    "default": 15,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Kit",
+    "name": "Kit",
+    "choices": [
+      "Dusty Velvet",
+      "Basement Soul",
+      "Amber Room"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Pattern",
+    "name": "Pattern",
+    "choices": [
+      "Velvet Stoop",
+      "Basement Bounce",
+      "Sunday Steps"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "KitLock",
+    "name": "Kit Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "PatternLock",
+    "name": "Pattern Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Scope",
+    "name": "Scope",
+    "choices": [
+      "Kit Only",
+      "Kit + Pattern",
+      "Kit + Groove",
+      "Kit + Fill",
+      "All",
+      "Kit + FX"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "Roll",
+    "name": "Roll Dice",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Undo",
+    "name": "Undo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Keep",
+    "name": "Keep",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Trigger",
+    "name": "Trigger Fill",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Record",
+    "name": "Rec Fill",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Cancel",
+    "name": "Cancel",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SaveKit",
+    "name": "Save Kit",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LoadKit",
+    "name": "Load Kit",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Preview",
+    "name": "Preview",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Follow",
+    "name": "Follow MPC",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "PreviewBpm",
+    "name": "Preview BPM",
+    "min": 40,
+    "max": 180,
+    "default": 92,
+    "unit": "BPM",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Editor",
+    "name": "Fill Editor",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "FillLength",
+    "name": "Fill Length",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar",
+      "2 Bars",
+      "4 Bars"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "RecMode",
+    "name": "Rec Mode",
+    "choices": [
+      "Replace",
+      "Overdub"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "CountIn",
+    "name": "Count-in",
+    "choices": [
+      "Off",
+      "1 Bar",
+      "2 Bars"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "NoteSelect",
+    "name": "Note Select",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "NoteNudge",
+    "name": "Note Nudge",
+    "min": -60,
+    "max": 60,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "NoteVelocity",
+    "name": "Note Velocity",
+    "min": 1,
+    "max": 127,
+    "default": 100,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "NoteGate",
+    "name": "Note Gate",
+    "min": 5,
+    "max": 500,
+    "default": 80,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "NoteChance",
+    "name": "Note Chance",
+    "min": 0,
+    "max": 100,
+    "default": 100,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "NoteDelete",
+    "name": "Delete Note",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Status",
+    "name": "Status",
+    "min": 0,
+    "max": 6,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Position",
+    "name": "Position",
+    "min": 0,
+    "max": 9999,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "RecordedCount",
+    "name": "Fill Notes",
+    "min": 0,
+    "max": 128,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Pad0",
+    "name": "Pad 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Level0",
+    "name": "Level 1",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Tune0",
+    "name": "Tune 1",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Decay0",
+    "name": "Decay 1",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pan0",
+    "name": "Pan 1",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sample0",
+    "name": "Sample 1",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Choke0",
+    "name": "Choke 1",
+    "min": 0,
+    "max": 16,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Route0",
+    "name": "Output 1",
+    "choices": [
+      "Main/Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "PadNote0",
+    "name": "Pad Note 1",
+    "min": 0,
+    "max": 127,
+    "default": 24,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pad1",
+    "name": "Pad 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Level1",
+    "name": "Level 2",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Tune1",
+    "name": "Tune 2",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Decay1",
+    "name": "Decay 2",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pan1",
+    "name": "Pan 2",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sample1",
+    "name": "Sample 2",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Choke1",
+    "name": "Choke 2",
+    "min": 0,
+    "max": 16,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Route1",
+    "name": "Output 2",
+    "choices": [
+      "Main/Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "PadNote1",
+    "name": "Pad Note 2",
+    "min": 0,
+    "max": 127,
+    "default": 26,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pad2",
+    "name": "Pad 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Level2",
+    "name": "Level 3",
+    "min": -48,
+    "max": 6,
+    "default": -6,
+    "unit": "dB",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Tune2",
+    "name": "Tune 3",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Decay2",
+    "name": "Decay 3",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pan2",
+    "name": "Pan 3",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sample2",
+    "name": "Sample 3",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Choke2",
+    "name": "Choke 3",
+    "min": 0,
+    "max": 16,
+    "default": 1,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Route2",
+    "name": "Output 3",
+    "choices": [
+      "Main/Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PadNote2",
+    "name": "Pad Note 3",
+    "min": 0,
+    "max": 127,
+    "default": 28,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pad3",
+    "name": "Pad 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Level3",
+    "name": "Level 4",
+    "min": -48,
+    "max": 6,
+    "default": -6,
+    "unit": "dB",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Tune3",
+    "name": "Tune 4",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Decay3",
+    "name": "Decay 4",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pan3",
+    "name": "Pan 4",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sample3",
+    "name": "Sample 4",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Choke3",
+    "name": "Choke 4",
+    "min": 0,
+    "max": 16,
+    "default": 1,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Route3",
+    "name": "Output 4",
+    "choices": [
+      "Main/Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 3,
+    "auto": true
+  },
+  {
+    "key": "PadNote3",
+    "name": "Pad Note 4",
+    "min": 0,
+    "max": 127,
+    "default": 29,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pad4",
+    "name": "Pad 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Level4",
+    "name": "Level 5",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Tune4",
+    "name": "Tune 5",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Decay4",
+    "name": "Decay 5",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pan4",
+    "name": "Pan 5",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sample4",
+    "name": "Sample 5",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Choke4",
+    "name": "Choke 5",
+    "min": 0,
+    "max": 16,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Route4",
+    "name": "Output 5",
+    "choices": [
+      "Main/Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 4,
+    "auto": true
+  },
+  {
+    "key": "PadNote4",
+    "name": "Pad Note 5",
+    "min": 0,
+    "max": 127,
+    "default": 31,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pad5",
+    "name": "Pad 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Level5",
+    "name": "Level 6",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Tune5",
+    "name": "Tune 6",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Decay5",
+    "name": "Decay 6",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pan5",
+    "name": "Pan 6",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sample5",
+    "name": "Sample 6",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Choke5",
+    "name": "Choke 6",
+    "min": 0,
+    "max": 16,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Route5",
+    "name": "Output 6",
+    "choices": [
+      "Main/Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 5,
+    "auto": true
+  },
+  {
+    "key": "PadNote5",
+    "name": "Pad Note 6",
+    "min": 0,
+    "max": 127,
+    "default": 33,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pad6",
+    "name": "Pad 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Level6",
+    "name": "Level 7",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Tune6",
+    "name": "Tune 7",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Decay6",
+    "name": "Decay 7",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pan6",
+    "name": "Pan 7",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sample6",
+    "name": "Sample 7",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Choke6",
+    "name": "Choke 7",
+    "min": 0,
+    "max": 16,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Route6",
+    "name": "Output 7",
+    "choices": [
+      "Main/Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 6,
+    "auto": true
+  },
+  {
+    "key": "PadNote6",
+    "name": "Pad Note 7",
+    "min": 0,
+    "max": 127,
+    "default": 35,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pad7",
+    "name": "Pad 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Level7",
+    "name": "Level 8",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Tune7",
+    "name": "Tune 8",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Decay7",
+    "name": "Decay 8",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pan7",
+    "name": "Pan 8",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sample7",
+    "name": "Sample 8",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Choke7",
+    "name": "Choke 8",
+    "min": 0,
+    "max": 16,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Route7",
+    "name": "Output 8",
+    "choices": [
+      "Main/Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 7,
+    "auto": true
+  },
+  {
+    "key": "PadNote7",
+    "name": "Pad Note 8",
+    "min": 0,
+    "max": 127,
+    "default": 36,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "ChokeTime",
+    "name": "Choke Time",
+    "min": 1,
+    "max": 30,
+    "default": 5,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Separate",
+    "name": "Separate Out",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "LowCut",
+    "name": "Low Cut",
+    "min": 0,
+    "max": 300,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "ModRate",
+    "name": "Mod Rate",
+    "min": 0.05,
+    "max": 8,
+    "default": 0.3,
+    "unit": "Hz",
+    "decimals": 2,
+    "auto": true
+  },
+  {
+    "key": "ModDepth",
+    "name": "Mod Depth",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "UserKit",
+    "name": "User Kit",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "EditDrum",
+    "name": "Edit Drum",
+    "choices": [
+      "Kick",
+      "Snare",
+      "Closed Hat"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Gated",
+    "name": "Gated Samples",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "GridSelect",
+    "name": "Grid Select",
+    "min": 0,
+    "max": 64,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid0",
+    "name": "Cell 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid1",
+    "name": "Cell 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid2",
+    "name": "Cell 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid3",
+    "name": "Cell 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid4",
+    "name": "Cell 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid5",
+    "name": "Cell 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid6",
+    "name": "Cell 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid7",
+    "name": "Cell 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid8",
+    "name": "Cell 9",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid9",
+    "name": "Cell 10",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid10",
+    "name": "Cell 11",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid11",
+    "name": "Cell 12",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid12",
+    "name": "Cell 13",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid13",
+    "name": "Cell 14",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid14",
+    "name": "Cell 15",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid15",
+    "name": "Cell 16",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid16",
+    "name": "Cell 17",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid17",
+    "name": "Cell 18",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid18",
+    "name": "Cell 19",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid19",
+    "name": "Cell 20",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid20",
+    "name": "Cell 21",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid21",
+    "name": "Cell 22",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid22",
+    "name": "Cell 23",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid23",
+    "name": "Cell 24",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid24",
+    "name": "Cell 25",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid25",
+    "name": "Cell 26",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid26",
+    "name": "Cell 27",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid27",
+    "name": "Cell 28",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid28",
+    "name": "Cell 29",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid29",
+    "name": "Cell 30",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid30",
+    "name": "Cell 31",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid31",
+    "name": "Cell 32",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid32",
+    "name": "Cell 33",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid33",
+    "name": "Cell 34",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid34",
+    "name": "Cell 35",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid35",
+    "name": "Cell 36",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid36",
+    "name": "Cell 37",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid37",
+    "name": "Cell 38",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid38",
+    "name": "Cell 39",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid39",
+    "name": "Cell 40",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid40",
+    "name": "Cell 41",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid41",
+    "name": "Cell 42",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid42",
+    "name": "Cell 43",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid43",
+    "name": "Cell 44",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid44",
+    "name": "Cell 45",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid45",
+    "name": "Cell 46",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid46",
+    "name": "Cell 47",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid47",
+    "name": "Cell 48",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid48",
+    "name": "Cell 49",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid49",
+    "name": "Cell 50",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid50",
+    "name": "Cell 51",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid51",
+    "name": "Cell 52",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid52",
+    "name": "Cell 53",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid53",
+    "name": "Cell 54",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid54",
+    "name": "Cell 55",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid55",
+    "name": "Cell 56",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid56",
+    "name": "Cell 57",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid57",
+    "name": "Cell 58",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid58",
+    "name": "Cell 59",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid59",
+    "name": "Cell 60",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid60",
+    "name": "Cell 61",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid61",
+    "name": "Cell 62",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid62",
+    "name": "Cell 63",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Grid63",
+    "name": "Cell 64",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "BankInfo",
+    "name": "Sound Bank",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "GridBar",
+    "name": "View Bar",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "GridTap",
+    "name": "Grid Tap",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPrev",
+    "name": "KitPrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitNext",
+    "name": "KitNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PatternPrev",
+    "name": "PatternPrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PatternNext",
+    "name": "PatternNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibrarySample0",
+    "name": "Library Sound 1",
+    "min": 0,
+    "max": 11039,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibrarySample1",
+    "name": "Library Sound 2",
+    "min": 0,
+    "max": 11039,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibrarySample2",
+    "name": "Library Sound 3",
+    "min": 0,
+    "max": 11039,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibrarySample3",
+    "name": "Library Sound 4",
+    "min": 0,
+    "max": 11039,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibrarySample4",
+    "name": "Library Sound 5",
+    "min": 0,
+    "max": 11039,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibrarySample5",
+    "name": "Library Sound 6",
+    "min": 0,
+    "max": 11039,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibrarySample6",
+    "name": "Library Sound 7",
+    "min": 0,
+    "max": 11039,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibrarySample7",
+    "name": "Library Sound 8",
+    "min": 0,
+    "max": 11039,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryBeat",
+    "name": "Library Beat",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "GrooveTemplate",
+    "name": "Groove Template",
+    "min": 0,
+    "max": 93,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryOpen",
+    "name": "Library Browser",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryKind",
+    "name": "Library Type",
+    "choices": [
+      "Kits",
+      "Chops",
+      "Loops",
+      "Beats",
+      "Grooves"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRole",
+    "name": "Destination",
+    "choices": [
+      "Kick",
+      "Snare",
+      "Closed Hat",
+      "Open Hat",
+      "Clap",
+      "Tom",
+      "Cymbal",
+      "Perc"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPage",
+    "name": "Library Page",
+    "min": 0,
+    "max": 2000,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPrev",
+    "name": "LibraryPrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryNext",
+    "name": "LibraryNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryLegacy",
+    "name": "LibraryLegacy",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryBeatOff",
+    "name": "LibraryBeatOff",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "GrooveOff",
+    "name": "GrooveOff",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPick0",
+    "name": "Library Pick 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPick1",
+    "name": "Library Pick 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPick2",
+    "name": "Library Pick 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPick3",
+    "name": "Library Pick 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPick4",
+    "name": "Library Pick 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPick5",
+    "name": "Library Pick 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPick6",
+    "name": "Library Pick 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPick7",
+    "name": "Library Pick 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRow0",
+    "name": "Library Row 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRow1",
+    "name": "Library Row 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRow2",
+    "name": "Library Row 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRow3",
+    "name": "Library Row 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRow4",
+    "name": "Library Row 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRow5",
+    "name": "Library Row 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRow6",
+    "name": "Library Row 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryRow7",
+    "name": "Library Row 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryInfo",
+    "name": "Library Info",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryFolder",
+    "name": "Library Folder",
+    "min": 0,
+    "max": 2000,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryBack",
+    "name": "Library Back",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryCurrentSound",
+    "name": "Current Sound",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LibraryPlaybackInfo",
+    "name": "Library Playback",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "FactoryKit",
+    "name": "Drum Kit",
+    "choices": [
+      "Custom / Legacy",
+      "V01 / Velvet01",
+      "V01 / Velvet02",
+      "V01 / Velvet03",
+      "V01 / Velvet04",
+      "V01 / Velvet05",
+      "V01 / Velvet06",
+      "V01 / Velvet07",
+      "V01 / Velvet08",
+      "V01 / Velvet09",
+      "V01 / Velvet10",
+      "V01 / Velvet11",
+      "V01 / Velvet12",
+      "V01 / Velvet13",
+      "V01 / Velvet14",
+      "V01 / Velvet15",
+      "V01 / Velvet16",
+      "V02 / Pocket01",
+      "V02 / Pocket02",
+      "V02 / Pocket03",
+      "V02 / Pocket04",
+      "V02 / Pocket05",
+      "V02 / Pocket06",
+      "V02 / Pocket07",
+      "V02 / Pocket08",
+      "V02 / Pocket09",
+      "V02 / Pocket10",
+      "V02 / Pocket11",
+      "V02 / Pocket12",
+      "V02 / Pocket13",
+      "V02 / Pocket14",
+      "V02 / Pocket15",
+      "V02 / Pocket16",
+      "V03 / Amber01",
+      "V03 / Amber02",
+      "V03 / Amber03",
+      "V03 / Amber04",
+      "V03 / Amber05",
+      "V03 / Amber06",
+      "V03 / Amber07",
+      "V03 / Amber08",
+      "V03 / Amber09",
+      "V03 / Amber10",
+      "V03 / Amber11",
+      "V03 / Amber12",
+      "V03 / Amber13",
+      "V03 / Amber14",
+      "V03 / Amber15",
+      "V03 / Amber16",
+      "V04 / Loose01",
+      "V04 / Loose02",
+      "V04 / Loose03",
+      "V04 / Loose04",
+      "V04 / Loose05",
+      "V04 / Loose06",
+      "V04 / Loose07",
+      "V04 / Loose08",
+      "V04 / Loose09",
+      "V04 / Loose10",
+      "V04 / Loose11",
+      "V04 / Loose12",
+      "V04 / Loose13",
+      "V04 / Loose14",
+      "V04 / Loose15",
+      "V04 / Loose16",
+      "V05 / Honey01",
+      "V05 / Honey02",
+      "V05 / Honey03",
+      "V05 / Honey04",
+      "V05 / Honey05",
+      "V05 / Honey06",
+      "V05 / Honey07",
+      "V05 / Honey08",
+      "V05 / Honey09",
+      "V05 / Honey10",
+      "V05 / Honey11",
+      "V05 / Honey12",
+      "V05 / Honey13",
+      "V05 / Honey14",
+      "V05 / Honey15",
+      "V05 / Honey16",
+      "V06 / Dust01",
+      "V06 / Dust02",
+      "V06 / Dust03",
+      "V06 / Dust04",
+      "V06 / Dust05",
+      "V06 / Dust06",
+      "V06 / Dust07",
+      "V06 / Dust08",
+      "V06 / Dust09",
+      "V06 / Dust10",
+      "V06 / Dust11",
+      "V06 / Dust12",
+      "V06 / Dust13",
+      "V06 / Dust14",
+      "V06 / Dust15",
+      "V06 / Dust16"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "KitDiceMode",
+    "name": "Dice Mode",
+    "choices": [
+      "Whole Kit",
+      "Mix Parts"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "KitBrowserPage",
+    "name": "Kit Page",
+    "min": 0,
+    "max": 12,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPagePrev",
+    "name": "KitPagePrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPageNext",
+    "name": "KitPageNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceInfo",
+    "name": "Dice Result",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "FactoryReload",
+    "name": "Reload Kit",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundKick",
+    "name": "Kick",
+    "min": 0,
+    "max": 440,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSnare",
+    "name": "Snare",
+    "min": 0,
+    "max": 546,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundHat",
+    "name": "Hat",
+    "min": 0,
+    "max": 376,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPerc",
+    "name": "Perc Set",
+    "min": 0,
+    "max": 244,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundBrowserGroup",
+    "name": "Sound Role",
+    "choices": [
+      "Kick",
+      "Snare",
+      "Hat Pairs",
+      "Perc Sets"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundBrowserPage",
+    "name": "Sound Page",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOpen",
+    "name": "Role Sounds",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPrev",
+    "name": "SoundPrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundNext",
+    "name": "SoundNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPick0",
+    "name": "SoundPick0",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPick1",
+    "name": "SoundPick1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPick2",
+    "name": "SoundPick2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPick3",
+    "name": "SoundPick3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPick4",
+    "name": "SoundPick4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPick5",
+    "name": "SoundPick5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPick6",
+    "name": "SoundPick6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPick7",
+    "name": "SoundPick7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow0",
+    "name": "Sound Row 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow1",
+    "name": "Sound Row 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow2",
+    "name": "Sound Row 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow3",
+    "name": "Sound Row 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow4",
+    "name": "Sound Row 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow5",
+    "name": "Sound Row 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow6",
+    "name": "Sound Row 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow7",
+    "name": "Sound Row 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundInfo",
+    "name": "Sound Info",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "RuleKick",
+    "name": "Kick Rule",
+    "choices": [
+      "LOCK",
+      "POCKET",
+      "LOOSE",
+      "BUSY"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RuleSnare",
+    "name": "Snare Rule",
+    "choices": [
+      "LOCK",
+      "POCKET",
+      "LOOSE",
+      "BUSY"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RuleHat",
+    "name": "Hat Rule",
+    "choices": [
+      "LOCK",
+      "POCKET",
+      "LOOSE",
+      "BUSY"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "RulePerc",
+    "name": "Perc Rule",
+    "choices": [
+      "LOCK",
+      "POCKET",
+      "LOOSE",
+      "BUSY"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "ActionInfo",
+    "name": "Last Action",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "HatGrid",
+    "name": "Hat Grid",
+    "choices": [
+      "1/4",
+      "1/8",
+      "1/16",
+      "1/32 Roll"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "PhraseState",
+    "name": "Phrase State",
+    "min": 0,
+    "max": 262143,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "HatRhythm",
+    "name": "Hat Rhythm",
+    "choices": [
+      "1/4",
+      "1/4 + FILL",
+      "1/4 + ROLL",
+      "1/8",
+      "1/8 + FILL",
+      "1/8 + ROLL",
+      "1/16",
+      "1/16 + FILL",
+      "1/16 + ROLL",
+      "1/8 DOT",
+      "1/8 DOT + FILL",
+      "1/8 DOT + ROLL",
+      "1/16 DOT",
+      "1/16 DOT + FILL",
+      "1/16 DOT + ROLL"
+    ],
+    "default": 3,
+    "auto": true
+  },
+  {
+    "key": "HatPhraseState",
+    "name": "Hat Phrase State",
+    "min": 0,
+    "max": 4095,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "HatRhythmPage",
+    "name": "Hat Rhythm Page",
+    "choices": [
+      "1 / 2",
+      "2 / 2"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "XKit",
+    "name": "Expansion Kit",
+    "min": 0,
+    "max": 65535,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSoundKick",
+    "name": "Kick Catalog",
+    "min": 0,
+    "max": 65535,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSoundSnare",
+    "name": "Snare Catalog",
+    "min": 0,
+    "max": 65535,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSoundHat",
+    "name": "Hat Catalog",
+    "min": 0,
+    "max": 65535,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSoundPerc",
+    "name": "Perc Catalog",
+    "min": 0,
+    "max": 65535,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSample0",
+    "name": "Expansion Sound 1",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSample1",
+    "name": "Expansion Sound 2",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSample2",
+    "name": "Expansion Sound 3",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSample3",
+    "name": "Expansion Sound 4",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSample4",
+    "name": "Expansion Sound 5",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSample5",
+    "name": "Expansion Sound 6",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSample6",
+    "name": "Expansion Sound 7",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSample7",
+    "name": "Expansion Sound 8",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XBeat",
+    "name": "Expansion Beat",
+    "min": 0,
+    "max": 131071,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XGroove",
+    "name": "Expansion Groove",
+    "min": 0,
+    "max": 131071,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XKitPage",
+    "name": "Kit Catalog Page",
+    "min": 0,
+    "max": 131071,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XSoundPage",
+    "name": "Sound Catalog Page",
+    "min": 0,
+    "max": 131071,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XLibraryPage",
+    "name": "Library Catalog Page",
+    "min": 0,
+    "max": 131071,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "XLibraryFolder",
+    "name": "Library Catalog Folder",
+    "min": 0,
+    "max": 131071,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PackFilter",
+    "name": "Expansion Filter",
+    "min": 0,
+    "max": 128,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PackPrev",
+    "name": "PackPrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PackNext",
+    "name": "PackNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitOpen",
+    "name": "KitOpen",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PackInfo",
+    "name": "Expansion Info",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitRow0",
+    "name": "Kit Row 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitRow1",
+    "name": "Kit Row 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitRow2",
+    "name": "Kit Row 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitRow3",
+    "name": "Kit Row 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitRow4",
+    "name": "Kit Row 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitRow5",
+    "name": "Kit Row 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitRow6",
+    "name": "Kit Row 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitRow7",
+    "name": "Kit Row 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPick0",
+    "name": "Kit Pick 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPick1",
+    "name": "Kit Pick 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPick2",
+    "name": "Kit Pick 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPick3",
+    "name": "Kit Pick 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPick4",
+    "name": "Kit Pick 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPick5",
+    "name": "Kit Pick 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPick6",
+    "name": "Kit Pick 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "KitPick7",
+    "name": "Kit Pick 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "XQKit",
+    "name": "Kit Select",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "XQKick",
+    "name": "Kick Select",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "XQSnare",
+    "name": "Snare Select",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "XQHat",
+    "name": "Hat Select",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "XQPerc",
+    "name": "Perc Select",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MixKick",
+    "name": "Kick Mix",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "MixSnare",
+    "name": "Snare Mix",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "MixHat",
+    "name": "Hat Mix",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "MixPerc",
+    "name": "Perc Mix",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "SoundPart",
+    "name": "Sound Part",
+    "choices": [
+      "KICK",
+      "SNARE",
+      "HI-HAT",
+      "PERC"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRow",
+    "name": "Selected Layer",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundDetails",
+    "name": "Sound Details",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundQ0",
+    "name": "Sound Control 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ1",
+    "name": "Sound Control 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ2",
+    "name": "Sound Control 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ3",
+    "name": "Sound Control 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ4",
+    "name": "Sound Control 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ5",
+    "name": "Sound Control 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ6",
+    "name": "Sound Control 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ7",
+    "name": "Sound Control 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ8",
+    "name": "Sound Control 9",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ9",
+    "name": "Sound Control 10",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ10",
+    "name": "Sound Control 11",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ11",
+    "name": "Sound Control 12",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ12",
+    "name": "Sound Control 13",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ13",
+    "name": "Sound Control 14",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ14",
+    "name": "Sound Control 15",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundQ15",
+    "name": "Sound Control 16",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "SoundRowInfo0",
+    "name": "Layer Name 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRowInfo1",
+    "name": "Layer Name 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRowInfo2",
+    "name": "Layer Name 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRowInfo3",
+    "name": "Layer Name 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOn0",
+    "name": "On 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOn1",
+    "name": "On 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOn2",
+    "name": "On 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundOn3",
+    "name": "On 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSolo0",
+    "name": "Solo 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSolo1",
+    "name": "Solo 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSolo2",
+    "name": "Solo 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSolo3",
+    "name": "Solo 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundLock0",
+    "name": "Lock 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundLock1",
+    "name": "Lock 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundLock2",
+    "name": "Lock 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundLock3",
+    "name": "Lock 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundInvert",
+    "name": "Invert Polarity",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRoll",
+    "name": "Roll Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundUndo",
+    "name": "Undo Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundAudition",
+    "name": "Audition Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "RoleOn0",
+    "name": "On Part 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn1",
+    "name": "On Part 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn2",
+    "name": "On Part 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn3",
+    "name": "On Part 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn4",
+    "name": "On Part 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn5",
+    "name": "On Part 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn6",
+    "name": "On Part 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleOn7",
+    "name": "On Part 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo0",
+    "name": "Solo Part 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo1",
+    "name": "Solo Part 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo2",
+    "name": "Solo Part 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo3",
+    "name": "Solo Part 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo4",
+    "name": "Solo Part 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo5",
+    "name": "Solo Part 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo6",
+    "name": "Solo Part 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleSolo7",
+    "name": "Solo Part 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock0",
+    "name": "Lock Part 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock1",
+    "name": "Lock Part 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock2",
+    "name": "Lock Part 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock3",
+    "name": "Lock Part 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock4",
+    "name": "Lock Part 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock5",
+    "name": "Lock Part 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock6",
+    "name": "Lock Part 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLock7",
+    "name": "Lock Part 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleShift0",
+    "name": "Shift Part 1",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift1",
+    "name": "Shift Part 2",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift2",
+    "name": "Shift Part 3",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift3",
+    "name": "Shift Part 4",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift4",
+    "name": "Shift Part 5",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift5",
+    "name": "Shift Part 6",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift6",
+    "name": "Shift Part 7",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleShift7",
+    "name": "Shift Part 8",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart0",
+    "name": "Start Part 1",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart1",
+    "name": "Start Part 2",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart2",
+    "name": "Start Part 3",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart3",
+    "name": "Start Part 4",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart4",
+    "name": "Start Part 5",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart5",
+    "name": "Start Part 6",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart6",
+    "name": "Start Part 7",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleStart7",
+    "name": "Start Part 8",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut0",
+    "name": "LowCut Part 1",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut1",
+    "name": "LowCut Part 2",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut2",
+    "name": "LowCut Part 3",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut3",
+    "name": "LowCut Part 4",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut4",
+    "name": "LowCut Part 5",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut5",
+    "name": "LowCut Part 6",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut6",
+    "name": "LowCut Part 7",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleLowCut7",
+    "name": "LowCut Part 8",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut0",
+    "name": "HighCut Part 1",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut1",
+    "name": "HighCut Part 2",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut2",
+    "name": "HighCut Part 3",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut3",
+    "name": "HighCut Part 4",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut4",
+    "name": "HighCut Part 5",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut5",
+    "name": "HighCut Part 6",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut6",
+    "name": "HighCut Part 7",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleHighCut7",
+    "name": "HighCut Part 8",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert0",
+    "name": "Invert Part 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert1",
+    "name": "Invert Part 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert2",
+    "name": "Invert Part 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert3",
+    "name": "Invert Part 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert4",
+    "name": "Invert Part 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert5",
+    "name": "Invert Part 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert6",
+    "name": "Invert Part 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RoleInvert7",
+    "name": "Invert Part 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Sample",
+    "name": "Kick L2 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L0Level",
+    "name": "Kick L2 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L0Tune",
+    "name": "Kick L2 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L0Shift",
+    "name": "Kick L2 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L0Decay",
+    "name": "Kick L2 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L0On",
+    "name": "Kick L2 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Lock",
+    "name": "Kick L2 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Solo",
+    "name": "Kick L2 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Start",
+    "name": "Kick L2 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L0LowCut",
+    "name": "Kick L2 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L0HighCut",
+    "name": "Kick L2 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L0Invert",
+    "name": "Kick L2 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Sample",
+    "name": "Kick L3 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L1Level",
+    "name": "Kick L3 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L1Tune",
+    "name": "Kick L3 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L1Shift",
+    "name": "Kick L3 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L1Decay",
+    "name": "Kick L3 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L1On",
+    "name": "Kick L3 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Lock",
+    "name": "Kick L3 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Solo",
+    "name": "Kick L3 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Start",
+    "name": "Kick L3 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L1LowCut",
+    "name": "Kick L3 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L1HighCut",
+    "name": "Kick L3 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L1Invert",
+    "name": "Kick L3 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Sample",
+    "name": "Kick L4 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L2Level",
+    "name": "Kick L4 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L2Tune",
+    "name": "Kick L4 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L2Shift",
+    "name": "Kick L4 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L2Decay",
+    "name": "Kick L4 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L2On",
+    "name": "Kick L4 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Lock",
+    "name": "Kick L4 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Solo",
+    "name": "Kick L4 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Start",
+    "name": "Kick L4 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L2LowCut",
+    "name": "Kick L4 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L2HighCut",
+    "name": "Kick L4 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L2Invert",
+    "name": "Kick L4 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Sample",
+    "name": "Snare L2 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L3Level",
+    "name": "Snare L2 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L3Tune",
+    "name": "Snare L2 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L3Shift",
+    "name": "Snare L2 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L3Decay",
+    "name": "Snare L2 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L3On",
+    "name": "Snare L2 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Lock",
+    "name": "Snare L2 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Solo",
+    "name": "Snare L2 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Start",
+    "name": "Snare L2 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L3LowCut",
+    "name": "Snare L2 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L3HighCut",
+    "name": "Snare L2 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L3Invert",
+    "name": "Snare L2 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Sample",
+    "name": "Snare L3 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L4Level",
+    "name": "Snare L3 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L4Tune",
+    "name": "Snare L3 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L4Shift",
+    "name": "Snare L3 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L4Decay",
+    "name": "Snare L3 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L4On",
+    "name": "Snare L3 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Lock",
+    "name": "Snare L3 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Solo",
+    "name": "Snare L3 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Start",
+    "name": "Snare L3 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L4LowCut",
+    "name": "Snare L3 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L4HighCut",
+    "name": "Snare L3 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L4Invert",
+    "name": "Snare L3 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Sample",
+    "name": "Snare L4 Sample",
+    "min": 0,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "L5Level",
+    "name": "Snare L4 Level",
+    "min": -48,
+    "max": 6,
+    "default": -12,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L5Tune",
+    "name": "Snare L4 Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L5Shift",
+    "name": "Snare L4 Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L5Decay",
+    "name": "Snare L4 Decay",
+    "min": 20,
+    "max": 2000,
+    "default": 500,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L5On",
+    "name": "Snare L4 On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Lock",
+    "name": "Snare L4 Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Solo",
+    "name": "Snare L4 Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Start",
+    "name": "Snare L4 Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "L5LowCut",
+    "name": "Snare L4 Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L5HighCut",
+    "name": "Snare L4 High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "L5Invert",
+    "name": "Snare L4 Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RuleKickStyle",
+    "name": "Kick Style",
+    "choices": [
+      "LOCK",
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "DOWNBEAT",
+      "OFFBEATS",
+      "SYNCOPATED",
+      "DOUBLE HIT"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RuleSnareStyle",
+    "name": "Snare Style",
+    "choices": [
+      "LOCK",
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SOFT",
+      "GHOST BEFORE",
+      "GHOST AFTER",
+      "DOUBLE GHOST"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RuleHatStyle",
+    "name": "Hat Style",
+    "choices": [
+      "LOCK",
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SPARSE",
+      "OFFBEATS",
+      "ACCENTED",
+      "OPEN HAT"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "RulePercStyle",
+    "name": "Perc Style",
+    "choices": [
+      "LOCK",
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SPARSE",
+      "OFFBEATS",
+      "ANSWER SNARE",
+      "PERC LOOP"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "SoundSamplePrev0",
+    "name": "Previous Sample 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSampleNext0",
+    "name": "Next Sample 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSamplePrev1",
+    "name": "Previous Sample 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSampleNext1",
+    "name": "Next Sample 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSamplePrev2",
+    "name": "Previous Sample 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSampleNext2",
+    "name": "Next Sample 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSamplePrev3",
+    "name": "Previous Sample 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundSampleNext3",
+    "name": "Next Sample 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "OpenHatRule",
+    "name": "Open Hat",
+    "choices": [
+      "OFF",
+      "OFFBEAT",
+      "BAR END",
+      "FILL END"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RideRule",
+    "name": "Ride",
+    "choices": [
+      "OFF",
+      "1/4",
+      "1/8",
+      "1/4 + BELL",
+      "1/8 + BELL"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "CrashRule",
+    "name": "Crash",
+    "choices": [
+      "OFF",
+      "START",
+      "AFTER FILL",
+      "EVERY 4",
+      "EVERY 8",
+      "EVERY 16"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "CymbalView",
+    "name": "Cymbal Sounds",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Cym0Sample",
+    "name": "Ride Sample",
+    "min": -1,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Cym0Level",
+    "name": "Ride Level",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym0Tune",
+    "name": "Ride Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym0Shift",
+    "name": "Ride Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym0Decay",
+    "name": "Ride Decay",
+    "min": 20,
+    "max": 4000,
+    "default": 800,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym0On",
+    "name": "Ride On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym0Lock",
+    "name": "Ride Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym0Solo",
+    "name": "Ride Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym0Start",
+    "name": "Ride Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym0LowCut",
+    "name": "Ride Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym0HighCut",
+    "name": "Ride High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym0Invert",
+    "name": "Ride Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym1Sample",
+    "name": "Crash Sample",
+    "min": -1,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Cym1Level",
+    "name": "Crash Level",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym1Tune",
+    "name": "Crash Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym1Shift",
+    "name": "Crash Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym1Decay",
+    "name": "Crash Decay",
+    "min": 20,
+    "max": 4000,
+    "default": 800,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym1On",
+    "name": "Crash On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym1Lock",
+    "name": "Crash Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym1Solo",
+    "name": "Crash Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym1Start",
+    "name": "Crash Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym1LowCut",
+    "name": "Crash Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym1HighCut",
+    "name": "Crash High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym1Invert",
+    "name": "Crash Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym2Sample",
+    "name": "Bell Sample",
+    "min": -1,
+    "max": 1048575,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Cym2Level",
+    "name": "Bell Level",
+    "min": -48,
+    "max": 6,
+    "default": 0,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym2Tune",
+    "name": "Bell Tune",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym2Shift",
+    "name": "Bell Shift",
+    "min": -30,
+    "max": 30,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym2Decay",
+    "name": "Bell Decay",
+    "min": 20,
+    "max": 4000,
+    "default": 800,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym2On",
+    "name": "Bell On",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym2Lock",
+    "name": "Bell Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym2Solo",
+    "name": "Bell Solo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym2Start",
+    "name": "Bell Start",
+    "min": 0,
+    "max": 200,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Cym2LowCut",
+    "name": "Bell Low Cut",
+    "min": 0,
+    "max": 1000,
+    "default": 0,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym2HighCut",
+    "name": "Bell High Cut",
+    "min": 2000,
+    "max": 20000,
+    "default": 20000,
+    "unit": "Hz",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Cym2Invert",
+    "name": "Bell Invert",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "SoundBrowse0",
+    "name": "Browse Sample 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPreview0",
+    "name": "Preview Sample 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundBrowse1",
+    "name": "Browse Sample 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPreview1",
+    "name": "Preview Sample 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundBrowse2",
+    "name": "Browse Sample 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPreview2",
+    "name": "Preview Sample 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundBrowse3",
+    "name": "Browse Sample 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPreview3",
+    "name": "Preview Sample 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleBrowserOpen",
+    "name": "Sample Browser",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleBrowserPage",
+    "name": "Sample Page",
+    "min": 0,
+    "max": 131071,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePrev",
+    "name": "SamplePrev",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleNext",
+    "name": "SampleNext",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleInfo",
+    "name": "Sample List",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleRow0",
+    "name": "Sample Row 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleRow1",
+    "name": "Sample Row 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleRow2",
+    "name": "Sample Row 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleRow3",
+    "name": "Sample Row 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleRow4",
+    "name": "Sample Row 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleRow5",
+    "name": "Sample Row 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleRow6",
+    "name": "Sample Row 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SampleRow7",
+    "name": "Sample Row 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePick0",
+    "name": "Pick Sample 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePick1",
+    "name": "Pick Sample 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePick2",
+    "name": "Pick Sample 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePick3",
+    "name": "Pick Sample 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePick4",
+    "name": "Pick Sample 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePick5",
+    "name": "Pick Sample 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePick6",
+    "name": "Pick Sample 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SamplePick7",
+    "name": "Pick Sample 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "FillGridPage",
+    "name": "Fill Instruments",
+    "choices": [
+      "SNARE / TOM / PERC / CLAP",
+      "KICK / HATS / CYMBAL"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DicePool",
+    "name": "Use Sounds From",
+    "choices": [
+      "THIS PACK",
+      "ALL PACKS",
+      "SELECTED KITS"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolOpen",
+    "name": "Select Kits",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolClear",
+    "name": "Clear Selected Kits",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolInfo",
+    "name": "Selected Kits",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolPick0",
+    "name": "Toggle Kit 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolPick1",
+    "name": "Toggle Kit 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolPick2",
+    "name": "Toggle Kit 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolPick3",
+    "name": "Toggle Kit 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolPick4",
+    "name": "Toggle Kit 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolPick5",
+    "name": "Toggle Kit 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolPick6",
+    "name": "Toggle Kit 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolPick7",
+    "name": "Toggle Kit 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolRow0",
+    "name": "Pool Kit 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolRow1",
+    "name": "Pool Kit 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolRow2",
+    "name": "Pool Kit 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolRow3",
+    "name": "Pool Kit 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolRow4",
+    "name": "Pool Kit 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolRow5",
+    "name": "Pool Kit 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolRow6",
+    "name": "Pool Kit 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PoolRow7",
+    "name": "Pool Kit 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock0",
+    "name": "Dice Lock 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock1",
+    "name": "Dice Lock 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock2",
+    "name": "Dice Lock 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock3",
+    "name": "Dice Lock 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock4",
+    "name": "Dice Lock 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock5",
+    "name": "Dice Lock 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock6",
+    "name": "Dice Lock 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock7",
+    "name": "Dice Lock 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock8",
+    "name": "Dice Lock 9",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock9",
+    "name": "Dice Lock 10",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock10",
+    "name": "Dice Lock 11",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock11",
+    "name": "Dice Lock 12",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock12",
+    "name": "Dice Lock 13",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock13",
+    "name": "Dice Lock 14",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock14",
+    "name": "Dice Lock 15",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceLock15",
+    "name": "Dice Lock 16",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "RulePickKick",
+    "name": "Kick Style Picker",
+    "choices": [
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "DOWNBEAT",
+      "OFFBEATS",
+      "SYNCOPATE",
+      "DOUBLE HIT"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RulePickSnare",
+    "name": "Snare Style Picker",
+    "choices": [
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SOFT",
+      "PRE GHOST",
+      "POST GHOST",
+      "2 GHOSTS"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RulePickHat",
+    "name": "Hat Style Picker",
+    "choices": [
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SPARSE",
+      "OFFBEATS",
+      "ACCENTED",
+      "OPEN HAT"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RulePickPerc",
+    "name": "Perc Style Picker",
+    "choices": [
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SPARSE",
+      "OFFBEATS",
+      "ANSWER",
+      "PERC LOOP"
+    ],
+    "default": 1,
+    "auto": true
+  }
+]

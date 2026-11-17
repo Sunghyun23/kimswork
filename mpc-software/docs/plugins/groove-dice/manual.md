@@ -1,4 +1,4 @@
-# Groove Dice 1.3.3 — User manual
+# Groove Dice 1.3.4 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -6,7 +6,7 @@ Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standa
 
 Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. other model compatibility and worst-case CPU are not certified by that test.
 
-Download the complete `groove-dice-1.3.3-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
+Download the complete `groove-dice-1.3.4-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
 The base package contains **Original Workshop**:128 independently synthesized WAV one-shots,96 kit configurations, two authored beats and93 timing templates. Ninety-six kits are combinations/settings, not96 separately recorded drum libraries. Optional expansions are separate files; the base release contains no private/commercial third-party drum library.
 
@@ -56,23 +56,28 @@ MAIN's kit LCD opens a paged kit browser. Pack arrows choose one installed pack 
 
 Whole Kit selects one eligible kit. Mix Parts combines Kick, Snare, a linked Closed/Open Hat pair and a four-role Perc ensemble from eligible kits. Extra enabled/unlocked kick and snare layers also stay within the pool. Kit Fixed and layer locks protect sounds. Manually choosing a kit or host preset is still allowed.
 
-## SOUND: samples, layers and shorter hats
+## SOUND: two pages per sound
 
-Choose KICK, SNARE, HI-HAT or PERC. Kick and Snare have up to four layers. HI-HAT has Closed and Open rows; Perc contains Clap, Tom, Cymbal and Perc. **Every row's Screen Q-Link group is Sample / Level / Decay / Shift.** Turn Decay down to shorten a hat or any other tail smoothly. No separate End control is required.
+Choose KICK, SNARE, HI-HAT or PERC. Kick and Snare have up to four layers; HI-HAT has Closed/Open and Perc contains Clap/Tom/Cymbal/Perc. Each visible row owns one Screen Q-Link group, A through D. Hat C/D and Cymbals D have no sound assigned and do not change anything.
 
-Tap a sample name to open its left-side list. Previous/next arrows and the sample Q-Link step the same catalogue. In the browser, Screen A1 selects a sample; the remaining sound relays are inactive. Pack arrows filter choices, PREVIEW auditions the selected sample and DONE closes the list. Background guides are hidden while the list is open.
+The lower-left **< SOUND 1 / 2 >** control has separate 48×48 previous/next arrows. Either arrow moves between the two pages; the center shows the current page. All rows switch together. Moving between drum categories or CYMBALS keeps the selected page.
 
-Each sound row has PREVIEW, ON, SOLO and LOCK. PREVIEW plays only that layer, not the complete stack, and is never recorded into a fill. It bypasses row mute/solo and MAIN mix trim but retains that sound's processing, Master and FX. It goes to Main even with Separate Out and does not choke performance voices. Wait for asynchronous sample loading after a selection; an empty extra layer has nothing to audition.
+| Page | Q-Link 1 | Q-Link 2 | Q-Link 3 | Q-Link 4 |
+|---|---|---|---|---|
+| SOUND 1 / 2 | Sample | Level | Tune | Shift |
+| SOUND 2 / 2 | Start | Decay | Low Cut | High Cut |
 
-Select a row and open DETAILS for **Start / Tune / Low Cut / High Cut**, plus available polarity options. Hat C/D expose closed/open details. Start trims the beginning; Decay shapes the tail; Shift moves the onset. ROLL SOUND respects the sound pool and enabled/unlocked rows. SAVE KIT stores one of eight project-local kit slots; save the MPC project for disk persistence.
+Sample, level, pitch and timing are on page1. Page2 shortens tails and edits the sample start/filters. Turn **Decay** down to shorten hats or any sound smoothly. No separate End parameter is required. There is no separate selected-sound DETAIL screen: all rows expose the same second-page controls.
+
+Page1 sample names open the left-side list. Previous/next sample arrows and the sample Q-Link step the same catalogue. In the list only Screen A1 selects the sample; other sound relays are inactive. Pack arrows filter choices, PREVIEW auditions it and DONE closes the list, returning to the current sound page. Background guides are suppressed while the browser is open.
+
+Each row has ON / SOLO / LOCK / REV. **REV** reverses that source from its end on the next hit or preview; playing tails retain their original direction. Start trims from the source end when reversed. Decay and Shift remain independent. Page2 adds **Ø** beside the sound name for polarity inversion, which changes sign rather than playback direction. REV and Ø are separate, independent per source and saved with user kits/projects. Factory-kit selection resets reverse to forward. Sample browsing and sound Dice preserve direction.
+
+Page1's row PREVIEW auditions only that layer and never records it into a fill. It bypasses row mute/solo and MAIN mix trim but retains sound processing, Master and FX. Preview goes to Main even with Separate Out and does not choke performance voices. Allow asynchronous sample loading after a selection; an empty layer has no sound. On page2 select the row and use AUDITION in the footer.
 
 ### Ride, Crash and Bell
 
-SOUND → CYMBALS exposes independent Ride, Crash and Bell source rows. A/B/C are Sample / Level / Decay / Shift. Tap a row name to select D's Start / Tune / Low Cut / High Cut controls. The sample list, arrows, Q-Link and PREVIEW work here too.
-
-AUTO / CURRENT KIT chooses the matching named family from the current kit's cymbal pack. BUILT-IN chooses the original synthesized fallback. Manual choices include that family and unclassified cymbals; known unrelated families are excluded. Missing selected assets remain silent and keep their identity. ON/SOLO/LOCK are independent. Unlocked sound Dice returns these rows to AUTO; KIT FIXED preserves them.
-
-Ride and Bell follow Hat Mix; Crash follows Perc Mix. All share the Cymbal role's pan, choke group and output pair. They are articulations, not three additional MIDI roles or output buses.
+CYMBALS uses the same two pages and controls, with A/B/C assigned to Ride/Crash/Bell. There is no extra selected-source D row. AUTO / CURRENT KIT chooses the matching family from the current kit's cymbal pack; BUILT-IN chooses the original synthesized fallback. Missing chosen assets keep their identity and stay silent. Ride/Bell follow Hat Mix and Crash follows Perc Mix; all share the Cymbal role's pan/choke/output pair. They do not create extra MIDI roles or output buses.
 
 Signed Shift ±30ms uses a fixed reported 30ms baseline latency for every role, including physical pad monitoring. Hardware compensation and playing feel are not assumed. Sample start trims source audio; Shift moves onset.
 
@@ -138,3 +143,7 @@ Current release notes describe automated checks, device confirmations and remain
 UID KpGy and the first 639 parameter identities remain unchanged. Four seven-style RULE selectors append at 639–642 (643 parameters total); legacy selectors remain for saved projects and automation. Bank/expansion formats are unchanged. Older plugin versions cannot preserve all new controls. Keep important projects and earlier installers before updating.
 
 Native, ARM32 and ARM64 builds, SDK validation, UBSan/allocation guards, state/expansion compatibility and 19 host-simulator checks pass. The owner confirmed the installed 1.3.3 MAIN locks, visible Dice changes and RULE selectors work on MPC XL OS3.10.1.12. This does not certify every physical control, output destination or maximum hardware load. Actual MPC screen captures accompany this release; offline UI renders are not represented as device captures.
+
+## 1.3.4 update
+
+All SOUND rows now have an independent REV toggle. The original643 parameter declarations are retained; seventeen automatable reverse flags and four UI reverse relays, four retained Tune relays and four polarity relays append for672 total. Existing GDLY/GDCY bank/layer layouts remain unchanged. A separate versioned trailer stores the reverse settings of eight user-kit slots. This revision is installed for QA; physical REV touch verification and new website captures remain pending while the Mac is locked.

@@ -1,4 +1,6 @@
-# Groove Dice 1.3.3
+# Groove Dice 1.3.4 candidate
+
+REV is new in this candidate: all seventeen SOUND sources have independent reverse switches, saved with user kits and projects. Start trims from the source end in reverse mode; Decay and Shift remain independent. SOUND has two in-place pages: Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Separate48px previous/next arrows surround a visible SOUND1/2 counter. REV stays available on both pages; approved per-row polarity Ø is on page2. Physical REV touchscreen verification is pending.
 
 One-bar neo-soul and hip-hop drums for MPC standalone, with visible Dice changes and individual locks.
 
@@ -19,6 +21,6 @@ Public package: Original Workshop only — 128 independently synthesized one-sho
 
 ## Compatibility and validation
 
-UID KpGy; 643 append-only parameters, first639 unchanged. Existing projects/expansion identities are supported; old RULE LOCK values migrate to BASIC plus a closed padlock. Signed Shift reports fixed 30ms latency including direct pads. Newer state cannot be fully represented by old engines. External sidechain and generated MIDI output are not implemented.
+UID KpGy; 672 append-only parameters, first643 unchanged. Existing projects/expansion identities are supported; old RULE LOCK values migrate to BASIC plus a closed padlock. Signed Shift reports fixed 30ms latency including direct pads. Newer state cannot be fully represented by old engines. External sidechain and generated MIDI output are not implemented.
 
 Native/ARM32/ARM64 builds and SDK validation pass. Engine, UBSan, allocation guards, sample/state/expansion/skin and real VST bridge tests pass. Host simulator:19 pass,0 warnings,0 failures. The owner confirmed 1.3.3 locks/Dice/RULE behavior on MPC XL OS3.10.1.12. Actual screenshots come directly from MPC through Remote Screen Viewer. Complete physical-control coverage, all routes and worst-case hardware CPU are not certified. No ASan pass is claimed. See VERIFICATION.md.

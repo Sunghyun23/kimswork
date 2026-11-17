@@ -6734,5 +6734,295 @@
     ],
     "default": 1,
     "auto": true
+  },
+  {
+    "key": "Reverse0",
+    "name": "Reverse Sound 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse1",
+    "name": "Reverse Sound 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse2",
+    "name": "Reverse Sound 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse3",
+    "name": "Reverse Sound 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse4",
+    "name": "Reverse Sound 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse5",
+    "name": "Reverse Sound 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse6",
+    "name": "Reverse Sound 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse7",
+    "name": "Reverse Sound 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse8",
+    "name": "Reverse Sound 9",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse9",
+    "name": "Reverse Sound 10",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse10",
+    "name": "Reverse Sound 11",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse11",
+    "name": "Reverse Sound 12",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse12",
+    "name": "Reverse Sound 13",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse13",
+    "name": "Reverse Sound 14",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse14",
+    "name": "Reverse Sound 15",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse15",
+    "name": "Reverse Sound 16",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Reverse16",
+    "name": "Reverse Sound 17",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "SoundRev0",
+    "name": "Reverse Row 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRev1",
+    "name": "Reverse Row 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRev2",
+    "name": "Reverse Row 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundRev3",
+    "name": "Reverse Row 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundTune0",
+    "name": "Tune Row 1",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": false
+  },
+  {
+    "key": "SoundTune1",
+    "name": "Tune Row 2",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": false
+  },
+  {
+    "key": "SoundTune2",
+    "name": "Tune Row 3",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": false
+  },
+  {
+    "key": "SoundTune3",
+    "name": "Tune Row 4",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 1,
+    "auto": false
+  },
+  {
+    "key": "SoundPolarity0",
+    "name": "Polarity Row 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPolarity1",
+    "name": "Polarity Row 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPolarity2",
+    "name": "Polarity Row 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundPolarity3",
+    "name": "Polarity Row 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
   }
 ]
