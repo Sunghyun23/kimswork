@@ -14,7 +14,7 @@ export const companion = {
  windows:`${repo}/releases/download/groove-dice-pack-builder%2Fv1.0.0/groove-dice-pack-builder-1.0.0-windows-amd64.zip`
 };
 export const workshop = {
- image:'groove-dice-main-1.0.0.webp',
+ image:'groove-dice-workshop-sessions-device-1.3.4.webp',
  name:'Workshop Sessions',version:'1.0.0',target:'Groove Dice',path:'expansions/groove-dice/workshop-sessions/',
  summary:'Eight curated kits from 32 original one-shots, plus a beat and a timing template. Made with Pack Builder.',
  release:`${repo}/releases/tag/groove-dice-workshop-sessions%2Fv1.0.0`,
@@ -26,5 +26,5 @@ import {plugins} from './plugins';
 export const softwareItems = [
  ...plugins.map(p=>({name:p.name,path:`plugins/${p.slug}/`,summary:p.summary,image:p.image,imageAlt:p.imageAlt,category:p.kind==='effect'?'effects':'instruments',status:p.release?`${p.release.preview?'Public preview':'Available'} · ${p.release.version}`:'In development'})),
  {...companion,imageAlt:'Groove Dice Pack Builder running on macOS',category:'apps',status:'macOS Apple Silicon · Windows x64'},
- {...workshop,imageAlt:'Workshop Sessions expansion running in Groove Dice on MPC Live III',category:'expansions',status:'For Groove Dice 1.0.0 or later'}
+ {...workshop,imageAlt:'Workshop Sessions selected in Groove Dice1.3.4 on MPC XL',category:'expansions',status:'For Groove Dice 1.0.0 or later'}
 ];

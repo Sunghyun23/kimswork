@@ -1,6 +1,6 @@
 # Groove Dice
 
-`kim`의 공개 소스 MPC 드럼·그루브 플러그인. UID `KpGy`, 정식판 `1.3.3`. 검증 범위와 남은 제한은 VALIDATION.md를 따른다. source는 public이며 자체 제작 코어만 기본 포함한다. 제한된 외부 확장팩은 Git 제외이고 Donut Theory의 소리·UID·기존 릴리스는 변경하지 않는다.
+`kim`의 공개 소스 MPC 드럼·그루브 플러그인. UID `KpGy`, 정식판 `1.3.4`. 검증 범위와 남은 제한은 VALIDATION.md를 따른다. source는 public이며 자체 제작 코어만 기본 포함한다. 제한된 외부 확장팩은 Git 제외이고 Donut Theory의 소리·UID·기존 릴리스는 변경하지 않는다.
 
 승인 디자인은 `design/main-concept-v3-performance.png`, `design/fill-editor-concept-v1.png`다. 실제 MPC 사용 영역은1280×628이며 상단 호스트 바/하단 함수 키는 호스트 소유다. 이미지 시안을 작동하는 스킨이나 실기기 캡처와 혼동하지 않는다.
 
@@ -240,3 +240,7 @@ Tune은 SOUND/CYMBALS의 각 행 Sample 옆에 별도 터치 노브로 표시한
 ## 승인된 SOUND 2페이지 구성
 
 1페이지 Sample/Level/Tune/Shift,2페이지 Start/Decay/LowCut/HighCut. 아래의48×48 이전/다음 화살표와 SOUND1/2표시로 모든 행을 함께 전환하며 Q-Link A–D는 각 사운드 행을 유지한다. 별도 DETAIL 모달을 없애고2페이지 이름 옆에 Ø(극성반전)를 보존한다. REV는 두 페이지에서 유지한다. Hat의C/D와Cymbals의D는 미할당이다. SoundDetails 기존값을 페이지선택으로 사용해 새 페이지파라미터를 만들지 않는다. 현재 총672개 파라미터다.
+
+## 1.3.4 정식 배포
+
+최신 SOUND2페이지·REV·Ø·동적캡션 중앙터치 수정은 [릴리스노트](../../../docs/plugins/groove-dice/releases/1.3.4.md)와 [매뉴얼](../../../docs/plugins/groove-dice/manual.md)를 따른다. 과거 로컬 후보·검증 대기 기록보다 최신 실기 원격 클릭 검증/캡처를 우선한다. 공개 패키지는Original Workshop만 포함하며 기기의 개인 확장팩은 보존한다.

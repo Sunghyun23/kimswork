@@ -4,7 +4,7 @@ Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standa
 
 ## Installation
 
-Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. other model compatibility and worst-case CPU are not certified by that test.
+Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. Other model compatibility and worst-case CPU are not certified by that test.
 
 Download the complete `groove-dice-1.3.4-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
@@ -14,8 +14,8 @@ The base package contains **Original Workshop**:128 independently synthesized WA
 
 1. Open Groove Dice. Fresh instances start on MAIN.
 2. Use the kit selector to choose a kit, or use the MPC's common PRESET list above the plugin.
-3. Press **PREVIEW** to hear a loop while MPC transport is stopped. Press it again to stop.
-4. Enable **FOLLOW** for playback controlled by MPC PLAY/STOP, tempo and position. The engine's bar-based behavior assumes4/4.
+3. Press **PLAY LOOP** to hear a loop while MPC transport is stopped. Press it again to stop.
+4. Enable **MPC SYNC** (Follow) for playback controlled by MPC PLAY/STOP, tempo and position. The engine's bar-based behavior assumes4/4.
 5. Open the padlocks beside controls you want Dice to change, choose a sound pool, then press **ROLL DICE**. Close a padlock to preserve that value. **LOCK KIT** protects sound selections and the four MAIN mix trims.
 6. Use **UNDO** to return to the immediately preceding roll. There is one undo level, no redo. Undo restores rolled settings and notes; it does not change the padlock configuration. Save the MPC project to keep your work.
 
@@ -90,11 +90,11 @@ Default closed/open hats share choke group1. Other parts are independent. KITS o
 
 ## Recording fills
 
-Open **EDIT / REC** from MAIN. Select fill A–D and its duration (1beat/2beats/1bar/2bars/4bars). Choose Replace or Overdub and an optional count-in. Press REC FILL, then play the physical pads. The selected slot stays fixed during recording. Recording stops at the chosen boundary. Automatic pattern output is not recorded back into the fill.
+Open **EDIT FILL** from MAIN. Select fill A–D and its duration (1beat/2beats/1bar/2bars/4bars). Choose Replace or Overdub and an optional count-in. Press REC FILL, then play the physical pads. The selected slot stays fixed during recording. Recording stops at the chosen boundary. Automatic pattern output is not recorded back into the fill.
 
 The fill editor shows the recorded note count and grid. Its first four rows are Snare / Tom / Perc / Clap; PERC / DRUMS switches to Kick / Closed Hat / Open Hat / Cymbal. Both views edit the same fill, so every recorded role is accessible. Select a note and edit Nudge, Velocity, Gate and Chance. In Screen Q-Link mode A controls fill slot/length/mode/count-in, and B controls the selected note's timing/velocity/gate/chance. C/D are intentionally unassigned. Changing page must not leave MAIN's sound controls active there.
 
-AUDITION/TRIGGER FILL queues the selected fill for the next bar once, then returns to the base groove. Fill Every can schedule periodic fills from the GROOVE page. Independent recorded fills are preserved by a Pattern-only roll; Fill/All scope explicitly permits fill variation.
+MAIN’s **PLAY FILL** or the fill editor’s **AUDITION** queues the selected fill for the next bar once, then returns to the base groove. Fill Every can schedule periodic fills from the GROOVE page. Independent recorded fills are preserved by a Pattern-only roll; Fill/All scope explicitly permits fill variation.
 
 Internal fill notes are saved in the plugin/project state. They are not MIDI clips recorded into MPC's sequencer. Save the MPC project or a host preset for persistence.
 
@@ -134,7 +134,7 @@ FOLLOW recognizes both negative-position pre-roll and measured MPC XL positive f
 
 ## Updating from earlier versions
 
-The first 342 legacy parameter definitions are unchanged; new controls are appended (533 total). Old states initialize extra layers off. New layer states need the newer engine; keep older packages if you need to restore older projects. ROOM now sounds different for existing wet presets. Back up important projects before updating.
+The first643 parameter declarations remain unchanged;1.3.4 appends29 controls for672 total. Old states initialize extra layers off. New layer states need the newer engine; keep older packages if you need to restore older projects. ROOM now sounds different for existing wet presets. Back up important projects before updating.
 
 Current release notes describe automated checks, device confirmations and remaining hardware limits. Older screenshots are labeled with their captured version; they must not be mistaken for fresh 1.3.3 captures.
 
@@ -146,4 +146,4 @@ Native, ARM32 and ARM64 builds, SDK validation, UBSan/allocation guards, state/e
 
 ## 1.3.4 update
 
-All SOUND rows now have an independent REV toggle. The original643 parameter declarations are retained; seventeen automatable reverse flags and four UI reverse relays, four retained Tune relays and four polarity relays append for672 total. Existing GDLY/GDCY bank/layer layouts remain unchanged. A separate versioned trailer stores the reverse settings of eight user-kit slots. This revision is installed for QA. Actual MPC remote-click verification and direct screen captures confirm page switching, category retention and independent REV/Ø highlights. Physical encoder and hardware-audio confirmation remain separate.
+All SOUND rows now have an independent REV toggle. The original643 parameter declarations are retained; seventeen automatable reverse flags and four UI reverse relays, four retained Tune relays and four polarity relays append for672 total. Existing GDLY/GDCY bank/layer layouts remain unchanged. A separate versioned trailer stores the reverse settings of eight user-kit slots. Actual MPC remote-click verification and direct screen captures confirm page switching, category retention and independent REV/Ø highlights. Physical encoder and hardware-audio confirmation remain separate.

@@ -26,44 +26,92 @@
   ],
   "files": [
     {
-      "file": "sound-page-1-initial.png",
-      "sha256": "c21f6b795a33b0e2731acc5f289910224b80a13032cd1d5fa4b0338830ab6da6"
-    },
-    {
-      "file": "sound-page-1-rev-on.png",
-      "sha256": "9b9354ce2f84851d8e71ad2b9abda671c34a14d761dcf068151361e5dd40fa1d"
-    },
-    {
-      "file": "sound-page-2-initial.png",
-      "sha256": "d16273cd3ae5707208d9f0f062f07d862835bdbf5b485329061972c6923794f2"
-    },
-    {
-      "file": "sound-page-2-polarity-on.png",
-      "sha256": "3f5307927a5672ab84ddfb1dcabbb3bb2b8ed5bd49ccdd0d172b44aafaf06235"
-    },
-    {
-      "file": "sound-page-2-focused.png",
-      "sha256": "3f5307927a5672ab84ddfb1dcabbb3bb2b8ed5bd49ccdd0d172b44aafaf06235"
-    },
-    {
-      "file": "sound-page-1-returned.png",
-      "sha256": "01411b8095a5441bcbd2ca6c5fc5f555fac1aa42e45ff91d0e4d0391da7e6293"
-    },
-    {
-      "file": "hat-page-2.png",
-      "sha256": "267607c46fcb7d7b5b1db0d5214c80832e98b4fe32971c194dd8bf5e7f013d98"
-    },
-    {
-      "file": "perc-page-2.png",
-      "sha256": "fda72c89839c12676a7de95ad797a0073c8509c13dc8b8954cbec74397de3016"
-    },
-    {
       "file": "cymbals-page-1.png",
       "sha256": "d57217df256b933296c23875d8b0f4209122b0df7df25fdc0de550ad17fa8346"
     },
     {
       "file": "cymbals-page-2.png",
       "sha256": "26d1d71b2e3d9b68d86a183808624a81787f65298e6e4bfe5cf957c13153c39d"
+    },
+    {
+      "file": "fill-after-kit-change.png",
+      "sha256": "3a19dfebd552ac8c61dd385a0547a03196d9d09fe38daebcfd89702437ccab0b"
+    },
+    {
+      "file": "hat-page-2.png",
+      "sha256": "267607c46fcb7d7b5b1db0d5214c80832e98b4fe32971c194dd8bf5e7f013d98"
+    },
+    {
+      "file": "kit-row-center-after-fix.png",
+      "sha256": "1b3c7af52acaed121b84ba4e1905a37d07a643ff78cc62efc9a58b9adf21b477"
+    },
+    {
+      "file": "kit-row-second-selected.png",
+      "sha256": "ab8c0b9c04bf371d88254941f7a739301065b6143cf72570d2d2e5341e8eb0f7"
+    },
+    {
+      "file": "perc-page-2.png",
+      "sha256": "fda72c89839c12676a7de95ad797a0073c8509c13dc8b8954cbec74397de3016"
+    },
+    {
+      "file": "release-cymbals-page-2.png",
+      "sha256": "76403faace4db6418f55cd0648432a150cb5a910e69266eff6a1d4968bdaef57"
+    },
+    {
+      "file": "release-cymbals.png",
+      "sha256": "d57217df256b933296c23875d8b0f4209122b0df7df25fdc0de550ad17fa8346"
+    },
+    {
+      "file": "release-fill.png",
+      "sha256": "fa4a7b923da272c6da7a85aa2136d1e6f5ea012e79c2d8b93cacf83abaa1589c"
+    },
+    {
+      "file": "release-kit-browser.png",
+      "sha256": "ae4037bd01a101183b1af1006eaa997d235cbb12f932cc2543ac548d042e379a"
+    },
+    {
+      "file": "release-kit-locked.png",
+      "sha256": "d03df0c5885e0b5e82a55edfb854db3fe0a40a0c37ab1a05b1abb91052fce507"
+    },
+    {
+      "file": "release-kit-pool-before.png",
+      "sha256": "81a34d24291b330006522d2726eb8c406b8fdb7997e266ced9bef5afaf303738"
+    },
+    {
+      "file": "release-kit-pool-selected.png",
+      "sha256": "f7bde190aff2b9245075b0108af5dfca4d7293dc1c797f02874cd6716896fef3"
+    },
+    {
+      "file": "release-main.png",
+      "sha256": "e6fefbf038fe2027243efc056af56124c15cd8097db97bbd86c6c476de0e2fbf"
+    },
+    {
+      "file": "release-sample-browser-edge-test.png",
+      "sha256": "b8c6345ea8a0d47d0e9a23582a419a6a9724f78c555aaf2d0114295e36460bc3"
+    },
+    {
+      "file": "release-sample-browser.png",
+      "sha256": "b8c6345ea8a0d47d0e9a23582a419a6a9724f78c555aaf2d0114295e36460bc3"
+    },
+    {
+      "file": "release-sound-page-1.png",
+      "sha256": "be0f9e9ce5a83e9da4279ab34107538191a4594d14aedd7ddf9ee8e959f1bb02"
+    },
+    {
+      "file": "release-sound-page-2.png",
+      "sha256": "435fde0f0d535f9642d59d1839cc784b12095333ea9afb18ad0176bbc418b79c"
+    },
+    {
+      "file": "release-workshop-sessions.png",
+      "sha256": "6762bf5fc6e6b09e90fd2b75bf278ffe52249909141dcb162d1421fba9b09c4e"
+    },
+    {
+      "file": "sample-row-center-after-fix.png",
+      "sha256": "f12a4d5073f2ea5cb165a7634d703120fb008723b701f84b2354dab276a9bcf1"
+    },
+    {
+      "file": "sample-row-center-before-fix.png",
+      "sha256": "b8c6345ea8a0d47d0e9a23582a419a6a9724f78c555aaf2d0114295e36460bc3"
     },
     {
       "file": "snare-page-1.png",
@@ -76,6 +124,41 @@
     {
       "file": "sound-page-1-final.png",
       "sha256": "f8f3c0cccaa48c8ea253d1d6273579ed0b23f5c1f03fe247fe090f6de9763cc8"
+    },
+    {
+      "file": "sound-page-1-initial.png",
+      "sha256": "c21f6b795a33b0e2731acc5f289910224b80a13032cd1d5fa4b0338830ab6da6"
+    },
+    {
+      "file": "sound-page-1-returned.png",
+      "sha256": "01411b8095a5441bcbd2ca6c5fc5f555fac1aa42e45ff91d0e4d0391da7e6293"
+    },
+    {
+      "file": "sound-page-1-rev-on.png",
+      "sha256": "9b9354ce2f84851d8e71ad2b9abda671c34a14d761dcf068151361e5dd40fa1d"
+    },
+    {
+      "file": "sound-page-2-focused.png",
+      "sha256": "3f5307927a5672ab84ddfb1dcabbb3bb2b8ed5bd49ccdd0d172b44aafaf06235"
+    },
+    {
+      "file": "sound-page-2-initial.png",
+      "sha256": "d16273cd3ae5707208d9f0f062f07d862835bdbf5b485329061972c6923794f2"
+    },
+    {
+      "file": "sound-page-2-polarity-on.png",
+      "sha256": "3f5307927a5672ab84ddfb1dcabbb3bb2b8ed5bd49ccdd0d172b44aafaf06235"
     }
+  ],
+  "release_images": "Original Workshop selected for plugin images; Workshop Sessions selected for that public expansion thumbnail. Other owner packs remain registered and contribute to global library counters.",
+  "caption_fix_verified": [
+    "Sample-name center opens sample list",
+    "Sample-row text center changes selected source exactly once",
+    "Selected-kit row text center toggles checkbox/count",
+    "Kit-name center opens kit browser",
+    "Kit-row text center chooses a different factory kit and closes browser",
+    "KIT FIXED caption does not overlap LOCK KIT",
+    "Grid adds/edits Perc/Clap/Tom/Snare notes",
+    "Kit selection retains fill note count"
   ]
 }

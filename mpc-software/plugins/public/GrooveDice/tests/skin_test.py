@@ -121,12 +121,14 @@ print('PASS MAIN C mix,16 SOUND relays,4 row guides with native-Q gutter, two ed
 # Sample names are separate native Labels. A transparent filmstrip has no intrinsic text/background.
 for row in range(4):
  children=defs['LayerSample'+str(row)]['componentsData']
- captions=[e for e in children if e['componentData']['type']=='Label'and e['componentData']['data'].get('type')=='Value']
- assert len(captions)==1
- x,y,w,h=map(int,captions[0]['bounds']['bounds'].split());assert x>=0 and y>=24 and x+w<=224 and y+h<=64
- assert 'verticallyCentred' in captions[0]['componentData']['data']['textStyle']['justification']
  touch=next(e for e in children if e['componentData']['type'].startswith('Btn') and rect(e)==(0.,24.,224.,40.))
- assert any(a.get('handleName')=='Parameter '+str(keys['SoundBrowse'+str(row)])for a in defs[touch['componentData']['type']]['actions'])
+ command=defs[touch['componentData']['type']];contents=command['componentsData'];captions=[e for e in contents if e['componentData']['type']=='Label'and e['componentData']['data'].get('type')=='Value']
+ assert len(captions)==1
+ x,y,w,h=map(int,captions[0]['bounds']['bounds'].split());assert (x,y,w,h)==(8,0,208,40)
+ assert 'verticallyCentred' in captions[0]['componentData']['data']['textStyle']['justification']
+ assert contents[-1]['componentData']['type']=='Slider'and contents.index(captions[0])<len(contents)-1
+ assert sum(a.get('handleName')=='Parameter '+str(keys['SoundBrowse'+str(row)])for a in command['actions'])==1
+
  arrows=[e for e in children if e['componentData']['type'].startswith('Btn') and rect(e)[2:]==(44.,44.)]
  assert len(arrows)==2
  for entry,key in zip(arrows,['SoundSamplePrev'+str(row),'SoundSampleNext'+str(row)]):
@@ -240,3 +242,20 @@ def expanded_count(entries,path=()):
  return count
 assert expanded_count(t['tabs'][2]['componentDefinition']['componentsData'])<2000
 print('PASS SOUND expanded widget tree below2000 including hidden pages/browser')
+
+# Runtime-value captions must sit below the final command press surface.
+for name,prefix,expected in [('SampleBrowser','SamplePick',8),('SelectedKitBrowser','PoolPick',8)]:
+ matched=0
+ for entry in defs[name]['componentsData']:
+  command=defs.get(entry['componentData']['type'],{});actions=command.get('actions',[])
+  if any(a.get('handleName')=='Parameter '+str(keys[prefix+str(row)])for row in range(8)for a in actions):
+   contents=command['componentsData'];assert contents[-1]['componentData']['type']=='Slider'
+   assert any(e['componentData']['type']=='Label'and e['componentData']['data'].get('type')=='Value'for e in contents[:-1]);matched+=1
+ assert matched==expected,(name,matched)
+for prefix in ['LibraryRowButton','RoleSoundRow','DynamicKitRow']:
+ for row in range(8):
+  command=defs[prefix+str(row)];assert not command.get('actions',[])
+  hit=defs[command['componentsData'][-1]['componentData']['type']];assert len([a for a in hit['actions']if a.get('handleName','').startswith('Parameter ')])==1
+  assert hit['componentsData'][0]['componentData']['data']['onImage']=='hit.png'
+  assert hit['componentsData'][-1]['componentData']['type']=='Slider'
+print('PASS sample/sample-list/kit-pool/library/role/kit caption center is covered by a single command surface')

@@ -66,6 +66,14 @@ def button(text,key,b,index=1,count=1,kind='cream',toggle=False):
   parts.append(g.entry('command press surface','Slider',surface,f'0 0 {w} {h}','No','Show','Always'))
   define('Btn'+str(counter),parts,[g.action('Mouse Down','Toggle Switch',H(key),''),g.action('Mouse Down','Toggle Switch',press,'')]);return instance('Btn'+str(counter),b)
  parts.append(g.entry('caption hit','Button',g.button_data('hit.png','hit.png',index,count),f'0 0 {w} {h}','No','Show','Always',remap=[('Data',H(key))]));define('Btn'+str(counter),parts);return instance('Btn'+str(counter),b)
+def command_hit(key,b):
+ entry=button('',key,b,toggle=True);name=get(get(entry,'componentData'),'type');definition=next(get(d,'value')for d in defs if get(d,'key')==name)
+ art_entry=get(definition,'componentsData')[0];put(get(art_entry,'componentData'),'data',g.button_data('hit.png','hit.png',1,1))
+ return entry
+def command_value(key,caption,b,size=21,kind='olive',colour='fff8e8c6'):
+ entry=button('',key,b,kind=kind,toggle=True);name=get(get(entry,'componentData'),'type');definition=next(get(d,'value')for d in defs if get(d,'key')==name);x,y,w,h=map(int,b.split())
+ get(definition,'componentsData').insert(1,label('',f'8 0 {w-16} {h}',size,colour,caption))
+ return entry
 def panel(title,b):
  x,y,w,h=map(int,b.split());h=138;name='panel-'+str(len(defs));badge,_,caption=title.partition(' · ')
  children=[image(art(w,h,'card'),f'0 0 {w} {h}'),image(art(44,22,'orange'),'10 3 44 22'),label(badge,'10 1 44 22',24,'fff4dfbb'),label(caption,f'64 0 {w-80} 23',22)]
@@ -168,7 +176,7 @@ for ti,tab in enumerate(tabs[2:],2):
  put(tab,'componentDefinition',g.component_definition([],children,'ffeed9b3'));put(tab,'qlinkBoundsData',bounds)
 
 from sound_skin import build_sound_skin
-build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,art,knob,value,conditional,base)
+build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,art,knob,value,conditional,base,command_value)
 # Custom sidebars for every choice selector, placed above current content and hiding background guides.
 for tab in tabs:
  children=get(get(tab,'componentDefinition'),'componentsData')
@@ -195,7 +203,7 @@ for tab in tabs:
    if key=='XKit':rows +=[label('','6 538 414 24',20,'fff7e8c7','KitBrowserPage'),button('< PREV','KitPagePrev','6 568 202 48',kind='cream',toggle=True),button('NEXT >','KitPageNext','218 568 202 48',kind='cream',toggle=True)]
    if key=='HatRhythm':rows +=[button('PAGE 1 / 2','HatRhythmPage','6 568 202 48',0,2),button('PAGE 2 / 2','HatRhythmPage','218 568 202 48',1,2)]
    if key.startswith('Rule'):
-    rows.append(label('Live changes / LOCK holds rhythm','12 548 402 30',19,'fff3dfba'))
+    rows.append(label('Live styles / use padlocks to keep','12 548 402 30',19,'fff3dfba'))
    # X uses a genuine native toggle on the local handle.
    hit=g.entry('Close sidebar','Button',g.button_data('hit.png','hit.png',0,2),'360 0 66 56','No','Show','Always',remap=[('Data',opened)]);rows +=[label('X','360 0 66 56',28,'fff8e4bd'),hit];define(name,rows,modal=True)
   children.append(instance(name,invalid=['IndexedEnabling/1/2/'+opened]))
@@ -203,7 +211,7 @@ for tab in tabs:
 def library_row(index,b):
  x,y,w,h=map(int,b.split());name='LibraryRowButton'+str(index)
  children=[conditional(image(art(w,h,'cream'),f'0 0 {w} {h}'),'IndexedEnabling/0/2/'+H('LibraryPick'+str(index))),conditional(image(art(w,h,'orange'),f'0 0 {w} {h}'),'IndexedEnabling/1/2/'+H('LibraryPick'+str(index))),label('',f'8 0 {w-16} {h}',20,'ff38261c','LibraryRow'+str(index))]
- define(name,children,[g.action('Mouse Down','Toggle Switch',H('LibraryPick'+str(index)),'')]);return instance(name,b)
+ children.append(command_hit('LibraryPick'+str(index),f'0 0 {w} {h}'));define(name,children);return instance(name,b)
 lib=[image(art(426,628,'dark'),'0 0 426 628'),button('<','PackPrev','6 2 48 40',toggle=True),label('','60 2 246 40',20,'fff8e8c6','PackInfo'),button('>','PackNext','310 2 48 40',toggle=True),button('X','LibraryOpen','366 2 54 40',toggle=True)]
 for i,title in enumerate(['KITS','CHOPS','LOOPS','BEATS','GROOVE']):lib.append(button(title,'LibraryKind',f'{6+i*83} 44 80 36',i,5,kind='olive'))
 for i,title in enumerate(['KICK','SNARE','CL HAT','OP HAT','CLAP','TOM','CYMBAL','PERC']):lib.append(button(title,'LibraryRole',f'{6+(i%4)*104} {86+(i//4)*31} 100 29',i,8,kind='dark'))
@@ -224,20 +232,20 @@ for group,title in enumerate(['KICK','SNARE','HAT PAIRS','PERC SET']):role.appen
 role.append(label('','6 98 414 36',22,'fff7e8c7','SoundInfo'))
 for row in range(8):
  name='RoleSoundRow'+str(row);children=[image(art(414,48,'cream'),'0 0 414 48'),label('','8 0 398 48',21,key='SoundRow'+str(row))]
- define(name,children,[g.action('Mouse Down','Toggle Switch',H('SoundPick'+str(row)),'')]);role.append(instance(name,f'6 {142+row*50} 414 48'))
+ children.append(command_hit('SoundPick'+str(row),'0 0 414 48'));define(name,children);role.append(instance(name,f'6 {142+row*50} 414 48'))
 role +=[button('< PREV','SoundPrev','6 560 202 48',toggle=True),button('NEXT >','SoundNext','218 560 202 48',toggle=True),g.entry('outside role close','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',H('SoundOpen'))])]
 define('RoleSoundBrowser',role,modal=True)
 for tab in tabs:get(get(tab,'componentDefinition'),'componentsData').append(instance('RoleSoundBrowser',invalid=['IndexedEnabling/1/2/'+H('SoundOpen')]))
 kitrows=[image(art(426,628,'dark'),'0 0 426 628'),button('<','PackPrev','6 2 48 40',toggle=True),label('','60 2 246 40',20,'fff8e8c6','PackInfo'),button('>','PackNext','310 2 48 40',toggle=True),button('X','KitOpen','366 2 54 40',toggle=True),label('DRUM KITS','6 48 414 38',25,'fff8e8c6'),label('','6 94 414 34',21,'fff7e8c7','XKitPage')]
 for row in range(8):
  name='DynamicKitRow'+str(row);parts=[g.entry('selected kit art','Button',g.button_data(art(414,48,'orange'),art(414,48,'cream'),1,1),'0 0 414 48','No','Show','Always',remap=[('Data',H('KitRow'+str(row)))]),label('','8 0 398 48',21,key='KitRow'+str(row))]
- define(name,parts,[g.action('Mouse Down','Toggle Switch',H('KitPick'+str(row)),'')]);kitrows.append(instance(name,f'6 {138+row*50} 414 48'))
+ parts.append(command_hit('KitPick'+str(row),'0 0 414 48'));define(name,parts);kitrows.append(instance(name,f'6 {138+row*50} 414 48'))
 kitrows +=[button('< PREV','KitPagePrev','6 560 202 48',toggle=True),button('NEXT >','KitPageNext','218 560 202 48',toggle=True),g.entry('outside kit close','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',H('KitOpen'))])]
 define('ExpansionKitBrowser',kitrows,modal=True)
 for tab in tabs:get(get(tab,'componentDefinition'),'componentsData').append(instance('ExpansionKitBrowser',invalid=['IndexedEnabling/1/2/'+H('KitOpen')]))
 pool=[image(art(426,628,'dark'),'0 0 426 628'),button('<','PackPrev','6 2 48 40',toggle=True),label('','60 2 246 40',20,'fff8e8c6','PackInfo'),button('>','PackNext','310 2 48 40',toggle=True),button('X','PoolOpen','366 2 54 40',toggle=True),label('','6 48 414 40',23,'fff8e8c6','PoolInfo')]
 for row in range(8):
- y=96+row*49;pool.extend([button('','PoolPick'+str(row),f'6 {y} 414 46',kind='olive',toggle=True),label('',f'12 {y} 402 46',21,'fff8e8c6','PoolRow'+str(row))])
+ y=96+row*49;pool.append(command_value('PoolPick'+str(row),'PoolRow'+str(row),f'6 {y} 414 46'))
 pool.extend([button('< PREV','KitPagePrev','6 496 202 46',toggle=True),button('NEXT >','KitPageNext','218 496 202 46',toggle=True),button('CLEAR','PoolClear','6 552 202 60',toggle=True),button('DONE','PoolOpen','218 552 202 60',toggle=True),g.entry('outside pool close','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',H('PoolOpen'))])])
 define('SelectedKitBrowser',pool,modal=True)
 for tab in tabs:get(get(tab,'componentDefinition'),'componentsData').append(instance('SelectedKitBrowser',invalid=['IndexedEnabling/1/2/'+H('PoolOpen')]))

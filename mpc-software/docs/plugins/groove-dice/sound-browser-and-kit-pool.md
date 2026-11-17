@@ -1,18 +1,18 @@
 # Sound selection, audition and Dice source range
 
-Release 1.3.3. Public package contains only Original Workshop; owner-only expansions remain separate.
+Release 1.3.4. Public package contains only Original Workshop; owner-only expansions remain separate.
 
 ## SOUND
 
 Choose KICK, SNARE, HI-HAT or PERC. Tap a sample name to open the left sample list; dragging the name is no longer required. Previous/next arrows and the sample Q-Link use the same catalogue and selected source. In the list, SCREEN A1 selects the sample; other SOUND relays are inactive. PREVIEW auditions the selected sample; DONE closes the list. Pack arrows filter the list. The modal suppresses background Q-Link guides and remains closable after changing tabs.
 
-All sound rows use Sample / Level / Decay / Shift, including every kick/snare layer, closed/open hat, Perc role, Ride, Crash and Bell. Tune moves to detail controls alongside Start / Low Cut / High Cut. HI-HAT groups C/D provide Start / Tune / Low Cut / High Cut for closed/open hat respectively. Decay shortens the tail smoothly; no End parameter was added.
+All sound rows use Sample / Level / Tune / Shift on SOUND1/2, and Start / Decay / Low Cut / High Cut on SOUND2/2. The 48px previous/next arrows change every row together; the counter shows the current page. The same SCREEN group stays with its row. HI-HAT has two rows (C/D inactive); CYMBALS has three (D inactive). REV is available on both pages; page2 adds independent polarity Ø. Decay shortens the tail smoothly; no End parameter was added.
 
 Each sample row has its own PREVIEW. It plays only that layer, not the entire kick/snare stack, and it never records a fill note. Row mute/solo and MAIN part trim are bypassed for audition; sound level/tuning/filter/shift, master and FX still apply. Audition goes to Main so it can be heard even with Separate Out. Preview voices do not choke performance voices. A newly selected asynchronous sample must be ready before audition; it does not audition the previous cached sound. An empty extra layer has no sound to preview.
 
 ## CYMBALS
 
-SOUND > CYMBALS opens Ride, Crash and Bell. A/B/C each control Sample, Level, Decay and Shift. Touch a row name to select the source for D: Start, Tune, Low Cut and High Cut. ON/SOLO/LOCK are independent per cymbal. Sample list, arrows, Q-Link and PREVIEW work here too.
+SOUND > CYMBALS opens Ride, Crash and Bell. A/B/C each follow their sound row on both SOUND pages; D is inactive. ON/SOLO/LOCK are independent per cymbal. Sample list, arrows, Q-Link and PREVIEW work here too.
 
 AUTO / CURRENT KIT chooses a named family from the same pack as the kit's Cymbal source. BUILT-IN chooses the independently synthesized original fallback. Manual source choices include the matching named family and unclassified Cymbal sources, excluding sources known to belong to a different family. Missing chosen assets show MISSING SOUND and stay silent; they are not silently replaced. State and user kits keep sample SHA identities so reinstalling a pack reconnects the source.
 
@@ -34,7 +34,7 @@ The fill note grid starts with Snare, Tom, Perc and Clap. PERC / DRUMS switches 
 
 ## Verification boundary
 
-Native/ARM builds, SDK validation, UBSan, allocation guards, saved-state identity tests, one-bar/record/count-in fixtures and UI bounds/guide checks are automated. Offline UI compositions are not device screenshots. Physical touchscreen and Q-Link feel require the owner's on-device check after loading the installed QA revision.
+Native/ARM builds, SDK validation, UBSan, allocation guards, saved-state identity tests, one-bar/record/count-in fixtures and UI bounds/guide checks are automated. Direct MPC XL remote clicks verified text-center sample and kit selection, page navigation, REV/polarity and selected-kit checkboxes. Published captures are device frames. Physical encoder feel, hardware audio and worst-case load remain outside this remote UI verification.
 
 ## Visible Dice controls and individual locks (1.3.2)
 

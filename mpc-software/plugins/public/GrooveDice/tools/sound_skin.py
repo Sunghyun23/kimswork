@@ -1,7 +1,7 @@
 """SOUND editing page. Four fixed SCREEN relay groups; no invented tab-navigation handler."""
 from pathlib import Path
 
-def build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,art,knob,value,conditional,base):
+def build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,art,knob,value,conditional,base,command_value):
  tab=next(t for t in tabs if get(t,'tabName')=='SOUND')
  import copy
  def not_hat(entry):return [conditional(copy.deepcopy(entry),'RangedEnabling/0/1/4/'+H('SoundPart')),conditional(entry,'IndexedEnabling/3/4/'+H('SoundPart'))]
@@ -16,7 +16,7 @@ def build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,
   key='SoundQ'+str(row*4);name='LayerSample'+str(row)
   if name in sample_defs:return instance(name,f'256 {y} 224 108')
   sample_defs.add(name)
-  parts=[label('SAMPLE','0 0 224 22',20),button('','SoundBrowse'+str(row),'0 24 224 40',kind='olive',toggle=True),label('','8 24 208 40',18,'fff8e7c7',key),button('<','SoundSamplePrev'+str(row),'0 64 44 44',toggle=True),button('PREVIEW','SoundPreview'+str(row),'48 64 128 44',kind='dark',toggle=True),button('>','SoundSampleNext'+str(row),'180 64 44 44',toggle=True)]
+  parts=[label('SAMPLE','0 0 224 22',20),command_value('SoundBrowse'+str(row),key,'0 24 224 40',18,'olive','fff8e7c7'),button('<','SoundSamplePrev'+str(row),'0 64 44 44',toggle=True),button('PREVIEW','SoundPreview'+str(row),'48 64 128 44',kind='dark',toggle=True),button('>','SoundSampleNext'+str(row),'180 64 44 44',toggle=True)]
   define(name,parts,[g.action('Mouse Down','Q-Link',H(key),'')]);return instance(name,f'256 {y} 224 108')
  def footer():
   controls=[button('<','SoundDetails','16 574 48 48',toggle=True),conditional(label('SOUND 1 / 2','72 574 140 48',20,'fff4e3bf'),'IndexedEnabling/0/2/'+H('SoundDetails')),conditional(label('SOUND 2 / 2','72 574 140 48',20,'fff4e3bf'),'IndexedEnabling/1/2/'+H('SoundDetails')),button('>','SoundDetails','220 574 48 48',toggle=True)]
@@ -51,7 +51,7 @@ def build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,
  browser=[image(art(426,628,'dark'),'0 0 426 628'),button('<','PackPrev','6 2 48 40',toggle=True),label('','60 2 246 40',20,'fff8e8c6','PackInfo'),button('>','PackNext','310 2 48 40',toggle=True),button('X','SampleBrowserOpen','366 2 54 40',toggle=True),label('','6 48 414 40',23,'fff8e8c6','SampleInfo')]
  for row in range(8):
   y=96+row*49
-  browser.extend([button('','SamplePick'+str(row),f'6 {y} 414 46',kind='olive',toggle=True),label('',f'12 {y} 402 46',21,'fff8e8c6','SampleRow'+str(row))])
+  browser.append(command_value('SamplePick'+str(row),'SampleRow'+str(row),f'6 {y} 414 46'))
  browser.extend([button('< PREV','SamplePrev','6 496 202 46',toggle=True),button('NEXT >','SampleNext','218 496 202 46',toggle=True),button('PREVIEW','SoundAudition','6 552 202 60',kind='orange',toggle=True),button('DONE','SampleBrowserOpen','218 552 202 60',toggle=True),g.entry('outside sample close','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',H('SampleBrowserOpen'))])])
  define('SampleBrowser',browser,modal=True);roots.append(instance('SampleBrowser',invalid=['IndexedEnabling/1/2/'+H('SampleBrowserOpen')]))
  for other in tabs:
