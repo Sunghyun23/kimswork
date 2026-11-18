@@ -121,3 +121,5 @@
 
 
 2026-11-18: User explicitly authorized official Donut Theory1.12.0 release and website publication. Earlier candidate-only statements are historical. ENV/PLAY and Release Pitch Drop are the current specification; preserve recorded physical/audio/CPU limits. Final publication details go in design/device-1.12.0/publication.json.
+
+- Donut Theory1.12.0 publication complete: stable Release449932324, source949dcfbd, ZIP/SHA256 integrity verified anonymously, Pages44301107512success,21public/77responsive checks,7actual latest MPC screenshots. InternalNVMe173runtime hashes match. Earlier candidate/public1.10.1 statements are historical. Preserve recorded physical/audio/CPU limits; Groove Dice/Crate Press unchanged. See design/device-1.12.0/publication.json.

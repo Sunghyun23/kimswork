@@ -1,5 +1,12 @@
 # Donut Theory — 프로젝트 인계 / 재개 기준
 
+## Latest official status — 1.12.0 published (2026-11-18)
+
+**Stable Donut Theory1.12.0** is public: [Release](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.12.0), [product](https://kimswork.app/plugins/donut-theory/), [manual](https://kimswork.app/plugins/donut-theory/manual/). Source949dcfbd0dfe7856ab3451908f5ceb289cf43daa; Release449932324; Pages44301107512success. ZIP5,982,630bytes / SHA256`5dfbdf164e16dcb13f877af2a354c702e1a7f10ebe180c7666ae006b48f21e1f`.
+
+Current tabs MAIN/CHORD,OSC,ENV,PLAY,MOD,FX. ENV combines both ADSRs; PLAY D adds shared Amp Release/Drop Amount/Drop Time. MAIN filters remain intact. UID kim/Krql,293parameters with first291exact,66programs. InternalNVMe173files match the release. Seven latest MPC screenshots are published. Engine/UBSan/bridge/analog/harmony/skin and19host checks pass;21public and77responsive checks pass. Physical encoder/multitouch/hardware audio/CPU/full-project certification remains limited. Groove Dice and Crate Press are unchanged. `design/device-1.12.0/{verification,publication,public-verification}.json` hold evidence. Candidate-only and older release-state paragraphs below are history.
+
+
 ## 1.12.0 local candidate — Release / Pitch Drop
 
 Latest user-approved PLAY D adds **Amp Release / Drop Amount / Drop Time / unassigned**. Amp Release is the same parameter30 used on ENV; editing either view updates the other. PLAY A/B/C keep their previous controls, arranged with D in a2×2 layout. MAIN and its filter group remain unchanged; ENV still holds both ADSRs.

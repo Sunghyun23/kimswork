@@ -1,0 +1,113 @@
+{
+  "count": 21,
+  "checks": [
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.12.0/donut-theory-1.12.0-mpc.zip",
+      "status": 200,
+      "sha256": "sha256:5dfbdf164e16dcb13f877af2a354c702e1a7f10ebe180c7666ae006b48f21e1f",
+      "bytes": 5982630
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.12.0/donut-theory-1.12.0-mpc.zip.sha256",
+      "status": 200,
+      "sha256": "sha256:69651ab15eddd98d77e14e4b6a03452a9df3d4addea837167e4d6d13b87dcea2",
+      "bytes": 94
+    },
+    {
+      "url": "https://kimswork.app/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "url": "https://kimswork.app/software/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "url": "https://kimswork.app/software/instruments/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "url": "https://kimswork.app/software/effects/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "url": "https://kimswork.app/plugins/donut-theory/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "url": "https://kimswork.app/plugins/crate-press/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "url": "https://kimswork.app/plugins/donut-theory/manual/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "url": "https://kimswork.app/plugins/crate-press/manual/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "url": "https://kimswork.app/plugins/groove-dice/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "image": "donut-theory-main-device-1.12.0.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "donut-theory-chord-device-1.12.0.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "donut-theory-osc-device-1.12.0.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "donut-theory-env-device-1.12.0.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "donut-theory-play-device-1.12.0.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "donut-theory-mod-device-1.12.0.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "donut-theory-fx-device-1.12.0.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "crate-press-main-0.2.4.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "crate-press-latched-0.2.4.webp",
+      "status": 200,
+      "byteIdentical": true
+    },
+    {
+      "image": "crate-press-perform-0.2.4.webp",
+      "status": 200,
+      "byteIdentical": true
+    }
+  ],
+  "sourceCommit": "949dcfbd0dfe7856ab3451908f5ceb289cf43daa"
+}
