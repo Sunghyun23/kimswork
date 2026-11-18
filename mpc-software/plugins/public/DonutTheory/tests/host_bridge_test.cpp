@@ -34,6 +34,14 @@ int main(){
  dispatch(effSetProgram,0,7);render();dispatch(effSetChunk,0,size,saved.data());render();
  assert(dispatch(effGetProgram)==12&&p->getInt(kRoot1)==61);
  dispatch(effIdle_Deprecated);int count=updates;dispatch(effIdle_Deprecated);assert(updates==count);
+ // Metadata queries must not emit UI callbacks, even with pending changes on a render thread.
+ dispatch(effIdle_Deprecated);updates=automations=0;
+ std::thread programReader([&]{render();p->set(kShape,float((p->getInt(kShape)+1)%4));rendering=true;
+  const int current=int(dispatch(effGetProgram));char currentName[64]{},indexedName[64]{};
+  dispatch(effGetProgramName,0,0,currentName);assert(dispatch(effGetProgramNameIndexed,current,0,indexedName)==1);
+  rendering=false;assert(currentName[0]&&indexedName[0]);});programReader.join();
+ assert(updates==0&&automations==0);dispatch(effIdle_Deprecated);assert(updates>0);
+ std::cout<<"PASS program metadata reads are callback-free; pending refresh drains on UI idle\n";
  dispatch(effClose);
  // MPC may poll values on its control thread without asking for display strings.
  // Render on a real separate thread; a value read there must never notify the host.
@@ -53,6 +61,38 @@ int main(){
  e->getParameter(e,kSmoothOpen);assert(p->getInt(kSmoothStatus)==1&&updates>0);std::string movement;p->formatValue(kSmoothMovement,0,movement);assert(movement=="TOP: 42 -> 0 st");
  updates=automations=0;p->set(kSmoothApply,1);std::thread applyPlan([&]{render();assert(updates==0&&automations==0);});applyPlan.join();assert(!p->getInt(kSmoothOpen)&&p->getInt(kSmoothStatus)==3);assert(p->getInt(kRoot1)==50&&p->getInt(kRoot2)==55&&p->getInt(kRoot3)==48&&p->getInt(kRoot4)==57);
  e->getParameter(e,kSmoothStatus);assert(updates>0&&automations>0);dispatch(effClose);
+ // An unchanged render must become quiet: comparison is in stored normalised
+ // space, not lossy plain space. Init's Transpose Interval zero previously
+ // produced one false host refresh per block and cleared MPC's preset list.
+ e=VSTPluginMain(host);p=static_cast<DonutTheory*>(e->object);dispatch(effOpen);
+ dispatch(effSetSampleRate,0,0,nullptr,48000);dispatch(effSetBlockSize,0,128);dispatch(effMainsChanged,0,1);
+ for(int program=0;program<66;++program){
+  dispatch(effSetProgram,0,program);
+  for(int b=0;b<12;++b){render();dispatch(effIdle_Deprecated);}
+  updates=automations=0;
+  for(int b=0;b<89;++b){render();dispatch(effIdle_Deprecated);}
+  assert(automations==0&&updates==0);
+  char presetName[64]{};assert(dispatch(effGetProgramNameIndexed,program,-1,presetName)==1);assert(presetName[0]);
+ }
+ std::cout<<"PASS 66 programs remain notification-free for 89 unchanged render blocks\n";
+ // Legacy/canonical choice mirrors preserve the exact host-normalised echo.
+ for(const auto probe:std::array<std::pair<int,float>,4>{{{kProgression,.77136f},{kHarmonyType1+7,.11744f},{kQuality16,.97984f},{kQuality11,.94812f}}}){
+  e->setParameter(e,probe.first,probe.second);assert(std::abs(e->getParameter(e,probe.first)-probe.second)<1.e-6f);
+ }
+ dispatch(effSetProgram,0,65);render();dispatch(effIdle_Deprecated);
+
+ // The native host may snapshot while constructing its list. A read must not
+ // release a held chord, consume a pending command, refresh UI or automate.
+ p->set(kTouch1,1);p->set(kRandomize,1);p->set(kTransposeOpen,1);p->set(kPadLearn,1);
+ std::array<float,kNumParams> live{};for(int i=0;i<kNumParams;++i)live[i]=p->getNormalised(i);
+ updates=automations=0;assert(dispatch(effGetChunk)==0);
+ data=nullptr;size=dispatch(effGetChunk,0,0,&data);assert(size>0&&data);
+ std::vector<unsigned char> snapshot((unsigned char*)data,(unsigned char*)data+size);
+ data=nullptr;assert(dispatch(effGetChunk,0,0,&data)==size);assert(!std::memcmp(data,snapshot.data(),size));
+ assert(updates==0&&automations==0);for(int i=0;i<kNumParams;++i)assert(p->getNormalised(i)==live[i]);
+ dispatch(effSetChunk,0,size,snapshot.data());assert(!p->getInt(kTouch1)&&!p->getInt(kRandomize)&&!p->getInt(kTransposeOpen)&&!p->getInt(kPadLearn));
+ assert(p->currentProgram()==65);dispatch(effClose);
+ std::cout<<"PASS callback-free, non-mutating repeated host snapshots and transient-free restoration\n";
  std::cout<<"PASS: UI value-poll smooth planning, audio apply and deferred reentrant notifications\n";
  std::cout<<"PASS: VST preset/state identity, master volume, deferred callbacks, reentrant UI refresh, idle coalescing\n";
 }

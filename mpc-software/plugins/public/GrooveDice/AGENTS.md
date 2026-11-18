@@ -100,3 +100,29 @@
 - 1.4.0local RULES expansion: first672full declarations/ranges stable; RulePickFullKick/Snare/Hat/Perc672–675 append,676total. First7choices preserve meanings;9new per part,16each. Legacy8style/7picker/4intensity aliases retain ranges; full canonical values drive generation/Dice/Undo/Screen/Program. Old state seeds full values. MAIN drawers page16rows as8+8with local page handles; hideQLinkBounds retained. Test36distinct raw+scheduled profiles, backbeats2/4, kick2/4exclusion, drag spacing/caps, other-part/fill preservation, old/new state and bounded physical fine updates. Preserve all installed personal banks/registry and keep them out of public ZIP/Git. Public stable remains1.3.4until new authorization.
 
 - 2026-11-18: user approved official1.4.0 release and website publication. Earlier local-only statements above describe candidate history. Retain actual QA limits and explicit product tags.
+
+
+## 2026-11-18 공통 Dice 잠금 — 최신 구현 후보
+
+이 결정은 과거 Donut Theory의 5개 헤더 잠금 후보를 대체한다. Donut Theory1.13.0 / Groove Dice1.5.0 로컬 후보이며, 별도 공개 승인 전 정식 버전은 각각1.12.0 /1.4.0이다.
+
+- Dice가 변경하는 값에 개별 자물쇠를 제공한다. 같은 실제 값을 표시하는 페이지/릴레이는 잠금을 공유한다. 수동 터치·Q-Link·명시적 공장 프리셋 선택은 허용한다.
+- Donut MAIN16개는 각 노브 왼쪽 위에44px 터치 잠금을 둔다. 다른 페이지의 실제 랜덤 대상도 잠근다. OSC Pair/Wave1/Wave2와 각 LFO의 Rate/Sync/Division은 각각 하나의 잠금을 공유한다. ENV와 PLAY의 Amp Release도 공유한다.
+- Groove Dice는 기존 MAIN16개 잠금을 유지하며 SOUND는 실제 역할·레이어·페이지에 따라 잠금 대상을 연결한다. FX의 랜덤 대상과 필인 A–D의 실제 데이터 보호도 제공한다. 랜덤화하지 않는 사운드 파라미터에는 의미 없는 잠금을 추가하지 않는다.
+- 기존 킷·패턴·파트·레이어 잠금은 개별 잠금보다 우선한다. UNLOCK ALL은 전체 페이지의 개별 잠금과 상위 보호를 해제하고, Dice 실행·음색/샘플/노트 변경은 하지 않는다.
+- master/MIDI/routing 및 항상 보존하는 Donut 코드·키·패드·Pitch Drop에는 Dice 잠금을 만들지 않는다. Q-Link 할당은 바꾸지 않는다. 원래 미술과 글꼴을 보존하며 Crate Press는 변경하지 않는다.
+- Donut first293 / Groove first676 파라미터 선언은 유지한다. 새 파라미터는 append하며 총353 /777개다. 공개 ZIP에는 개인 확장팩을 넣지 않는다.
+- 자동 검사와 실제 MPC 터치/화면 검증은 분리해서 기록한다. 물리 Q-Link 회전·오디오·최악 CPU는 새 검증 없이 완료로 주장하지 않는다.
+
+
+## 2026-11-18 Groove Dice1.5.1 — predictable Dice policy (supersedes1.5.0 common-lock candidate)
+
+- Global ROLL DICE changes the MAIN16controls and regenerates the repeating main pattern, respecting MAIN locks and Pattern Lock. If Kit Lock is off it also chooses sounds within the selected pack/kit pool; Kit Lock preserves the kit. Random Amount0 leaves everything unchanged.
+- All four recorded/edited fill banks and all seven master/kit FX parameter values are preserved by global Dice, including Whole Kit replacement. The previous Extra scope selector is removed from the interface; saved Scope values remain compatible but no longer choose global behavior.
+- ROLL FILL is a separate bottom action in the fill editor: it varies only the selected A–D bank, uses Random Amount, respects legacy locked rhythm roles, and is blocked during active recording. ROLL FX is a separate bottom action on FX: it randomizes Drive/Dust/Room/Duck only. Both support UNDO and do not regenerate the main pattern or choose a new kit.
+- Individual Dice padlocks are visible only beside MAIN16controls. Remove the1.5.0-added SOUND/FX/choke/fill locks and duplicated GROOVE timing locks; existing Kit/Pattern/Role/Layer protections and global UNLOCK ALL remain. Appended1.5.0 lock parameters are retained for state/ID compatibility and no longer restrict non-MAIN randomization.
+- GROOVE remains the detailed timing/density/ghost/velocity/random-amount/fill-frequency page; this change does not redesign or delete it. Donut Theory remains unchanged with its approved all-page shared locks.
+- First777declarations are unchanged; append RollFill777/RollFx778,779total, same kim/KpGy identity and existing Q-Link maps. This is a local installed candidate; public stable stays1.4.0 until a separate release request. Preserve all personal expansions and keep them out of public packages.
+
+
+2026-11-19: User authorized publishing all current fixes and updating the website: Donut Theory1.13.14 and Groove Dice1.5.1; Crate Press0.2.4 is already current and unchanged. Prior candidate-only statements are historical. User separately requested installing all three on an SD card for another device; SDK currently sees only internal nvme and removable SSD, so card identity/insertion is pending. Do not silently install to SSD or remove the internal copies until the card destination is confirmed and verified. Personal expansions must remain excluded from public packages.

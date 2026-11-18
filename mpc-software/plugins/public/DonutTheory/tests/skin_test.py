@@ -164,7 +164,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==293
+assert index['LearnStatus']==84 and len(params)==353
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -548,7 +548,7 @@ assert len(curves)==2
 for curve,indices in zip(curves,[(27,28,29,30),(31,32,33,34)]):
  assert [curve[s+'Handle']for s in ['attack','decay','sustain','release']]==[f'Parameter {i}'for i in indices]
  assert curve['version']==1 and curve['forceHideShapeHandles']
-faders=[w for w in envwidgets if w['componentData']['type']=='DTEnvStage']
+faders=[w for w in envwidgets if w['componentData']['type'].startswith('DTEnvStage')]
 assert len(faders)==8 and Image.open(skin/'env-fader.png').size==(64,7776)
 for tab,groups in [(env,[(27,28,29,30),(31,32,33,34),(11,12,35,36)]),(play,[(0,8,6,37),(48,49,63),(21,38,47),(30,291,292)])]:
  assert len(tab['qlinkBoundsData'])==len(groups)
@@ -563,5 +563,36 @@ for tab,groups in [(env,[(27,28,29,30),(31,32,33,34),(11,12,35,36)]),(play,[(0,8
    x,y,width,height=map(int,w['bounds']['bounds'].split());assert gx<=x and gy<=y and x+width<=gx+gw and y+height<=gy+gh
 assert all(not(w['componentData']['type']=='Label'and w['componentData']['data'].get('type')=='Text'and not w['componentData']['data'].get('text'))for tab in t['tabs']for w in tab['componentDefinition']['componentsData'])
 assert params[:291]==json.loads((P/'tests/legacy-291-parameters.json').read_text())
-assert [p['key']for p in params[291:]]==['ReleaseDropAmount','ReleaseDropTime']
+assert [p['key']for p in params[291:293]]==['ReleaseDropAmount','ReleaseDropTime']
 print('PASS: ENV dual curves/eight faders; PLAY four banks with shared Amp Release and two appended Drop controls; first291 metadata exact')
+
+assert params[:293]==json.loads((P/'tests/legacy-293-parameters.json').read_text())
+assert [p['key']for p in params[293:298]]==['DiceLockOsc','DiceLockFilter','DiceLockAmp','DiceLockMod','DiceLockFx']
+config=json.loads((P/'dice-locks.json').read_text())
+locks=[w for w in children if w['componentData']['name'].startswith('Dice value lock ')]
+assert len(locks)==16
+assert any(w['componentData']['name']=='Unlock All'and w['bounds']['bounds']=='18 502 122 44'for w in children)
+for tab in t['tabs']:
+ assert not any(w['componentData']['name'].startswith('Dice Lock ')for w in tab['componentDefinition']['componentsData'])
+assert len(config['owners'])==54
+assert config['targets']['27']==index['DiceValueLockAmpAttack']
+assert config['targets']['30']==index['DiceValueLockAmpRelease']
+assert config['targets']['14']==config['targets']['39']==config['targets']['40']==config['targets']['277']
+print('PASS:16MAIN locks,54canonical lock owners, shared ENV/PLAY Release and Rate/Sync/Division; global UNLOCK ALL')
+
+# PLAY's native selectors and ENV compact filter selector need shared value locks too.
+for name in ['Voice Mode','Glide Mode']:
+ tab=next(x for x in t['tabs']if x['tabName']=='PLAY')
+ target=index['DiceValueLock'+('VoiceMode'if name=='Voice Mode'else'GlideLegato')]
+ assert any(w['componentData']['type']=='DTValueLock'+str(target)for w in tab['componentDefinition']['componentsData'])
+print('PASS PLAY Voice/Glide mode selectors have shared44px Dice locks')
+
+visible_locks=set()
+def visible_lock_walk(widgets,stack=()):
+ for w in widgets:
+  typ=w['componentData']['type']
+  if typ.startswith('DTValueLock'):visible_locks.add(int(typ[len('DTValueLock'):]))
+  if typ in defs and typ not in stack:visible_lock_walk(defs[typ].get('componentsData',[]),stack+(typ,))
+for tab in t['tabs']:visible_lock_walk(tab['componentDefinition']['componentsData'])
+assert set(config['locks'].values())<=visible_locks
+print('PASS all54 canonical Dice owners have reachable visible locks')

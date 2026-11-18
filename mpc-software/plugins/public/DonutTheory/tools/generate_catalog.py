@@ -136,6 +136,9 @@ c('FactoryReload','Reload Sound',['Off','On'])
 # Release-only pitch envelope; append after all shipped291 declarations.
 f('ReleaseDropAmount','Drop Amount',0,24,0,'st')
 f('ReleaseDropTime','Drop Time',20,2000,250,'ms',True)
+for section in ['Osc','Filter','Amp','Mod','Fx']:c('DiceLock'+section,'Lock '+section.upper(),['Unlocked','Locked'])
+from dice_lock_catalog import append as append_dice_locks
+append_dice_locks(params)
 (P/'src/ChordTypes.h').write_text('#pragma once\nnamespace donut {\nstatic constexpr int kTypeCount=32;\nstatic constexpr int kTypeSizes[32]={'+','.join(str(len(t[2]))for t in TYPES)+'};\nstatic constexpr int kTypeIntervals[32][5]={' + ','.join('{'+','.join(map(str,list(t[2])+[0]*(5-len(t[2]))))+'}'for t in TYPES)+'};\nstatic const char*const kTypeSuffixes[32]={'+','.join(json.dumps(t[1])for t in TYPES)+'};\ninline bool minorType(int q){switch(q){'+''.join('case '+str(q)+':'for q in sorted(MINOR_TYPES))+'return true;default:return false;}}\n}\n')
 (P/'parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 (P/'factory-presets.json').write_text(json.dumps(dict(sounds=factory_sounds,progressions=progressions),indent=2)+'\n')
@@ -144,8 +147,10 @@ for p in params:
  key=p['key'];nm=p['name'];d=p['default']
  if 'choices'in p:expr='mpc::choiceParam('+json.dumps(key.lower())+','+json.dumps(nm)+', {'+','.join(json.dumps(x) for x in p['choices'])+'},'+str(d)+')'
  else:expr='mpc::'+('logParam' if p['log'] else 'floatParam')+'('+json.dumps(key.lower())+','+json.dumps(nm)+','+','.join(str(p[x])+'f' if '.' in str(p[x]) else str(p[x])+'.0f' for x in ['min','max','default'])+','+json.dumps(p['unit'])+', 1)'
- lines.append('{auto editor='+expr+';editor.automatable=false;p.addParam(std::move(editor));}' if key.startswith(('Edit','PadPosition','ChordKey','Transpose','KeyDegree','Smooth','HarmonyEdit','HarmonyTones','HarmonyCurrent','LfoRateControl','ModRateControl','Lfo2RateControl','Randomize','Randomized','FactoryReload')) else 'p.addParam('+expr+');')
+ lines.append('{auto editor='+expr+';editor.automatable=false;p.addParam(std::move(editor));}' if key.startswith(('Edit','PadPosition','ChordKey','Transpose','KeyDegree','Smooth','HarmonyEdit','HarmonyTones','HarmonyCurrent','LfoRateControl','ModRateControl','Lfo2RateControl','Randomize','Randomized','FactoryReload','DiceLock','DiceValueLock','UnlockDice')) else 'p.addParam('+expr+');')
 lines+=['}']
+from dice_lock_catalog import definitions as dice_definitions
+lines+=dice_definitions(params)
 for name,prefix in [('Roots','Root'),('LegacyQualities','Quality'),('Qualities','HarmonyType'),('Voicings','Voicing'),('Octaves','ChordOctave'),('PadNotes','PadNote'),('Touches','Touch')]:lines.append('static constexpr int kChord'+name+'[16] = {'+','.join('k'+prefix+str(slot) for slot in range(1,17))+'};')
 lines.append('static constexpr int kLegacyBankProgressions[4] = {kProgression,kProgression2,kProgression3,kProgression4};')
 lines.append('static constexpr int kBankProgressions[4] = {kHarmonyPreset1,kHarmonyPreset2,kHarmonyPreset3,kHarmonyPreset4};')

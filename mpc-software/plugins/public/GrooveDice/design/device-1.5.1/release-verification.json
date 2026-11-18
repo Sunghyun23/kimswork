@@ -1,0 +1,25 @@
+{
+  "version": "1.5.1",
+  "status": "Release approved; original regression and device checks reused because binaries and TUI exactly match the verified candidate.",
+  "identity": "kim/KpGy",
+  "parameters": 779,
+  "unchanged_prefix": 777,
+  "device": "MPC XL /3.10.1.12 / internal NVMe",
+  "installation": "SDK update165files match; all4owner expansions byte-identical to installed1.5.0",
+  "automated": "full regression suite PASS; final common-policy/state/reset/engine UBSan PASS; native/arm32/arm64 builds; SDK validator0errors0warnings; host19PASS0WARN0FAIL; existing Q-Link maps exact",
+  "device_remote_touch": {
+    "main": "Roll changes MAIN controls and chooses Honey Session kit",
+    "fill_preservation": "authored Tom note atstep4 and15note count retained through MAIN Roll",
+    "fx_preservation": "Drive10/Dust10/Room0/Duck9/LowCut0/ModRate0.30/ModDepth0 unchanged across MAIN Roll and kit replacement",
+    "ui": "MAIN locks only; SOUND/GROOVE/FX/choke/fill extra icons removed; separate bottom ROLL FILL and ROLL FX with Undo",
+    "dedicated_fill": "ROLL FILL changes selected Tom nudge0ms to-1ms; immediate Undo restores0ms and the authored15note fill",
+    "dedicated_fx": "ROLL FX directly changes Drive/Dust/Duck from0 to10/10/9%; its caption center responds",
+    "pages": "MAIN, GROOVE, SOUND, CYMBALS, FILL, KITS, FX, ROUTING inspected; native startup MAIN; body and tabs visible"
+  },
+  "not_newly_certified": [
+    "physical Q-Link rotation",
+    "hardware audio audition",
+    "worst-case CPU"
+  ],
+  "publicProfileHost": "19PASS/0WARN/0FAIL"
+}

@@ -36,7 +36,7 @@ int soundTarget(int n)const{
 }
 static int layerStoredKey(int n){return n<4?kMixKick+n:kRoleOn0+n-4;}
 static bool extraSampleKey(int key){return key>=kL0Sample&&key<=kL5Invert&&(key-kL0Sample)%LayerFields==LSample;}
-void layerSet(int key,float value){clearOrphan(canonical(key));if(getNormalised(key)==param(key).toNormalised(value))return;bool before=internal;internal=true;set(key,value);internal=before;changed[key].store(true);}
+void layerSet(int key,float value){if(!diceAllows(key))return;clearOrphan(canonical(key));if(getNormalised(key)==param(key).toNormalised(value))return;bool before=internal;internal=true;set(key,value);internal=before;changed[key].store(true);}
 void initLayerSaved(){for(auto&kit:savedLayers)for(int n=0;n<LayerStoredCount;++n)kit[n].store(param(layerStoredKey(n)).def);}
 void initLayers(){
  layerPacks.resize(library.packs.size());
@@ -65,9 +65,12 @@ void syncLayerUi(bool force=false){
  }
  for(int r=0;r<4;++r){int role=soundRole(r),layer=soundLayer(r);for(int field:{LOn,LSolo,LLock}){int relay=(field==LOn?kSoundOn0:field==LSolo?kSoundSolo0:kSoundLock0)+r;float next=role<0?0:get(soundKey(r,field));if(get(relay)!=next){set(relay,next);changed[relay].store(true);}}}
  int role=soundRole(row);float invert=role<0?0:get(soundKey(row,LInvert));if(get(kSoundInvert)!=invert){set(kSoundInvert,invert);changed[kSoundInvert].store(true);}
+ for(int n=0;n<16;++n){int target=soundTarget(n),lock=target<0?-1:diceValueLock(target);int enabled=kSoundValueLockEnabled0+n,relay=kSoundValueLock0+n;float v=lock<0?0:get(lock);if(get(enabled)!=(lock>=0?1.f:0.f)){set(enabled,lock>=0?1:0);changed[enabled].store(true);}if(get(relay)!=v){set(relay,v);changed[relay].store(true);}}
  syncReverseUi();internal=before;
 }
 bool layerParameter(int key,float value){
+ if(key>=kSoundValueLock0&&key<=kSoundValueLock15){int target=soundTarget(key-kSoundValueLock0),lock=target<0?-1:diceValueLock(target);if(lock>=0)layerSet(lock,value);syncLayerUi(true);queueLayerUi();return true;}
+ if(diceValueLock(key)<0&&key>=kDiceValueLockDrive&&key<=kSoundValueLockEnabled15){syncLayerUi(true);queueLayerUi();return false;}
  if(reverseParameter(key,value))return true;
  if(key==kCymbalView){layerSet(kSoundRow,0);layerSet(kSampleBrowserOpen,0);syncLayerUi(true);queueLayerUi();return true;}
  if(key==kSampleBrowserOpen){syncLayerUi(true);queueLayerUi();return true;}
@@ -108,7 +111,7 @@ void rollLayers(int role,bool base=true){
  const auto&items=layerItems(role);if(items.empty())return;
  bool modified=false;int count=role<2?4:1;
  for(int layer=base?0:1;layer<count;++layer){if(!getBool(layerKey(role,layer,LOn))||getBool(layerKey(role,layer,LLock)))continue;
-  int key=layerKey(role,layer,LSample),old=getInt(key),position=int(random()%items.size());if(items.size()>1&&items[position]==old)position=(position+1)%items.size();layerSet(key,items[position]);modified|=items[position]!=old;
+  int key=layerKey(role,layer,LSample);if(!diceAllows(key))continue;int old=getInt(key),position=int(random()%items.size());if(items.size()>1&&items[position]==old)position=(position+1)%items.size();layerSet(key,items[position]);modified|=items[position]!=old;
   if(layer)layerMissing[role*3+layer-1].store(0);else missingSample[role].store(false);
  }
  if(modified)layerSet(kXKit,0);queueLayerUi();

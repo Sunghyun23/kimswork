@@ -1,0 +1,7 @@
+{
+  "version": "0.2.4",
+  "device": "MPC XL3.10.1.12",
+  "native_preset_popup": "rows visible incl Init/Clean and Drums/Pocket Press",
+  "selection": "Pocket Press succeeds: Drive18/Compress55/Punch76/Release140/Mix75",
+  "scope": "remote touch/list/parameter readback only; no source changes/redeployment; no new hardware audio/CPU certification"
+}

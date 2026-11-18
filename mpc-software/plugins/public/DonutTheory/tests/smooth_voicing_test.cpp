@@ -35,6 +35,6 @@ int main(){
  SmoothInput bad=in;bad.chords[0]={84,6,0,4};assert(!findSmoothVoicing(bad).valid);bad=in;bad.start=15;assert(!findSmoothVoicing(bad).valid);
  AtomicSmoothPlan shared;auto other=plan;other.input.count=16;other.after.fill(99);other.voice.fill(5);std::atomic<bool> done{false};
  std::thread writer([&]{for(int i=0;i<20000;++i)shared.publish(i%2?plan:other);done.store(true);});
- int accepted=0;do{SmoothPlan snapshot;if(shared.read(snapshot)){++accepted;assert(snapshot.input==plan.input?snapshot.after==plan.after&&snapshot.voice==plan.voice:snapshot.input==other.input&&snapshot.after==other.after&&snapshot.voice==other.voice);}}while(!done.load());writer.join();assert(accepted);
+ int accepted=0;do{SmoothPlan snapshot;if(shared.read(snapshot)){++accepted;assert(snapshot.input==plan.input?snapshot.after==plan.after&&snapshot.voice==plan.voice:snapshot.input==other.input&&snapshot.after==other.after&&snapshot.voice==other.voice);}}while(!done.load());writer.join();SmoothPlan committed;assert(shared.read(committed));assert(committed.input==plan.input&&committed.after==plan.after&&committed.voice==plan.voice);++accepted;assert(accepted);
  std::cout<<"PASS: exact loop optimum, E/E/E/E example42->0st, 400 bounded/idempotent progressions, safe register, allocation-free search and atomic publication\n";
 }

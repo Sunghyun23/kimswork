@@ -2,6 +2,10 @@
 import os,subprocess,sys
 from pathlib import Path
 P=Path(__file__).resolve().parents[1];SDK=P.parents[2]/'third_party/mpc-plugin-builder-sdk';env=dict(os.environ,MPC_PLUGIN_FOLDER=str(P));with_private='--with-private'in sys.argv
+for suffix,flags in [('',[]),('_ubsan',['-fsanitize=undefined','-fno-sanitize-recover=all'])]:
+ binary=P/'build'/('common_locks_test'+suffix)
+ subprocess.run(['clang++','-std=c++17','-O2',*flags,'-I'+str(SDK/'framework'),str(P/'tests/common_locks_test.cpp'),'-o',str(binary)],check=True)
+ subprocess.run([str(binary)],env=env,check=True)
 for flag,name in [([], 'engine_test'),(['-fsanitize=undefined'],'engine_test_ubsan')]:
  subprocess.run(['clang++','-std=c++17','-O2',*flag,'-I'+str(SDK/'framework'),str(P/'tests/engine_test.cpp'),'-o',str(P/'build'/name)],check=True)
  subprocess.run([str(P/'build'/name)],env=env,check=True)

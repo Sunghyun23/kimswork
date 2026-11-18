@@ -1,0 +1,59 @@
+{
+  "version": "1.13.14",
+  "status": "local candidate fixed, full regression and actual MPC native preset selection verified; installed on internal NVMe",
+  "publicVersion": "1.12.0; no release or site publication in this task",
+  "device": {
+    "model": "MPC XL",
+    "os": "3.10.1.12",
+    "drive": "/nvme",
+    "runtimeFilesMatched": 177,
+    "missing": 0,
+    "different": 0,
+    "extra": 0
+  },
+  "cause": {
+    "parameter": 219,
+    "id": "transposedelta",
+    "name": "Transpose Interval",
+    "requestedPlain": 0,
+    "observedPlain": 1.49012e-07,
+    "before": "89 unchanged render blocks caused 89 Automate and 89 UpdateDisplay callbacks",
+    "mechanism": "setFromEngine compared lossy plain values; conversion back to plain never equalled requested zero. Repeated host notification drains during UI reads interfered with the native preset list. Host menu internals were not inspected.",
+    "after": "all 66 programs remain notification-free across 89 settled unchanged render blocks each"
+  },
+  "fixes": [
+    "Skip engine writes if the desired plain value is already equivalent OR its stored normalized representation is unchanged. Keep fractional normalized host echoes for legacy/canonical choices.",
+    "effGetProgram is callback-free, including render-thread metadata reads.",
+    "effGetChunk emits no host callbacks and sanitizes transient commands in a serialized copy; no mutation or release of live touch/MIDI gestures."
+  ],
+  "automated": [
+    "native + ARM32 + ARM64 builds and SDK validator: 0 errors, 0 warnings",
+    "full engine, voicing, analog-filter, bridge and skin regressions including UBSan pass",
+    "SDK host:19PASS,0WARN,0FAIL",
+    "66 programs \u00d789 unchanged blocks:0 spurious notifications",
+    "callback-free repeated snapshots, identical bytes, live-state preservation and transient-free restore",
+    "exact fractional normalized legacy-choice echo regression"
+  ],
+  "hardware": [
+    "fresh Init opens MAIN; native PRESET displays factory names",
+    "native Bass/Pocket Anchor selection updates both header and sound values (Cutoff460Hz,Sub41.5%)",
+    "native index64 Keys/Dusty Sunday and65 Synth/Velvet Melt select and update actual values",
+    "native list remains visible after ROLL DICE; selecting another factory preset restores factory values",
+    "MAIN/CHORD tab transition checked remotely"
+  ],
+  "nativeCheckedRowNote": "After Dice, the host labels the currently checked row Random Sound; tapping that same checked row dismisses the host menu without sending a new program selection. Verified changing to a different factory entry instead. Explicit same-program dispatcher reload is covered by engine/bridge tests, not claimed as a native checked-row reload.",
+  "unchanged": [
+    "kim/Krql identity",
+    "353 parameter declarations and IDs",
+    "66 factory programs, names, order and recipes",
+    "artwork, layout and every Q-Link map",
+    "Groove Dice and Crate Press source/runtime"
+  ],
+  "otherPlugins": "Earlier actual MPC checks verified native list/selection for Groove Dice1.5.1 and Crate Press0.2.4. Crate evidence: design/device-0.2.4/native-preset-check/.",
+  "limits": [
+    "No new physical Q-Link or multi-touch certification",
+    "No new hardware audio capture or worst-case CPU certification",
+    "No new full MPC project save/reopen certification; native state round-trip and snapshot behavior tested locally"
+  ],
+  "diagnostics": "Temporary bridge mode switches, file logging and diagnostic skin removed from installed runtime; official SDK export matches every final runtime file."
+}

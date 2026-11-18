@@ -1,0 +1,1 @@
+Assertion failed: (callbacks==0&&"state snapshot must not refresh or automate host"), function main, file dt-snapshot-baseline-test.cpp, line 6.

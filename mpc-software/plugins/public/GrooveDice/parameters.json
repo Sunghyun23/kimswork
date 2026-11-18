@@ -7120,5 +7120,1035 @@
     ],
     "default": 1,
     "auto": true
+  },
+  {
+    "key": "DiceValueLockDrive",
+    "name": "Dice Lock Drive",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDust",
+    "name": "Dice Lock Dust",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockRoom",
+    "name": "Dice Lock Room",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDuck",
+    "name": "Dice Lock Duck",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLowCut",
+    "name": "Dice Lock Low Cut",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockModRate",
+    "name": "Dice Lock Mod Rate",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockModDepth",
+    "name": "Dice Lock Mod Depth",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockXSample0",
+    "name": "Dice Lock Expansion Sound 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLevel0",
+    "name": "Dice Lock Level 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockTune0",
+    "name": "Dice Lock Tune 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDecay0",
+    "name": "Dice Lock Decay 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockPan0",
+    "name": "Dice Lock Pan 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockChoke0",
+    "name": "Dice Lock Choke 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockXSample1",
+    "name": "Dice Lock Expansion Sound 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLevel1",
+    "name": "Dice Lock Level 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockTune1",
+    "name": "Dice Lock Tune 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDecay1",
+    "name": "Dice Lock Decay 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockPan1",
+    "name": "Dice Lock Pan 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockChoke1",
+    "name": "Dice Lock Choke 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockXSample2",
+    "name": "Dice Lock Expansion Sound 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLevel2",
+    "name": "Dice Lock Level 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockTune2",
+    "name": "Dice Lock Tune 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDecay2",
+    "name": "Dice Lock Decay 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockPan2",
+    "name": "Dice Lock Pan 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockChoke2",
+    "name": "Dice Lock Choke 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockXSample3",
+    "name": "Dice Lock Expansion Sound 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLevel3",
+    "name": "Dice Lock Level 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockTune3",
+    "name": "Dice Lock Tune 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDecay3",
+    "name": "Dice Lock Decay 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockPan3",
+    "name": "Dice Lock Pan 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockChoke3",
+    "name": "Dice Lock Choke 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockXSample4",
+    "name": "Dice Lock Expansion Sound 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLevel4",
+    "name": "Dice Lock Level 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockTune4",
+    "name": "Dice Lock Tune 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDecay4",
+    "name": "Dice Lock Decay 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockPan4",
+    "name": "Dice Lock Pan 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockChoke4",
+    "name": "Dice Lock Choke 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockXSample5",
+    "name": "Dice Lock Expansion Sound 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLevel5",
+    "name": "Dice Lock Level 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockTune5",
+    "name": "Dice Lock Tune 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDecay5",
+    "name": "Dice Lock Decay 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockPan5",
+    "name": "Dice Lock Pan 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockChoke5",
+    "name": "Dice Lock Choke 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockXSample6",
+    "name": "Dice Lock Expansion Sound 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLevel6",
+    "name": "Dice Lock Level 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockTune6",
+    "name": "Dice Lock Tune 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDecay6",
+    "name": "Dice Lock Decay 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockPan6",
+    "name": "Dice Lock Pan 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockChoke6",
+    "name": "Dice Lock Choke 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockXSample7",
+    "name": "Dice Lock Expansion Sound 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockLevel7",
+    "name": "Dice Lock Level 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockTune7",
+    "name": "Dice Lock Tune 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockDecay7",
+    "name": "Dice Lock Decay 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockPan7",
+    "name": "Dice Lock Pan 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockChoke7",
+    "name": "Dice Lock Choke 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockL0Sample",
+    "name": "Dice Lock Kick L2 Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockL1Sample",
+    "name": "Dice Lock Kick L3 Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockL2Sample",
+    "name": "Dice Lock Kick L4 Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockL3Sample",
+    "name": "Dice Lock Snare L2 Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockL4Sample",
+    "name": "Dice Lock Snare L3 Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockL5Sample",
+    "name": "Dice Lock Snare L4 Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockCym0Sample",
+    "name": "Dice Lock Ride Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockCym1Sample",
+    "name": "Dice Lock Crash Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "DiceValueLockCym2Sample",
+    "name": "Dice Lock Bell Sample",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "FillDiceLock0",
+    "name": "Fill A Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "FillDiceLock1",
+    "name": "Fill B Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "FillDiceLock2",
+    "name": "Fill C Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "FillDiceLock3",
+    "name": "Fill D Lock",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock0",
+    "name": "Sound Value Lock 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock1",
+    "name": "Sound Value Lock 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock2",
+    "name": "Sound Value Lock 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock3",
+    "name": "Sound Value Lock 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock4",
+    "name": "Sound Value Lock 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock5",
+    "name": "Sound Value Lock 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock6",
+    "name": "Sound Value Lock 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock7",
+    "name": "Sound Value Lock 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock8",
+    "name": "Sound Value Lock 9",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock9",
+    "name": "Sound Value Lock 10",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock10",
+    "name": "Sound Value Lock 11",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock11",
+    "name": "Sound Value Lock 12",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock12",
+    "name": "Sound Value Lock 13",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock13",
+    "name": "Sound Value Lock 14",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock14",
+    "name": "Sound Value Lock 15",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLock15",
+    "name": "Sound Value Lock 16",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled0",
+    "name": "Sound Lock Available 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled1",
+    "name": "Sound Lock Available 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled2",
+    "name": "Sound Lock Available 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled3",
+    "name": "Sound Lock Available 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled4",
+    "name": "Sound Lock Available 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled5",
+    "name": "Sound Lock Available 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled6",
+    "name": "Sound Lock Available 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled7",
+    "name": "Sound Lock Available 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled8",
+    "name": "Sound Lock Available 9",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled9",
+    "name": "Sound Lock Available 10",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled10",
+    "name": "Sound Lock Available 11",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled11",
+    "name": "Sound Lock Available 12",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled12",
+    "name": "Sound Lock Available 13",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled13",
+    "name": "Sound Lock Available 14",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled14",
+    "name": "Sound Lock Available 15",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SoundValueLockEnabled15",
+    "name": "Sound Lock Available 16",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "UnlockDice",
+    "name": "Unlock All Dice",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "RollFill",
+    "name": "Roll Fill",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "RollFx",
+    "name": "Roll FX",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
   }
 ]

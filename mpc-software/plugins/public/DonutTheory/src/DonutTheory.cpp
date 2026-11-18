@@ -41,7 +41,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11200;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11314;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -72,18 +72,21 @@ public:
         applyFactorySound(index);
         stateLoadPending_.store(true,std::memory_order_release);
     }
+    std::vector<uint8_t> commandState_;
     const std::vector<uint8_t>& internalSaveState(){
-        // Screen auditions/commands/playing lamps are gestures, not musical
-        // state. End auditions via atomic gates; never touch audio-owned voices
-        // from the saving thread. Physical MIDI ownership stays intact.
-        for(int slot=0;slot<16;++slot)setFromEngine(kChordTouches[slot],0);
-        for(int page=0;page<4;++page)setFromEngine(kChordPlayingPage1+page,0);
-        for(int command=0;command<4;++command){setFromEngine(kSoundPrev+command,0);setFromEngine(kSlotsMinus+command,0);}
-        setFromEngine(kTouchStop,0);setFromEngine(kPadLearn,0);
-        // Canonicalise gesture normalised values too, including fractional host writes.
-        set(kTransposeOpen,0);set(kTransposeApply,0);
-        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);set(kRandomize,0);set(kFactoryReload,0);
-        return mpc::Plugin::internalSaveState();
+        // Hosts snapshot state while building their preset menu. A snapshot is
+        // read-only: sanitize transient commands in the copy, never live gates.
+        commandState_=mpc::Plugin::internalSaveState();
+        size_t pos=12;
+        for(int index=0;index<kNumParams;++index){
+            const size_t idSize=commandState_[pos++];pos+=idSize;
+            bool transient=index==kTouchStop||index==kPadLearn||index==kTransposeOpen||index==kTransposeApply||index==kSmoothOpen||index==kSmoothApply||index==kSmoothPreview||index==kRandomize||index==kFactoryReload||index==kUnlockDice;
+            for(int slot=0;slot<16;++slot)transient|=index==kChordTouches[slot];
+            transient|=(index>=kChordPlayingPage1&&index<kChordPlayingPage1+4)||(index>=kSoundPrev&&index<kSoundPrev+4)||(index>=kSlotsMinus&&index<kSlotsMinus+4);
+            if(transient)std::fill(commandState_.begin()+pos,commandState_.begin()+pos+8,0);
+            pos+=8;
+        }
+        return commandState_;
     }
     bool internalLoadState(const uint8_t* data,size_t size) {
         stateLoading_.store(true,std::memory_order_release);
@@ -97,11 +100,12 @@ public:
         for(int index=91;index<kNumParams;++index)if(count<=uint32_t(index))set(index,param(index).def);
         for(int slot=0;slot<16;++slot)if(count<=uint32_t(kHarmonyType1+slot))set(kHarmonyType1+slot,get(kChordLegacyQualities[slot]));
         for(int bank=0;bank<4;++bank)if(count<=uint32_t(kHarmonyPreset1+bank))set(kHarmonyPreset1+bank,get(kLegacyBankProgressions[bank]));
+        if(count>kDiceLockOsc&&count<=298){for(size_t i=0;i<std::size(kDiceValueLocks);++i){int section=diceSection(kDiceValueOwners[i]);if(section>=0&&count>uint32_t(kDiceLockOsc+section))set(kDiceValueLocks[i],get(kDiceLockOsc+section));}}
         if(count<=kSoundCurrent)set(kSoundCurrent,get(kSoundPreset));
         legacyReplaySamples_.store(count>242?int(sr_*.5f):0,std::memory_order_release);
         if(count<=77)set(kPadMap,0); // Existing projects retain Trigger Base routing.
         set(kTransposeOpen,0);set(kTransposeApply,0);
-        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);set(kRandomize,0);set(kFactoryReload,0);
+        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);set(kRandomize,0);set(kFactoryReload,0);set(kUnlockDice,0);
         stateLoading_.store(false,std::memory_order_release);return true;
     }
     void parameterChanged(int index,float value) override {
@@ -176,7 +180,7 @@ public:
         reset();
     }
     void reset() override {
-        setFromEngine(kRandomize,0);setFromEngine(kFactoryReload,0);soundReload_.store(false);
+        setFromEngine(kRandomize,0);setFromEngine(kFactoryReload,0);setFromEngine(kUnlockDice,0);soundReload_.store(false);
         setFromEngine(kTransposeOpen,0);setFromEngine(kTransposeApply,0);
         clearNotes();for(int i=0;i<N;++i){auto& v=voices_[i];const float phase=std::fmod(i*.61803398875f,1.f);v.a.resetPhase(phase);v.sineA.resetPhase(phase);v.b.resetPhase(std::fmod(phase+.23f,1.f));v.sineB.resetPhase(std::fmod(phase+.23f,1.f));v.sub.resetPhase(phase);v.fm.resetPhase(phase);}
         for(int i=0;i<16;++i)for(int j=0;j<4;++j)lastTouchChord_[i][j]=getInt(chordField(i,j));lastSlotCount_=activeSlots();lastMainPage_=getInt(kMainChordPage);lastLowCut_=-1;cachePadMapping();for(auto& d:delay_)d.reset();chorus_.reset();
@@ -201,7 +205,8 @@ public:
         for(int i=0;i<4;++i){if(getInt(kSoundPrev+i)){const int target=i<2?kSoundCurrent:kBankProgressions[getInt(kMainChordPage)];const int count=i<2?kFactoryProgramCount:kProgressionCount;setFromEngine(target,float((getInt(target)+(i%2?1:-1)+count)%count));setFromEngine(kSoundPrev+i,0);arrows_[i]=0;}}
         if(getBool(kFactoryReload)){if(replay==0)soundReload_.store(true);setFromEngine(kFactoryReload,0);}
         if(soundReload_.exchange(false)||getInt(kSoundCurrent)!=lastPatch_){lastPatch_=getInt(kSoundCurrent);applyFactorySound(lastPatch_);lastFX_=0;lastPair_=getInt(kOscPair);clearNotes();}
-        if(getBool(kRandomize)){if(replay==0){randomizeSound();lastPair_=getInt(kOscPair);clearNotes();}setFromEngine(kRandomize,0);}
+        if(getBool(kUnlockDice)){for(int key:kDiceValueLocks)setFromEngine(key,0);for(int i=kDiceLockOsc;i<=kDiceLockFx;++i)setFromEngine(i,0);setFromEngine(kUnlockDice,0);}
+        if(getBool(kRandomize)){if(replay==0){if(randomizeSound()){lastPair_=getInt(kOscPair);clearNotes();}}setFromEngine(kRandomize,0);}
         if(getInt(kOscPair)!=lastPair_){lastPair_=getInt(kOscPair);setFromEngine(kWave1,float(lastPair_/4));setFromEngine(kWave2,float(lastPair_%4));}
         else {const int pair=getInt(kWave1)*4+getInt(kWave2);if(pair!=lastPair_){lastPair_=pair;setFromEngine(kOscPair,float(pair));}}
         for(int bank=0;bank<4;++bank)if(getInt(kBankProgressions[bank])!=lastProgressions_[bank]){
@@ -510,8 +515,13 @@ private:
     std::atomic<std::uintptr_t> proxySyncThread_{0};std::atomic<int> proxySyncIndex_{-1};
     std::atomic_flag flushing_=ATOMIC_FLAG_INIT;
     void setFromEngine(int index,float value) {
-        if(get(index)==value)return;
-        set(index,value);changed_[index].store(true,std::memory_order_release);
+        // Compare the representation actually stored by the SDK. Plain values
+        // need not round-trip exactly (Transpose Interval 0 is a known case).
+        const float normalised=param(index).toNormalised(value);
+        // Preserve an equivalent discrete value written with a fractional host
+        // normalised value; legacy choice aliases must not quantise its echo.
+        if(get(index)==value||getNormalised(index)==normalised)return;
+        setNormalised(index,normalised);changed_[index].store(true,std::memory_order_release);
         displayPending_.store(true,std::memory_order_release);
     }
     WowFlutter wowFlutter_;float tapePitch_=0;
@@ -521,17 +531,30 @@ private:
     uint32_t randomSoundBits(){auto x=randomSoundState_;x^=x<<13;x^=x>>17;x^=x<<5;return randomSoundState_=x;}
     float randomSoundFloat(float lo,float hi){return lo+(hi-lo)*float(randomSoundBits()>>8)*(1.f/16777216.f);}
     int randomSoundChoice(int count){return int(randomSoundBits()%unsigned(count));}
-    void randomizeSound(){
+    static int diceSection(int key){
+        switch(key){
+        case kWave1:case kWave2:case kOscPair:case kMix:case kDetune:case kOctave:case kPulse:case kSub:case kNoise:case kFM:case kTone:case kBody:case kBodyTone:case kDrift:return 0;
+        case kFilter:case kCutoff:case kResonance:case kEnv:case kKeyTrack:case kFiltAttack:case kFiltDecay:case kFiltSustain:case kFiltRelease:return 1;
+        case kAmpAttack:case kAmpDecay:case kAmpSustain:case kAmpRelease:case kExpression:case kVoiceMode:case kGlide:case kGlideLegato:return 2;
+        case kShape:case kTarget:case kDepth:case kRate:case kSync:case kDivision:case kLfoRateControl:case kLfo2Shape:case kLfo2Target:case kLfo2Depth:case kLfo2Rate:case kLfo2Sync:case kLfo2Division:case kLfo2RateControl:case kModMode:case kModShape:case kTremDepth:case kTremRate:case kModSync:case kModDivision:case kModRateControl:case kPan:case kMotion:case kVibrato:return 3;
+        case kDriveType:case kDrive:case kDriveMix:case kChorus:case kDelay:case kFeedback:case kDelayDivision:case kSpace:case kFXPreset:case kLowCut:case kOutputTrim:return 4;
+        default:return -1;
+        }
+    }
+    bool randomizeSound(){
+        bool allLocked=true;for(int key:kDiceValueLocks)allLocked&=getBool(key);if(allLocked)return false;
+        // Gate writes before they reach parameter callbacks/host notification queues.
+        auto write=[&](int key,float value){const int lock=diceValueLock(key);if(lock>=0&&!getBool(lock))setFromEngine(key,value);};
         // Correlated ranges, not independent full-scale noise: five playable families.
         const int family=randomSoundChoice(5);const bool bass=family==0,keys=family==1,pad=family==4;
-        auto f=[&](int key,float lo,float hi){setFromEngine(key,randomSoundFloat(lo,hi));};
+        auto f=[&](int key,float lo,float hi){write(key,randomSoundFloat(lo,hi));};
         int a=randomSoundChoice(4),b=randomSoundChoice(4);if(bass&&a==0&&b==0)b=1;
-        setFromEngine(kWave1,float(a));setFromEngine(kWave2,float(b));setFromEngine(kOscPair,float(a*4+b));
+        write(kWave1,float(a));write(kWave2,float(b));write(kOscPair,float(a*4+b));
         f(kMix,15,70);f(kDetune,-8,8);f(kDrift,0,8);f(kBodyTone,0,bass?35:42);f(kSub,bass?20:0,bass?65:18);
-        setFromEngine(kOctave,randomSoundChoice(5)==0?-1.f:0.f);f(kPulse,28,72);f(kNoise,0,keys?0.5f:1.2f);f(kFM,0,a==0&&!bass?20:0);
-        f(kTone,12,45);setFromEngine(kBody,0);setFromEngine(kMotion,0);setFromEngine(kSpace,0);f(kExpression,50,78);f(kVibrato,0,2);
-        setFromEngine(kVoiceMode,bass?0.f:family==3?1.f:2.f);f(kGlide,0,bass?100:family==3?120:0);setFromEngine(kGlideLegato,1);
-        const int filter=bass||randomSoundChoice(10)<8?0:1+randomSoundChoice(3);setFromEngine(kFilter,float(filter));
+        write(kOctave,randomSoundChoice(5)==0?-1.f:0.f);f(kPulse,28,72);f(kNoise,0,keys?0.5f:1.2f);f(kFM,0,a==0&&!bass?20:0);
+        f(kTone,12,45);write(kBody,0);write(kMotion,0);write(kSpace,0);f(kExpression,50,78);f(kVibrato,0,2);
+        write(kVoiceMode,bass?0.f:family==3?1.f:2.f);f(kGlide,0,bass?100:family==3?120:0);write(kGlideLegato,1);
+        const int filter=bass||randomSoundChoice(10)<8?0:1+randomSoundChoice(3);write(kFilter,float(filter));
         if(filter==2)f(kCutoff,180,850);else f(kCutoff,bass?300:650,bass?1800:pad?2800:5000);
         f(kResonance,3,32);f(kEnv,bass?10:5,keys?40:30);f(kKeyTrack,20,65);
         const float attacks[5][2]={{2,9},{3,25},{5,90},{3,22},{120,1200}};
@@ -541,17 +564,17 @@ private:
         f(kAmpAttack,attacks[family][0],attacks[family][1]);f(kAmpDecay,decays[family][0],decays[family][1]);f(kAmpSustain,sustains[family][0],sustains[family][1]);f(kAmpRelease,releases[family][0],releases[family][1]);
         f(kFiltAttack,2,pad?500:25);f(kFiltDecay,160,keys?1600:950);f(kFiltSustain,10,55);f(kFiltRelease,100,pad?1400:650);
         const int target1=randomSoundChoice(10)<7?1:randomSoundChoice(4),target2=randomSoundChoice(10)<5?4:randomSoundChoice(5);
-        setFromEngine(kShape,float(randomSoundChoice(4)));setFromEngine(kTarget,float(target1));f(kDepth,.5f,target1==0?2.5f:12);
-        setFromEngine(kLfo2Shape,float(randomSoundChoice(5)));setFromEngine(kLfo2Target,float(target2));f(kLfo2Depth,.5f,target2==0?2.f:10);
-        setFromEngine(kSync,1);setFromEngine(kLfo2Sync,1);setFromEngine(kModSync,1);
-        setFromEngine(kDivision,float(randomSoundChoice(5)));setFromEngine(kLfo2Division,float(randomSoundChoice(5)));setFromEngine(kModDivision,float(randomSoundChoice(5)));
+        write(kShape,float(randomSoundChoice(4)));write(kTarget,float(target1));f(kDepth,.5f,target1==0?2.5f:12);
+        write(kLfo2Shape,float(randomSoundChoice(5)));write(kLfo2Target,float(target2));f(kLfo2Depth,.5f,target2==0?2.f:10);
+        write(kSync,1);write(kLfo2Sync,1);write(kModSync,1);
+        write(kDivision,float(randomSoundChoice(5)));write(kLfo2Division,float(randomSoundChoice(5)));write(kModDivision,float(randomSoundChoice(5)));
         f(kRate,.1f,2);f(kLfo2Rate,.1f,2);f(kTremRate,.2f,4);
-        const int pan=bass?0:randomSoundChoice(2);setFromEngine(kModMode,float(pan));setFromEngine(kModShape,float(randomSoundChoice(4)));
-        f(kTremDepth,bass?3:pan?20:5,bass?12:pan?80:35);setFromEngine(kPan,0);
-        int drive=randomSoundChoice(10)<8?0:randomSoundChoice(3);setFromEngine(kDriveType,float(drive));f(kDrive,0,drive==2?7:20);f(kDriveMix,25,65);
-        f(kChorus,0,bass?3:22);f(kDelay,0,bass?2:14);f(kFeedback,10,28);setFromEngine(kDelayDivision,float(randomSoundChoice(4)));setFromEngine(kFXPreset,0);
+        const int pan=bass?0:randomSoundChoice(2);write(kModMode,float(pan));write(kModShape,float(randomSoundChoice(4)));
+        f(kTremDepth,bass?3:pan?20:5,bass?12:pan?80:35);write(kPan,0);
+        int drive=randomSoundChoice(10)<8?0:randomSoundChoice(3);write(kDriveType,float(drive));f(kDrive,0,drive==2?7:20);f(kDriveMix,25,65);
+        f(kChorus,0,bass?3:22);f(kDelay,0,bass?2:14);f(kFeedback,10,28);write(kDelayDivision,float(randomSoundChoice(4)));write(kFXPreset,0);
         f(kLowCut,bass?18:keys?65:85,bass?26:keys?110:160);f(kOutputTrim,3,6);
-        setFromEngine(kRandomized,1);
+        setFromEngine(kRandomized,1);return true;
     }
     void applyFactorySound(int index){
         setFromEngine(kRandomized,0);
@@ -709,13 +732,17 @@ static VstIntPtr donutDispatch(AEffect* e,VstInt32 op,VstInt32 index,VstIntPtr v
     if(op==effOpen){const auto result=mpc::detail::dispatcher(e,op,index,value,ptr,opt);p->requestHostIdle();return result;}
     if(op==effSetChunk)return p->internalLoadState(static_cast<const uint8_t*>(ptr),size_t(value))?1:0;
     if(op==effSetProgram){p->setProgram(int(value));p->flushHostUpdates();return 0;}
-    if(op==effGetProgram){p->flushHostUpdates();return p->currentProgram();}
+    // Metadata reads must not re-enter the host or drain UI notifications.
+    // The host can query the current program while constructing a preset menu,
+    // including from threads that render this instance. Idle/value reads drain changes.
+    if(op==effGetProgram)return p->currentProgram();
     if(op==effGetProgramName){mpc::copyString(static_cast<char*>(ptr),kVstMaxProgNameLen+1,p->getBool(kRandomized)?"Random Sound":p->programName(p->currentProgram()));return 0;}
     if(op==effIdle_Deprecated||op==effEditIdle){p->flushHostUpdates();return 1;}
     if(op==effGetChunk){
+        if(!ptr)return 0;
         const auto& state=p->internalSaveState();
-        if(ptr)*static_cast<void**>(ptr)=const_cast<uint8_t*>(state.data());
-        p->flushHostUpdates();return VstIntPtr(state.size());
+        *static_cast<void**>(ptr)=const_cast<uint8_t*>(state.data());
+        return VstIntPtr(state.size());
     }
     if(op==effGetParamDisplay||op==effGetParamName)p->flushHostUpdates();
     return mpc::detail::dispatcher(e,op,index,value,ptr,opt);

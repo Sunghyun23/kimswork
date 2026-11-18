@@ -45,3 +45,60 @@
 2026-11-18: User explicitly authorized official Donut Theory1.12.0 release and website publication. Earlier candidate-only statements are historical. ENV/PLAY and Release Pitch Drop are the current specification; preserve recorded physical/audio/CPU limits. Final publication details go in design/device-1.12.0/publication.json.
 
 - Donut Theory1.12.0 publication complete: stable Release449932324, source949dcfbd, ZIP/SHA256 integrity verified anonymously, Pages44301107512success,21public/77responsive checks,7actual latest MPC screenshots. InternalNVMe173runtime hashes match. Earlier candidate/public1.10.1 statements are historical. Preserve recorded physical/audio/CPU limits; Groove Dice/Crate Press unchanged. See design/device-1.12.0/publication.json.
+
+## 1.13.0 local candidate — section Dice locks
+
+Five persistent nonautomatable locks append at293–297 (298total); first293definitions,66programs and every existing Q-Link map remain unchanged. Default is Unlocked; old293states migrate to all unlocked. Locks affect ROLL DICE only: manual controls and explicit factory selection remain available. Factory selection preserves lock preferences. If all five are locked Dice is a no-op, including held voices and the Random Sound status. Partial rolls keep the existing note-clear behavior.
+
+| Lock | Protected settings | Visible control |
+|---|---|---|
+| OSC | Waves/pair/mix/detune/octave/pulse/sub/noise/FM/tone/body/drift | MAIN A title |
+| FILTER | Type/cutoff/resonance/env amount/key track/filter ADSR | MAIN B and ENV B titles |
+| AMP | Amp ADSR, Expression, Voice Mode, Glide and Glide Mode | ENV A, PLAY A and PLAY D titles |
+| MOD | Both LFOs (shape/target/rate/depth/sync/division), shared Tremolo/Auto Pan, static Pan, Motion/Vibrato | MAIN C title |
+| FX | Drive/type/mix, Chorus/Delay/Feedback/Division/Space, Low-cut, Sound Trim | MAIN D title |
+
+Lock symbols use Groove Dice's dark padlock/cream-open/orange-closed convention, with24px art inside44px touch targets at title rails. Targets end before adjacent selectors; no controls or Q-Link slots are removed. The MAIN groups mix some DSP families: Sub/Body are protected by OSC even though they appear in B; Glide by AMP even though it appears in D; motion by MOD even though it appears in D. Chord/Key/pad/input/Strum/ChordGlide/PitchDrop/master controls remain outside Dice. All three Sync switches are forced on only when MOD is unlocked; locking MOD preserves existing Sync states. Writes are filtered before parameter callbacks/host-notification queues rather than restored afterward. Modal roots remain last with hideQLinkBounds.
+
+Native/ARM/SDK and full engine/UBSan/bridge/skin pass, including32lock combinations×8rolls, save/load, all-locked held notes, manual/preset independence and old293migration. Physical/device checks are recorded separately. Public stable remains1.12.0 until a new release is requested. Groove Dice and Crate Press are unchanged.
+
+### Dice-lock placement refinement (local1.13.0)
+
+Latest user correction moves glyph-only locks to a leading column before each section name, away from panel corners and header collage. ENV/PLAY section titles align left with MAIN. Keep44px hit targets; MAIN lower menus shift4px and lower knobs/Sync/dividers3px to leave the targets clear of neighbouring values/menus. Panel and Q-Link bounds, all Q-Link JSON and engine/parameter contracts remain unchanged. Native/ARM/SDK, UI overlap regression and host19checks pass. Latest placement captures and device read-back live in design/device-1.13.0/leading-locks/. Older captures in the parent folder show the rejected right-corner placement. No public release/site update.
+
+
+## 2026-11-18 공통 Dice 잠금 — 최신 구현 후보
+
+이 결정은 과거 Donut Theory의 5개 헤더 잠금 후보를 대체한다. Donut Theory1.13.0 / Groove Dice1.5.0 로컬 후보이며, 별도 공개 승인 전 정식 버전은 각각1.12.0 /1.4.0이다.
+
+- Dice가 변경하는 값에 개별 자물쇠를 제공한다. 같은 실제 값을 표시하는 페이지/릴레이는 잠금을 공유한다. 수동 터치·Q-Link·명시적 공장 프리셋 선택은 허용한다.
+- Donut MAIN16개는 각 노브 왼쪽 위에44px 터치 잠금을 둔다. 다른 페이지의 실제 랜덤 대상도 잠근다. OSC Pair/Wave1/Wave2와 각 LFO의 Rate/Sync/Division은 각각 하나의 잠금을 공유한다. ENV와 PLAY의 Amp Release도 공유한다.
+- Groove Dice는 기존 MAIN16개 잠금을 유지하며 SOUND는 실제 역할·레이어·페이지에 따라 잠금 대상을 연결한다. FX의 랜덤 대상과 필인 A–D의 실제 데이터 보호도 제공한다. 랜덤화하지 않는 사운드 파라미터에는 의미 없는 잠금을 추가하지 않는다.
+- 기존 킷·패턴·파트·레이어 잠금은 개별 잠금보다 우선한다. UNLOCK ALL은 전체 페이지의 개별 잠금과 상위 보호를 해제하고, Dice 실행·음색/샘플/노트 변경은 하지 않는다.
+- master/MIDI/routing 및 항상 보존하는 Donut 코드·키·패드·Pitch Drop에는 Dice 잠금을 만들지 않는다. Q-Link 할당은 바꾸지 않는다. 원래 미술과 글꼴을 보존하며 Crate Press는 변경하지 않는다.
+- Donut first293 / Groove first676 파라미터 선언은 유지한다. 새 파라미터는 append하며 총353 /777개다. 공개 ZIP에는 개인 확장팩을 넣지 않는다.
+- 자동 검사와 실제 MPC 터치/화면 검증은 분리해서 기록한다. 물리 Q-Link 회전·오디오·최악 CPU는 새 검증 없이 완료로 주장하지 않는다.
+
+
+### 2026-11-19 native PRESET investigation / local1.13.3
+Donut native popup is blank in Random Sound and fresh Init. Groove Dice1.5.1 and Crate Press0.2.4 native list/selection work on the same MPC XL. Slash-label replacement alone was tested and did not fix Donut; original names restored. A separate confirmed bridge defect: effGetProgram drained host notifications, causing UI callbacks on a render-thread metadata read. New regression fails baseline and passes after making effGetProgram side-effect-free. All353IDs/66program indices/recipes and UI/Q-Link maps remain. Final1.13.3native/ARM/SDK/full regression pass; temporary file logging is removed. Native-popup causality/hardware completion is NOT confirmed: device became unreachable at192.168.0.56 before final install. Installed version at disconnect was temporary1.13.2probe. Restore/install final1.13.3upon reconnect, then continue controlled API/skin comparison until native list and selection actually work. Do not report this candidate as the confirmed native-popup fix. See DonutTheory/design/device-1.13.3/native-preset-fix/verification.json and CratePress/design/device-0.2.4/native-preset-check/. Public releases unchanged.
+
+
+### 2026-11-19 reconnect investigation continuation
+Reconnected MPC XL: original full-art temporary1.13.4 again showed a blank native picker. Actual device program trace confirms all66 indexed names/count are valid (value=-1). An unmodified SDK dispatcher/value-reader comparison1.13.5 displayed the native list; original bridge with notification flush disabled1.13.6 remained blank. Removing only the early NeedIdle request1.13.8 also remained blank. Runtime idle-routing comparison1.13.7 gave a visible list but multiple writes advanced the mode, so this is a lead, not exact cause proof. Network/Remote/SSH all dropped again while loading a fresh QA project under1.13.9, before the plugin was opened. Installed1.13.9 is a TEMPORARY mode-comparison build; replace it before final delivery. Scratch1.13.10 tests only idle return0 and has no QA logging/controls; built, NOT installed/tested. Product source remains safe local1.13.3 (pure program metadata reads), NOT a confirmed native-list fix. No release/site publication. See design/device-1.13.3/native-preset-fix/reconnect-investigation.json. Crate Press0.2.4 and Groove Dice1.5.1 native preset list/actual selection were verified working; no source fix needed for their native picker.
+
+
+## Latest local candidate 1.13.14 — native PRESET fixed (2026-11-19)
+
+This supersedes the unresolved1.13.3 investigation and all temporary1.13.4–1.13.13 probes. Public stable remains1.12.0; no Release/website publication was performed in this task. The installed internal-NVMe candidate retains the approved54shared Dice-value locks/353parameters,66programs and original UI/Q-Link maps.
+
+The exact repeating-notification defect was in `setFromEngine`: Transpose Interval219 requested plain0, but SDK round-trip returned approximately1.49012e-7. Comparing only plain values emitted an engine update on every block;89idle render blocks produced89Automate and89UpdateDisplay calls. Those updates drained during host UI queries and prevented the native PRESET list from remaining visible. Compare both semantic plain equivalence and the stored normalized representation; do not quantize fractional normalized legacy-choice echoes. An additional query-side-effect fix makes effGetProgram pure and effGetChunk a callback-free snapshot. Serialize a sanitized copy of transient gates/commands; never release live touches or consume commands while saving state.
+
+Native/ARM32/ARM64 and SDK validation pass. Full engine/voicing/bridge/skin+UBSan passes; SDKhost19PASS/0WARN/0FAIL. All66programs now emit zero notifications during89settled unchanged render blocks each. Regression tests also cover exact legacy normalized echoes, live-state-preserving snapshots and transient-free restoration.
+
+Actual MPC XL/3.10.1.12 verification: native list from fresh Init, Bass/Pocket Anchor with changed values, indices64/65Dusty Sunday/Velvet Melt, Dice→native list→different factory selection, MAIN/CHORD transition. Official SDK export matches all177runtimefiles on internal `/nvme`, with no extra diagnostic files. The native host treats its currently checked Random Sound row as the current custom state; tapping that checked row does not send a fresh program selection. Do not claim native same-checked-row factory reload. Local explicit factory selection/dispatcher same-program reload remains tested.
+
+Groove Dice1.5.1 and Crate Press0.2.4 native lists/selection were verified working; neither needed a source change. Physical encoders/multitouch, new hardware audio/worst CPU and full MPC project save/reopen are not newly certified. Evidence: `mpc-software/plugins/public/DonutTheory/design/device-1.13.14/native-preset-fix/verification.json`.
+
+
+2026-11-19: User authorized publishing all current fixes and updating the website: Donut Theory1.13.14 and Groove Dice1.5.1; Crate Press0.2.4 is already current and unchanged. Prior candidate-only statements are historical. User separately requested installing all three on an SD card for another device; SDK currently sees only internal nvme and removable SSD, so card identity/insertion is pending. Do not silently install to SSD or remove the internal copies until the card destination is confirmed and verified. Personal expansions must remain excluded from public packages.

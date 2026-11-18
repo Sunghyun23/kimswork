@@ -1,10 +1,10 @@
 # Donut Theory — User Manual
 
-**Version 1.12.0 · kim · MPC standalone · UID Krql**
+**Version 1.13.14 · kim · MPC standalone · UID Krql**
 
 A warm polyphonic instrument for bass, keys, leads, pads and chord playing. Its original Moog-inspired engine combines a nonlinear oscillator mixer, a four-stage ladder low-pass and rounded VCA. It is an inspired synthesis design, not an exact recreation of a named instrument or artist's recordings.
 
-The current reference device is **MPC XL / MPC OS 3.10.1.12**, installed on internal NVMe. Build, DSP, state and remote UI checks are described in the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.12.0). Complete physical Q-Link, simultaneous finger multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.
+The current reference device is **MPC XL / MPC OS 3.10.1.12**, installed on internal NVMe. Build, DSP, state and remote UI checks are described in the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.13.14). Complete physical Q-Link, simultaneous finger multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.
 
 ## First session
 
@@ -262,6 +262,22 @@ The engine has **16 audio voices**, not sixteen complete chords of unlimited siz
 
 **Drift is not Detune.** Detune creates a steady offset between oscillators. Drift moves pitch over time for worn-tape instability, with a fine low-end taper for subtle settings. Vibrato is another distinct effect: regular periodic pitch movement. Motion, on MOD, adds its own slow movement and chorus contribution.
 
+
+## 1.13.0 local candidate — section Dice locks
+
+Five persistent nonautomatable locks append at293–297 (298total); first293definitions,66programs and every existing Q-Link map remain unchanged. Default is Unlocked; old293states migrate to all unlocked. Locks affect ROLL DICE only: manual controls and explicit factory selection remain available. Factory selection preserves lock preferences. If all five are locked Dice is a no-op, including held voices and the Random Sound status. Partial rolls keep the existing note-clear behavior.
+
+| Lock | Protected settings | Visible control |
+|---|---|---|
+| OSC | Waves/pair/mix/detune/octave/pulse/sub/noise/FM/tone/body/drift | MAIN A title |
+| FILTER | Type/cutoff/resonance/env amount/key track/filter ADSR | MAIN B and ENV B titles |
+| AMP | Amp ADSR, Expression, Voice Mode, Glide and Glide Mode | ENV A, PLAY A and PLAY D titles |
+| MOD | Both LFOs (shape/target/rate/depth/sync/division), shared Tremolo/Auto Pan, static Pan, Motion/Vibrato | MAIN C title |
+| FX | Drive/type/mix, Chorus/Delay/Feedback/Division/Space, Low-cut, Sound Trim | MAIN D title |
+
+Lock symbols use Groove Dice's dark padlock/cream-open/orange-closed convention, with24px art inside44px touch targets at title rails. Targets end before adjacent selectors; no controls or Q-Link slots are removed. The MAIN groups mix some DSP families: Sub/Body are protected by OSC even though they appear in B; Glide by AMP even though it appears in D; motion by MOD even though it appears in D. Chord/Key/pad/input/Strum/ChordGlide/PitchDrop/master controls remain outside Dice. All three Sync switches are forced on only when MOD is unlocked; locking MOD preserves existing Sync states. Writes are filtered before parameter callbacks/host-notification queues rather than restored afterward. Modal roots remain last with hideQLinkBounds.
+
+Native/ARM/SDK and full engine/UBSan/bridge/skin pass, including32lock combinations×8rolls, save/load, all-locked held notes, manual/preset independence and old293migration. Physical/device checks are recorded separately. Public stable remains1.12.0 until a new release is requested. Groove Dice and Crate Press are unchanged.
 ## ENV / PLAY and Release Pitch Drop
 
 ENV places both envelopes together: A controls Amp Attack/Decay/Sustain/Release; B controls Filter Attack/Decay/Sustain/Release; C controls Filter Cutoff/Resonance/Env Amount/Key Track. Filter Type is a touch list. The two editable ADSR diagrams and vertical faders share their existing parameters. Diagrams show envelope relationships, not a calibrated time axis or a measured waveform.
@@ -611,16 +627,27 @@ New recipes are original harmonic designs for neo-soul, hip-hop, R&B, vamps, mod
 
 Tap **ROLL DICE** in the bottom CREATE row on MAIN, to generate a complete sound. It changes the oscillators, filter, envelopes, Body/Sub/Drift, modulation and effects together. Generation uses playable bass, keys, synth, lead or pad envelope families and bounded effect amounts. The existing sixteen Q-Links remain available to refine the result.
 
-**LFO 1, LFO 2 and shared Tremolo/Auto Pan Sync turn ON** every time you generate. Each synchronized rate chooses its own division from 1/16, 1/8, 1/4, 1/2 or 1 bar. You can turn any Sync off afterward to edit its free Hz rate.
+**LFO 1, LFO 2 and shared Tremolo/Auto Pan Sync turn ON** when their shared rate lock is open. Each synchronized rate chooses its own division from 1/16, 1/8, 1/4, 1/2 or 1 bar. You can turn any Sync off afterward to edit its free Hz rate.
 
 ROLL DICE preserves your master Volume, reference Key, all chord settings, MIDI/pad mapping, slot count and page, input routing, Strum and CHORD GLIDE preference. Ordinary Voice Mode and Glide time are part of the generated sound. As with factory sound selection, sounding voices release when the sound changes.
 
-The host PRESET header and internal SOUND PRESET field both show **Random Sound**. Select any factory sound to return to its recipe, including the factory sound selected before you pressed RND. Save your project to retain a generated sound; loading it restores the saved values without generating again. The 66 factory programs remain in their existing order.
+The host PRESET header and internal SOUND PRESET field both show **Random Sound**. Choose a different factory entry in the native header, or explicitly reselect a factory recipe in SOUND PRESET. The native checked Random Sound row represents the current custom state and dismisses without reloading. Save your project to retain a generated sound; loading it restores the saved values without generating again. The 66 factory programs remain in their existing order.
 
-Compatibility:1.10.0 preserved the first288 declarations and added three command/status fields. Version1.12.0 retains those291 and appends two Release Drop fields for293total. Complete automatic tests and direct MPC XL remote UI checks passed. Full hardware audio, physical encoder/multitouch coverage, project round-trip and worst-case CPU certification remain outside these checks. See the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.12.0).
+Compatibility:1.10.0 preserved the first288 declarations and added three command/status fields. Version1.12.0 retains those291 and appends two Release Drop fields for293total. Complete automatic tests and direct MPC XL remote UI checks passed. Full hardware audio, physical encoder/multitouch coverage, project round-trip and worst-case CPU certification remain outside these checks. See the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.13.14).
 
 ## Bottom action area — 1.10.1
 
 The original warm artwork, type family and donut knobs remain. MAIN now places **Sound Preset / Voice / Input** in the bottom BROWSE row. **ROLL DICE / Chord Preset / slot-page arrows** share CREATE below it. Four chord pads span the bottom, each 70 px tall. The main controls use more compact spacing and 72 px knob bounds; all sixteen Q-Link assignments are unchanged. Filter/LFO/motion choices and Sync remain beside the controls they affect.
 
 The gray MPC host header is unchanged and remains separate from the plugin-owned browse row. MAIN still opens first; press its function tab again for CHORD. This footer layout first shipped in1.10.1 with the engine,291parameters and66programs unchanged from1.10.0. Version1.12.0 adds Release Pitch Drop for293parameters;66programs remain. Native/ARM builds and automatic/remote UI checks pass; physical encoder/multitouch, hardware audio/CPU and full project recall limitations remain.
+
+
+## Dice locks and native presets — 1.13.14
+
+Each randomizable control has a padlock. Close it to preserve that value during ROLL DICE; open it to let Dice change it. Manual touch, Q-Link and explicit factory selection still work. MAIN provides sixteen locks; detailed pages expose the remaining sound locks. OSC Pair and its two wave choices share one lock. Each module shares one Rate/Sync/Division lock. ENV and PLAY share the Amp Release lock. An unlocked modulation rate enables Sync during generation; a locked rate preserves its Sync state.
+
+**UNLOCK ALL** opens every Dice lock without generating a sound or changing notes. Chords, Key, MIDI/pad mapping, master Volume and Release Pitch Drop are always preserved by Dice and have no unnecessary locks. Locks persist in projects and across factory sound changes. When every randomizable value is locked, Dice leaves held notes and the sound unchanged.
+
+The MPC top PRESET list now displays and selects all 66 factory entries, including Dusty Sunday and Velvet Melt. An internal floating-point comparison had generated a refresh on every block even without input;1.13.14 fixes it. State snapshots also leave held notes and live controls untouched while excluding momentary commands from restored state. The first293 parameter declarations remain unchanged;60append-only lock/command fields bring the total to353.
+
+Native/ARM32/ARM64, full engine/voicing/bridge/skin and UBSan tests pass; SDK host19PASS/0WARN/0FAIL. Actual MPC XL/3.10.1.12 checks cover native preset selection, Dice, MAIN/CHORD navigation and177matching installed files. Physical encoder/multi-touch, new hardware audio and worst-case hardware CPU are not newly certified.

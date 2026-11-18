@@ -1,4 +1,4 @@
-# Groove Dice 1.4.0 — User manual
+# Groove Dice 1.5.1 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -6,7 +6,7 @@ Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standa
 
 Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. Other model compatibility and worst-case CPU are not certified by that test.
 
-Download the complete `groove-dice-1.4.0-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
+Download the complete `groove-dice-1.5.1-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
 The base package contains **Original Workshop**:128 independently synthesized WAV one-shots,96 kit configurations, two authored beats and93 timing templates. Ninety-six kits are combinations/settings, not96 separately recorded drum libraries. Optional expansions are separate files; the base release contains no private/commercial third-party drum library.
 
@@ -178,4 +178,17 @@ The repeating MAIN bar remains one bar. Recorded fills and other parts are prese
 
 All672previous declarations/normalized ranges remain exact. Four16-choice controls append at672–675(total676); old4/8/7-choice aliases keep their ranges. Old state seeds the appended selectors; newer state retains them. Old aliases remain available for automation; legacy LOCK migration still becomes BASIC plus a closed padlock. Saved tracks may cache the previous seven-choice map; reset to defaults or compare a new instance to reach all16through Q-Link. Full-range controls, Dice and Undo share the same canonical styles. Legacy fallback values are readback aliases, not extra current styles.
 
-Native/ARM32/ARM64 and SDK validation pass; full test/UBSan/bridge/skin/host suite is required. Targeted tests compare36distinct raw and36distinct actual scheduled new patterns, with variable32/512blocks, backbeats, kick exclusions, other-part/fill preservation and old672/full-state migration. Actual-device outcomes follow separately. Owner installs must preserve all four existing expansion banks and registry; never publish personal packs. Public stable remains1.3.4 until an authorized new release.
+Native/ARM32/ARM64 and SDK validation pass; full test/UBSan/bridge/skin/host suite is required. Targeted tests compare36distinct raw and36distinct actual scheduled new patterns, with variable32/512blocks, backbeats, kick exclusions, other-part/fill preservation and old672/full-state migration. Actual-device outcomes follow separately. Owner installs must preserve all four existing expansion banks and registry; never publish personal packs. This extended-rule system remains available in1.5.1.
+
+
+## Predictable Dice — 1.5.1
+
+**ROLL DICE** changes eligible MAIN controls and regenerates the repeating one-bar main pattern. MAIN padlocks preserve individual values; LOCK PATTERN preserves its notes. With LOCK KIT off, Dice can choose sounds within the selected pack/kit pool. LOCK KIT preserves the kit and MAIN mix trims. Random Amount0 changes nothing.
+
+All four recorded/edited fill banks and all seven master/kit FX values are preserved, including during Whole Kit replacement. The former Extra scope selector has been removed; there is no hidden Fill/FX scope.
+
+Use **ROLL FILL** at the bottom of the fill editor to vary the selected A–D bank only. It uses Random Amount, respects existing rhythm-role protection and is blocked during recording. **ROLL FX** at the bottom of FX changes Drive/Dust/Room/Duck only. Both actions support UNDO and do not roll the kit or main pattern.
+
+Individual Dice padlocks belong to MAIN's sixteen controls. SOUND retains its meaningful kit/role/layer protections; GROOVE remains the detailed timing, density, ghosts, velocity and fill-frequency page. UNLOCK ALL opens individual and upper-level protection without changing any sound or note.
+
+779append-only parameters retain all earlier ranges and IDs. Obsolete candidate lock fields remain for saved-state compatibility but are not displayed as misleading locks. Native/ARM builds, SDK validation, full regression/UBSan and SDK host19PASS/0WARN/0FAIL pass. Actual MPC XL3.10.1.12 checks cover all pages, MAIN roll/fill/FX preservation, dedicated ROLL FILL/ROLL FX, Undo and native preset selection. Physical encoders, hardware audio and worst-case CPU are not newly certified. The public ZIP includes Original Workshop only.

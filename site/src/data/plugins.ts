@@ -25,17 +25,17 @@ export const plugins: Plugin[] = [{
   "tagline": "A little worn. Endlessly warm.",
   "summary": "Warm synthesis. Rich chords. Movement in every direction.",
   "description": "A Moog-inspired synthesizer for MPC bass, keys, leads and pads. Shape its nonlinear ladder engine with Body and Sub, two independent LFOs and synchronized Tremolo or Auto Pan, then build your own chord changes. Shape both envelopes on ENV and add a downward pitch release from PLAY.",
-  "developmentVersion": "1.12.0",
+  "developmentVersion": "1.13.14",
   "release": {
-    "version": "1.12.0",
-    "tag": "donut-theory/v1.12.0",
-    "asset": "donut-theory-1.12.0-mpc.zip"
+    "version": "1.13.14",
+    "tag": "donut-theory/v1.13.14",
+    "asset": "donut-theory-1.13.14-mpc.zip"
   },
-  "image": "donut-theory-main-device-1.12.0.webp",
-  "imageAlt": "Actual Donut Theory1.12.0 MAIN running on MPC XL with filter controls, ROLL DICE and chord pads",
+  "image": "donut-theory-main-device-1.13.14.webp",
+  "imageAlt": "Actual MPC XL Donut Theory 1.13.14 with individual shared Dice locks",
   "manual": "plugins/donut-theory/manual/",
   "intro": "66 synthesized factory sounds, 32 chord types and 96 progression recipes. Tap ROLL DICE to generate a complete oscillator-to-FX sound with synchronized motion, while keeping your chords and master level. No external samples are required.",
-  "verifiedDevice": "MPC XL / OS3.10.1.12, internal NVMe; actual1.12.0 ENV/PLAY, D controls, bidirectional Amp Release, mode-list and startup checks; all173installed files verified",
+  "verifiedDevice": "MPC XL / OS3.10.1.12; native presets, Dice and MAIN/CHORD verified;177installed files matched",
   "mapping": [
     [
       "A \u00b7 OSC / Sound",
@@ -102,6 +102,10 @@ export const plugins: Plugin[] = [{
   ],
   "changes": [
     {
+      "title": "1.13.14: lock your favorites. Keep exploring.",
+      "text": "Individual shared Dice locks and UNLOCK ALL protect selected sound values across pages. Native preset browsing is restored by eliminating repeated false refreshes; snapshots preserve live gestures. Factory sounds and Q-Link maps are unchanged."
+    },
+    {
       "title": "1.12.0: shape what happens after the note.",
       "text": "ENV replaces FILTER and PLAY replaces AMP. Both ADSRs share one screen; PLAY D adds Release / Drop Amount / Drop Time. Old projects default to Drop Off; the first291parameters remain unchanged, with only two appended for293total. MAIN and its filter controls are unchanged."
     },
@@ -138,39 +142,44 @@ export const plugins: Plugin[] = [{
   ],
   "screenshots": [
     {
-      "image": "donut-theory-main-device-1.12.0.webp",
-      "alt": "Actual MPC XL Donut Theory1.12.0 MAIN screen",
-      "caption": "MAIN \u00b7 Original filter controls, footer ROLL DICE, preset navigation and four chord pads. Actual MPC XL1.12.0 capture."
+      "image": "donut-theory-main-device-1.13.14.webp",
+      "alt": "Actual MPC XL Donut Theory 1.13.14 with individual shared Dice locks",
+      "caption": "MAIN \u00b7 Actual MPC XL1.13.14. Shared per-control Dice locks; original artwork and sixteen Q-Link assignments."
     },
     {
-      "image": "donut-theory-env-device-1.12.0.webp",
-      "alt": "Actual MPC XL Donut Theory1.12.0 ENV screen",
-      "caption": "ENV \u00b7 Amp and Filter ADSR together; eight vertical faders and filter response below. Amp Release shares its value with PLAY. Actual MPC XL1.12.0 capture."
+      "image": "donut-theory-presets-device-1.13.14.webp",
+      "alt": "Actual native MPC preset list showing Dusty Sunday and Velvet Melt",
+      "caption": "NATIVE PRESETS \u00b7 Actual1.13.14 list and selected factory sound. Both final factory entries work."
     },
     {
-      "image": "donut-theory-play-device-1.12.0.webp",
-      "alt": "Actual MPC XL Donut Theory1.12.0 PLAY screen",
-      "caption": "PLAY \u00b7 Four groups, including Release / Pitch Drop. This QA example uses Release395.1ms, Amount12st and Time249.5ms; new projects default to Drop Off. Actual MPC XL1.12.0 capture."
+      "image": "donut-theory-env-device-1.13.14.webp",
+      "alt": "Actual MPC XL Donut Theory1.13.14 ENV controls with shared Dice locks",
+      "caption": "ENV \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
     },
     {
-      "image": "donut-theory-chord-device-1.12.0.webp",
-      "alt": "Actual MPC XL Donut Theory1.12.0 CHORD screen",
-      "caption": "CHORD \u00b7 Key/circle reference,32types,96recipes, voicing, octave, glide and Strum. Actual MPC XL1.12.0 capture."
+      "image": "donut-theory-play-device-1.13.14.webp",
+      "alt": "Actual MPC XL Donut Theory1.13.14 PLAY controls with shared Dice locks",
+      "caption": "PLAY \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
     },
     {
-      "image": "donut-theory-osc-device-1.12.0.webp",
-      "alt": "Actual MPC XL Donut Theory1.12.0 OSC screen",
-      "caption": "OSC \u00b7 Detailed oscillator settings. Actual MPC XL1.12.0 capture."
+      "image": "donut-theory-chord-device-1.13.14.webp",
+      "alt": "Actual Donut Theory1.13.14 chord editor",
+      "caption": "CHORD \u00b7 Actual MPC XL1.13.14: key/circle reference,32types,96recipes, voicing, octave, Glide and Strum."
     },
     {
-      "image": "donut-theory-mod-device-1.12.0.webp",
-      "alt": "Actual MPC XL Donut Theory1.12.0 MOD screen",
-      "caption": "MOD \u00b7 Two independent LFOs and synchronized rate settings. Actual MPC XL1.12.0 capture."
+      "image": "donut-theory-osc-device-1.13.14.webp",
+      "alt": "Actual MPC XL Donut Theory1.13.14 OSC controls with shared Dice locks",
+      "caption": "OSC \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
     },
     {
-      "image": "donut-theory-fx-device-1.12.0.webp",
-      "alt": "Actual MPC XL Donut Theory1.12.0 FX screen",
-      "caption": "FX \u00b7 Drive, chorus, delay, cleanup Low-cut and shared motion. Actual MPC XL1.12.0 capture."
+      "image": "donut-theory-mod-device-1.13.14.webp",
+      "alt": "Actual MPC XL Donut Theory1.13.14 MOD controls with shared Dice locks",
+      "caption": "MOD \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
+    },
+    {
+      "image": "donut-theory-fx-device-1.13.14.webp",
+      "alt": "Actual MPC XL Donut Theory1.13.14 FX controls with shared Dice locks",
+      "caption": "FX \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
     }
   ],
   "auditions": [
@@ -191,10 +200,10 @@ export const plugins: Plugin[] = [{
  tagline:'A new groove, one roll away.',
  summary:'Roll a musical groove. Lock what you love. Shape every drum.',
  description:'A one-bar neo-soul and hip-hop drum instrument for MPC. Roll new timing, rules, mix and cymbal accents, protect individual controls with a padlock, and build your sound from layered original drums.',
- developmentVersion:'1.4.0', release:{version:'1.4.0',tag:'groove-dice/v1.4.0',asset:'groove-dice-1.4.0-mpc.zip'}, image:'groove-dice-main-device-1.4.0.webp',
- imageAlt:'Groove Dice 1.4.0 MAIN captured directly from MPC XL with extended rules and sixteen individual Dice locks',
+ developmentVersion:'1.5.1', release:{version:'1.5.1',tag:'groove-dice/v1.5.1',asset:'groove-dice-1.5.1-mpc.zip'}, image:'groove-dice-main-device-1.5.1.webp',
+ imageAlt:'Actual MPC XL Groove Dice1.5.1 with MAIN Dice locks and independent sound pool controls',
  intro:'Includes 128 original synthesized one-shots, 96 kit combinations, two authored beats and 93 timing templates. Optional .gdexp packs stay separate. No commercial or personal sample library is bundled.',
- verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; 1.4.0 remote rule-list, live edit and Dice checks; earlier SOUND/REV/polarity checks',
+ verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; 1.5.1 MAIN/fill/FX policy, dedicated roll actions, Undo and native presets; earlier SOUND/REV/polarity checks',
  mapping:[['A · Timing','Swing','Snare Late','Hat Shift','Rnd Nudge'],['B · Rules','Kick','Snare','Hat','Perc'],['C · Drum Mix','Kick Level','Snare Level','Hat Level','Perc Level'],['D · Hats / Cymbals','Hat Rhythm','Open Hat','Ride','Crash']],
  features:[
   {title:'Roll the values you can see.',text:'Sixteen MAIN padlocks decide which controls Dice may change. Open a lock to explore; close it to preserve that value. Timing and mix stay within musical bounds, with strong/weak/medium/weak velocity accents. Undo restores the preceding roll.'},
@@ -202,10 +211,11 @@ export const plugins: Plugin[] = [{
   {title:'Give the hats a phrase.',text:'Choose 15 straight, dotted, fill and roll rhythms. Add restrained open hats, replace automatic hats with Ride/Bell, or mark starts and fill endings with Crash. Character processing remains on FX.'},
   {title:'Find a sample. Hear it. Shape it.',text:'Tap a sound name for its browser, step with arrows or turn a Q-Link. Two in-place pages offer Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Every source has independent REV, with polarity on page2 and a single-layer preview. Four kick/snare layers and independent Ride/Crash/Bell sources keep sound design close.'},
   {title:'Choose where the next kit comes from.',text:'Use one pack, every installed pack or up to 64 selected kits. Roll a whole kit or mix parts, keeping linked hats and a four-role percussion ensemble. Kit Fixed and layer locks protect your selections.'},
-  {title:'Record a fill. Keep it yours.',text:'Play physical pads into four independent fill slots, up to four bars each. Two grid views expose all eight drum roles. Main-pattern rolls preserve recorded fills unless you explicitly include Fill.'}
+  {title:'Record a fill. Keep it yours.',text:'Play physical pads into four independent fill slots, up to four bars each. Two grid views expose all eight drum roles. Main-pattern rolls preserve all recorded fills. Use ROLL FILL separately.'}
  ],
  changes:[
-  {title:'1.4.0: 36 new ways to move.',text:'Nine new rules per part extend the original seven to sixteen. New choices include END DOUBLE kicks, DRAG IN snares, CRESCENDO hats and LATIN THREE percussion. Live edits and Roll Dice use the same full range, honor locks and preserve recorded fills unless Fill is included.'},
+  {title:'1.5.1: three rolls, clear boundaries.',text:'ROLL DICE reshapes MAIN and its pattern while preserving every fill and FX value. Dedicated ROLL FILL and ROLL FX actions have Undo. Individual locks stay on MAIN; kit, role and layer protection remain. UNLOCK ALL changes protection only.'},
+  {title:'1.4.0: 36 new ways to move.',text:'Nine new rules per part extend the original seven to sixteen. New choices include END DOUBLE kicks, DRAG IN snares, CRESCENDO hats and LATIN THREE percussion. Live edits and Roll Dice use the same full range, honor locks and preserve recorded fills.'},
   {title:'1.3.4: two sound pages. Every source in reach.',text:'Large previous/next arrows and a visible SOUND1/2 counter switch all rows and their SCREEN Q-Links together. Tune is on page1, Decay on page2. REV and polarity are independent for all17sources; no separate Detail screen is needed.'},
   {title:'Visible Dice, individual locks.',text:'Roll Dice updates eligible MAIN values. Separate 44px padlocks replace LOCK in the RULE selectors. Older saved LOCK states retain their frozen rhythm and migrate to BASIC with a closed padlock.'},
   {title:'A complete sound workflow.',text:'Tap-to-browse lists, synchronized arrows/Q-Link, isolated previews, Decay on every sound row and editable Ride/Crash/Bell sources. Dice pools can be limited to selected kits. The blank-skin and overlapping kit-caption defects are fixed.'},
@@ -213,9 +223,11 @@ export const plugins: Plugin[] = [{
  ],
  limitations:['Signed Shift reports a fixed 30ms baseline latency, including direct pads. Hardware compensation and playing feel are not certified.','Remote UI checks cover page/REV/polarity operation; full physical Q-Link coverage, worst-case CPU and every output destination remain unverified.','A stopped recording intentionally started inside a bar may wait for a host bar anchor/seek; use aligned starts or punch in during running playback.','External sidechain input and generated MIDI output to the MPC sequencer are not implemented.','Install optional packs using Pack Builder or the Python CLI, then reopen the plugin. This is not native MPC XPN registration.'],
  screenshots:[
-  {image:'groove-dice-main-device-1.4.0.webp',alt:'Groove Dice 1.4.0 MAIN running on MPC XL after Roll Dice with expanded rules',caption:'MAIN · Direct MPC XL 1.4.0 capture after Roll Dice. This device includes optional owner packs; the public ZIP contains only the 128 original sounds.'},
+  {image:'groove-dice-main-device-1.5.1.webp',alt:'Groove Dice1.5.1 MAIN running on MPC XL',caption:'MAIN · Direct MPC XL1.5.1 capture. This device includes optional owner packs; the public ZIP contains only the 128 original sounds.'},
+  {image:'groove-dice-fill-device-1.5.1.webp',alt:'Actual MPC fill editor with separate ROLL FILL',caption:'ROLL FILL · Vary only the selected fill; Undo restores it. Actual MPC XL1.5.1.'},
+  {image:'groove-dice-fx-device-1.5.1.webp',alt:'Actual MPC FX page with separate ROLL FX',caption:'ROLL FX · Independent texture exploration and Undo. Main Dice preserves these values. Actual MPC XL1.5.1.'},
   {image:'groove-dice-rules-device-1.4.0.webp',alt:'Actual MPC Groove Dice Kick Rules second page with eight additional choices',caption:'RULES · Eight choices per page, with PAGE 1/2 and PAGE 2/2 controls. All sixteen choices are also available through Q-Link.'},
-  {image:'groove-dice-sound-device-1.3.4.webp',alt:'Actual MPC Groove Dice SOUND1/2 page with Sample Level Tune Shift and per-row reverse buttons',caption:'SOUND1/2 · Sample, Level, Tune and Shift. Each row keeps one SCREEN Q-Link group; previous/next arrows and the page counter stay visible.'},
+  {image:'groove-dice-sound-device-1.5.1.webp',alt:'Actual MPC Groove Dice SOUND1/2 page with Sample Level Tune Shift and per-row reverse buttons',caption:'SOUND1/2 · Sample, Level, Tune and Shift. Each row keeps one SCREEN Q-Link group; previous/next arrows and the page counter stay visible.'},
   {image:'groove-dice-sound-page-2-device-1.3.4.webp',alt:'Actual MPC SOUND2/2 with Start Decay Low Cut High Cut and polarity switches',caption:'SOUND2/2 · Start, Decay, Low Cut and High Cut for each source. REV stays available; Ø controls polarity independently.'},
   {image:'groove-dice-browser-device-1.3.4.webp',alt:'Actual Groove Dice sample browser on MPC, filtered to Original Workshop',caption:'SAMPLE BROWSER · Tap the name, choose a source and preview it. Pack filters, arrows and SCREEN selection share the same catalogue.'},
   {image:'groove-dice-cymbals-device-1.3.4.webp',alt:'Actual MPC Ride Crash and Bell source editor in Groove Dice',caption:'CYMBALS · Ride, Crash and Bell use the same two-page layout, with separate sources, reverse and polarity.'},
@@ -223,7 +235,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-18-action-footer';
+export const navigationVersion = 'software-2026-11-19-dice-presets';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

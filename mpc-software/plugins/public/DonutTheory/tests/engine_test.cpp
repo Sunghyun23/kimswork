@@ -26,12 +26,21 @@ struct Rig {
 };
 int main(){
 
+ // Canonical value locks share rates/wave pairs across every UI representation.
+ {static_assert(kNumParams==353,"append-only common locks");
+  for(int chosen:kDiceValueLocks){Rig m;m.block();m.block();m.p->set(chosen,1);for(int roll=0;roll<4;++roll){std::array<float,kNumParams> before{};for(int i=0;i<kNumParams;++i)before[i]=m.p->get(i);m.p->set(kRandomize,1);m.block();for(int i=0;i<298;++i)if(diceValueLock(i)==chosen)assert(m.p->get(i)==before[i]);assert(m.p->getBool(chosen));}}
+  Rig m;for(int key:kDiceValueLocks){m.p->set(key,1);assert(!m.p->param(key).automatable);}m.block({mpc::MidiEvent::noteOn(0,60,100)},512);auto v=m.p->voiceSnapshots();m.p->set(kRandomize,1);m.block();assert(m.p->activeVoices()==1&&!m.p->getBool(kRandomized));
+  for(int key:kDiceValueLocks)assert(m.p->getBool(key));std::array<float,298>before{};for(int i=0;i<298;++i)before[i]=m.p->get(i);m.p->set(kUnlockDice,1);m.block();for(int key:kDiceValueLocks)assert(!m.p->getBool(key));for(int i=0;i<293;++i)assert(m.p->get(i)==before[i]);assert(m.p->activeVoices()==1&&!m.p->getBool(kUnlockDice));
+  m.p->set(kDiceValueLockCutoff,1);m.p->set(kCutoff,987);m.block();assert(std::abs(m.p->get(kCutoff)-987)<.01f);m.p->setProgram(1);m.block();assert(m.p->getBool(kDiceValueLockCutoff));auto saved=m.p->internalSaveState();m.p->set(kDiceValueLockCutoff,0);assert(m.p->internalLoadState(saved.data(),saved.size()));m.p->reset();m.block();assert(m.p->getBool(kDiceValueLockCutoff));
+  m.p->set(kUnlockDice,1);auto pending=m.p->internalSaveState();assert(m.p->internalLoadState(pending.data(),pending.size()));assert(!m.p->getBool(kUnlockDice));
+  std::cout<<"PASS:54canonical locks/216rolls, shared rate/pair ownership, all-locked sounding-note preservation, unlock-only invariance, direct/preset independence and saved preferences\n";
+ }
  for(double sr:{48000.,96000.}){Rig m(sr);m.p->set(kAmpRelease,2000);m.p->set(kReleaseDropAmount,24);m.p->set(kReleaseDropTime,20);m.block({mpc::MidiEvent::noteOn(0,60,100)},512);m.block({mpc::MidiEvent::noteOff(0,60)},1);
   int remaining=int(sr*.020)-1;while(remaining){int n=std::min(remaining,97);m.block({},n);remaining-=n;}for(auto v:m.p->voiceSnapshots())if(v.owner==60)assert(std::abs(v.pitch-36)<.002f);
  }
  std::cout<<"PASS: Release Drop duration at48/96kHz with variable97-frame blocks\n";
  // Release Drop is separate from note-to-note Glide and snapshots each gate-off.
- {static_assert(kReleaseDropAmount==291&&kReleaseDropTime==292&&kNumParams==293,"append-only release drop");
+ {static_assert(kReleaseDropAmount==291&&kReleaseDropTime==292&&kNumParams==353,"append-only release drop");
   Rig m;m.p->set(kAmpAttack,1);m.p->set(kAmpSustain,100);m.p->set(kAmpRelease,2000);m.p->set(kReleaseDropAmount,12);m.p->set(kReleaseDropTime,100);
   m.block({mpc::MidiEvent::noteOn(0,60,100)},512);
   auto pitch=[&](){for(auto v:m.p->voiceSnapshots())if(v.owner==60)return v.pitch;return -1000.f;};
@@ -61,7 +70,7 @@ int main(){
   std::cout<<"PASS: Legato fallback does not trigger Release Drop while an older key is held\n";
  }
 
- {static_assert(kRandomize==288&&kRandomized==289&&kNumParams==293,"append-only generator");Rig m;m.block();
+ {static_assert(kRandomize==288&&kRandomized==289&&kNumParams==353,"append-only generator");Rig m;m.block();
   m.p->set(kVolume,-20);m.p->set(kChordKeyRoot,7);m.p->set(kSpread,11);m.p->set(kChordGlide,1);m.p->set(kSlotCount,3);m.block();
   std::array<float,kNumParams>before{};for(int i=0;i<kNumParams;++i)before[i]=m.p->get(i);
   for(int roll=0;roll<60;++roll){m.p->set(kRandomize,1);m.block();assert(m.p->getBool(kRandomized)&&!m.p->getBool(kRandomize));
@@ -76,7 +85,7 @@ int main(){
   std::cout<<"PASS:60complete sound generations, finite non-silent variable-block audio, forced sync, preserved all16chords/pads/master/key/performance, custom-state restore and same-program reload\n";
  }
 
- {static_assert(kSoundCurrent==287&&kNumParams==293,"append-only factory selection");
+ {static_assert(kSoundCurrent==287&&kNumParams==353,"append-only factory selection");
   Rig m;m.p->set(kVolume,-20);m.p->set(kRoot1,61);m.p->set(kSpread,17);m.p->set(kChordGlide,1);m.p->set(kChordKeyRoot,5);
   for(int index:{64,65}){m.p->setProgram(index);m.block();assert(m.p->currentProgram()==index);assert(std::abs(m.p->get(kVolume)+20)<.001f&&m.p->getInt(kRoot1)==61&&std::abs(m.p->get(kSpread)-17)<.001f&&m.p->getBool(kChordGlide)&&m.p->getInt(kChordKeyRoot)==5);
    assert(m.p->getInt(kModMode)==1&&m.p->getInt(kModSync)==1&&m.p->getInt(kModDivision)==1);assert(m.p->get(kTremDepth)==(index==64?70:80));assert(m.p->get(kBodyTone)==(index==64?28:22));
@@ -88,7 +97,7 @@ int main(){
   std::cout<<"PASS:66factory programs, canonical/legacy selection, retained master/chord/key/strum state, new288 and old287state migration\n";
  }
 
- {static_assert(kBodyTone==279&&kLfo2Shape==280&&kLfo2RateControl==286&&kNumParams==293,"append-only Body/LFO2");
+ {static_assert(kBodyTone==279&&kLfo2Shape==280&&kLfo2RateControl==286&&kNumParams==353,"append-only Body/LFO2");
   double response[3]{};int at=0;
   for(float frequency:{40.f,250.f,4000.f}){donut::BodyTone body;body.prepare(48000);double dry=0,wet=0;
    for(int i=0;i<96000;++i){const float x=.1f*std::sin(6.28318530718f*frequency*i/48000);float y=body.process(x,1);assert(std::isfinite(y));if(i>=48000){dry+=x*x;wet+=y*y;}}
@@ -115,7 +124,7 @@ int main(){
  std::cout<<"PASS: Body band/level compensation/zero bypass, inert legacy Body, five LFO2 targets/shapes, depth0 isolation, independent sync/free rate,288state/old279 migration and allocation-free variable blocks\n";
 
  // Mode-aware rate relays retain free Hz and control independent divisions.
- {static_assert(kModSync==275&&kModDivision==276&&kLfoRateControl==277&&kModRateControl==278&&kNumParams==293,"append-only sync");
+ {static_assert(kModSync==275&&kModDivision==276&&kLfoRateControl==277&&kModRateControl==278&&kNumParams==353,"append-only sync");
   Rig t;t.p->set(kRate,1.7f);t.p->set(kTremRate,3.2f);t.block();
   for(bool motion:{false,true}){int sync=motion?kModSync:kSync,div=motion?kModDivision:kDivision,relay=motion?kModRateControl:kLfoRateControl,rate=motion?kTremRate:kRate;
    const float free=t.p->get(rate);t.p->set(sync,1);t.block();
@@ -135,7 +144,7 @@ int main(){
 
 
  // Motion mode shares rate/depth, retains stereo, and safely migrates old states.
- {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==293,"append-only motion");
+ {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==353,"append-only motion");
   Rig m;m.p->set(kMotion,0);m.p->set(kSpace,0);m.p->set(kChorus,0);m.p->set(kDelay,0);m.p->set(kDrift,0);m.p->set(kDepth,0);m.p->set(kVibrato,0);m.p->set(kAmpAttack,1);m.p->set(kAmpSustain,100);m.p->set(kAmpDecay,1);m.p->set(kTremRate,2);m.p->set(kTremDepth,100);m.p->set(kModMode,1);
   for(int i=0;i<400;++i)m.block();m.block({mpc::MidiEvent::noteOn(0,72,100)});
   bool left=false,right=false;
@@ -218,7 +227,7 @@ int main(){
  std::cout<<"PASS: scoped smooth APPLY preserves roots/types/MIDI/inactive slots, preview ownership/end/stop, stale-plan rejection and safe state\n";
 
  // Key reference never changes notes. Explicit confirmation moves all active roots only.
- {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==293,"Append-only key controls");
+ {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==353,"Append-only key controls");
   for(int count=0;count<4;++count)for(int key=0;key<12;++key)for(int from=0;from<12;++from){Rig m;m.p->set(kSlotCount,count);m.block();
    std::array<std::array<float,5>,16> before{};
    for(int slot=0;slot<16;++slot){m.p->set(kChordRoots[slot],48+slot%12);m.p->set(kChordOctaves[slot],slot%5);m.p->set(kChordPadNotes[slot],80+slot);for(int f=0;f<5;++f)before[slot][f]=m.p->get(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot]);}
@@ -245,7 +254,7 @@ int main(){
  std::cout<<"PASS: 576 key/source/count transposes, reference isolation, whole-operation bounds, degree readback, state and old208 migration without render allocations\n";
 
  // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
- {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==293,"Append-only pad positions");
+ {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==353,"Append-only pad positions");
   Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
   m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
   m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);
@@ -295,11 +304,11 @@ int main(){
   auto state=m.p->internalSaveState();Rig r;assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();assert(r.p->getInt(kProgression3)==1&&r.p->getInt(kRoot1)==61&&r.p->getInt(kRoot9)==kProgressions[1][0][0]);
  }
  std::cout<<"PASS: independent bank presets, visible-page arrows, musical settings preservation and state round-trip\n";
- // Saving removes transient UI gates from state, releases screen auditions on
- // the audio thread, and leaves a held physical MIDI chord sounding.
+ // A host snapshot strips transient gates from its copy, preserving both live
+ // screen and physical MIDI chords until their actual release gestures.
  {Rig m;m.p->set(kSlotCount,3);m.p->set(kInputMode,1);m.p->set(kPadMap,1);m.p->set(kAmpRelease,1);m.block();
   m.block({mpc::MidiEvent::noteOn(0,m.p->getInt(kPadNote16),100)});m.p->set(kTouch1,1);m.block();assert(m.p->activeVoices()==10);
-  auto state=m.p->internalSaveState();assert(m.p->getInt(kTouch1)==0&&m.p->getInt(kChordPlayingPage4)==0);for(int b=0;b<40;++b)m.block();assert(m.p->activeVoices()==5);
+  auto state=m.p->internalSaveState();assert(m.p->getInt(kTouch1)==1);for(int b=0;b<40;++b)m.block();assert(m.p->activeVoices()==10);m.p->set(kTouch1,0);for(int b=0;b<40;++b)m.block();assert(m.p->activeVoices()==5);
   Rig r;assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();assert(r.p->activeVoices()==0&&r.p->getInt(kTouch1)==0);
  }
  // Editor Q-Links mirror the visible four-slot bank; direct slot parameters

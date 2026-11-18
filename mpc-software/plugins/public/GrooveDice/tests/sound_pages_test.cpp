@@ -1,7 +1,7 @@
 #define main priorLayerMain
 #include "layers_test.cpp"
 #undef main
-int main(){Host h;auto&p=*h.p;assert(kParamCount==676);const int fields[2][4]={{G::LSample,G::LLevel,G::LTune,G::LShift},{G::LStart,G::LDecay,G::LLowCut,G::LHighCut}};int checked=0;
+int main(){Host h;auto&p=*h.p;assert(kParamCount==779);const int fields[2][4]={{G::LSample,G::LLevel,G::LTune,G::LShift},{G::LStart,G::LDecay,G::LLowCut,G::LHighCut}};int checked=0;
  for(int part=0;part<5;++part){if(part==4)p.set(kCymbalView,1);else p.set(kSoundPart,part);int rows=part==2?2:part==4?3:4;
   for(int page=0;page<2;++page){p.set(kSoundDetails,page);for(int row=0;row<rows;++row){for(int column=0;column<4;++column){int q=row*4+column,key=p.soundKey(row,fields[page][column]);assert(p.soundTarget(q)==key);auto before=p.internalSaveState();if(column!=0||page){std::array<float,kParamCount>values;for(int k=0;k<kParamCount;++k)values[k]=p.getNormalised(k);p.setNormalised(kSoundQ0+q,.371f);assert(std::abs(p.getNormalised(key)-.371f)<.00001f);for(int other=0;other<rows;++other)if(other!=row)assert(p.getNormalised(p.soundKey(other,fields[page][column]))==values[p.soundKey(other,fields[page][column])]);}h.render();++checked;}
     p.set(kSoundRev0+row,1);p.set(kSoundPolarity0+row,1);h.render();assert(p.getBool(kReverse0+p.soundReverseSlot(row))&&p.getBool(p.soundKey(row,G::LInvert)));p.set(kSoundPolarity0+row,0);h.render();assert(p.getBool(kReverse0+p.soundReverseSlot(row))&&!p.getBool(p.soundKey(row,G::LInvert)));

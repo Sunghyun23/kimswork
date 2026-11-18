@@ -152,14 +152,19 @@ extra_styles={
  'Hat':['FIRST HALF','LAST HALF','ON BEATS','UPBEATS','TWO ON ONE','ONE ON TWO','SOFT TAIL','CRESCENDO','SKIP TWO'],
  'Perc':['CLAP REPLY','TOM TURN','SHAKER','CALL REPLY','OFFBEAT TOM','CLAP PAIR','LATIN THREE','TOM CLAP','END PICKUP']}
 for role,choices,default in styles:c('RulePickFull'+role,role+' Extended Style Picker',[short_styles.get(x,x)for x in choices[1:]]+extra_styles[role],default-1)
+from dice_lock_catalog import append as append_dice_locks
+append_dice_locks(params)
 P.joinpath('parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 lines=['// Generated parameter declarations. Stable index order from parameters.json.','enum Key { '+', '.join('k'+p['key'] for p in params)+', kParamCount };','inline void declareParameters(mpc::Plugin& plugin) {']
 for p in params:
  if 'choices'in p:expr='mpc::choiceParam('+json.dumps(p['key'])+','+json.dumps(p['name'])+',{'+','.join(json.dumps(v)for v in p['choices'])+'},'+str(p['default'])+')'
  else:expr='mpc::floatParam('+','.join([json.dumps(p['key']),json.dumps(p['name']),str(p['min']),str(p['max']),str(p['default']),json.dumps(p['unit']),str(p['decimals'])])+')'
  lines+=['{ auto p='+expr+'; p.automatable='+str(p['auto']).lower()+'; plugin.addParam(p); }']
-lines+=['}'];P.joinpath('src/Parameters.h').write_text('\n'.join(lines)+'\n')
-p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.4.0',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
+lines+=['}']
+from dice_lock_catalog import definitions as dice_definitions
+lines+=dice_definitions()
+P.joinpath('src/Parameters.h').write_text('\n'.join(lines)+'\n')
+p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.5.1',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
 main=['Swing','Snare Late','Hat Shift','Rnd Nudge','Kick Style','Snare Style','Hat Style','Perc Style','Kick Mix','Snare Mix','Hat Mix','Perc Mix','Drive','Dust','Room','Hat Rhythm']
 pages=[{'name':'MAIN','controls':main},{'name':'FILL','controls':['Fill Select','Fill Length','Rec Mode','Count-in','Note Nudge','Note Velocity','Note Gate','Note Chance']},{'name':'GROOVE','controls':main[:4]+['Density','Ghost','Vel Spread','Random Amt']+['Preview BPM','Note Select','Note Nudge','Note Velocity','Fill Select','Fill Density','Fill Every','Variation']},{'name':'SOUND','controls':['Sound Control '+str(i+1) for i in range(16)]},{'name':'KITS','controls':['Kit Select','Kit Lock','Pattern','Pattern Lock','User Kit','Save Kit','Load Kit','Choke Time']+[f'Choke {i}'for i in range(1,9)]},{'name':'FX','controls':['Drive','Dust','Room','Duck','Low Cut','Mod Rate','Mod Depth','Master']},{'name':'ROUTING','controls':[f'Output {i}'for i in range(1,9)]+[f'Pad Note {i}'for i in range(1,9)]}]
 P.joinpath('ui.json').write_text(json.dumps({'kit':'amber','pages':pages},indent=2)+'\n')

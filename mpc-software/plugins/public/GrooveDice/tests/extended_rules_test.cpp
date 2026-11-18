@@ -3,7 +3,7 @@
 #undef main
 #include <set>
 int main(){
- static_assert(kRulePickFullKick==672&&kParamCount==676,"append-only extended rules");
+ static_assert(kRulePickFullKick==672&&kParamCount==779,"append-only extended rules");
  for(int group=0;group<4;++group){Host h;auto&p=h.p;p.set(kDensity,100);p.set(kHatRhythm,6);h.block();
   std::set<std::vector<Row>>raw;std::set<std::vector<std::tuple<int,int,int>>>scheduled;
   auto fill=h.notes(0);auto other=h.notes(4,(group+1)%4);

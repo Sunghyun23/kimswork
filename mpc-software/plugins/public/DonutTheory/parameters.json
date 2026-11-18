@@ -6487,5 +6487,545 @@
     "default": 250,
     "unit": "ms",
     "log": true
+  },
+  {
+    "key": "DiceLockOsc",
+    "name": "Lock OSC",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceLockFilter",
+    "name": "Lock FILTER",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceLockAmp",
+    "name": "Lock AMP",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceLockMod",
+    "name": "Lock MOD",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceLockFx",
+    "name": "Lock FX",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockTone",
+    "name": "Dice Lock Tone",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockMotion",
+    "name": "Dice Lock Motion",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockSpace",
+    "name": "Dice Lock Space",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockDrive",
+    "name": "Dice Lock Drive",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockGlide",
+    "name": "Dice Lock Glide",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockVibrato",
+    "name": "Dice Lock Vibrato",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockExpression",
+    "name": "Dice Lock Expression",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockMix",
+    "name": "Dice Lock Osc Mix",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockDetune",
+    "name": "Dice Lock Detune",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockCutoff",
+    "name": "Dice Lock Filter Cutoff",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockResonance",
+    "name": "Dice Lock Resonance",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockShape",
+    "name": "Dice Lock LFO Shape",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockDepth",
+    "name": "Dice Lock LFO Depth",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockTarget",
+    "name": "Dice Lock LFO Target",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockFilter",
+    "name": "Dice Lock Filter Type",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockDriveType",
+    "name": "Dice Lock Drive Type",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockVoiceMode",
+    "name": "Dice Lock Voice Mode",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockOctave",
+    "name": "Dice Lock Osc 2 Oct",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockPulse",
+    "name": "Dice Lock Pulse Width",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockSub",
+    "name": "Dice Lock Sub",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockNoise",
+    "name": "Dice Lock Noise Level",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockFM",
+    "name": "Dice Lock FM Amount",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockAmpAttack",
+    "name": "Dice Lock Amp Attack",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockAmpDecay",
+    "name": "Dice Lock Amp Decay",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockAmpSustain",
+    "name": "Dice Lock Amp Sustain",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockAmpRelease",
+    "name": "Dice Lock Amp Release",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockFiltAttack",
+    "name": "Dice Lock Filter Attack",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockFiltDecay",
+    "name": "Dice Lock Filter Decay",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockFiltSustain",
+    "name": "Dice Lock Filter Sustain",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockFiltRelease",
+    "name": "Dice Lock Filter Release",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockEnv",
+    "name": "Dice Lock Filter Env",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockKeyTrack",
+    "name": "Dice Lock Key Track",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockGlideLegato",
+    "name": "Dice Lock Glide Mode",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockDriveMix",
+    "name": "Dice Lock Drive Mix",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockChorus",
+    "name": "Dice Lock Chorus",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockDelay",
+    "name": "Dice Lock Delay Mix",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockFeedback",
+    "name": "Dice Lock Feedback",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockDelayDivision",
+    "name": "Dice Lock Delay Division",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockFXPreset",
+    "name": "Dice Lock FX Preset",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockTremDepth",
+    "name": "Dice Lock Tremolo Depth",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockOscPair",
+    "name": "Dice Lock OSC Pair",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockDrift",
+    "name": "Dice Lock Drift",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockLowCut",
+    "name": "Dice Lock Low Cut",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockOutputTrim",
+    "name": "Dice Lock Sound Trim",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockModMode",
+    "name": "Dice Lock Motion Mode",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockModShape",
+    "name": "Dice Lock Motion Shape",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockPan",
+    "name": "Dice Lock Pan",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockLfoRateControl",
+    "name": "Dice Lock LFO Rate Control",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockModRateControl",
+    "name": "Dice Lock Mod Rate Control",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockBodyTone",
+    "name": "Dice Lock Body",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockLfo2Shape",
+    "name": "Dice Lock LFO 2 Shape",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockLfo2Depth",
+    "name": "Dice Lock LFO 2 Depth",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockLfo2Target",
+    "name": "Dice Lock LFO 2 Target",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockLfo2RateControl",
+    "name": "Dice Lock LFO 2 Rate Control",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "UnlockDice",
+    "name": "Unlock All Dice",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
   }
 ]

@@ -129,7 +129,7 @@ for row in range(4):
  assert contents[-1]['componentData']['type']=='Slider'and contents.index(captions[0])<len(contents)-1
  assert sum(a.get('handleName')=='Parameter '+str(keys['SoundBrowse'+str(row)])for a in command['actions'])==1
 
- arrows=[e for e in children if e['componentData']['type'].startswith('Btn') and rect(e)[2:]==(44.,44.)]
+ arrows=[e for e in children if e['componentData']['type'].startswith('Btn') and rect(e)[2:]==(44.,44.) and rect(e)[1]==64]
  assert len(arrows)==2
  for entry,key in zip(arrows,['SoundSamplePrev'+str(row),'SoundSampleNext'+str(row)]):
   assert any(a.get('handleName')=='Parameter '+str(keys[key])for a in defs[entry['componentData']['type']]['actions'])
@@ -142,15 +142,12 @@ for row in range(4):
  assert any(a.get('onAction')=='Mouse Down' and a.get('handler')=='Q-Link' and a.get('handleName')=='Parameter '+str(keys['SoundQ'+str(row*4)]) for a in defs['LayerSample'+str(row)]['actions'])
 print('PASS each sample selector focuses its own SCREEN Q-Link row')
 
-# Kit lock must be visible, with scope choices reflecting its real behavior.
-labels=[e['componentData'] for d in defs.values() for e in d.get('componentsData',[]) if e['componentData']['type']=='Label']
+# Global Dice no longer has a scope selector that can overwrite recorded fills or FX.
+labels=[e['componentData']for d in defs.values()for e in d.get('componentsData',[])if e['componentData']['type']=='Label']
 text=json.dumps(labels)
-for caption in ['LOCK KIT','KIT FIXED','EXTRA CHANGES','No extras','New Pattern','Groove Variation','Recorded Fill','Pattern + Fill + FX']:
- assert caption in text,caption
-for n in range(6):
- rows=defs['GDChoiceScopeRow'+str(n)]['componentsData']
- assert len(rows)==1
-print('PASS explicit kit lock and explicit extra-change choices')
+for caption in ['LOCK KIT','KIT FIXED','LOCK PATTERN','ROLL FILL','ROLL FX']:assert caption in text
+assert 'GDChoiceScopeRow0'not in defs
+print('PASS explicit kit/pattern locks and dedicated fill/FX actions; no global Extra selector')
 
 # RULES expose seven playable touch choices without a LOCK value and MAIN B's four fixed SCREEN relays.
 for n,key in enumerate(['RulePickFullKick','RulePickFullSnare','RulePickFullHat','RulePickFullPerc']):
@@ -261,5 +258,16 @@ for prefix in ['LibraryRowButton','RoleSoundRow','DynamicKitRow']:
 print('PASS sample/sample-list/kit-pool/library/role/kit caption center is covered by a single command surface')
 
 assert m[:672]==json.loads((P/'tests/legacy-parameters-1.3.4.json').read_text())
-assert len(m)==676
+assert len(m)==779
 print('PASS: first672full declarations retained, extended16style selectors append')
+
+assert m[:676]==json.loads((P/'tests/legacy-676-parameters.json').read_text())
+assert any('UNLOCK ALL' in str(d) for d in defs.values())
+assert m[:777]==json.loads((P/'tests/legacy-777-parameters.json').read_text())
+assert any('ROLL FILL'in str(d)for d in defs.values())
+assert any('ROLL FX'in str(d)for d in defs.values())
+for d in defs.values():
+ for c in d.get('componentsData',[]):
+  for binding in c.get('handle remapping',{}).get('map',[]):
+   assert binding.get('value')not in {'Parameter '+str(i)for i in range(676,777)if m[i]['key'].startswith(('DiceValueLock','SoundValueLock','FillDiceLock'))}
+print('PASS MAIN-only value locks, separate ROLL FILL/FX, legacy777metadata retained')
