@@ -306,3 +306,5 @@ Filter LFO and shared Motion have independent MAIN SYNC toggles. Rate selects Hz
 - D: Drive / Glide / Motion Rate / Depth.
 
 ADSR remains on AMP/FILTER detail. Body adds compensated low-mid density; Sub is the separate octave-below sine. New Body/LFO2Depth default0, with legacyBody and first279parameter declarations preserved;287total. Native/ARM32/ARM64/SDK clean; host19/0/0 and full regressions pass. Final122installed files match the build. [Actual MPC capture and verification](design/device-1.8.0/verification.json). Physical encoders, hardware audio/CPU and full MPC project restoration are not newly certified; reset cached MAIN maps/new instance if an old track retains its previous assignments. No public push/Release/site deployment for this candidate.
+
+Original sound auditions: [Soul Studies](presets/soul-studies/README.md) contains two actual-engine WAV examples, complete recipes and user-preset descriptors for1.8.0. Factory programs/installed files are unchanged; MPC user-preset import is not yet tested.
