@@ -1,0 +1,55 @@
+{
+  "engineVersion": "1.8.0",
+  "source": "actual native engine, restored saved preset chunk; not a hardware recording",
+  "sampleRate": 48000,
+  "channels": 2,
+  "pcmBits": 16,
+  "bpm": 82,
+  "progression": [
+    "Cmaj9",
+    "Am9/E",
+    "F6/9/D",
+    "G9sus4/D"
+  ],
+  "topNotes": [
+    "D4",
+    "C4",
+    "C4",
+    "C4"
+  ],
+  "audioPostprocessing": "PCM conversion only; level adjustment is baked into saved Sound Trim",
+  "checks": [
+    "287parameter native state round-trip",
+    "all samples finite, no clipping",
+    "all voices release",
+    "XML state64 matches the restored native chunk",
+    "WAV header/frame count valid"
+  ],
+  "limitation": "MPC XPL browser import not tested; XPL points to internal NVMe ARM64 installation; factory64programs unchanged",
+  "patches": [
+    {
+      "slug": "dusty-sunday",
+      "name": "Keys / Dusty Sunday Wide",
+      "seconds": 15.4573125,
+      "peak": 0.6305431127548218,
+      "rms": 0.06469788867733026,
+      "soundTrimDb": 5.94698,
+      "autoPanDepthPercent": 70,
+      "stateSHA256": "4d80f6bde248661b6de9c225c55d46c0080c86349bfa8d02fed3cb42474f7daf",
+      "wavSHA256": "6fe374acf349f326053701133ff1d75009316a733d78f982e6a954d6d57124bd",
+      "xplSHA256": "adeb9dd4a75143ea607ab47d32b2ac2dcf82199bd6fe6b19738aa42fad61b306"
+    },
+    {
+      "slug": "velvet-melt",
+      "name": "Synth / Velvet Melt Wide",
+      "seconds": 15.4573125,
+      "peak": 0.3990921080112457,
+      "rms": 0.06546957952657063,
+      "soundTrimDb": 5.41555,
+      "autoPanDepthPercent": 80,
+      "stateSHA256": "f7b2d42e057d4ac8ce3cc953f912569c9b738655c42ad5d78fd5599fb7b83ede",
+      "wavSHA256": "b94704f999ca74b6622b40dcc104d28d9125bfb711be66a319780a72ec5cee3e",
+      "xplSHA256": "26c8365cbe56df03baadf25ba3e762bc25a8171b9774205bcb7b8b92c608215f"
+    }
+  ]
+}

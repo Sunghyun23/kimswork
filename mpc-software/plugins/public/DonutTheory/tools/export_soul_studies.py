@@ -4,7 +4,7 @@ import argparse,array,base64,csv,hashlib,json,math,shutil,struct,sys,wave,zipfil
 from pathlib import Path
 from xml.etree import ElementTree as ET
 P=Path(__file__).resolve().parents[1]
-a=argparse.ArgumentParser();a.add_argument('render_directory',type=Path);args=a.parse_args();src=args.render_directory;out=P/'presets/soul-studies';(out/'audio').mkdir(parents=True,exist_ok=True)
+a=argparse.ArgumentParser();a.add_argument('render_directory',type=Path);a.add_argument('--output',type=Path,default=P/'presets/soul-studies');args=a.parse_args();src=args.render_directory;out=args.output;(out/'audio').mkdir(parents=True,exist_ok=True)
 levels={x['slug']:x for x in csv.DictReader((src/'levels.csv').open())};items=[]
 for slug in ['dusty-sunday','velvet-melt']:
  recipe=json.loads((src/(slug+'.json')).read_text());chunk=(src/(slug+'.mpcp')).read_bytes()
@@ -22,9 +22,9 @@ for slug in ['dusty-sunday','velvet-melt']:
  wav=out/'audio'/(slug+'.wav')
  with wave.open(str(wav),'wb')as w:w.setnchannels(2);w.setsampwidth(2);w.setframerate(48000);w.writeframes(pcm.tobytes())
  with wave.open(str(wav))as w:assert w.getnchannels()==2 and w.getframerate()==48000 and w.getnframes()*2==len(samples)
- items.append({'slug':slug,'name':recipe['name'],'seconds':len(samples)/96000,'peak':max(map(abs,samples)),'rms':math.sqrt(sum(x*x for x in samples)/len(samples)),'soundTrimDb':float(levels[slug]['trim_db']),'stateSHA256':hashlib.sha256(chunk).hexdigest(),'wavSHA256':hashlib.sha256(wav.read_bytes()).hexdigest(),'xplSHA256':hashlib.sha256(xpl.read_bytes()).hexdigest()})
+ items.append({'slug':slug,'name':recipe['name'],'seconds':len(samples)/96000,'peak':max(map(abs,samples)),'rms':math.sqrt(sum(x*x for x in samples)/len(samples)),'soundTrimDb':float(levels[slug]['trim_db']),'autoPanDepthPercent':recipe['valuesById']['tremdepth'],'stateSHA256':hashlib.sha256(chunk).hexdigest(),'wavSHA256':hashlib.sha256(wav.read_bytes()).hexdigest(),'xplSHA256':hashlib.sha256(xpl.read_bytes()).hexdigest()})
 (out/'verification.json').write_text(json.dumps({'engineVersion':'1.8.0','source':'actual native engine, restored saved preset chunk; not a hardware recording','sampleRate':48000,'channels':2,'pcmBits':16,'bpm':82,'progression':['Cmaj9','Am9/E','F6/9/D','G9sus4/D'],'topNotes':['D4','C4','C4','C4'],'audioPostprocessing':'PCM conversion only; level adjustment is baked into saved Sound Trim','checks':['287parameter native state round-trip','all samples finite, no clipping','all voices release','XML state64 matches the restored native chunk','WAV header/frame count valid'],'limitation':'MPC XPL browser import not tested; XPL points to internal NVMe ARM64 installation; factory64programs unchanged','patches':items},indent=2)+'\n')
-zip_path=P/'build/donut-theory-soul-studies.zip'
+zip_path=P/('build/donut-theory-soul-studies-wide-pan.zip' if out.name=='wide-pan' else 'build/donut-theory-soul-studies.zip')
 with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED)as z:
  for f in sorted(out.rglob('*')):
   if f.is_file():z.write(f,'Donut Theory Soul Studies/'+str(f.relative_to(out)))

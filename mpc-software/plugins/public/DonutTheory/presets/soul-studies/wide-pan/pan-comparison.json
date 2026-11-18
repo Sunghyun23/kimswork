@@ -1,0 +1,22 @@
+{
+  "dusty-sunday": {
+    "original": {
+      "minLeftVsRightDb": -0.68,
+      "maxLeftVsRightDb": 0.77
+    },
+    "wide": {
+      "minLeftVsRightDb": -6.15,
+      "maxLeftVsRightDb": 6.3
+    }
+  },
+  "velvet-melt": {
+    "original": {
+      "minLeftVsRightDb": -1.23,
+      "maxLeftVsRightDb": 0.82
+    },
+    "wide": {
+      "minLeftVsRightDb": -9.55,
+      "maxLeftVsRightDb": 8.8
+    }
+  }
+}
