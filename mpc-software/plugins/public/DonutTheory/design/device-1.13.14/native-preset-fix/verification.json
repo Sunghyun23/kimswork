@@ -1,7 +1,7 @@
 {
   "version": "1.13.14",
-  "status": "local candidate fixed, full regression and actual MPC native preset selection verified; installed on internal NVMe",
-  "publicVersion": "1.12.0; no release or site publication in this task",
+  "status": "Official1.13.14 published; actual native preset selection and internal177file match verified",
+  "publicVersion": "1.13.14; Release450675398 and GitHub Pages44419559175 successful",
   "device": {
     "model": "MPC XL",
     "os": "3.10.1.12",

@@ -1,0 +1,33 @@
+{
+  "id": 450675398,
+  "project": "DonutTheory",
+  "version": "1.13.14",
+  "tag": "donut-theory/v1.13.14",
+  "commit": "d23da9a70e96dc8cd83f2b0e86801c297a1e2c91",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.13.14",
+  "assets": [
+    {
+      "name": "donut-theory-1.13.14-mpc.zip",
+      "size": 6019685,
+      "digest": "sha256:a517f75e68c38f925ff078dad6f8a1090d00a3b8613261aa0c64c2f4004cba37",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.13.14/donut-theory-1.13.14-mpc.zip"
+    },
+    {
+      "name": "donut-theory-1.13.14-mpc.zip.sha256",
+      "size": 95,
+      "digest": "sha256:1530a523bc7b0640922596cc44dd268794c95de220791a4e21fee779d210cec6",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.13.14/donut-theory-1.13.14-mpc.zip.sha256"
+    }
+  ],
+  "date": "2026-11-19",
+  "publicRelease": true,
+  "stable": true,
+  "pagesRun": 44419559175,
+  "pagesConclusion": "success",
+  "publicChecks": 25,
+  "responsiveRouteWidthChecks": 77,
+  "publicAssetDigestsVerified": true,
+  "actualDeviceScreenshots": true,
+  "privatePayloadsInPublic": 0,
+  "sdInstallation": "Pending: device exposes nvme and removable SSD only; user asked to insert/identify SD. Existing internal installs preserved."
+}

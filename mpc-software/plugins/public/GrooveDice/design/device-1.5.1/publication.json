@@ -1,0 +1,33 @@
+{
+  "id": 450675486,
+  "project": "GrooveDice",
+  "version": "1.5.1",
+  "tag": "groove-dice/v1.5.1",
+  "commit": "d23da9a70e96dc8cd83f2b0e86801c297a1e2c91",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.5.1",
+  "assets": [
+    {
+      "name": "groove-dice-1.5.1-mpc.zip",
+      "size": 18731074,
+      "digest": "sha256:92de156096b222a0ad59bed6cece49a17522863cee001df5791e2ca222862843",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.5.1/groove-dice-1.5.1-mpc.zip"
+    },
+    {
+      "name": "groove-dice-1.5.1-mpc.zip.sha256",
+      "size": 92,
+      "digest": "sha256:179e7b65a6ba7d3671af3e354d958c950a991e9b1dd76e540ac6be6d3deb5ec5",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.5.1/groove-dice-1.5.1-mpc.zip.sha256"
+    }
+  ],
+  "date": "2026-11-19",
+  "publicRelease": true,
+  "stable": true,
+  "pagesRun": 44419559175,
+  "pagesConclusion": "success",
+  "publicChecks": 25,
+  "responsiveRouteWidthChecks": 77,
+  "publicAssetDigestsVerified": true,
+  "actualDeviceScreenshots": true,
+  "privatePayloadsInPublic": 0,
+  "sdInstallation": "Pending: device exposes nvme and removable SSD only; user asked to insert/identify SD. Existing internal installs preserved."
+}

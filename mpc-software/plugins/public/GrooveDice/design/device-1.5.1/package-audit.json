@@ -1,0 +1,20 @@
+[
+  {
+    "project": "DonutTheory",
+    "version": "1.13.14",
+    "bytes": 6019685,
+    "sha256": "a517f75e68c38f925ff078dad6f8a1090d00a3b8613261aa0c64c2f4004cba37",
+    "banks": [],
+    "zipEntries": 179
+  },
+  {
+    "project": "GrooveDice",
+    "version": "1.5.1",
+    "bytes": 18731074,
+    "sha256": "92de156096b222a0ad59bed6cece49a17522863cee001df5791e2ca222862843",
+    "banks": [
+      "kim - VST - Groove Dice/Content/Banks/default.gdbank"
+    ],
+    "zipEntries": 159
+  }
+]
