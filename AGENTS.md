@@ -106,3 +106,5 @@
 - 2026-11-16 Crate Press는 public effect, vendor kim, UID K36Z다. 자체 spec/manual/validation 및 프로젝트 AGENTS를 따른다. 사용자가 검증 후 Release/웹 업데이트를 승인했다. Software 첫 목록과 카테고리 제품 카드에는 실제 소프트웨어 스크린샷 썸네일을 먼저 보여주고 Effects 카테고리를 별도로 유지한다. 미검증 물리/오디오/CPU를 완료로 주장하지 않는다.
 
 - Donut Theory latest1.8.0 user-approved layout supersedes historical MAIN maps above: A OSC Pair/Mix/Detune/Drift; B Cutoff/Resonance/Body/Sub; C independent LFO1Rate/Depth/LFO2Rate/Depth; D Drive/Glide/MotionRate/Depth. ADSRs remain on existing AMP/FILTER detail. New Body uses an appended parameter; legacy Body2 stays inert for compatibility. Follow the project AGENTS and latest handoff for287parameter state/routing/UI checks.
+
+- Donut Theory1.9.0 retains the1.8.0MAIN/DSP layout and appends two approved Soul Studies (66programs,288parameters). Old SoundPreset46range64 stays unchanged; SoundCurrent287 owns full selection. First287metadata remain exact. Sound changes preserve chord/key/MIDI/Strum/ChordGlide/master settings.

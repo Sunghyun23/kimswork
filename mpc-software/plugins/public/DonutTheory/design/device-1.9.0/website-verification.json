@@ -1,0 +1,38 @@
+{
+  "version": "1.9.0",
+  "date": "2026-11-18",
+  "pagesBuilt": 17,
+  "localReferences": 270,
+  "responsiveChecks": 56,
+  "javascriptErrors": [],
+  "viewports": [
+    320,
+    344,
+    390,
+    690,
+    768,
+    1024,
+    1440
+  ],
+  "routes": [
+    "/",
+    "/install/",
+    "/plugins/crate-press/",
+    "/plugins/donut-theory/",
+    "/plugins/donut-theory/manual/",
+    "/plugins/groove-dice/",
+    "/software/",
+    "/software/instruments/"
+  ],
+  "checks": [
+    "English lang and dark body on all routes",
+    "No page-level horizontal overflow",
+    "All eager and lazy images complete with nonzero natural dimensions",
+    "Both audio sources return WAV RIFF data",
+    "Software Instruments thumbnail uses real MPC1.9.0MAIN",
+    "Donut page reports stable1.9.0 with explicit product release links"
+  ],
+  "limits": [
+    "Headless Chromium viewport checks; no foldable hardware certification"
+  ]
+}

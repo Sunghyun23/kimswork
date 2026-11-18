@@ -16,7 +16,7 @@ PC, 일반 모바일, 폴드 외부·내부 화면을 지원한다. 기종 판�
 
 ## 콘텐츠 원칙
 
-현재 Donut Theory는 개발 알파다. 공개 Release 없음. Screen Q-Link와 화면 코드 hold 문제를 제품 페이지에 표시한다. 승인 이미지는 디자인 시안으로 명시한다. 실제 캡처와 시안을 혼동하지 않는다. 개발 버전과 공개 버전을 별도로 관리하고, 새 Release를 발행하면 링크 실재 여부와 기능·제한 설명도 갱신한다.
+Donut Theory와 Groove Dice는 정식 Release, Crate Press는 공개 preview로 관리한다. 현재 버전과 검증 범위는 제품 메타데이터를 기준으로 표시한다. 실제 캡처와 시안을 혼동하지 않으며 공개 제품 카드에는 실제 스크린샷을 먼저 보여준다. 개발 버전과 공개 버전을 별도로 관리하고, 새 Release를 발행하면 링크 실재 여부와 기능·제한 설명도 갱신한다.
 
 개발 명령과 제품 추가 절차: [site README](../site/README.md).
 
@@ -43,3 +43,7 @@ PC, 일반 모바일, 폴드 외부·내부 화면을 지원한다. 기종 판�
 
 ## Donut Theory 1.0.0 publication
 The public brand is Kim’s Work at https://kimswork.app/. Product metadata lives in site/src/data/plugins.ts. Actual MPC Live III screenshots replace concept art. The detailed English manual is imported from mpc-software/docs/plugins/donut-theory/manual.md into /plugins/donut-theory/manual/; changes to that source trigger Pages too. Release metadata must reference an existing plugin-specific tag and asset, never repository-wide latest.
+
+## Donut Theory1.9.0 publication
+
+Product detail and Software thumbnails use actual MPC XL1.9.0 captures. The English manual describes the current66-sound bank, dual LFO/Body/Sub layout, sync and expanded chord workflow. Two88BPM/1/8 native engine auditions are labeled as renders rather than hardware recordings. Explicit1.9.0release assets replace historical1.2.3links. Existing GitHub Pages hosting/domain/theme remain.

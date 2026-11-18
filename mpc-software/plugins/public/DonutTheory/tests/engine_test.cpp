@@ -25,7 +25,19 @@ struct Rig {
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
- {static_assert(kBodyTone==279&&kLfo2Shape==280&&kLfo2RateControl==286&&kNumParams==287,"append-only Body/LFO2");
+ {static_assert(kSoundCurrent==287&&kNumParams==288,"append-only factory selection");
+  Rig m;m.p->set(kVolume,-20);m.p->set(kRoot1,61);m.p->set(kSpread,17);m.p->set(kChordGlide,1);m.p->set(kChordKeyRoot,5);
+  for(int index:{64,65}){m.p->setProgram(index);m.block();assert(m.p->currentProgram()==index);assert(std::abs(m.p->get(kVolume)+20)<.001f&&m.p->getInt(kRoot1)==61&&std::abs(m.p->get(kSpread)-17)<.001f&&m.p->getBool(kChordGlide)&&m.p->getInt(kChordKeyRoot)==5);
+   assert(m.p->getInt(kModMode)==1&&m.p->getInt(kModSync)==1&&m.p->getInt(kModDivision)==1);assert(m.p->get(kTremDepth)==(index==64?70:80));assert(m.p->get(kBodyTone)==(index==64?28:22));
+   m.p->set(kCutoff,987);auto saved=m.p->internalSaveState();assert(m.p->internalLoadState(saved.data(),saved.size()));m.p->reset();m.p->set(kSoundPreset,2);m.block();assert(m.p->currentProgram()==index&&std::abs(m.p->get(kCutoff)-987)<.01f);
+  }
+  for(int i=0;i<200;++i)m.block();m.p->set(kSoundPreset,13);m.block();assert(m.p->currentProgram()==13&&m.p->get(kBodyTone)==0&&m.p->get(kLfo2Depth)==0&&m.p->getInt(kModMode)==0);
+  auto old=m.p->internalSaveState();size_t end=12;for(int i=0;i<287;++i)end+=1+old[end]+8;old.resize(end+4);for(int b=0;b<4;++b)old[end+b]=0;old[8]=287&255;old[9]=287>>8;old[10]=old[11]=0;
+  assert(m.p->internalLoadState(old.data(),old.size()));m.p->reset();m.block();assert(m.p->currentProgram()==13);
+  std::cout<<"PASS:66factory programs, canonical/legacy selection, retained master/chord/key/strum state, new288 and old287state migration\n";
+ }
+
+ {static_assert(kBodyTone==279&&kLfo2Shape==280&&kLfo2RateControl==286&&kNumParams==288,"append-only Body/LFO2");
   double response[3]{};int at=0;
   for(float frequency:{40.f,250.f,4000.f}){donut::BodyTone body;body.prepare(48000);double dry=0,wet=0;
    for(int i=0;i<96000;++i){const float x=.1f*std::sin(6.28318530718f*frequency*i/48000);float y=body.process(x,1);assert(std::isfinite(y));if(i>=48000){dry+=x*x;wet+=y*y;}}
@@ -49,10 +61,10 @@ int main(){
   size_t end=12;for(int i=0;i<279;++i)end+=1+state[end]+8;state.resize(end+4);state[8]=23;state[9]=1;state[10]=state[11]=0;for(int i=0;i<4;++i)state[end+i]=0;
   assert(loaded.p->internalLoadState(state.data(),state.size()));loaded.p->reset();loaded.block();assert(loaded.p->get(kBodyTone)==0&&loaded.p->get(kLfo2Depth)==0&&loaded.p->getInt(kLfo2Target)==1&&!loaded.p->getBool(kLfo2Sync));
  }
- std::cout<<"PASS: Body band/level compensation/zero bypass, inert legacy Body, five LFO2 targets/shapes, depth0 isolation, independent sync/free rate,287state/old279 migration and allocation-free variable blocks\n";
+ std::cout<<"PASS: Body band/level compensation/zero bypass, inert legacy Body, five LFO2 targets/shapes, depth0 isolation, independent sync/free rate,288state/old279 migration and allocation-free variable blocks\n";
 
  // Mode-aware rate relays retain free Hz and control independent divisions.
- {static_assert(kModSync==275&&kModDivision==276&&kLfoRateControl==277&&kModRateControl==278&&kNumParams==287,"append-only sync");
+ {static_assert(kModSync==275&&kModDivision==276&&kLfoRateControl==277&&kModRateControl==278&&kNumParams==288,"append-only sync");
   Rig t;t.p->set(kRate,1.7f);t.p->set(kTremRate,3.2f);t.block();
   for(bool motion:{false,true}){int sync=motion?kModSync:kSync,div=motion?kModDivision:kDivision,relay=motion?kModRateControl:kLfoRateControl,rate=motion?kTremRate:kRate;
    const float free=t.p->get(rate);t.p->set(sync,1);t.block();
@@ -72,7 +84,7 @@ int main(){
 
 
  // Motion mode shares rate/depth, retains stereo, and safely migrates old states.
- {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==287,"append-only motion");
+ {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==288,"append-only motion");
   Rig m;m.p->set(kMotion,0);m.p->set(kSpace,0);m.p->set(kChorus,0);m.p->set(kDelay,0);m.p->set(kDrift,0);m.p->set(kDepth,0);m.p->set(kVibrato,0);m.p->set(kAmpAttack,1);m.p->set(kAmpSustain,100);m.p->set(kAmpDecay,1);m.p->set(kTremRate,2);m.p->set(kTremDepth,100);m.p->set(kModMode,1);
   for(int i=0;i<400;++i)m.block();m.block({mpc::MidiEvent::noteOn(0,72,100)});
   bool left=false,right=false;
@@ -155,7 +167,7 @@ int main(){
  std::cout<<"PASS: scoped smooth APPLY preserves roots/types/MIDI/inactive slots, preview ownership/end/stop, stale-plan rejection and safe state\n";
 
  // Key reference never changes notes. Explicit confirmation moves all active roots only.
- {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==287,"Append-only key controls");
+ {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==288,"Append-only key controls");
   for(int count=0;count<4;++count)for(int key=0;key<12;++key)for(int from=0;from<12;++from){Rig m;m.p->set(kSlotCount,count);m.block();
    std::array<std::array<float,5>,16> before{};
    for(int slot=0;slot<16;++slot){m.p->set(kChordRoots[slot],48+slot%12);m.p->set(kChordOctaves[slot],slot%5);m.p->set(kChordPadNotes[slot],80+slot);for(int f=0;f<5;++f)before[slot][f]=m.p->get(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot]);}
@@ -182,7 +194,7 @@ int main(){
  std::cout<<"PASS: 576 key/source/count transposes, reference isolation, whole-operation bounds, degree readback, state and old208 migration without render allocations\n";
 
  // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
- {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==287,"Append-only pad positions");
+ {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==288,"Append-only pad positions");
   Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
   m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
   m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);
@@ -414,12 +426,11 @@ int main(){
  t.p->setProgram(12);t.p->reset();assert(t.p->getInt(kProgression)==5&&t.p->getInt(kRoot1)==61&&t.p->getInt(kChordOctave1)==4);
  // Snapshot restoration preserves custom edits rather than reapplying the factory patch.
  t.p->set(kCutoff,1234);auto snapshot=t.p->internalSaveState();t.p->set(kCutoff,50);t.p->set(kRoot1,25);assert(t.p->internalLoadState(snapshot.data(),snapshot.size()));t.p->reset();t.block();assert(std::abs(t.p->get(kCutoff)-1234)<.1f&&t.p->getInt(kRoot1)==61);
- // Momentary arrows reset themselves: repeated taps advance once each and wrap.
- t.p->set(kSoundPreset,0);t.block();t.p->set(kSoundPrev,1);t.block();assert(t.p->getInt(kSoundPreset)==63);t.block();assert(t.p->getInt(kSoundPreset)==63);
- assert(t.p->getInt(kSoundPrev)==0);
- t.p->set(kSoundPrev,1);t.block();assert(t.p->getInt(kSoundPreset)==62);
- t.p->set(kSoundNext,1);t.block();assert(t.p->getInt(kSoundPreset)==63);
- t.p->set(kSoundNext,1);t.block();assert(t.p->getInt(kSoundPreset)==0);
+ // Sound arrows cover all66programs while legacy46 retains its64-range.
+ t.p->set(kSoundCurrent,0);t.block();t.p->set(kSoundPrev,1);t.block();assert(t.p->currentProgram()==65);t.block();assert(t.p->currentProgram()==65);
+ t.p->set(kSoundPrev,1);t.block();assert(t.p->currentProgram()==64);
+ t.p->set(kSoundNext,1);t.block();assert(t.p->currentProgram()==65);
+ t.p->set(kSoundNext,1);t.block();assert(t.p->currentProgram()==0);
  t.p->set(kHarmonyPreset1,0);t.block();
  t.p->set(kChordPrev,1);t.block();assert(t.p->getInt(kHarmonyPreset1)==95);
  t.p->set(kChordPrev,1);t.block();assert(t.p->getInt(kHarmonyPreset1)==94);
@@ -449,8 +460,8 @@ int main(){
  t.p->set(kTrigger,56.5f);assert(t.p->displayText(kTrigger)=="57 MIDI");
  // All presets render finite non-silent audio. This is not artistic listening approval.
  float minPeak=1,maxPeak=0;
- for(int patch=0;patch<64;++patch){t.p->setProgram(patch);t.p->set(kInputMode,0);t.p->reset();float peak=t.block({mpc::MidiEvent::noteOn(0,60,110)});for(int i=0;i<400;++i)peak=std::max(peak,t.block({},(i%2)?32:512));assert(peak>1e-5f);minPeak=std::min(minPeak,peak);maxPeak=std::max(maxPeak,peak);}
+ for(int patch=0;patch<kFactoryProgramCount;++patch){t.p->setProgram(patch);t.p->set(kInputMode,0);t.p->reset();float peak=t.block({mpc::MidiEvent::noteOn(0,60,110)});for(int i=0;i<400;++i)peak=std::max(peak,t.block({},(i%2)?32:512));assert(peak>1e-5f);minPeak=std::min(minPeak,peak);maxPeak=std::max(maxPeak,peak);}
  // All progressions support four overlapping pads with bounded voice allocation.
  t.p->set(kInputMode,1);t.p->reset();for(int prog=0;prog<kProgressionCount;++prog){t.p->set(kHarmonyPreset1,prog);t.block();for(int pad=0;pad<4;++pad)t.block({mpc::MidiEvent::noteOn(0,36+pad,100)});assert(t.p->activeVoices()<=16);for(int pad=0;pad<4;++pad)t.block({mpc::MidiEvent::noteOff(0,36+pad)});t.finish();}
- std::cout<<"PASS: channel-isolated pedals, CC121 mono fallback, unified presets/volume, synced rate display;  MIDI/chord ownership, sustain, mono fallback, mode transitions, preset independence, state, arrows, spread cancellation, sample offsets, allocation-free rendering, 64 sounds and 96 progressions. Peak range "<<minPeak<<".."<<maxPeak<<"\n";
+ std::cout<<"PASS: channel-isolated pedals, CC121 mono fallback, unified presets/volume, synced rate display;  MIDI/chord ownership, sustain, mono fallback, mode transitions, preset independence, state, arrows, spread cancellation, sample offsets, allocation-free rendering, 66 sounds and 96 progressions. Peak range "<<minPeak<<".."<<maxPeak<<"\n";
 }

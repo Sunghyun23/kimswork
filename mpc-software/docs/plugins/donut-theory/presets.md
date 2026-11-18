@@ -1,3 +1,7 @@
+## Current release target — 1.9.0 (2026-11-18)
+
+The approved 1.8.0 MAIN layout/engine is retained. Two approved 88 BPM /1/8 Auto Pan Soul Studies append as built-in programs65/66: Keys / Dusty Sunday, Synth / Velvet Melt. Factory bank66; first64order/names/recipes retained. Legacy SoundPreset46 remains64choices; appended SoundCurrent287 has66choices. Total288parameters; first287declarations match the1.8fixture exactly. Sound selection preserves master/chord/key/strum/glide-preference state. See the current manual/release notes for the coherent public specification; historical sections below are development history.
+
 # Donut Theory factory bank v4 — 1.2.0
 
 현재 정식판1.2.2에서도 이1.2.0 엔진/레시피를 유지한다. 최신 배포·사용자 확인·검증 한계는 [인계 기준](handoff.md)을 따른다.

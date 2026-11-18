@@ -270,3 +270,7 @@ User found the18%/24% audition depths too subtle. Added an optional --wide-pan r
 ## 2026-11-18 — Soul Studies88BPM / Auto Pan1/8
 
 User requested88BPM and eighth-note Auto Pan. Renderer now accepts --bpm/--pan-sync while retaining the original/wide variants. New sync-88-eighth files use host tempo/PPQ88, ModSync1/Division1, depths70/80%; one cycle0.340909s/2.93333Hz. Native-state round-trip, finite unclipped audio, full note release and saved-setting/WAV/XML checks passed. Clips14.6591s. Presets do not set host tempo; MPC must use88BPM. Engine/factory bank/installed MPC unchanged; MPC preset import remains untested.
+
+## 2026-11-18 —1.9.0 official publication preparation
+
+User authorized official Release and website deployment after approving88BPM/1/8Auto Pan auditions. Both accepted timbres append as factory65/66; first64programs and first287full declarations retained, canonical SoundCurrent287(total288) keeps legacy46range64. Original1.8.0DSP/layout retained. Full build/tests and final display-name skin checks pass. InternalNVMe MPC XL final read-back122files byte-identical; actualscreens/hashes are in design/device-1.9.0/verification.json. Native factory auditions preserve the approved result (DustyexactPCM,Velvetmax1LSB). Detailed release/manual/README and site are current. Website build/links/responsive tests pass; final publication URLs/status will be appended after deployment. Hardware audio/CPU/fullproject/physicalcoverage limits remain as release notes.

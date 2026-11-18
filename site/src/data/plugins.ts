@@ -2,6 +2,7 @@ export interface Plugin {
  slug: string; name: string; kind?: 'instrument' | 'effect'; category: string; tagline: string; description: string; summary: string;
  developmentVersion: string; image: string; imageAlt: string; intro: string; mapping: string[][]; limitations: string[]; verifiedDevice: string; features: {title: string; text: string}[];
  changes: {title:string; text:string}[]; manual?: string; screenshots: {image:string; alt:string; caption:string}[];
+ auditions?: {name:string; file:string; description:string}[];
  release: null | { version: string; tag: string; asset: string; preview?: boolean };
 }
 export const plugins: Plugin[] = [{
@@ -18,49 +19,150 @@ export const plugins: Plugin[] = [{
  screenshots:[{image:'crate-press-main-0.2.2.webp',alt:'Crate Press MAIN running on MPC Live III',caption:'MAIN · Actual MPC Live III capture, 0.2.2. Compact section headings, live numeric values and eight performance buttons.'},{image:'crate-press-perform-0.2.2.webp',alt:'Crate Press PERFORM settings running on MPC Live III',caption:'PERFORM · Actual MPC capture. Independent timing, feedback, texture and release controls.'}]
 },
 {
- slug: 'donut-theory', name: 'Donut Theory', category: 'POLYPHONIC SYNTHESIZER',
- tagline: 'A little worn. Endlessly warm.',
- summary: 'A Moog-inspired synthesis engine, warm factory sounds and sixteen playable chord slots for MPC.',
- description: 'A nonlinear oscillator mixer, four-stage ladder low-pass and rounded VCA now shape the sound at its source. Explore 63 factory voices rebuilt for this engine, plus a dry Init, then play bass, leads and your own chord changes inside your MPC.',
- developmentVersion: '1.2.3', image: 'donut-theory-main-1.2.2.webp', release: {version:'1.2.3',tag:'donut-theory/v1.2.3',asset:'donut-theory-1.2.3-mpc.zip'},
- imageAlt: 'Donut Theory running on MPC Live III, showing its four performance control groups and large chord pads',
- manual: 'plugins/donut-theory/manual/',
- intro: 'Sixteen oscillator pairs, hands-on envelopes and four Q-Link banks keep the sound close. Start with one of 64 sound presets, or build a chord arrangement across four banks of four slots.',
- verifiedDevice: 'MPC XL internal installation; earlier MPC Live III audio/UI checks, OS 3.10.1.12',
- mapping: [ ['A · Sound / Play','OSC Pair','OSC Mix','Sub','Drift'], ['B · Amp Envelope','Attack','Decay','Sustain','Release'], ['C · Filter / LFO','Filter Cutoff','Resonance','LFO Rate','LFO Depth'], ['D · FX / Tremolo','Drive','Glide','Tremolo Rate','Tremolo Depth'] ],
- limitations: [
-  'SUB spectral and parameter/skin tests pass; a dedicated MPC XL physical SUB knob/listening matrix has not been confirmed.',
-  'Sixteen chord slots share a sixteen-voice engine; overlapping chords can steal older voices.',
-  'Screen chord pads audition the instrument; they do not send MIDI notes to the MPC sequencer.',
-  'Use Q-Link Screen mode for chord editing. Program/Track mode retains the synth mapping.',
-  'The MPC’s gray host PRESET list is flat. Use the instrument’s SOUND PRESET browser for category-first selection.',
-  'Manual pad-location hints have been removed in 1.2.2. Use each slot’s MIDI Note / LEARN to connect a physical pad; saved MIDI assignments are unchanged.',
-  'MPC Live III hardware checks cover all 64 program changes and audible screen-chord gates, filter sweeps and native preset reload after restart. The overlapping-release CPU test observed 41%; this is not a worst-case guarantee.',
-  'Remote Viewer reported audio-output dropouts during testing; their source was not isolated. Artifact-free hardware output and a full MPC project round-trip are not certified.',
-  'The new engine changes existing project sounds. Keep 1.1.2 for sound-identical recall. Testing on other MPC models, simultaneous finger multi-touch and every physical Q-Link rotation is not certified.'
- ],
- changes: [
-  {title:'1.2.3: bass weight within reach.',text:'Sub replaces Body beside OSC Mix. Its independent sine plays exactly one octave below OSC1 through the shared filter and amp envelope. Factory programs migrate the former Body mix/sub contributions into explicit controls; old user Body automation may sound different.'},
-  {title:'1.2.2: a lighter chord editor.',text:'Removed manual pad-location hint controls after reports of stalled MAIN-to-CHORD navigation. The expanded CHORD widget tree shrinks from 10,889 to 1,913. Repeated remote tab switching, inversion selection and sixteen-slot navigation were checked on MPC Live III. MIDI Note, LEARN and saved assignments remain.'},
-  {title:'A new engine, from mixer to VCA.',text:'Version 1.2.0 replaces the low-pass voice path with a four-stage nonlinear ladder, a saturating oscillator summer and level-dependent VCA rounding. This is the default engine, with no extra mode to enable. The existing band-limited oscillators, envelopes and effects remain part of the instrument.'},
-  {title:'Resonance that responds to level.',text:'Nonlinear stages and a simultaneous feedback solve make resonance react to the signal. The ladder runs internally at twice the sample rate with output filtering. Higher resonance naturally reduces low-end gain; its top is limited below autonomous self-oscillation.'},
-  {title:'Every playable factory sound refitted.',text:'All 63 Bass, Keys, Synth, Lead and Pad recipes have revised cutoff, resonance and filter-envelope settings, gentler external drive and remeasured output trims. Names, categories, program order and individual low-cut settings remain. Init keeps low-cut and effects off, while using the new engine.'},
-  {title:'The familiar performance surface.',text:'The UI, 208 parameter identities, synth and CHORD Q-Link mappings, enlarged chord arrows are retained. Band-pass, High-pass and Notch remain 12 dB SVF extensions; they are not ladder variants.'},
-  {title:'Saved settings load. Their sound changes.',text:'Existing projects pass through the new mixer, filter and VCA, so parameter compatibility does not mean identical sound. Keep the 1.1.2 package and render tracks before upgrading if you need their old sound. The new engine costs more CPU; full hardware load certification is listed separately.'}
- ],
- screenshots: [
-  {image:'donut-theory-main-1.2.2.webp',alt:'Donut Theory 1.2.2 running on MPC Live III with four synthesis groups and large screen chord pads',caption:'MAIN · Actual v1.2.2 MPC Live III capture. In 1.2.3, Sub replaces the pictured Body control; this is not a fresh 1.2.3 capture.'},
-  {image:'donut-theory-chords-1.2.2.webp',alt:'Actual Donut Theory 1.2.2 editor with all sixteen slots enabled and bank 13 to 16 selected',caption:'CHORD · Sixteen slots, four at a time. Root, type, inversions, octave and individual MIDI assignments share one editor.'},
-  {image:'donut-theory-browser-1.2.2.webp',alt:'Actual Donut Theory 1.2.2 category-first sound browser over the MAIN screen',caption:'SOUND PRESET · Choose a category first. The left sidebar covers underlying chord arrows and hides Q-Link guides.'}
- ],
- features: [
-  { title: '64 starting points. Six familiar categories.', text: 'The ladder engine has 63 individually refitted factory sounds and a dry Init. Browse Bass, Keys, Synth, Lead and Pad. Per-sound low-cut and output trim provide practical starting levels.' },
-  { title: 'A little movement goes a long way.', text: 'Drift adds slow wow and faster flutter. Filter LFO and independent tremolo have separate rate and depth controls, alongside a complete amp ADSR.' },
-  { title: 'Your changes, across sixteen slots.', text: 'Start with four chords and expand to eight, twelve or sixteen. Keep four large touch pads on MAIN; assign physical pads with LEARN. Each bank keeps its own chord-preset selection.' },
-  { title: 'Shape the voicing. Keep the groove.', text: 'Choose the available inversions for each chord, Open voicing and an independent ±2-octave offset. The 32 four-chord presets are starting points, and affect only the bank you are viewing.' },
-  { title: 'Weight, warmth and space.', text: 'Combine Tape, Tube or Fuzz character with chorus and tempo delay. Filter cutoff and resonance sit beside the LFO that moves them.' },
-  { title: 'An MPC instrument, from the first screen.', text: 'Play keyboard notes, chord triggers or both in Split mode. Mono and Legato apply to melody notes; chord pads keep their full voicings.' }
- ]
+  "slug": "donut-theory",
+  "name": "Donut Theory",
+  "category": "POLYPHONIC SYNTHESIZER",
+  "tagline": "A little worn. Endlessly warm.",
+  "summary": "Warm synthesis. Rich chords. Movement in every direction.",
+  "description": "A Moog-inspired synthesizer for MPC bass, keys, leads and pads. Shape its nonlinear ladder engine with Body and Sub, two independent LFOs and synchronized Tremolo or Auto Pan, then build your own chord changes.",
+  "developmentVersion": "1.9.0",
+  "release": {
+    "version": "1.9.0",
+    "tag": "donut-theory/v1.9.0",
+    "asset": "donut-theory-1.9.0-mpc.zip"
+  },
+  "image": "donut-theory-main-device-1.9.0.webp",
+  "imageAlt": "Donut Theory1.9.0 running on MPC XL with Dusty Sunday, two LFOs, Body, Sub and synchronized Auto Pan",
+  "manual": "plugins/donut-theory/manual/",
+  "intro": "66 synthesized factory sounds, 32 chord types and 96 progression recipes. The new Dusty Sunday and Velvet Melt sounds bring wide Auto Pan character into the factory bank. No external samples are required.",
+  "verifiedDevice": "MPC XL / OS 3.10.1.12, internal NVMe; actual1.9.0 remote UI checks and runtime read-back",
+  "mapping": [
+    [
+      "A · OSC / Sound",
+      "OSC Pair",
+      "OSC Mix",
+      "Detune",
+      "Drift"
+    ],
+    [
+      "B · Filter / Tone",
+      "Filter Cutoff",
+      "Resonance",
+      "Body",
+      "Sub"
+    ],
+    [
+      "C · LFO 1 /2",
+      "LFO 1 Rate",
+      "LFO 1 Depth",
+      "LFO 2 Rate",
+      "LFO 2 Depth"
+    ],
+    [
+      "D · FX / Motion",
+      "Drive",
+      "Glide",
+      "Mod Rate",
+      "Mod Depth"
+    ]
+  ],
+  "features": [
+    {
+      "title": "66 sounds. A warm place to start.",
+      "text": "Bass, Keys, Synth, Lead and Pad, plus dry Init. Category-first browsing and per-sound low-cut keep selection practical. Dusty Sunday and Velvet Melt append to the original 64 programs."
+    },
+    {
+      "title": "Weight and texture, side by side.",
+      "text": "Sub adds a sine one octave below the main oscillator. Body adds broad low-mid density through gentle saturation. Filter Cutoff and Resonance share the same group; amp/filter ADSRs stay on detail pages."
+    },
+    {
+      "title": "Two LFOs. One shared motion effect.",
+      "text": "Each LFO has independent Shape, Target, Rate, Depth and Sync. Choose Tremolo or Auto Pan in a separate module. Every synchronized Rate uses its existing Q-Link to select a division and remembers its free Hz value."
+    },
+    {
+      "title": "Find a home for your chords.",
+      "text": "Set a Major or Minor reference Key beside the circle of fifths. Explicit transpose moves active roots together. Smooth Voicing proposes smaller top-note movement, with preview before you apply it."
+    },
+    {
+      "title": "Play the space between notes.",
+      "text": "Overlapping chord triggers can glide between nearby voices while holding common tones. One-shot Strum spreads the chord from bass to top. Ordinary Mono/Legato melody remains separate."
+    },
+    {
+      "title": "Sixteen slots, four within reach.",
+      "text": "Expand from 4 to 16 slots. Four large MAIN pads play while held; physical pads connect through individual MIDI Note/LEARN. CHORD uses sixteen SCREEN Q-Links for Root, Type, Voicing and Octave."
+    }
+  ],
+  "changes": [
+    {
+      "title": "1.9.0: two new voices, built in.",
+      "text": "Keys / Dusty Sunday and Synth / Velvet Melt join the factory bank at programs 65/66. Both use eighth-note Auto Pan at 70%/80% depth. Set MPC to 88 BPM for the audition feel; sound selection preserves your chords, Strum, CHORD GLIDE and master Volume."
+    },
+    {
+      "title": "A clearer performance surface.",
+      "text": "OSC Pair/Mix/Detune/Drift; Filter/Resonance/Body/Sub; both LFOs; Drive/Glide/Motion. Four groups keep sixteen controls in a consistent order. Touch selectors and independent SYNC toggles sit beside the relevant knobs."
+    },
+    {
+      "title": "More harmony, less top-note travel.",
+      "text": "32 chord types and 96 four-chord recipes, Key/circle reference, explicit transpose and Smooth Voicing extend the editor. Inversions, octave, overlapping chord glide and one-shot Strum remain directly editable."
+    },
+    {
+      "title": "Bring your sessions forward.",
+      "text": "The original 64 sound programs keep their order, with two new additions. Sound changes preserve your chord settings and master Volume. Saved tracks may retain older Q-Link maps: reset them or compare a fresh instance."
+    }
+  ],
+  "limitations": [
+    "The gray MPC host PRESET list is flat. Category-first navigation is provided inside SOUND PRESET.",
+    "The sixteen-voice pool is shared by melody and chords. Long overlapping chord releases can steal older voices.",
+    "Screen chord pads audition sound; they do not send MIDI notes to the MPC sequencer. Record physical trigger notes instead.",
+    "SCREEN mode follows CHORD; Program/Track retains the synth mapping. Old tracks may cache previous defaults.",
+    "Actual XL checks cover remote screen operation and installed-file read-back. Complete physical Q-Link/multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.",
+    "Native audio demos are engine renders, not MPC output recordings. Testing on every MPC model/OS is not certified.",
+    "The engine changed in 1.2.0 and explicit Sub in 1.2.3; retained parameter identities do not guarantee identical older project sounds."
+  ],
+  "screenshots": [
+    {
+      "image": "donut-theory-main-device-1.9.0.webp",
+      "alt": "Actual MPC XL 1.9.0 MAIN with Dusty Sunday and independent modulation",
+      "caption": "MAIN · Actual 1.9.0 MPC XL capture. Four control groups and the Dusty Sunday factory sound."
+    },
+    {
+      "image": "donut-theory-chord-device-1.9.0.webp",
+      "alt": "Actual MPC XL Donut Theory chord editor with key reference and circle of fifths",
+      "caption": "CHORD · Four editable slots, Key/circle reference, transpose, Smooth Voicing, chord glide and Strum."
+    },
+    {
+      "image": "donut-theory-browser-device-1.9.0.webp",
+      "alt": "Actual Donut Theory category-first sound browser running on MPC XL",
+      "caption": "SOUND PRESET · Choose a category, then a sound. The host PRESET list also contains all 66 program names."
+    },
+    {
+      "image": "donut-theory-mod-device-1.9.0.webp",
+      "alt": "Donut Theory MOD detail with two independent LFOs on MPC XL",
+      "caption": "MOD · Independent LFOs, routing and tempo settings. MAIN keeps both rates and depths close."
+    },
+    {
+      "image": "donut-theory-amp-device-1.9.0.webp",
+      "alt": "Donut Theory AMP detail running on MPC XL",
+      "caption": "AMP · Amp ADSR and playing controls live on their dedicated page."
+    },
+    {
+      "image": "donut-theory-fx-device-1.9.0.webp",
+      "alt": "Actual Donut Theory FX detail with Auto Pan and stereo balance",
+      "caption": "FX · Drive, chorus, delay, cleanup Low-cut and shared Tremolo/Auto Pan with static Pan."
+    }
+  ],
+  "auditions": [
+    {
+      "name": "Keys / Dusty Sunday",
+      "file": "donut-theory-dusty-sunday-1.9.0.wav",
+      "description": "Soft sine/triangle keys ·8 ms Strum ·70% Auto Pan."
+    },
+    {
+      "name": "Synth / Velvet Melt",
+      "file": "donut-theory-velvet-melt-1.9.0.wav",
+      "description": "Soft saw/triangle ·6 ms Strum ·65 ms chord glide ·80% Auto Pan."
+    }
+  ]
 },
 {
  slug:'groove-dice', name:'Groove Dice',manual:'plugins/groove-dice/manual/', category:'DRUM & GROOVE INSTRUMENT',
@@ -97,7 +199,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-18-groove-dice-134';
+export const navigationVersion = 'software-2026-11-18-donut-theory-190';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

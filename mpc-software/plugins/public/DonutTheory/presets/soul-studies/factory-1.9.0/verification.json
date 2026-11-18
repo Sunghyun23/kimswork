@@ -1,0 +1,59 @@
+{
+  "engineVersion": "1.9.0",
+  "source": "actual native engine, restored saved preset chunk; not a hardware recording",
+  "sampleRate": 48000,
+  "channels": 2,
+  "pcmBits": 16,
+  "bpm": 88,
+  "progression": [
+    "Cmaj9",
+    "Am9/E",
+    "F6/9/D",
+    "G9sus4/D"
+  ],
+  "topNotes": [
+    "D4",
+    "C4",
+    "C4",
+    "C4"
+  ],
+  "audioPostprocessing": "PCM conversion only; level adjustment is baked into saved Sound Trim",
+  "checks": [
+    "288parameter native state round-trip",
+    "all samples finite, no clipping",
+    "all voices release",
+    "XML state64 matches the restored native chunk",
+    "WAV header/frame count valid"
+  ],
+  "limitation": "MPC XPL browser import not tested; XPL points to internal NVMe ARM64 installation; use built-in programs for timbre-only recall; XPL also includes demo chord/performance settings",
+  "patches": [
+    {
+      "slug": "dusty-sunday",
+      "name": "Keys / Dusty Sunday Sync",
+      "seconds": 14.659083333333333,
+      "peak": 0.6198892593383789,
+      "rms": 0.064726560501368,
+      "soundTrimDb": 7.82824,
+      "autoPanDepthPercent": 70,
+      "autoPanSync": true,
+      "autoPanDivision": "1/8",
+      "stateSHA256": "0bca0665535cd9c9602162dbfa41a357633cda075196ec1ad8456eb6dc97544f",
+      "wavSHA256": "9aa765488f8837001a002a038f1cc7d53d4f57018ee32529a74b825d4200b590",
+      "xplSHA256": "ac23e0dc46d22038f4260a3585d4bd738fd574d13e9aec1848ea1361885d9c4e"
+    },
+    {
+      "slug": "velvet-melt",
+      "name": "Synth / Velvet Melt Sync",
+      "seconds": 14.659083333333333,
+      "peak": 0.4002739489078522,
+      "rms": 0.06548397003360422,
+      "soundTrimDb": 7.44624,
+      "autoPanDepthPercent": 80,
+      "autoPanSync": true,
+      "autoPanDivision": "1/8",
+      "stateSHA256": "dc15da83f5479dbab4b144a2e43edcb13baa1c578ee97682c442914fdd5cf057",
+      "wavSHA256": "beafa165285f044952ffebb7d4862c2f2c2e6609cbbf4c0be42d634c5b9a2bbd",
+      "xplSHA256": "998cdc6c063c60bb9418875bf496242c64e938687a68ac103928e5fa34b5b10b"
+    }
+  ]
+}

@@ -1,3 +1,7 @@
+## Current release target — 1.9.0 (2026-11-18)
+
+The approved 1.8.0 MAIN layout/engine is retained. Two approved 88 BPM /1/8 Auto Pan Soul Studies append as built-in programs65/66: Keys / Dusty Sunday, Synth / Velvet Melt. Factory bank66; first64order/names/recipes retained. Legacy SoundPreset46 remains64choices; appended SoundCurrent287 has66choices. Total288parameters; first287declarations match the1.8fixture exactly. Sound selection preserves master/chord/key/strum/glide-preference state. See the current manual/release notes for the coherent public specification; historical sections below are development history.
+
 # Donut Theory — 제품 및 구현 사양
 
 상태: **1.2.2 정식 배포·웹 갱신 완료(2026-11-15)**. 사용자 직접 MAIN↔CHORD 터치 정상 전환 확인. [인계·재개 기준](handoff.md)을 먼저 읽는다. 수동 패드 위치 UI 제거 및 CHORD 경량화 후 실기기 원격 반복 전환/보이싱/16슬롯 확인. 1.2.0 엔진 실기기64음색 발음/CPU 관찰과1.2.1 UI·음색 저장 복원을 확인했다. 물리 입력 전체·최악 부하·프로젝트 복원은 미인증. 아래 개발 이력보다 최신 버전 항목을 우선한다. 현재 동작과 남은 항목은 [구현 기록](implementation.md), [프로젝트 README](../../../plugins/public/DonutTheory/README.md)를 우선 참고한다. 이 문서에는 장기 목표도 포함된다.

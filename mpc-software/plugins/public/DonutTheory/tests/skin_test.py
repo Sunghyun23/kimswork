@@ -3,6 +3,7 @@ from pathlib import Path
 P=Path(__file__).resolve().parents[1];skin=P/'skins'
 t=json.loads((skin/'TUI.json').read_text())['pageData'];q=json.loads((skin/'Q-Links.json').read_text());params=json.loads((P/'parameters.json').read_text())
 index={p['key']:i for i,p in enumerate(params)}
+index['SoundPreset']=index['SoundCurrent']
 expected=['OscPair','Mix','Detune','Drift','Cutoff','Resonance','BodyTone','Sub','LfoRateControl','Depth','Lfo2RateControl','Lfo2Depth','Drive','Glide','ModRateControl','TremDepth']
 main=q['Screen Mode Q-Links']['map'][0];assert main['Bank Direction']=='Column'
 # SDK hardware banks are columns read top-to-bottom, not Q-Link 1..4.
@@ -42,7 +43,7 @@ for key in ('DTMenu','DTSmallMenu','DTSelectFilter'):
 print('PASS: full-size rotating artwork, visible titles, native arrow buttons, menu fallback gestures')
 
 assert any(c['componentData']['name']=='Filter / LFO divider' for c in children)
-for key,count in [('SoundPreset',64),('HarmonyCurrent',96)]:
+for key,count in [('SoundPreset',66),('HarmonyCurrent',96)]:
  panel=defs['DTChoicePanel'+str(index[key])]
  assert panel['componentsData']
  rows=[defs['DTSideRow'+str(index[key])+'-'+str(i)] for i in range(count)]
@@ -50,7 +51,7 @@ for key,count in [('SoundPreset',64),('HarmonyCurrent',96)]:
  assert len(buttons)==count
  assert [c['componentData']['data']['buttonId'] for c in buttons]==list(range(count))
  assert all(c['componentData']['data']['numButtonsInGroup']==count for c in buttons)
-print('PASS: explicit 64 sound / 96 chord choices and Drive/Play separator')
+print('PASS: explicit 66 sound / 96 chord choices and Drive/Play separator')
 
 for name,definition in defs.items():
  if any(c['componentData']['type']=='Slider' and c['componentData']['data'].get('handleName','').startswith('ResetOnGestureEnd/') for c in definition['componentsData']):continue # continuous hold surfaces checked below
@@ -163,7 +164,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==287
+assert index['LearnStatus']==84 and len(params)==288
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -190,20 +191,20 @@ print('PASS: momentary editor auditions, root-only labels, advanced safety and a
 # Category-first bank replaces the flat picker in MAIN and detail pages.
 from collections import Counter
 bank=json.loads((P/'factory-presets.json').read_text())['sounds']
-assert Counter(p['category'] for p in bank)=={'Init':1,'Bass':12,'Keys':15,'Synth':12,'Lead':12,'Pad':12}
+assert Counter(p['category'] for p in bank)=={'Init':1,'Bass':12,'Keys':16,'Synth':13,'Lead':12,'Pad':12}
 assert index['LowCut']==85
 assert bank[0]['values']['LowCut']==0 and all(0<p['values']['LowCut']<=220 for p in bank[1:])
-assert len({json.dumps(p['values'],sort_keys=True) for p in bank})==64
+assert len({json.dumps(p['values'],sort_keys=True) for p in bank})==66
 panel=defs['DTChoicePanel'+str(index['SoundPreset'])]
 assert 'DTSideSoundCategories' in defs
 for ci,category in enumerate(('Init','Bass','Keys','Synth','Lead','Pad'),1):
  assert f'DTSideSoundCategory{ci}' in defs
  choices=[i for i,preset in enumerate(bank) if preset['category']==category]
  assert all(f'DTSideRow{index["SoundPreset"]}-{i}' in defs for i in choices)
-print('PASS: category-first 64-new-sound bank, Init, unique recipes and per-sound low cut')
+print('PASS: category-first 66-sound bank, Init, unique recipes and per-sound low cut')
 
 # Bank voicing contract: warm subtractive programs without new modes/UI choices.
-for sound in bank[1:]:
+for sound in bank[1:64]:
  v=sound['values'];assert v['Filter']==0 and v['DriveType']==0,sound['name']
  assert v['Drift']<=5 and v['FM']<=18 and abs(v['Detune'])<=7,sound['name']
  if sound['category']!='Keys':assert v['FM']==0,sound['name']
@@ -358,10 +359,10 @@ editor_widgets=defs['Editor_DTAllChords']['componentsData']
 titles=[c for c in editor_widgets if c['componentData']['type']=='Label' and c['componentData']['data'].get('text','').startswith('CHORD EDITOR')]
 assert len(titles)==1
 assert any(c['componentData']['type']=='Label' and c['componentData']['data'].get('text')=='CHORDS' and c['bounds']['bounds']=='214 564 180 44' for c in editor_widgets)
-for key in ('DTMenu-choice-46','sliderWithFocusMenu-choice-46'):
+for key in ('DTMenu-choice-287','sliderWithFocusMenu-choice-287'):
  launcher=defs[defs[key]['componentsData'][-1]['componentData']['type']]
- assert launcher['actions'][0]['handleName']=='Local/2/dtChoice46'
- assert launcher['componentsData'][0]['handle remapping']['map']==[{'key':'Data','value':'Local/7/soundCategory46'}]
+ assert launcher['actions'][0]['handleName']=='Local/2/dtChoice287'
+ assert launcher['componentsData'][0]['handle remapping']['map']==[{'key':'Data','value':'Local/7/soundCategory287'}]
  assert launcher['componentsData'][0]['componentData']['data']['buttonId']==0
 print('PASS: single editor title, intact CHORDS caption and category-first touch launchers')
 
@@ -479,7 +480,7 @@ for name in ['Rate','TremRate']:
 print('PASS: first275 metadata preserved; front SYNC buttons and mode-aware rate mappings retain sixteen Q-Links')
 
 assert params[:279]==json.loads((P/'tests/legacy-279-parameters.json').read_text())
-assert [p['key']for p in params[279:]]==['BodyTone','Lfo2Shape','Lfo2Rate','Lfo2Depth','Lfo2Target','Lfo2Sync','Lfo2Division','Lfo2RateControl']
+assert [p['key']for p in params[279:287]]==['BodyTone','Lfo2Shape','Lfo2Rate','Lfo2Depth','Lfo2Target','Lfo2Sync','Lfo2Division','Lfo2RateControl']
 assert all(box(k)[1]==164 for k in ['OscPair','Mix','Detune','Drift','Cutoff','Resonance','BodyTone','Sub'])
 assert all(box(k)[1]==390 for k in ['Rate','Depth','Lfo2RateControl','Lfo2Depth','Drive','Glide','TremRate','TremDepth'])
 assert 'DTTempoSyncLfo2RateControl' in defs
@@ -487,3 +488,11 @@ assert all(not k.startswith('Amp')for k in byname)
 assert {'Amp Attack','Amp Decay','Amp Sustain','Amp Release'} <= {w['componentData']['name']for w in t['tabs'][3]['componentDefinition']['componentsData']}
 assert {'Filter Attack','Filter Decay','Filter Sustain','Filter Release'} <= {w['componentData']['name']for w in t['tabs'][2]['componentDefinition']['componentsData']}
 print('PASS: approved OSC/filter/dual-LFO/motion groups; detailed ADSRs remain; first279 declarations retained')
+
+assert params[:287]==json.loads((P/'tests/legacy-287-parameters.json').read_text())
+assert len(params[46]['choices'])==64 and len(params[287]['choices'])==66
+print('PASS: first287full declarations unchanged; appended full-range sound browser')
+
+osc=next(tab['componentDefinition']['componentsData']for tab in t['tabs']if tab['tabName']=='OSC')
+w=next(w for w in osc if w['componentData']['name']=='Sound Preset')
+assert w['handle remapping']['map'][0]['value']=='WithName[Sound Preset]/Parameter 287'

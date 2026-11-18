@@ -1,25 +1,19 @@
 # Donut Theory — User Manual
 
-Donut Theory is a synthesis-based instrument by **kim** for Akai MPC standalone. It combines warm basses, worn keys, analog-style leads, textured pads and playable chord progressions in one instrument. Its character draws on soul and hip-hop production; it is not an official artist product or an exact recreation of a particular record, keyboard or tape machine.
+**Version 1.9.0 · kim · MPC standalone · UID Krql**
 
-This manual describes the current instrument layout. Check the release notes for the installation package's exact version, tested hardware and remaining limitations. The development reference device is **MPC Live III running MPC OS 3.10.1.12**. This does not establish compatibility or performance on every MPC model. Multiple simultaneous screen touches, every physical Q-Link and worst-case CPU use require their own device checks.
+A warm polyphonic instrument for bass, keys, leads, pads and chord playing. Its original Moog-inspired engine combines a nonlinear oscillator mixer, a four-stage ladder low-pass and rounded VCA. It is an inspired synthesis design, not an exact recreation of a named instrument or artist's recordings.
 
-## Contents
+The current reference device is **MPC XL / MPC OS 3.10.1.12**, installed on internal NVMe. Build, DSP, state and remote UI checks are described in the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.9.0). Complete physical Q-Link, simultaneous finger multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.
 
-1. [Install, update and remove](#install-update-and-remove)
-2. [First session](#first-session)
-3. [Navigation and selection](#navigation-and-selection)
-4. [MAIN and Q-Link controls](#main-and-q-link-controls)
-5. [Sounds and presets](#sounds-and-presets)
-6. [Keyboard, physical pads and screen chords](#keyboard-physical-pads-and-screen-chords)
-7. [Chord editor](#chord-editor)
-8. [Synthesis reference](#synthesis-reference)
-9. [Saving, recording and automation](#saving-recording-and-automation)
-10. [Troubleshooting](#troubleshooting)
-11. [Manual pad location hints](#manual-pad-location-hints)
-12. [Factory sound list](#factory-sound-list)
-13. [What changed in 1.2.0](#what-changed-in-120)
-14. [Earlier changes in 1.1.2](#earlier-changes-in-112)
+## First session
+
+1. Install the complete plugin folder using the instructions below. Open Donut Theory: MAIN appears first without a startup message.
+2. Tap SOUND PRESET, choose Keys, then Dusty Sunday; or Synth, then Velvet Melt. These are the two new sounds in 1.9.0.
+3. For the approved audition feel, set MPC tempo to **88 BPM**. Both sounds have Auto Pan synchronized to **1/8**, with 70% and 80% Depth respectively. Listen in stereo.
+4. Select NOTES for normal keyboard/pad notes, or SPLIT for melody and assigned chord triggers. Screen chord pads play while held; Amp Release and effects set the tail after release.
+5. Press MAIN again for CHORD. Choose a progression, change its voicings, set a reference Key, or use SMOOTH VOICING before applying it.
+6. Use AMP for amp ADSR and FILTER for filter ADSR. These are deliberately off the main sixteen Q-Links.
 
 ## Install, update and remove
 
@@ -35,7 +29,7 @@ The package includes ARM32 and ARM64 MPC binaries. The native development librar
 
 1. Download the Donut Theory MPC ZIP from its specific release, then extract it.
 2. Locate the complete folder named `kim - VST - Donut Theory`.
-3. Copy that folder into `VST2 Plugins` on your MPC-accessible drive. Keep the contents and subfolders together.
+3. Copy that folder into `VST2 Plugins` on your MPC-accessible drive (the internal NVMe is used on the reference device). Keep the contents and subfolders together.
 4. Restart the MPC application or device so it can discover the plugin.
 5. Create an instrument/plugin track and select **Donut Theory** from the external plugins.
 
@@ -65,16 +59,6 @@ Donut Theory retains its plugin identity across updates. Existing projects may r
 
 Save a copy of any project that uses the plugin, and render or replace its tracks if needed. Remove `kim - VST - Donut Theory` from `VST2 Plugins`, then restart MPC. Projects that reference it will require the plugin to restore those instrument tracks.
 
-## First session
-
-1. Open Donut Theory. The plugin starts on **MAIN**, without a startup tutorial popup.
-2. Tap **SOUND PRESET**, choose a category, then choose a sound. Try a Lead or Pad for an analog-style starting point.
-3. Set **INPUT** to **NOTES** to play ordinary notes from pads or a keyboard.
-4. Adjust **Filter Cutoff**, **Sub** and **Drift**. Use **Attack** and **Release** to change how the sound starts and ends.
-5. Press and hold a large chord pad at the bottom of MAIN. Release it to end the gate; the Amp Release and effects determine the remaining tail.
-6. To play those chords from physical MPC pads, open **CHORD → PAD SETUP**, use **LEARN** for each slot, and choose **CHORDS** or **SPLIT** input mode.
-
-Start at a comfortable listening level. Sound Trim helps balance the factory bank, but velocity, note range, resonance, overlapping chords and drive can still change perceived loudness.
 
 ## Navigation and selection
 
@@ -88,77 +72,36 @@ Tap a plugin selection field to open a list in the **left sidebar**, while retai
 
 **SOUND PRESET** uses category-first browsing: choose **Init**, **Bass**, **Keys**, **Synth**, **Lead** or **Pad**, then a sound. Use the browser's back control to choose another category. Reopening SOUND PRESET starts from the category list.
 
-The gray MPC **PRESET** selector is different. With the current host/SDK integration it exposes a flat list of 64 programs, with category prefixes such as `Bass / Pocket Anchor`. These prefixes are names, not host folder navigation. Use the plugin's SOUND PRESET control for category-first selection.
+The gray MPC **PRESET** selector is different. With the current host/SDK integration it exposes a flat list of 66 programs, with category prefixes such as `Bass / Pocket Anchor`. These prefixes are names, not host folder navigation. Use the plugin's SOUND PRESET control for category-first selection.
 
 ## MAIN and Q-Link controls
 
-![MAIN running on MPC Live III](https://kimswork.app/images/donut-theory-main-1.2.2.webp)
+![Donut Theory MAIN running on MPC XL](/images/donut-theory-main-device-1.9.0.webp)
 
-MAIN arranges four groups in reading order: A upper left, B upper right, C lower left and D lower right. Each group has four Q-Link controls.
+Four groups are arranged in reading order: A upper left, B upper right, C lower left, D lower right.
 
 | Group | Control 1 | Control 2 | Control 3 | Control 4 |
 |---|---|---|---|---|
-| **A · SOUND / PLAY** | OSC Pair | OSC Mix | Sub | Drift |
-| **B · AMP ENVELOPE** | Attack | Decay | Sustain | Release |
-| **C · FILTER / LFO** | Filter Cutoff | Resonance | LFO Rate | LFO Depth |
-| **D · FX / TREMOLO** | Drive | Glide | Tremolo Rate | Tremolo Depth |
+| A · OSC / SOUND | OSC Pair | OSC Mix | Detune | Drift |
+| B · FILTER / TONE | Filter Cutoff | Resonance | Body | Sub |
+| C · LFO 1 / 2 | LFO 1 Rate | LFO 1 Depth | LFO 2 Rate | LFO 2 Depth |
+| D · FX / MOTION | Drive | Glide | Mod Rate | Mod Depth |
 
-With the supplied column mapping, the four physical controls read top to bottom in the same order as each group reads left to right. The host's 16-control positions are A = 13/9/5/1, B = 14/10/6/2, C = 15/11/7/3 and D = 16/12/8/4.
+SCREEN mode follows the visible page. CHORD uses its own Root/Type/Voicing/Octave mapping; Program/Track keeps this synth mapping. Physical columns read top-to-bottom in the displayed left-to-right order: A = 13/9/5/1, B = 14/10/6/2, C = 15/11/7/3, D = 16/12/8/4. Older tracks can cache previous assignments; compare a new instance or reset the map if controls do not match.
 
-**Q-LINK SCREEN** follows the current plugin view. On CHORD it becomes the chord editor mapping described below. Program/Track mappings retain the synth controls; they do not become chord editing controls simply because the editor is visible.
-
-OSC Mix is immediately beside OSC Pair on MAIN. Glide is in group D and also available on AMP. Space remains on FX. SUB controls an independent sine oscillator exactly one octave below OSC1. It follows note pitch, glide and pitch modulation, shares the voice filter and amp envelope, and does not alter OSC Mix. At 0% it is silent; raise it to reinforce bass.
-
-The filter type, LFO Shape/Target and drive type have touch selectors near their controls. Drive type sits above Drive. Vibrato and Expression remain available as separate touch controls; they do not occupy the main 16 Q-Link positions.
-
-### What to reach for
-
-| Desired change | Control |
-|---|---|
-| Different oscillator character | OSC Pair |
-| Octave-down bass weight | Sub |
-| Slowly wandering, tape-like pitch | Drift |
-| Static beating between oscillators | Detune on OSC |
-| Sliding between notes | Glide and Glide Mode |
-| Softer or brighter tone | Filter Cutoff, then Resonance |
-| Short pluck or long pad | Amp ADSR |
-| Periodic filter movement | LFO Target = Filter, Rate and Depth |
-| Volume pulsation independent of filter movement | Tremolo Rate and Depth |
-| Saturation or distortion | Drive Type, Drive and Drive Mix |
-| More width and echoes | Space; refine Chorus and Delay on FX |
+Filter Type, each LFO's Shape/Target, Drive Type and the shared motion Mode/Shape use touch lists. Each Rate has an independent SYNC button. Turning a synchronized Rate selects its division, while turning an unsynchronized Rate adjusts Hz. ADSRs remain on AMP/FILTER. Space, static Pan and cleanup Low-cut remain on FX. Drift changes pitch over time; Detune sets a fixed oscillator difference.
 
 ## Sounds and presets
 
-### Factory sounds
+There are **66 factory sounds**: Init 1, Bass 12, Keys 16, Synth 13, Lead 12 and Pad 12. The first 64 names, program numbers and recipes remain in order. **Keys / Dusty Sunday** and **Synth / Velvet Melt** append as programs 65 and 66 (zero-based host indices 64 and 65).
 
-Version **1.2.0** uses a **Moog-inspired synthesis engine**, not just revised preset recipes. The default low-pass path combines nonlinear oscillator mixing, a four-stage nonlinear ladder and rounded VCA response. All 63 playable factory sounds have been refitted for its cutoff, resonance and envelope behavior, and output trims are remeasured. No additional mode needs to be enabled. It is an inspired hybrid engine rather than a component-accurate recreation of a named Moog instrument. Existing parameter values load, but existing project sounds change through the new engine. Keep 1.1.2 and render tracks before upgrading when exact old sound is needed.
+Dusty Sunday uses sine/triangle keys, gentle phase-modulation character, Body and wide eighth-note Auto Pan. Velvet Melt uses a soft saw/triangle mixture, slower envelopes, subtle independent LFO 2 mix motion and wider Auto Pan. Both load their timbre and sync settings; they do **not** set MPC tempo or replace your chords, Strum or CHORD GLIDE preference. The website's performance examples add a Cmaj9 → Am9/E → F6/9/D → G9sus4/D progression, 8/6 ms Strum and overlapping chord glide on Velvet Melt.
 
-There are **64 factory sounds**: Init 1, Bass 12, Keys 15, Synth 12, Lead 12 and Pad 12. They use the same synthesis engine rather than acoustic instrument samples. Keys such as tines, bells and reeds describe their synthesized character.
+The default low-pass is the original nonlinear ladder; band-pass/high-pass/notch are SVF extensions. Init is dry with Low-cut off. Other sounds have individual Low-cut and Sound Trim settings for practical mix starting points. Low-cut cleans bass and is separate from creative Filter Cutoff.
 
-**Init** is a simple starting sound with Low-cut and effects off. The other sounds include individual Low-cut and Sound Trim settings. Low-cut removes unwanted bass; it is separate from the main creative filter. These settings are starting points for a mix, not a guarantee that every arrangement needs the same EQ.
+Selecting a factory sound loads its timbre, envelopes, effects and modulation, ends current notes, and preserves master Volume, input mode, reference Key, chord content/voicing/octave, active slot count/page, pad assignments, progression choices and Strum/CHORD GLIDE. Sound arrows cycle all 66 sounds. The host PRESET list exposes all 66 names as a flat list; use SOUND PRESET inside the plugin for category-first browsing.
 
-Selecting a sound changes the timbre, envelopes, modulation, effects, Low-cut and Sound Trim, and clears currently sounding notes. It preserves the master Volume, input mode, chord slot count/page, chord settings, chord presets and pad assignments. You can audition different sounds without rebuilding the progression.
-
-The SOUND PRESET arrows browse sounds. They are independent of the **CHORD PRESET** arrows at the bottom.
-
-### Chord progression recipes
-
-There are **32 four-chord recipes**: eight base progressions in four transpositions, at 0, +2, −2 and +5 semitones. They are not 32 distinct sixteen-chord songs.
-
-| Base recipe | Four chords at its base transposition |
-|---|---|
-| Sunday Soul | Dm9 → G13 → Cmaj9 → Am9 |
-| Basement Loop | Fm9 → Bbm9 → Eb9 → Abmaj7 |
-| After Hours | Dm9 → Gm9 → A7♭9 → Dm9 |
-| Velvet Morning | Ebmaj9 → Cm9 → Fm9 → Bb13 |
-| Dusty Sunset | Am9 → Fmaj9 → Dm9 → E7♭9 |
-| Warm Windows | Gmaj9 → Em9 → Am9 → D13 |
-| Open Sky | Csus2 → Fmaj9 → Asus2 → Gsus2 |
-| Soul Turnaround | Cmaj9 → A7 → Dm9 → G9 |
-
-**CHORD PRESET affects only the four slots currently visible on MAIN.** It replaces their Root and Type. It preserves their Voicing, Octave and Pad Note assignments, and leaves the other twelve slots untouched. Each of the four banks remembers its own preset selection.
-
-For example, with 16 slots active and bank **9–12** visible, choosing Sunday Soul changes slots 9–12 only. Slots 1–8 and 13–16 retain their chords. The MOD page's **PRESET 1–4** control is explicitly for the first bank; it does not follow the visible bank.
+**96 chord progression recipes** are independent of sounds. The original 32 retain their positions; 64 new Neo, Pocket, Vamp, RnB, Modal, Gospel, Color and Turn recipes add different harmonic forms. A recipe replaces only Root/Type in the visible four-slot bank. It preserves that bank's Voicing, Octave and MIDI mappings and all other banks. The full list and 32 chord formulas appear at the end of this manual.
 
 ## Keyboard, physical pads and screen chords
 
@@ -213,7 +156,7 @@ In **CHORD → ADVANCED**, **Individual** pad mapping uses each slot's assignmen
 
 ## Chord editor
 
-### Key reference and circle of fifths — 1.3.0
+### Key reference and circle of fifths
 
 The CHORD editor has a KEY selector and MAJOR/MINOR switch beside a circle of fifths. Selecting a key updates the reference diagram and seven diatonic chords; it does not change any stored chord or keyboard note. MINOR uses the natural minor scale. The outer ring shows major keys and the inner ring their relative minors. The highlighted sector identifies the selected key pair. This diagram is a reference, not a chord trigger. Enharmonic spellings are chosen for readability.
 
@@ -226,7 +169,7 @@ Chord type, voicing, per-slot octave, MIDI Note/LEARN, input mode, sound and ina
 **PAD SETUP** holds the MIDI Note readouts/manual assignment and LEARN for the four slots in the selected bank. Close it to choose a different bank. The sixteen CHORD SCREEN Q-Links remain Root / Type / Voicing / Octave; Program/Track retains the synth mapping. All new drawers suppress background Q-Link guides.
 
 
-![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.2.2.webp)
+![CHORD editor running on MPC XL](/images/donut-theory-chord-device-1.9.0.webp)
 
 ### Four to sixteen slots
 
@@ -247,9 +190,9 @@ In **Q-LINK SCREEN**, groups A–D represent the four visible slots. Each group 
 
 For bank 5–8, A edits slot 5, B slot 6, C slot 7 and D slot 8. MIDI Note stays a separate assignment field. Octave is available as a donut control and a value selection list.
 
-### Expanded harmony, chord glide and strum — 1.5.0
+### Expanded harmony, chord glide and strum
 
-The current development candidate offers32chord types and96four-chord progression presets. The original11types/32recipes stay in their original positions;64additional recipes are grouped by name into Neo, Pocket, Vamp, RnB, Modal, Gospel, Color and Turn. Use CHORD PRESET on MAIN to fill the visible four-slot bank. Each of four banks retains its own selection. The library includes minor11/13, major6/9, major9#11/13, suspended dominants, altered dominants, half-diminished, diminished7, augmented7 and minor-major7 colors. See [the complete harmony library](#harmony-library) for names and formulas.
+The instrument offers 32 chord types and 96 four-chord progression presets. The original11types/32recipes stay in their original positions;64additional recipes are grouped by name into Neo, Pocket, Vamp, RnB, Modal, Gospel, Color and Turn. Use CHORD PRESET on MAIN to fill the visible four-slot bank. Each of four banks retains its own selection. The library includes minor11/13, major6/9, major9#11/13, suspended dominants, altered dominants, half-diminished, diminished7, augmented7 and minor-major7 colors. See [the complete harmony library](#harmony-library) for names and formulas.
 
 **CHORD GLIDE** in the editor enables newest-held chord connection independently for each MIDI channel. It shares the existing GLIDE time control on MAIN/AMP and the CHORD touch field. Overlap two triggers: exact common MIDI tones keep their existing voices/envelopes, and remaining tones use a minimum-distance assignment. Releasing the newest trigger returns to an older still-held chord; releasing the last ends the chord. MIDI channel1 and screen chords share a chain. Separate channels remain separate. Sequential, non-overlapping presses snap rather than sliding from release tails. Global Mono/Legato still governs ordinary melody notes separately. A zero GLIDE time gives immediate pitch changes. The underlying time control is an exponential time constant, not a guaranteed end-to-end slide duration.
 
@@ -257,7 +200,7 @@ The current development candidate offers32chord types and96four-chord progressio
 
 Legacy parameter declarations and ranges remain unchanged; full-range controls append separately. Old project values migrate by their saved plain choices. The initial roughly half-second load replay guard prevents old MPC normalized aliases from replacing new full-range choices. Legacy automation continues after that replay window. An older project with a stored Q-Link map may need its SCREEN assignments reset or a fresh instance to use the new full-range Type relays. Shared sixteen-voice and hardware-validation limits still apply.
 
-### Smooth voicing — 1.4.0
+### Smooth voicing
 
 Tap **SMOOTH VOICING** above TRANSPOSE in CHORD. Choose **CURRENT 4** for the bank you are editing, or **ALL SLOTS** for all active slots. The panel shows each selected slot's top note before and after the proposal, plus the total semitone movement around the entire loop, including its last-to-first connection. Notes use the MPC octave naming convention.
 
@@ -311,7 +254,7 @@ The engine has **16 audio voices**, not sixteen complete chords of unlimited siz
 | Detune | Static oscillator-2 offset, −25 to +25 cents. |
 | Oscillator 2 Octave | −2 to +2 octaves. |
 | Pulse Width | Pulse duty cycle, 5–95%. |
-| Sub | Sine sub-oscillator level, 0–100%, exactly one octave below OSC1. Also available on MAIN group A / Q-Link 3. |
+| Sub | Sine sub-oscillator level, 0–100%, exactly one octave below OSC1. Also available on MAIN group B / Q-Link 4. |
 | Noise | Noise amount, 0–30%. |
 | FM | Phase-modulation character on **Sine oscillator 1**, 0–100%; not a general multi-operator FM matrix. |
 | Tone | Harmonic/saturation character macro; separate from the stored base cutoff. |
@@ -357,20 +300,17 @@ Filter ADSR shapes brightness and is separate from Amp ADSR. Velocity-dependent 
 
 A short release still has a short envelope tail. A pad's long release can sound sustained after a screen pad is released; lower Release to distinguish this from a stuck gate.
 
-### MOD: LFO, vibrato and movement
+### MOD: two independent LFOs
 
-The main LFO offers **Sine, Triangle, Square and Sample & Hold**, with target **Pitch, Filter, Pulse Width or Amp**. Shape and Target are touch choices on MAIN. Sync and Division are on MOD. There is no separate duplicate LFO Settings page.
+MAIN group C places the two LFOs together. Each has its own Rate, Depth, Shape, Target and SYNC. LFO 1 offers Sine, Triangle, Square and Sample & Hold, with Pitch, Filter, Pulse Width or Amp targets. LFO 2 adds Saw and an OSC Mix target. Both free rates span 0.05–20 Hz. Depth 0 bypasses that LFO's contribution. LFO 2 does not share its oscillator with Tremolo/Auto Pan.
 
-- **Rate:** 0.05–20 Hz when Sync is off.
-- **Depth:** 0–100%.
-- **Sync:** follows MPC tempo when enabled.
-- **Division:** 1/16, 1/8, 1/4, 1/2 or 1 bar when synchronized.
+Tap SYNC next to the relevant Rate. Off: drag the Rate knob or turn its Q-Link in Hz. On: the same Rate knob/Q-Link selects 1/16, 1/8, 1/4, 1/2 or 1 bar. Each module remembers its free Hz value. Tempo comes from MPC; playback PPQ aligns the phases when available. Without a valid tempo the fallback is 120 BPM. One division is one full modulation cycle, so at 88 BPM, 1/8 is approximately 2.933 cycles per second.
 
-With Sync on, Division and host tempo determine the effective speed. The free-running Hz value is retained, but turning that value does not set the synchronized speed. Change Division for a different rhythmic rate.
+**Vibrato** retains its dedicated pitch oscillator and CC1 response. **Motion** on the detailed MOD page is the older pitch/chorus macro; it is separate from the shared Tremolo/Auto Pan mode. MOD's PRESET 1–4 changes the first chord bank only.
 
-**Vibrato** has a dedicated 5.2 Hz pitch oscillator, with depth control and additional CC1 response. **Motion** combines slow pitch movement with chorus contribution. These can coexist with Drift and the main LFO; moderate their combined amount for stable tuning.
+### Body and Sub
 
-MOD's **PRESET 1–4** selects the first bank's chord recipe only, even while another bank is visible on MAIN.
+**Body** adds broad low-mid density through a gentle saturated 140–650 Hz band with fixed gain compensation. It is not a sub oscillator. At 0 it is bypassed. **Sub** is a separate sine oscillator one octave below OSC 1, following the voice pitch, filter and amp envelope. Combine them or leave either at zero. Legacy saved Body values from older releases do not automatically activate the new Body stage.
 
 ### FX: saturation, space and cleanup
 
@@ -384,13 +324,16 @@ MOD's **PRESET 1–4** selects the first bank's chord recipe only, even while an
 | Feedback | Echo regeneration, 0–65%. |
 | Delay Division | Tempo-related 1/8, 1/4, dotted 1/4 or 1/2. |
 | Space | Combined chorus/width and delay-wet macro, 0–100%. |
-| Tremolo Rate | Independent volume modulation, 0.1–15 Hz. |
-| Tremolo Depth | 0–100%; zero disables the pulsation. |
+| Mod Rate | Shared Tremolo/Auto Pan rate, 0.1–15 Hz or synchronized division. |
+| Mod Depth | 0–100%; amount of the selected motion mode. |
+| Mode / Shape | Tremolo or Auto Pan; Sine, Triangle, Saw, Square or Sample & Hold. |
+| Pan | Static stereo balance, L100 through center to R100. |
 | Low-cut | Final low-frequency cleanup, Off to 250 Hz. |
 | Sound Trim | Per-sound output correction, −18 to +18 dB. |
 
-Tremolo is independent of the main LFO, so filter movement and volume pulsation can run together. **Tremolo is free-running in Hz; it has no tempo-sync division.** It follows Drive and precedes chorus/delay, so echoes may continue between its pulses.
+The shared motion module runs independently of LFO 1 and LFO 2. Choose **Tremolo** for level pulsation or **Auto Pan** for stereo movement; these two modes do not run simultaneously. Mode and Shape sit above the right-hand Rate/Depth controls on MAIN. Its SYNC button uses the same five divisions as the LFOs, independently. With Auto Pan, try 70–80% Depth and listen in stereo.
 
+Tremolo is applied before chorus/delay, so echoes may remain between pulses. Auto Pan balances the final stereo signal after effects and low-cut; it preserves the existing stereo image. Pan offsets its center. Depth 0 disables motion while preserving the static Pan value.
 Low-cut acts on the stereo output after chorus/delay. Typical factory starting ranges are 18–28 Hz for Bass, 85–160 Hz for Keys, 85–140 Hz for Synth, 100–160 Hz for Lead and 120–200 Hz for Pad. Adjust to the arrangement. Raising Low-cut too far can remove a bass patch's fundamental.
 
 Sound Trim balances a patch's output; Volume is your overall listening/track level. The factory trim measurements use a standardized performance and cannot predict every combination of notes and effects.
@@ -413,89 +356,90 @@ For automation, use the actual synth or per-slot chord parameters exposed by MPC
 
 Selecting a different sound or changing input/voice routing clears current notes. Changing the visible chord bank releases screen audition gates but preserves physical MIDI-held chords. When changing several settings during a performance, release notes first if you want a predictable transition.
 
-## Troubleshooting
+## Troubleshooting and verification limits
 
-| Symptom | Check |
-|---|---|
-| Plugin does not appear | OS requirement, Enhancements and External Plugin Support; complete package under `VST2 Plugins`; no extra nested folder; restart MPC. |
-| Background or knobs are missing | Replace the complete package, including `Plugin Skins`; a binary-only installation is incomplete. |
-| Presets appear in one long list | The gray host PRESET list is flat. Use the illustrated panel's SOUND PRESET for category-first browsing. |
-| Physical pads play single notes | Select CHORDS/SPLIT and LEARN each desired pad; NOTES intentionally bypasses chord expansion. |
-| A physical pad is silent | Confirm track/input routing, active slot count and the actual learned MIDI number; in CHORDS unmapped notes are ignored. |
-| First learned pad press is silent | Expected: the first event registers its note. Press again to play. |
-| Screen chords do not record into the sequence | Screen pads are internal audition gates. Record physical-pad or keyboard triggers. |
-| Sound continues after releasing a pad | Check Amp Release, delay and CC64 sustain. Use ALL NOTES OFF if an input was interrupted. |
-| Legato still produces a full chord | Legato governs ordinary melody; chord triggers intentionally remain polyphonic. |
-| Some held chords disappear | The sixteen-voice limit is shared by notes and chord tones. Reduce overlap, sustain or release. |
-| LFO Rate seems ineffective | With Sync on, change Division; free Hz is retained but does not set synchronized speed. |
-| Chords change in the wrong bank | MAIN CHORD PRESET follows its visible bank; MOD PRESET 1–4 always addresses the first bank. |
-| Q-Link still changes synth controls in CHORD | Select Q-LINK SCREEN. Program/Track retain the synth map. |
-| An old project has an old Q-Link layout | Preserve the project and compare a fresh instance; host-side assignments can be stored independently of the current skin. |
-| Pitch sounds too unstable | Reduce Drift, Motion, Vibrato/CC1 and Pitch-target LFO depth; Detune is a separate static offset. |
-| Sound is thin after editing | Check Low-cut, main filter mode/cutoff, OSC Mix and Sub. |
+- **Blank panel:** restart MPC after replacing the complete folder; keep one installation. Both Plugin Skins and ARM binaries are required. Do not mix old and new runtime files.
+- **Wrong Q-Link:** select SCREEN and compare a fresh instance. Saved tracks may carry older maps. On CHORD, the sixteen controls must be Root/Type/Voicing/Octave for the visible bank.
+- **No physical chord:** set CHORDS or SPLIT and assign each slot with PAD SETUP / LEARN. The first learned hit registers silently; the next plays. No host Pad Perform layout change is required.
+- **Chord rings after release:** reduce Amp Release, Delay and Chorus to distinguish a normal tail from a held gate. Changing routing or a sound clears notes.
+- **Sound picker looks flat:** the gray MPC PRESET list belongs to the host. Category-first navigation is provided by the illustrated SOUND PRESET field.
+- **Auto Pan seems subtle:** use stereo output, centered Pan and 70–80% Depth. Tremolo changes level; Auto Pan changes stereo balance.
+- **Sync speed unexpected:** set MPC tempo, then turn the synchronized Rate to the division you want. Turning SYNC off restores the independent Hz value.
+- **Voices disappear:** chords share sixteen voices (fifteen for chords with Mono/Legato melody reservation). Shorten releases or reduce overlapping chords.
+- **Older project sounds different:** the engine changed in 1.2.0, explicit Sub changed in 1.2.3, and factory modulation is initialized on selection. Retained IDs do not promise sound-identical old recall. Keep old installers/rendered tracks when needed.
 
-When reporting an issue, include the package version, MPC model/OS, input mode, voice mode, sound name, active chord bank, Q-Link mode and whether it occurs in a new instance or an older project. A screenshot and a short reproducible sequence are more useful than an isolated symptom.
-
-## Manual pad location hints
-
-The manual bank/cell location hint feature introduced in 1.1.2 was removed in **1.2.2**. It is no longer displayed on MAIN or CHORD. This retires only a visual reminder, not physical-pad support. Use **MIDI Note / LEARN** to connect each physical pad as described above. Existing note assignments and all sixteen chord slots are retained. The old location parameter values remain stored solely for state compatibility and no longer drive any visible controls.
+Native/ARM32/ARM64 builds, SDK validation, host simulator, deterministic DSP/state/UBSan tests and actual MPC remote UI checks support this release. The audio demos are native engine renders, not hardware recordings. Other models/OS versions, complete physical Q-Link/multi-touch coverage, a full MPC project round-trip and worst-case hardware CPU/audio certification remain unverified. Earlier Live III observations are historical, not new XL measurements.
 
 ## Factory sound list
 
-| Category | Sounds |
-|---|---|
-| **Init · 1** | Init |
-| **Bass · 12** | Pocket Anchor; Maple Thump; Brick Bounce; Molasses; Crate Knock; Soft Cone; Motor Hum; Felt Punch; Honey Slide; Walnut Pluck; Low Canvas; Dust Motor |
-| **Keys · 15** | Felt Circuit; Worn Tines; Honey Reeds; Kitchen Bell; Soft Hammer; Velour Clav; Milk Glass; Tape Celeste; Reed Cabinet; Bronze Mallet; Evening Felt; Pocket Organ; Pearl Hammer; Cocoa Tines; Dust Harp |
-| **Synth · 12** | Chopped Brass; Mellow Block; Velvet Stab; Amber Stack; Rubber Chord; Hollow Print; Record Bloom; Copper Pluck; Faded Poly; Small Ensemble; Syncopated Ink; Glass Chord |
-| **Lead · 12** | Ribbon Whistle; Bent Wire; Narrow Alley; Honey Horn; Syrup Line; Ink Flute; Frayed Saw; Pocket Squeak; Golden Thread; Melted Neon; Muted Trumpet; Round Needle |
-| **Pad · 12** | Draped Velvet; Paper Halo; Warm Projection; Woven Air; Satin Room; Faded Choir; Ember Strings; Curtain Light; Soft Horizon; Opaque Silk; Dusk Film; Golden Haze |
-
-For exact release compatibility and completed validation, consult the download's release notes. The repository also maintains [preset design notes](https://github.com/Sunghyun23/kimswork/blob/main/mpc-software/docs/plugins/donut-theory/presets.md) and the [implementation and verification record](https://github.com/Sunghyun23/kimswork/blob/main/mpc-software/docs/plugins/donut-theory/implementation.md).
-
-## Earlier changes in 1.1.2
-
-- **Default sound:** all 63 playable factory sounds have Moog-inspired voicing: revised oscillator blends, low-pass settings, envelopes, restrained detune and Tape saturation. Effects and pitch movement are reduced where appropriate. This is recipe retuning within the existing synthesis engine, not a new ladder-filter model.
-- **Level and low end:** stereo renders were used to recalibrate Sound Trim. Individual low-cut settings remain; dry Init is unchanged. Velocity, register, resonance, drive and overlapping chords still affect output level.
-- **Chord navigation:** chord-preset and slot-page arrows have 44 × 44 touch targets. Four large 222 × 70 chord pads remain. Repeated HOLD TO PLAY captions are removed, with chord names and optional location hints sharing the pad face.
-- **Physical-position hints:** the shared CHORD editor has a manual A–H / 1–16 location drawer. MAIN shows the assigned label and 4 × 4 highlight. Clear removes the hint without changing MIDI. Register the actual input with LEARN.
-- **Compatibility:** previous parameter IDs/order and Q-Link mappings are preserved; sixteen nonautomatable position parameters are appended. Existing project sounds retain their saved settings. Select a factory sound to hear its revised recipe. Old projects load with unassigned hints.
-
-Builds for native, ARM32 and ARM64, SDK validation, host simulator 19 checks, engine/UBSan/VST bridge and skin regressions pass. All 64 sounds have finite, non-silent offline renders within the measured test bounds. On MPC Live III / OS 3.10.1.12, the new location selection/clear/MAIN display and Q-Link guide hide/restore were checked through Remote Screen Viewer. A complete hardware listening review of all revoiced sounds, fresh physical LEARN inputs, all physical Q-Link rotations, simultaneous finger multi-touch and a new hardware project save/restart round-trip were not completed for this update. Automated state migration and note ownership tests pass.
-
-
-## What changed in 1.2.0
-
-- **Engine:** new nonlinear oscillator summer, four-stage nonlinear ladder Low-pass, simultaneous resonant feedback solve, 2× ladder processing with FIR output filtering, and rounded VCA response. No new UI or engine mode. The other filter types and downstream FX are retained.
-- **Factory bank:** all 63 playable sounds have new cutoff/resonance/envelope operating points and gentler external drive. Stereo renders recalibrate Sound Trim; names, categories, Low-cut and Init parameter recipe remain. Intrinsic engine coloration applies to Init too.
-- **Compatibility:** UID and all 208 parameter declarations/order/ranges, UI and Q-Link maps remain. Saved parameters restore but do not produce identical old sound. Use1.1.2 for exact old-engine recall.
-- **Performance:** the ladder costs more CPU. A desktop16-voice benchmark measured about 5.8% average / 10.5% worst block in the recorded run; this does not predict MPC headroom. Overlapping long-release chords are the most demanding case.
-- **Evidence:** dedicated filter response/nonlinearity/modulation/rate tests, engine/UBSan/bridge, host simulator19 and skin checks pass. All 64 sounds render finite/non-silent offline. Same-state A/B audio isolates engine changes from preset changes. Hardware verification and remaining limits are documented in the release notes.
-
-[Engine design and research references](https://github.com/Sunghyun23/kimswork/blob/main/mpc-software/docs/plugins/donut-theory/engine.md)
-
-Hardware follow-up in 1.2.1: the engine ran on MPC Live III / OS 3.10.1.12. All 64 factory programs changed and produced audible screen chords. Four screen holds and release tails, cutoff/resonance sweeps, all filter types and native preset restoration after restart were checked. Overlapping long-release chords showed 41% on the host CPU display (12% after release), not a worst-case guarantee. Remote Viewer reported output dropouts whose cause was not isolated. Every physical Q-Link, fresh physical MIDI/LEARN, simultaneous finger multi-touch and a full MPC project round-trip were not re-certified.
-
-
-## What changed in 1.2.1
-
-Fixed a layering bug that left chord-page arrow controls above the left selection drawer. Modal sidebars now render and intercept above ordinary tab widgets; Q-Link guides hide in the drawer and restore on closing. All seven plugin pages were visually checked on MPC. That update used actual 1.2.1 captures; current images show 1.2.2. DSP, 208 parameter identities and Q-Link mappings are unchanged from 1.2.0. The device save/reload check used a native .xpl plugin preset, not a complete MPC project.
-
-
-## What changed in 1.2.2
-
-Manual pad-location selectors, tiny grid hints and their bank/cell popup trees were removed after reports of stalled MAIN-to-CHORD switching and unreliable position display. Hidden widgets still cost construction work: the expanded CHORD tree drops from 10,889 to 1,913 widgets. MAIN and CHORD remain two native sub-tabs of the first function key; pressing it again switches between them. No navigation help popup is used.
-
-On MPC Live III / OS 3.10.1.12, a fresh instance opened MAIN and entered CHORD, and repeated remote transitions followed by inversion selection, 4→8→12→16 expansion and bank 13–16 selection worked. Remote capture latency affected some rapid-test frames; this is not a timing benchmark or certification of every physical interaction. The original stall’s exact cause is not proven by a controlled old/new hardware A/B. The engine, sound recipes, UID, all 208 stored parameter declarations and Q-Link mappings remain unchanged. MIDI Note and LEARN remain the physical-pad connection controls. The old 16 location values are retained but unused by the UI.
-
-
-Hardware follow-up for 1.2.2 (2026-11-15): the user confirmed normal MAIN↔CHORD switching by repeatedly tapping the first tab directly on the MPC. This supplements the remote check; all physical Q-Link and fresh LEARN inputs remain a separate verification scope.
-
-## 1.2.3: front-panel SUB
-
-MAIN A is now **OSC Pair / OSC Mix / Sub / Drift**. The Sub knob controls the existing independent sine sub at half OSC1 frequency; it does not add a second duplicate sub. It follows pitch/glide, then goes through the same filter and amp envelope as the other oscillators. Use Notes with Mono or Legato and lower Low-cut appropriately for bass playing. Raising Sub does not change oscillator balance. Factory programs retain their previous combined mix/sub amounts by moving the former Body contributions into explicit OSC Mix and Sub values. The deprecated Body parameter ID remains for host/state compatibility but is no longer exposed in the custom pages and no longer shapes audio. Old user projects containing Body automation may therefore sound different; their IDs are retained, not their old Body-dependent sound.
-
-Native/ARM32/ARM64 builds, SDK validation, engine/UBSan, host bridge, analog-engine tests, host simulator and skin/Q-Link tests pass. An offline spectral test confirms110Hz SUB beneath220Hz OSC, silence at Sub0, increasing level at50/100 and no audio-thread allocations. These are automated tests; the new SUB hardware knob/listening behavior on MPC XL has not yet been confirmed. Version 1.2.3 publishes this change; hardware coverage remains as stated above.
+| Program | Category | Sound |
+|---|---|---|
+| 1 | Init | Init |
+| 2 | Bass | Pocket Anchor |
+| 3 | Bass | Maple Thump |
+| 4 | Bass | Brick Bounce |
+| 5 | Bass | Molasses |
+| 6 | Bass | Crate Knock |
+| 7 | Bass | Soft Cone |
+| 8 | Bass | Motor Hum |
+| 9 | Bass | Felt Punch |
+| 10 | Bass | Honey Slide |
+| 11 | Bass | Walnut Pluck |
+| 12 | Bass | Low Canvas |
+| 13 | Bass | Dust Motor |
+| 14 | Keys | Felt Circuit |
+| 15 | Keys | Worn Tines |
+| 16 | Keys | Honey Reeds |
+| 17 | Keys | Kitchen Bell |
+| 18 | Keys | Soft Hammer |
+| 19 | Keys | Velour Clav |
+| 20 | Keys | Milk Glass |
+| 21 | Keys | Tape Celeste |
+| 22 | Keys | Reed Cabinet |
+| 23 | Keys | Bronze Mallet |
+| 24 | Keys | Evening Felt |
+| 25 | Keys | Pocket Organ |
+| 26 | Keys | Pearl Hammer |
+| 27 | Keys | Cocoa Tines |
+| 28 | Keys | Dust Harp |
+| 29 | Synth | Chopped Brass |
+| 30 | Synth | Mellow Block |
+| 31 | Synth | Velvet Stab |
+| 32 | Synth | Amber Stack |
+| 33 | Synth | Rubber Chord |
+| 34 | Synth | Hollow Print |
+| 35 | Synth | Record Bloom |
+| 36 | Synth | Copper Pluck |
+| 37 | Synth | Faded Poly |
+| 38 | Synth | Small Ensemble |
+| 39 | Synth | Syncopated Ink |
+| 40 | Synth | Glass Chord |
+| 41 | Lead | Ribbon Whistle |
+| 42 | Lead | Bent Wire |
+| 43 | Lead | Narrow Alley |
+| 44 | Lead | Honey Horn |
+| 45 | Lead | Syrup Line |
+| 46 | Lead | Ink Flute |
+| 47 | Lead | Frayed Saw |
+| 48 | Lead | Pocket Squeak |
+| 49 | Lead | Golden Thread |
+| 50 | Lead | Melted Neon |
+| 51 | Lead | Muted Trumpet |
+| 52 | Lead | Round Needle |
+| 53 | Pad | Draped Velvet |
+| 54 | Pad | Paper Halo |
+| 55 | Pad | Warm Projection |
+| 56 | Pad | Woven Air |
+| 57 | Pad | Satin Room |
+| 58 | Pad | Faded Choir |
+| 59 | Pad | Ember Strings |
+| 60 | Pad | Curtain Light |
+| 61 | Pad | Soft Horizon |
+| 62 | Pad | Opaque Silk |
+| 63 | Pad | Dusk Film |
+| 64 | Pad | Golden Haze |
+| 65 | Keys | Dusty Sunday |
+| 66 | Synth | Velvet Melt |
 
 ## Harmony library
 
@@ -643,32 +587,3 @@ New recipes are original harmonic designs for neo-soul, hip-hop, R&B, vamps, mod
 | 94 | Turnarounds | Turn / Late Checkout | Em7b5 → A7alt → Dm11 → G7alt |
 | 95 | Turnarounds | Turn / Round Trip | C6/9 → F#7alt → Fmaj13 → G13sus4 |
 | 96 | Turnarounds | Turn / Last Cup | Fmaj9#11 → Em11 → A7alt → D9sus4 |
-
-## Shared motion — 1.6.0 development candidate
-
-MAIN D / FX–MOTION has Drive, Glide, Mod Rate and Mod Depth on its four existing Q-Links. Touch MODE to choose Tremolo (volume pulses) or Auto Pan (left/right motion). Touch WAV for Sine, Triangle, Saw, Square or S&H. Rate0.1–15Hz and Depth0–100% are shared; only the selected effect runs after the mode transition settles. Depth0 stops motion. Filter LFO remains independent. The module is free-running; it does not add tempo synchronization.
-
-For gentle floating stereo, start with Auto Pan, Sine, Rate0.3–0.6Hz and Depth20–35%. FX detail contains the base Pan knob: Center is unchanged stereo, L/R shift the balance; motion is centered on this position and clamps at the extremes. This is balance panning of the complete stereo signal, not per-note pan or stereo widening. Old projects open with Tremolo/Sine/Center. Legacy automation names Tremolo Rate/Depth refer to the same shared controls displayed as Mod Rate/Depth.
-
-## Tempo-synced rates — 1.7.0 development candidate
-
-The SYNC button beside each MAIN Rate knob is independent. With SYNC off, the knob and Q-Link set Hz. With SYNC on, they select1/16,1/8,1/4,1/2or1bar; the LCD shows the division. Turning SYNC off restores that module's previous free rate. Filter LFO reuses the MOD tab's existing Sync/Division; Motion sync applies to the selected Tremolo or Auto Pan mode. Filter and Motion can use different divisions. No dotted/triplet choices are added in this version.
-
-Tempo follows the host. Valid PPQ while playing locks phase to the song; while stopped, the oscillator continues at its tempo-derived frequency. Missing/invalid tempo uses120BPM. The old1.6free-running-only description is superseded by this section. Existing custom/cached rate Q-Link assignments can still point to the legacy Hz parameter; reset them to the current plugin defaults or use a fresh instance to obtain mode-aware rate controls. Program/Track and Screen defaults both use the new rate relays.
-
-## Main performance layout — 1.8.0 development candidate
-
-| Group | Four Q-Link controls |
-| --- | --- |
-| A · OSC / SOUND | OSC Pair, OSC Mix, Detune, Drift |
-| B · FILTER / TONE | Filter Cutoff, Resonance, Body, Sub |
-| C · LFO 1 / 2 | LFO1Rate, LFO1Depth, LFO2Rate, LFO2Depth |
-| D · FX / MOTION | Drive, Glide, Motion Rate, Motion Depth |
-
-Amp ADSR is on AMP. Filter ADSR, Env Amount and Key Track remain on FILTER. They are fully functional after moving off MAIN. C's left pair is LFO1; the right pair is independent LFO2. Select each shape and target above its pair. Each Rate's SYNC button switches its same knob/Q-Link between Hz and beat division, retaining the free frequency. Motion's SYNC and Tremolo/Auto Pan selection remain independent in D.
-
-Body adds warm low-mid density with a broad140–650Hz emphasis, gentle saturation and gain compensation. It differs from Sub, which adds the octave-below sine. Body at0 is bypassed. Start around20–35%, then add Sub sparingly; gain compensation does not promise identical loudness for every sound. Detune controls the fixed pitch offset of OSC2, while Drift makes the pitch move over time.
-
-LFO2 targets: Pitch, Filter, Pulse Width, Amp or OSC Mix. Pulse Width is audible on pulse oscillators; OSC Mix movement is most audible when the two oscillators differ. Depth0 disables its influence. LFO1/LFO2/Motion can run together with independent rates and Sync. LFO2 offers Sine/Triangle/Saw/Square/S&H and free0.05–20Hz. It retains the five1/16..1bar divisions. Factory programs start Body/LFO2 at0depth so the existing64sounds keep their baseline. Saved custom projects retain adjustments.
-
-Legacy Body automation remains inactive. New Body is a separate saved control to avoid changing old projects. MAIN default mappings changed with the new groups; reset cached custom Q-Link maps or use a fresh instance if an existing track still shows the former ADSR arrangement. CHORD mapping is unchanged.

@@ -27,6 +27,9 @@ int main(){
  char name[64]{};dispatch(effGetProgramName,0,0,name);assert(std::strcmp(name,p->programName(1))==0);
  p->set(kRoot1,61);p->set(kVolume,-20);dispatch(effSetProgram,0,12);render();
  assert(dispatch(effGetProgram)==12&&p->getInt(kRoot1)==61&&std::abs(p->get(kVolume)+20)<.001f);
+ assert(e->numPrograms==66);
+ for(int program:{64,65}){dispatch(effSetProgram,0,program);render();assert(dispatch(effGetProgram)==program);dispatch(effGetProgramName,0,0,name);assert(std::strcmp(name,kPatchNames[program])==0);}
+ dispatch(effSetProgram,0,12);render();
  void* data=nullptr;auto size=dispatch(effGetChunk,0,0,&data);std::vector<unsigned char> saved((unsigned char*)data,(unsigned char*)data+size);
  dispatch(effSetProgram,0,7);render();dispatch(effSetChunk,0,size,saved.data());render();
  assert(dispatch(effGetProgram)==12&&p->getInt(kRoot1)==61);

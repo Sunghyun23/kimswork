@@ -28,9 +28,12 @@ const Study studies[]={
  {kSpread,6},{kGlide,65},{kChordGlide,1}},true}
 };
 struct Result {std::vector<float> audio;std::vector<uint8_t> state;std::vector<float> values;float peak=0;double rms=0;};
-Result render(const Study& study,float trim,bool widePan=false,double bpm=82,int panDivision=-1){
+Result render(const Study& study,float trim,bool widePan=false,double bpm=82,int panDivision=-1,bool factory=false){
  constexpr int sr=48000;const double bar=240./bpm;const int frames=int((.25+bar*4+3.5)*sr);
- DonutTheory p;p.setProgram(0);for(auto [key,value]:study.values)p.set(key,value);p.set(kOutputTrim,trim);p.set(kInputMode,2);if(widePan)p.set(kTremDepth,std::string(study.slug)=="dusty-sunday"?70.f:80.f);if(panDivision>=0){p.set(kModSync,1);p.set(kModDivision,float(panDivision));}
+ DonutTheory p;
+ if(factory){p.setProgram(std::string(study.slug)=="dusty-sunday"?64:65);p.set(kSpread,study.overlap?6:8);p.set(kChordGlide,study.overlap?1:0);}
+ else {p.setProgram(0);for(auto [key,value]:study.values)p.set(key,value);p.set(kOutputTrim,trim);}
+ p.set(kInputMode,2);if(widePan)p.set(kTremDepth,std::string(study.slug)=="dusty-sunday"?70.f:80.f);if(panDivision>=0){p.set(kModSync,1);p.set(kModDivision,float(panDivision));}
  const int roots[]={48,45,41,43},types[]={3,2,14,20},voices[]={0,3,4,3};
  for(int i=0;i<4;++i){p.set(kChordRoots[i],roots[i]);p.set(kChordQualities[i],types[i]);p.set(kChordVoicings[i],voices[i]);p.set(kChordOctaves[i],2);}
  p.set(kChordKeyRoot,0);p.set(kChordKeyMode,0);p.prepare(sr,512);p.reset();
@@ -55,17 +58,18 @@ Result render(const Study& study,float trim,bool widePan=false,double bpm=82,int
  if(loaded.activeVoices())throw std::runtime_error("Voices did not release");result.rms=std::sqrt(energy/result.audio.size());return result;
 }
 float inputFor(float output){float lo=0,hi=3;for(int i=0;i<35;++i){float m=(lo+hi)*.5f;if(mpc::dsp::fastTanh(m)<output)lo=m;else hi=m;}return (lo+hi)*.5f;}
-int main(int argc,char** argv){if(argc<2)return 2;bool widePan=false;double bpm=82;int panDivision=-1;
- for(int i=2;i<argc;++i){const std::string arg=argv[i];if(arg=="--wide-pan")widePan=true;else if(arg=="--bpm"&&i+1<argc)bpm=std::stod(argv[++i]);else if(arg=="--pan-sync"&&i+1<argc){std::string division=argv[++i];const char* names[]={"1/16","1/8","1/4","1/2","1bar"};for(int n=0;n<5;++n)if(division==names[n])panDivision=n;if(panDivision<0)return 2;}else return 2;}
- if(!std::isfinite(bpm)||bpm<20||bpm>300)return 2;if(DonutTheory::metadata().version!=10800||kNumParams!=287){std::cerr<<"Soul studies require the reviewed1.8.0 engine\n";return 3;}std::filesystem::path dir=argv[1];std::filesystem::create_directories(dir);
+int main(int argc,char** argv){if(argc<2)return 2;bool widePan=false,factory=false;double bpm=82;int panDivision=-1;
+ for(int i=2;i<argc;++i){const std::string arg=argv[i];if(arg=="--factory")factory=true;else if(arg=="--wide-pan")widePan=true;else if(arg=="--bpm"&&i+1<argc)bpm=std::stod(argv[++i]);else if(arg=="--pan-sync"&&i+1<argc){std::string division=argv[++i];const char* names[]={"1/16","1/8","1/4","1/2","1bar"};for(int n=0;n<5;++n)if(division==names[n])panDivision=n;if(panDivision<0)return 2;}else return 2;}
+ if(!std::isfinite(bpm)||bpm<20||bpm>300)return 2;if((factory&&(DonutTheory::metadata().version!=10900||kNumParams!=288))||(!factory&&(DonutTheory::metadata().version!=10800||kNumParams!=287))){std::cerr<<"Soul studies require the reviewed1.8.0 engine\n";return 3;}std::filesystem::path dir=argv[1];std::filesystem::create_directories(dir);
  std::ofstream summary(dir/"levels.csv");summary<<"slug,trim_db,peak,rms,seconds\n";
- for(const auto& study:studies){auto first=render(study,0,widePan,bpm,panDivision);float trim=std::clamp(20.f*std::log10(inputFor(.55f)/inputFor(first.peak)),-18.f,18.f);auto result=render(study,trim,widePan,bpm,panDivision);
-  trim=std::clamp(trim+float(20*std::log10(.065/result.rms)),-18.f,18.f);result=render(study,trim,widePan,bpm,panDivision);
+ for(const auto& study:studies){auto first=render(study,0,widePan,bpm,panDivision,factory);float trim=std::clamp(20.f*std::log10(inputFor(.55f)/inputFor(first.peak)),-18.f,18.f);auto result=render(study,trim,widePan,bpm,panDivision,factory);
+  trim=std::clamp(trim+float(20*std::log10(.065/result.rms)),-18.f,18.f);result=render(study,trim,widePan,bpm,panDivision,factory);
+  if(factory){DonutTheory fp;fp.setProgram(std::string(study.slug)=="dusty-sunday"?64:65);trim=fp.get(kOutputTrim);}
   auto raw=dir/(std::string(study.slug)+".f32");std::ofstream f(raw,std::ios::binary);f.write(reinterpret_cast<const char*>(result.audio.data()),result.audio.size()*sizeof(float));
   std::ofstream state(dir/(std::string(study.slug)+".mpcp"),std::ios::binary);state.write(reinterpret_cast<const char*>(result.state.data()),result.state.size());
-  std::ofstream json(dir/(std::string(study.slug)+".json"));json<<std::setprecision(9)<<"{\n  \"name\": \""<<study.name<<(widePan?" Wide":"")<<(panDivision>=0?" Sync":"")<<"\",\n  \"bpm\": "<<bpm<<",\n  \"engineVersion\": \"1.8.0\",\n  \"uid\": "<<DonutTheory::metadata().uniqueId<<",\n  \"parameterCount\": "<<kNumParams<<",\n  \"valuesById\": {\n";
+  std::ofstream json(dir/(std::string(study.slug)+".json"));json<<std::setprecision(9)<<"{\n  \"name\": \""<<study.name<<(widePan?" Wide":"")<<(panDivision>=0?" Sync":"")<<"\",\n  \"bpm\": "<<bpm<<",\n  \"engineVersion\": \""<<(factory?"1.9.0":"1.8.0")<<"\",\n  \"uid\": "<<DonutTheory::metadata().uniqueId<<",\n  \"parameterCount\": "<<kNumParams<<",\n  \"valuesById\": {\n";
   DonutTheory names;for(int i=0;i<kNumParams;++i)json<<"    \""<<names.param(i).id<<"\": "<<result.values[i]<<(i+1<kNumParams?",":"")<<"\n";json<<"  }\n}\n";
   summary<<study.slug<<","<<trim<<","<<result.peak<<","<<result.rms<<","<<result.audio.size()/96000.<<"\n";
-  std::cout<<study.name<<": peak="<<result.peak<<" rms="<<result.rms<<" trim="<<trim<<"; 287parameters round-trip and all notes release\n";
+  std::cout<<study.name<<": peak="<<result.peak<<" rms="<<result.rms<<" trim="<<trim<<"; "<<kNumParams<<" parameters round-trip and all notes release\n";
  }
 }

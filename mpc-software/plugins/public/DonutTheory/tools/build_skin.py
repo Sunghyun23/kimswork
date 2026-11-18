@@ -16,6 +16,8 @@ for p,m in zip(params,declared):
 # UI aliases select appended full-range controls while legacy declarations/IDs
 # remain byte-identical for existing MPC projects and automation.
 by_native={p.name:p for p in params}
+by_native['Sound Preset'].name='Legacy Sound Preset'
+by_native['Full Sound Preset'].name='Sound Preset'
 for slot in range(1,17):
  old=by_native[f'Chord {slot} Type'];new=by_native[f'Chord {slot} Harmony'];old.name='Legacy '+old.name;new.name=f'Chord {slot} Type'
 for bank in range(1,5):
@@ -40,6 +42,7 @@ pd=get(tui,'pageData');defs=get(get(pd,'componentDefinitions'),'localComponentDe
 by={p.name:p for p in params};meta=json.loads((P/'parameters.json').read_text());bykey={m['key']:i for i,m in enumerate(meta)}
 for slot in range(1,17):bykey['Quality'+str(slot)]=bykey['HarmonyType'+str(slot)]
 for bank in range(1,5):bykey['Progression'+('' if bank==1 else str(bank))]=bykey['HarmonyPreset'+str(bank)]
+bykey['SoundPreset']=bykey['SoundCurrent']
 bykey['Progression']=bykey['HarmonyCurrent']
 bykey['Rate']=bykey['LfoRateControl'];bykey['TremRate']=bykey['ModRateControl']
 def handle(key):return 'Parameter '+str(bykey[key])
@@ -230,6 +233,13 @@ from key_reference import install as key_reference
 key_reference(g,tui,params,out)
 from tempo_controls import install as tempo_controls
 tempo_controls(g,tui,ql,params,out)
+# Apply display-only names after all choice/browser bindings have been generated.
+osc_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='OSC'),'componentDefinition'),'componentsData')
+for w in osc_widgets:
+ if get(get(w,'componentData'),'name')=='Sound Preset':
+  mapping=get(get(w,'handle remapping'),'map')[0];setv(mapping,'value','WithName[Sound Preset]/'+get(mapping,'value'))
+
+
 # Manual pad-location hints retired: their per-slot 8x16 selection trees
 # inflate CHORD construction on MPC. MIDI/LEARN and stored IDs remain intact.
 # Later additions (bank arrows, pad hints) must never render or receive input

@@ -40,11 +40,11 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10800;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10900;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
-        for(int i=0;i<64;++i) addProgram(kPatchNames[i],std::vector<float>(kPatches[i],kPatches[i]+kSoundPreset+1));
+        for(int i=0;i<kFactoryProgramCount;++i){const auto* base=kPatches[i<64?i:0];addProgram(kPatchNames[i],std::vector<float>(base,base+kSoundPreset+1));}
         // Prefix programs intentionally exclude input/chord settings.
         for(int i=0;i<=kSoundPreset;++i)set(i,kPatches[0][i]);
         set(kOscPair,getInt(kWave1)*4+getInt(kWave2));
@@ -64,11 +64,10 @@ public:
     }
 #endif
     // Host programs and the in-skin selector share the same atomic parameter.
-    int currentProgram() const { return getInt(kSoundPreset); }
+    int currentProgram() const { return getInt(kSoundCurrent); }
     void setProgram(int index) {
-        if(index<0||index>=64)return;
-        for(int i=1;i<=kSoundPreset;++i)setFromEngine(i,kPatches[index][i]);
-        setFromEngine(kFXPreset,0);setFromEngine(kOscPair,getInt(kWave1)*4+getInt(kWave2));applySoundExtras(index);
+        if(index<0||index>=kFactoryProgramCount)return;
+        applyFactorySound(index);
         stateLoadPending_.store(true,std::memory_order_release);
     }
     const std::vector<uint8_t>& internalSaveState(){
@@ -96,6 +95,7 @@ public:
         for(int index=91;index<kNumParams;++index)if(count<=uint32_t(index))set(index,param(index).def);
         for(int slot=0;slot<16;++slot)if(count<=uint32_t(kHarmonyType1+slot))set(kHarmonyType1+slot,get(kChordLegacyQualities[slot]));
         for(int bank=0;bank<4;++bank)if(count<=uint32_t(kHarmonyPreset1+bank))set(kHarmonyPreset1+bank,get(kLegacyBankProgressions[bank]));
+        if(count<=kSoundCurrent)set(kSoundCurrent,get(kSoundPreset));
         legacyReplaySamples_.store(count>242?int(sr_*.5f):0,std::memory_order_release);
         if(count<=77)set(kPadMap,0); // Existing projects retain Trigger Base routing.
         set(kTransposeOpen,0);set(kTransposeApply,0);
@@ -111,6 +111,8 @@ public:
                     if(getBool(syncParameters_[module]))setFromEngine(divisionParameters_[module],float(std::lround(std::clamp(value,0.f,1.f)*4)));
                     else setFromEngine(rate,param(rate).toPlain(value));}
             }
+            if(index==kSoundPreset&&!protect)setFromEngine(kSoundCurrent,value);
+            if(index==kSoundCurrent&&value<64)setFromEngine(kSoundPreset,value);
             const int oldType=slotForParameter(index,kChordLegacyQualities),oldBank=slotForParameter4(index,kLegacyBankProgressions);
             if(oldType>=0&&!protect)setFromEngine(kHarmonyType1+oldType,value);
             if(oldBank>=0&&!protect)setFromEngine(kHarmonyPreset1+oldBank,value);
@@ -177,7 +179,7 @@ public:
         panLeft_.snap(1);panRight_.snap(1);motionGain_.snap(1);bodyTone_.reset();lfo2_.reset();lfo2Signal_.snap(0);for(int i=0;i<5;++i){lfo2TargetWeights_[i]=i==getInt(kLfo2Target)?1.f:0.f;lfo2Weights_[i].snap(lfo2TargetWeights_[i]);}
         wowFlutter_.reset();tapePitch_=0;tremolo_.reset();lfo_.reset();vibrato_.reset();drift_.reset();chorusLfo_.reset();
         setFromEngine(kOscPair,getInt(kWave1)*4+getInt(kWave2));lastPair_=getInt(kOscPair);
-        lastFX_=getInt(kFXPreset);lastPatch_=getInt(kSoundPreset);for(int bank=0;bank<4;++bank)lastProgressions_[bank]=getInt(kBankProgressions[bank]);
+        lastFX_=getInt(kFXPreset);lastPatch_=getInt(kSoundCurrent);for(int bank=0;bank<4;++bank)lastProgressions_[bank]=getInt(kBankProgressions[bank]);
         lastInput_=getInt(kInputMode);lastMode_=getInt(kVoiceMode);lastTrigger_=getInt(kTrigger);
         for(int i=0;i<kNumParams;++i){p_[i]=get(i);smooth_[i].snap(p_[i]);}
         gain_.snap(dbToGain(get(kVolume)));control_=0;dcIn_=dcOut_=0;for(int i=0;i<4;++i)arrows_[i]=getInt(kSoundPrev+i);
@@ -192,8 +194,8 @@ public:
 #ifdef DONUT_TOUCH_DIAGNOSTICS
         diagnosticFrames.fetch_add(unsigned(ctx.numFrames),std::memory_order_relaxed);
 #endif
-        for(int i=0;i<4;++i){if(getInt(kSoundPrev+i)){const int target=i<2?kSoundPreset:kBankProgressions[getInt(kMainChordPage)];const int count=i<2?64:kProgressionCount;setFromEngine(target,float((getInt(target)+(i%2?1:-1)+count)%count));setFromEngine(kSoundPrev+i,0);arrows_[i]=0;}}
-        if(getInt(kSoundPreset)!=lastPatch_){lastPatch_=getInt(kSoundPreset);for(int i=1;i<kSoundPreset;++i)setFromEngine(i,kPatches[lastPatch_][i]);setFromEngine(kFXPreset,0);lastFX_=0;setFromEngine(kOscPair,getInt(kWave1)*4+getInt(kWave2));lastPair_=getInt(kOscPair);applySoundExtras(lastPatch_);clearNotes();}
+        for(int i=0;i<4;++i){if(getInt(kSoundPrev+i)){const int target=i<2?kSoundCurrent:kBankProgressions[getInt(kMainChordPage)];const int count=i<2?kFactoryProgramCount:kProgressionCount;setFromEngine(target,float((getInt(target)+(i%2?1:-1)+count)%count));setFromEngine(kSoundPrev+i,0);arrows_[i]=0;}}
+        if(getInt(kSoundCurrent)!=lastPatch_){lastPatch_=getInt(kSoundCurrent);applyFactorySound(lastPatch_);lastFX_=0;lastPair_=getInt(kOscPair);clearNotes();}
         if(getInt(kOscPair)!=lastPair_){lastPair_=getInt(kOscPair);setFromEngine(kWave1,float(lastPair_/4));setFromEngine(kWave2,float(lastPair_%4));}
         else {const int pair=getInt(kWave1)*4+getInt(kWave2);if(pair!=lastPair_){lastPair_=pair;setFromEngine(kOscPair,float(pair));}}
         for(int bank=0;bank<4;++bank)if(getInt(kBankProgressions[bank])!=lastProgressions_[bank]){
@@ -507,6 +509,16 @@ private:
     WowFlutter wowFlutter_;float tapePitch_=0;
     SVF lowCut_[2];
     float dcCoeff_=.9993f,lastLowCut_=-1,trimGain_=1;
+    void applyFactorySound(int index){
+        const int base=index<64?index:0;
+        for(int i=1;i<kSoundPreset;++i)setFromEngine(i,kPatches[base][i]);
+        applySoundExtras(base);
+        for(int i=kModMode;i<=kModDivision;++i)setFromEngine(i,param(i).def);
+        if(index>=64)for(const auto& v:kSoulValues[index-64])setFromEngine(v.parameter,v.value);
+        setFromEngine(kFXPreset,0);setFromEngine(kOscPair,getInt(kWave1)*4+getInt(kWave2));
+        if(index<64)setFromEngine(kSoundPreset,float(index));
+        setFromEngine(kSoundCurrent,float(index));
+    }
     void applySoundExtras(int patch){setFromEngine(kBodyTone,0);for(int i=kLfo2Shape;i<=kLfo2Division;++i)setFromEngine(i,param(i).def);setFromEngine(kLowCut,kPatchExtras[patch][0]);setFromEngine(kDrift,kPatchExtras[patch][1]);setFromEngine(kTremRate,kPatchExtras[patch][2]);setFromEngine(kTremDepth,kPatchExtras[patch][3]);setFromEngine(kOutputTrim,kPatchExtras[patch][4]);}
     donut::BodyTone bodyTone_;LFO lfo2_;Smoother lfo2Signal_;std::array<Smoother,5> lfo2Weights_;float lfo2TargetWeights_[5]{};
     float sr_=44100,delaySamples_=22050,dcIn_=0,dcOut_=0;LFO tremolo_,lfo_,vibrato_,drift_,chorusLfo_;Xorshift32 noise_{1234567};Smoother gain_,delayTime_,panLeft_,panRight_,motionGain_;DelayLine chorus_,delay_[2];
