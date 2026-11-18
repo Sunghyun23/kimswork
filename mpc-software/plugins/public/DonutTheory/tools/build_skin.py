@@ -164,7 +164,7 @@ for filename,fill in [('pad-off.png',(215,194,148)),('pad-on.png',(176,111,55))]
 from chord_editor import install as install_chord_editor
 install_chord_editor(g,tui,params,out)
 # Touch-only selectors; the existing sixteen MAIN Q-Links stay fixed.
-menu('ModMode',840,356);menu('ModShape',1114,356)
+menu('ModMode',964,356);menu('ModShape',1114,356)
 # Native Name labels use legacy host metadata unless explicitly overridden.
 fx_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='FX'),'componentDefinition'),'componentsData')
 for w in list(fx_widgets):

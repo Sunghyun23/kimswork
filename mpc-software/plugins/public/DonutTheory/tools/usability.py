@@ -73,8 +73,8 @@ def install(g,tui,params,out):
   get(defs['DTPad'+str(i)],'componentsData').insert(1,label(str(i+1),'8 0 28 20',17))
  # Filter/LFO and FX/Tremolo use the same four-control grouping as Q-Link.
  # Shape/Target stay with the filter; Sync/Division remain on MOD.
- children.append(label('MODE','804 356 36 32',15))
- children.append(label('WAV','1072 356 40 32',15))
+ # Mode and waveform sit above the two motion knobs on the right.
+ # Their values identify them; avoid cramped captions between dropdowns.
  # Explanations stay inside the relevant selection screens.
  hints={'Voice Mode':'MONO / LEGATO: single-note melody in NOTES and SPLIT. POLY: multiple notes. Chord pads always play full chords.',
  'Input Mode':'NOTES: play notes. CHORDS: assigned notes play chords. SPLIT: assigned chords plus melody notes.'}

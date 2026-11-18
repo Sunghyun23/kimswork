@@ -289,3 +289,5 @@ Build, device and validation outcomes are appended when complete. Public stable 
 ### 1.6.0 installed development candidate
 
 MAIN D now shares Tremolo / Auto Pan with Drive, Glide, Mod Rate and Mod Depth. Touch MODE/WAV; set base Pan on FX. No D page switching. Original272parameter declarations and MAIN/CHORD Q-Link assignments remain;275parameters total. Old projects default Tremolo/Sine/Center. Native and both ARM builds, SDK0errors/0warnings, host19/0/0 and DSP/state/UI regressions passed. Final MPC XL internalNVMe installation matches all120build files; actual screen/input evidence: [device verification](design/device-1.6.0/verification.json). Physical encoders, hardware audio and worst-case CPU are not newly certified. Public stable remains1.2.3; no public release/push/site deployment.
+
+1.6.1 installed UI correction: Mode/Shape now align over Mod Rate/Depth on the right. Existing275parameters, DSP and Q-Links retained. Build/SDK/host checks passed; all120installed files verified. [Actual MPC captures](design/device-1.6.1/verification.json). Public stable remains1.2.3.
