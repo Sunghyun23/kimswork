@@ -1,0 +1,30 @@
+{
+  "id": 449766143,
+  "project": "GrooveDice",
+  "version": "1.4.0",
+  "tag": "groove-dice/v1.4.0",
+  "commit": "44a629e0d452f01b1fabb7914ae0be1e2807a692",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.4.0",
+  "assets": [
+    {
+      "name": "groove-dice-1.4.0-mpc.zip",
+      "size": 18681229,
+      "digest": "sha256:b156f736ec5577b401993adf2a023c79dabe50124fce776ee884f93320c8b5ea",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.4.0/groove-dice-1.4.0-mpc.zip"
+    },
+    {
+      "name": "groove-dice-1.4.0-mpc.zip.sha256",
+      "size": 92,
+      "digest": "sha256:c277506fbae702fc1be27e953a45cd4afaecba8e1ed0275e32c9c0bdc7befdc8",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.4.0/groove-dice-1.4.0-mpc.zip.sha256"
+    }
+  ],
+  "date": "2026-11-18",
+  "stable": true,
+  "pagesRun": 44277085158,
+  "publicChecks": 14,
+  "responsiveRouteWidthChecks": 63,
+  "localReferences": 270,
+  "publicAssetDigestsVerified": true,
+  "actualDeviceScreenshots": true
+}
