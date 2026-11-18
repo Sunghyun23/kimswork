@@ -1,0 +1,32 @@
+{
+  "id": 449863647,
+  "project": "CratePress",
+  "version": "0.2.4",
+  "tag": "crate-press/v0.2.4",
+  "commit": "e0ad89615c28971d89125a2234348d0db64e9ca7",
+  "preview": true,
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/crate-press/v0.2.4",
+  "assets": [
+    {
+      "name": "crate-press-0.2.4-mpc.zip",
+      "size": 1638341,
+      "digest": "sha256:6eaa8e8acbcdf44a69e833fb63b047ece13ad56f1edfcd481c97ec00a76eb02c",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.4/crate-press-0.2.4-mpc.zip"
+    },
+    {
+      "name": "crate-press-0.2.4-mpc.zip.sha256",
+      "size": 92,
+      "digest": "sha256:ec57383b3e0510a300d8a8230aa027b1782404c88451ab3adf1efd9b3a1bdb21",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.4/crate-press-0.2.4-mpc.zip.sha256"
+    }
+  ],
+  "date": "2026-11-18",
+  "publicRelease": true,
+  "pagesRun": 44291228984,
+  "publicChecks": 22,
+  "responsiveRouteWidthChecks": 77,
+  "localReferences": 272,
+  "publicAssetDigestsVerified": true,
+  "actualDeviceScreenshots": true,
+  "grooveDiceUnchanged": true
+}

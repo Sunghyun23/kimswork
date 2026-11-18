@@ -1,0 +1,32 @@
+{
+  "id": 449863561,
+  "project": "DonutTheory",
+  "version": "1.10.1",
+  "tag": "donut-theory/v1.10.1",
+  "commit": "e0ad89615c28971d89125a2234348d0db64e9ca7",
+  "preview": false,
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.10.1",
+  "assets": [
+    {
+      "name": "donut-theory-1.10.1-mpc.zip",
+      "size": 5993349,
+      "digest": "sha256:e1d721d35a754e4978557abef27b07dcfaecef940158b183644b0d6ebb55af56",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.10.1/donut-theory-1.10.1-mpc.zip"
+    },
+    {
+      "name": "donut-theory-1.10.1-mpc.zip.sha256",
+      "size": 94,
+      "digest": "sha256:dec789d64885fa9a5745e00d26df47fa4d9d3d4e714df325df6c573c45e529c5",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.10.1/donut-theory-1.10.1-mpc.zip.sha256"
+    }
+  ],
+  "date": "2026-11-18",
+  "publicRelease": true,
+  "pagesRun": 44291228984,
+  "publicChecks": 22,
+  "responsiveRouteWidthChecks": 77,
+  "localReferences": 272,
+  "publicAssetDigestsVerified": true,
+  "actualDeviceScreenshots": true,
+  "grooveDiceUnchanged": true
+}
