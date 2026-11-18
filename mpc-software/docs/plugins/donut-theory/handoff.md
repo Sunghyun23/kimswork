@@ -266,3 +266,7 @@ Audio renders from the restored native1.8.0preset chunks, not from hardware outp
 ## 2026-11-18 — Soul Studies wider Auto Pan revision
 
 User found the18%/24% audition depths too subtle. Added an optional --wide-pan render variant at70%/80%, preserving rates0.22/0.18Hz and all other timbral/harmonic settings. Saved Sound Trim is recalibrated for matched average level. Original files remain intact. Wide-state287parameter round-trip, finite/unclipped audio, note release and WAV/XPL checks pass. Measured100ms stereo windows over0.3..11.6s: Dusty Sunday L/R balance range grows−0.68..+0.77dB to−6.15..+6.30dB; Velvet Melt−1.23..+0.82dB to−9.55..+8.80dB. Metrics and new user-preset/WAVs are in presets/soul-studies/wide-pan. Engine/factory bank/device installation unchanged; actual MPC preset import remains untested.
+
+## 2026-11-18 — Soul Studies88BPM / Auto Pan1/8
+
+User requested88BPM and eighth-note Auto Pan. Renderer now accepts --bpm/--pan-sync while retaining the original/wide variants. New sync-88-eighth files use host tempo/PPQ88, ModSync1/Division1, depths70/80%; one cycle0.340909s/2.93333Hz. Native-state round-trip, finite unclipped audio, full note release and saved-setting/WAV/XML checks passed. Clips14.6591s. Presets do not set host tempo; MPC must use88BPM. Engine/factory bank/installed MPC unchanged; MPC preset import remains untested.

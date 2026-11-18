@@ -20,3 +20,5 @@ python3 mpc-software/plugins/public/DonutTheory/tools/export_soul_studies.py /pr
 The renderer verifies all287parameter values after loading each saved chunk, checks finite/unclipped output, and checks complete note release. `verification.json` records levels and hashes. The renderer intentionally rejects another engine version until the studies are reviewed again. Original code/patches/audio follow the repository's MIT license.
 
 User-requested stronger movement: [Wide Pan revision](wide-pan/README.md) raises Auto Pan depths to70%/80%, retaining the slow rates. The original18%/24% versions above remain available.
+
+Requested tempo-sync audition: [88BPM / Auto Pan1/8](sync-88-eighth/README.md), retaining70%/80% depth.
