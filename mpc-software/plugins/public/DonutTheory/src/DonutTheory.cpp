@@ -41,7 +41,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11001;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11200;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -235,7 +235,7 @@ public:
         for(int i=0;i<16;++i)if(lastPadMap_[i]!=getInt(kChordPadNotes[i]))mapChanged=true;
         if(lastPadMap_[16]!=getInt(kPadMap))mapChanged=true;
         if(mapChanged){
-            for(auto& v:voices_)if(v.owner>=0&&v.owner<2048){v.amp.reset();v.env.reset();v.filter.reset();v.wait=v.glideWait=0;v.owner=-1;}
+            for(auto& v:voices_)if(v.owner>=0&&v.owner<2048){v.amp.reset();v.env.reset();v.filter.reset();v.wait=v.glideWait=0;v.releaseDrop.snap(0);v.owner=-1;}
             for(int i=0;i<16;++i)if(lastPadMap_[i]!=getInt(kChordPadNotes[i]))setFromEngine(kChordSlot,float(i));
             std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);cachePadMapping();
         }
@@ -316,7 +316,7 @@ public:
                 if(v.glideWait>0&&!--v.glideWait){if(raw_[kGlide]>0)v.pitch.setTarget(float(v.note));else v.pitch.snap(float(v.note));}
                 if(v.wait>0){--v.wait;if(v.wait==0){v.amp.noteOn();v.env.noteOn();}else continue;}
                 if(!v.amp.isActive())continue;
-                const float amp=v.amp.process(),env=v.env.process(),pitch=v.pitch.process();
+                const float amp=v.amp.process(),env=v.env.process(),pitch=v.pitch.process()+v.releaseDrop.next();
                 if(control||v.dirty){
                     v.dirty=false;
                     const float modulation=(p_[kVibrato]*.003f+wheel_[v.channel]*.5f)*vib+p_[kMotion]*.0006f*drift;
@@ -409,6 +409,7 @@ public:
             if(getBool(syncParameters_[module])){static const char* names[]={"1/16","1/8","1/4","1/2","1 bar"};out=names[getInt(divisionParameters_[module])];return true;}
             char b[32];std::snprintf(b,sizeof b,"%.1f Hz",get(rateParameters_[module]));out=b;return true;}
         if(index==kTremRate&&getBool(kModSync)){static const char* names[]={"1/16","1/8","1/4","1/2","1 bar"};out=std::string("Sync ")+names[getInt(kModDivision)];return true;}
+        if(index==kReleaseDropAmount&&value<=0){out="Off";return true;}
         if(index==kPan){char b[32];if(std::abs(value)<.5f)out="Center";else {std::snprintf(b,sizeof b,"%s %.0f %%",value<0?"L":"R",std::abs(value));out=b;}return true;}
         if(param(index).kind==mpc::Param::Kind::Float){char b[48];std::snprintf(b,sizeof b,"%.1f %s",value,param(index).unit.c_str());out=b;return true;}
         return false;
@@ -416,7 +417,7 @@ public:
 #ifdef DONUT_VOICE_TEST
     std::array<float,3> modulationPhases()const{return {lfo_.phase(),tremolo_.phase(),lfo2_.phase()};}
     struct VoiceSnapshot {int owner,note;float pitch,amplitude;bool held;};
-    std::array<VoiceSnapshot,N> voiceSnapshots()const{std::array<VoiceSnapshot,N> result{};for(int i=0;i<N;++i){const auto& v=voices_[i];result[i]={v.owner,v.note,v.pitch.value(),v.amp.level(),v.amp.isHeld()||v.wait>0};}return result;}
+    std::array<VoiceSnapshot,N> voiceSnapshots()const{std::array<VoiceSnapshot,N> result{};for(int i=0;i<N;++i){const auto& v=voices_[i];result[i]={v.owner,v.note,v.pitch.value()+v.releaseDrop.value(),v.amp.level(),v.amp.isHeld()||v.wait>0};}return result;}
 #endif
     int activeVoices() const {int n=0;for(const auto& v:voices_)if(v.amp.isActive()||v.wait)n++;return n;}
 private:
@@ -489,7 +490,7 @@ private:
             smoothNext_=smoothBeat_-1;smoothOff_=int(smoothBeat_*.8f);smoothGate_=true;
         }
     }
-    struct Voice {PolyBlepOsc a,b;WavetableSine sineA,sineB,sub,fm;donut::AnalogVoiceFilter filter;ADSR amp,env;Smoother pitch;int owner=-1,channel=0,wait=0,note=60,glideWait=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
+    struct Voice {PolyBlepOsc a,b;WavetableSine sineA,sineB,sub,fm;donut::AnalogVoiceFilter filter;ADSR amp,env;Smoother pitch;LinearRamp releaseDrop;int owner=-1,channel=0,wait=0,note=60,glideWait=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
     std::array<Voice,N> voices_{};
     std::array<Smoother,kNumParams> smooth_{};float p_[kNumParams]{},raw_[kNumParams]{};
     uint16_t held_[16][128]{};uint64_t order_[16][128]{};int velocity_[16][128]{};
@@ -567,11 +568,24 @@ private:
     donut::BodyTone bodyTone_;LFO lfo2_;Smoother lfo2Signal_;std::array<Smoother,5> lfo2Weights_;float lfo2TargetWeights_[5]{};
     float sr_=44100,delaySamples_=22050,dcIn_=0,dcOut_=0;LFO tremolo_,lfo_,vibrato_,drift_,chorusLfo_;Xorshift32 noise_{1234567};Smoother gain_,delayTime_,panLeft_,panRight_,motionGain_;DelayLine chorus_,delay_[2];
     static float flush(float x){return std::fabs(x)<1e-25f?0.f:x;}
-    void clearNotes(){bodyTone_.reset();chordLead_.fill(-1);touchOrder_.fill(0);smoothPlaying_=smoothGate_=false;setFromEngine(kSmoothPreview,0);for(auto& f:lowCut_)f.reset();for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}setFromEngine(kTouchStop,0);for(auto& v:voices_){v.amp.reset();v.env.reset();v.filter.reset();v.wait=v.glideWait=0;v.owner=-1;}std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);std::fill(std::begin(bend_),std::end(bend_),0.f);std::fill(std::begin(wheel_),std::end(wheel_),0.f);}
-    void release(Voice& v){v.glideWait=0;v.wait=0;v.amp.noteOff();v.env.noteOff();}
+    void clearNotes(){bodyTone_.reset();chordLead_.fill(-1);touchOrder_.fill(0);smoothPlaying_=smoothGate_=false;setFromEngine(kSmoothPreview,0);for(auto& f:lowCut_)f.reset();for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}setFromEngine(kTouchStop,0);for(auto& v:voices_){v.amp.reset();v.env.reset();v.filter.reset();v.wait=v.glideWait=0;v.releaseDrop.snap(0);v.owner=-1;}std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);std::fill(std::begin(bend_),std::end(bend_),0.f);std::fill(std::begin(wheel_),std::end(wheel_),0.f);}
+    void release(Voice& v){
+        // Snapshot at the real gate-off (after sustain), once per release.
+        // Finish any note-to-note glide at its audible position before dropping.
+        if(v.amp.isHeld()&&v.wait==0&&raw_[kReleaseDropAmount]>0){
+            v.pitch.snap(v.pitch.value());v.releaseDrop.snap(0);
+            v.releaseDrop.setTarget(-raw_[kReleaseDropAmount],std::max(1,int(std::lround(raw_[kReleaseDropTime]*.001f*sr_))));
+            v.dirty=true;
+        }
+        v.glideWait=0;v.wait=0;v.amp.noteOff();v.env.noteOff();
+    }
     int allocate(){const int first=mono()?1:0;for(int i=first;i<N;++i)if(!voices_[i].amp.isActive()&&!voices_[i].wait)return i;int best=first;for(int i=first+1;i<N;++i)if((voices_[i].amp.isReleasing()&&!voices_[best].amp.isReleasing())||(voices_[i].amp.isReleasing()==voices_[best].amp.isReleasing()&&voices_[i].order<voices_[best].order))best=i;return best;}
     void start(int owner,int ch,int note,int vel,int wait=0,int forced=-1,bool legato=false,bool allowGlide=true){
         Voice& v=voices_[forced>=0?forced:allocate()];const bool sounding=v.amp.isActive(),connected=sounding&&v.amp.isHeld();
+        // Reused release tails start a new gesture; Always Glide continues from
+        // their audible dropped pitch, while ordinary retriggers snap as before.
+        if(sounding&&!connected&&v.releaseDrop.value()!=0)v.pitch.snap(v.pitch.value()+v.releaseDrop.value());
+        v.releaseDrop.snap(0);
         v.glideWait=0;v.owner=owner;v.channel=ch;v.note=note;v.order=++clock_;v.velocity=vel/127.f;v.velocityGain=1-(1-v.velocity)*p_[kExpression]*.01f;v.dirty=true;
         if(allowGlide&&sounding&&raw_[kGlide]>0&&(int(std::lround(raw_[kGlideLegato]))==0||v.amp.isHeld()))v.pitch.setTarget(float(note));else v.pitch.snap(float(note));
         if(!sounding)v.filter.reset();

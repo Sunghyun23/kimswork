@@ -24,42 +24,42 @@ export const plugins: Plugin[] = [{
   "category": "POLYPHONIC SYNTHESIZER",
   "tagline": "A little worn. Endlessly warm.",
   "summary": "Warm synthesis. Rich chords. Movement in every direction.",
-  "description": "A Moog-inspired synthesizer for MPC bass, keys, leads and pads. Shape its nonlinear ladder engine with Body and Sub, two independent LFOs and synchronized Tremolo or Auto Pan, then build your own chord changes.",
-  "developmentVersion": "1.10.1",
+  "description": "A Moog-inspired synthesizer for MPC bass, keys, leads and pads. Shape its nonlinear ladder engine with Body and Sub, two independent LFOs and synchronized Tremolo or Auto Pan, then build your own chord changes. Shape both envelopes on ENV and add a downward pitch release from PLAY.",
+  "developmentVersion": "1.12.0",
   "release": {
-    "version": "1.10.1",
-    "tag": "donut-theory/v1.10.1",
-    "asset": "donut-theory-1.10.1-mpc.zip"
+    "version": "1.12.0",
+    "tag": "donut-theory/v1.12.0",
+    "asset": "donut-theory-1.12.0-mpc.zip"
   },
-  "image": "donut-theory-main-device-1.10.1.webp",
-  "imageAlt": "Donut Theory 1.10.1 running on MPC XL with bottom browse controls, ROLL DICE and four large chord pads",
+  "image": "donut-theory-main-device-1.12.0.webp",
+  "imageAlt": "Actual Donut Theory1.12.0 MAIN running on MPC XL with filter controls, ROLL DICE and chord pads",
   "manual": "plugins/donut-theory/manual/",
   "intro": "66 synthesized factory sounds, 32 chord types and 96 progression recipes. Tap ROLL DICE to generate a complete oscillator-to-FX sound with synchronized motion, while keeping your chords and master level. No external samples are required.",
-  "verifiedDevice": "MPC XL / OS 3.10.1.12, internal NVMe; actual 1.10.1 footer, preset, chord, Voice/Input and detail-tab remote UI checks with runtime read-back",
+  "verifiedDevice": "MPC XL / OS3.10.1.12, internal NVMe; actual1.12.0 ENV/PLAY, D controls, bidirectional Amp Release, mode-list and startup checks; all173installed files verified",
   "mapping": [
     [
-      "A · OSC / Sound",
+      "A \u00b7 OSC / Sound",
       "OSC Pair",
       "OSC Mix",
       "Detune",
       "Drift"
     ],
     [
-      "B · Filter / Tone",
+      "B \u00b7 Filter / Tone",
       "Filter Cutoff",
       "Resonance",
       "Body",
       "Sub"
     ],
     [
-      "C · LFO 1 /2",
+      "C \u00b7 LFO 1 /2",
       "LFO 1 Rate",
       "LFO 1 Depth",
       "LFO 2 Rate",
       "LFO 2 Depth"
     ],
     [
-      "D · FX / Motion",
+      "D \u00b7 FX / Motion",
       "Drive",
       "Glide",
       "Mod Rate",
@@ -67,6 +67,14 @@ export const plugins: Plugin[] = [{
     ]
   ],
   "features": [
+    {
+      "title": "Shape the whole release.",
+      "text": "PLAY places Amp Release, Drop Amount and Drop Time together. Release a key to slide down by up to24semitones; sustain and legato fallback follow your playing. Set Amount to0 to turn it off."
+    },
+    {
+      "title": "Two envelopes. One clear view.",
+      "text": "ENV brings Amp ADSR and Filter ADSR side by side, with editable diagrams and vertical faders. Filter response stays together below. PLAY Release shares the Amp Release value, while Filter Release stays independent."
+    },
     {
       "title": "66 sounds. A warm place to start.",
       "text": "Bass, Keys, Synth, Lead and Pad, plus dry Init. Category-first browsing and per-sound low-cut keep selection practical. Dusty Sunday and Velvet Melt append to the original 64 programs."
@@ -93,7 +101,14 @@ export const plugins: Plugin[] = [{
     }
   ],
   "changes": [
-    {"title":"1.10.1: browse, create, play.","text":"Sound Preset, Voice and Input move into a bottom browse row. ROLL DICE joins chord-preset and slot navigation beneath it, followed by four 70 px chord pads. Original artwork and typography stay; compact main controls and guides make room. Sound engine, 291 parameters, 66 programs, detail pages and Q-Link assignments are unchanged."},
+    {
+      "title": "1.12.0: shape what happens after the note.",
+      "text": "ENV replaces FILTER and PLAY replaces AMP. Both ADSRs share one screen; PLAY D adds Release / Drop Amount / Drop Time. Old projects default to Drop Off; the first291parameters remain unchanged, with only two appended for293total. MAIN and its filter controls are unchanged."
+    },
+    {
+      "title": "1.10.1: browse, create, play.",
+      "text": "Sound Preset, Voice and Input move into a bottom browse row. ROLL DICE joins chord-preset and slot navigation beneath it, followed by four 70 px chord pads. Original artwork and typography stay; compact main controls and guides make room. Sound engine, 291 parameters, 66 programs, detail pages and Q-Link assignments are unchanged."
+    },
     {
       "title": "1.10.0: a whole new sound, one tap away.",
       "text": "ROLL DICE generates oscillators, filter and envelopes, modulation and FX within playable bounds. LFO 1, LFO 2 and shared motion Sync turn on automatically. Chords, Key, MIDI mapping, Strum, CHORD GLIDE preference and master Volume stay in place. Select any factory sound to return to a known starting point."
@@ -118,50 +133,56 @@ export const plugins: Plugin[] = [{
     "SCREEN mode follows CHORD; Program/Track retains the synth mapping. Old tracks may cache previous defaults.",
     "Actual XL checks cover remote screen operation and installed-file read-back. Complete physical Q-Link/multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.",
     "Native audio demos are engine renders, not MPC output recordings. Testing on every MPC model/OS is not certified.",
-    "The engine changed in 1.2.0 and explicit Sub in 1.2.3; retained parameter identities do not guarantee identical older project sounds."
+    "The engine changed in 1.2.0 and explicit Sub in 1.2.3; retained parameter identities do not guarantee identical older project sounds.",
+    "Pitch Drop needs an audible Amp Release tail. Editable envelope diagrams are parameter views, not calibrated time plots or hardware waveform measurements."
   ],
   "screenshots": [
     {
-      "image": "donut-theory-main-device-1.10.1.webp",
-      "alt": "Actual MPC XL 1.10.1 MAIN with bottom ROLL DICE, Sound Preset, Voice, Input and chord controls",
-      "caption": "MAIN · Actual MPC XL 1.10.1 capture. Browse and Create controls are grouped below the original-style knobs, with four tall chord pads along the bottom."
+      "image": "donut-theory-main-device-1.12.0.webp",
+      "alt": "Actual MPC XL Donut Theory1.12.0 MAIN screen",
+      "caption": "MAIN \u00b7 Original filter controls, footer ROLL DICE, preset navigation and four chord pads. Actual MPC XL1.12.0 capture."
     },
     {
-      "image": "donut-theory-chord-device-1.10.1.webp",
-      "alt": "Actual MPC XL Donut Theory chord editor with key reference and circle of fifths",
-      "caption": "CHORD · Actual MPC XL 1.10.1 capture of the unchanged editor. Four editable slots, Key/circle reference, transpose, Smooth Voicing, chord glide and Strum."
+      "image": "donut-theory-env-device-1.12.0.webp",
+      "alt": "Actual MPC XL Donut Theory1.12.0 ENV screen",
+      "caption": "ENV \u00b7 Amp and Filter ADSR together; eight vertical faders and filter response below. Amp Release shares its value with PLAY. Actual MPC XL1.12.0 capture."
     },
     {
-      "image": "donut-theory-voice-device-1.10.1.webp",
-      "alt": "Actual MPC XL Donut Theory Voice Mode sidebar opened from the bottom browse row",
-      "caption": "BROWSE · Voice/Input and Sound Preset open their existing left lists from the footer. Category-first sound browsing and all 66 factory programs are retained."
+      "image": "donut-theory-play-device-1.12.0.webp",
+      "alt": "Actual MPC XL Donut Theory1.12.0 PLAY screen",
+      "caption": "PLAY \u00b7 Four groups, including Release / Pitch Drop. This QA example uses Release395.1ms, Amount12st and Time249.5ms; new projects default to Drop Off. Actual MPC XL1.12.0 capture."
     },
     {
-      "image": "donut-theory-mod-device-1.10.1.webp",
-      "alt": "Donut Theory MOD detail with two independent LFOs on MPC XL",
-      "caption": "MOD · Independent LFOs, routing and tempo settings. MAIN keeps both rates and depths close."
+      "image": "donut-theory-chord-device-1.12.0.webp",
+      "alt": "Actual MPC XL Donut Theory1.12.0 CHORD screen",
+      "caption": "CHORD \u00b7 Key/circle reference,32types,96recipes, voicing, octave, glide and Strum. Actual MPC XL1.12.0 capture."
     },
     {
-      "image": "donut-theory-amp-device-1.10.1.webp",
-      "alt": "Donut Theory AMP detail running on MPC XL",
-      "caption": "AMP · Amp ADSR and playing controls live on their dedicated page."
+      "image": "donut-theory-osc-device-1.12.0.webp",
+      "alt": "Actual MPC XL Donut Theory1.12.0 OSC screen",
+      "caption": "OSC \u00b7 Detailed oscillator settings. Actual MPC XL1.12.0 capture."
     },
     {
-      "image": "donut-theory-fx-device-1.10.1.webp",
-      "alt": "Actual Donut Theory FX detail with Auto Pan and stereo balance",
-      "caption": "FX · Drive, chorus, delay, cleanup Low-cut and shared Tremolo/Auto Pan with static Pan."
+      "image": "donut-theory-mod-device-1.12.0.webp",
+      "alt": "Actual MPC XL Donut Theory1.12.0 MOD screen",
+      "caption": "MOD \u00b7 Two independent LFOs and synchronized rate settings. Actual MPC XL1.12.0 capture."
+    },
+    {
+      "image": "donut-theory-fx-device-1.12.0.webp",
+      "alt": "Actual MPC XL Donut Theory1.12.0 FX screen",
+      "caption": "FX \u00b7 Drive, chorus, delay, cleanup Low-cut and shared motion. Actual MPC XL1.12.0 capture."
     }
   ],
   "auditions": [
     {
       "name": "Keys / Dusty Sunday",
       "file": "donut-theory-dusty-sunday-1.9.0.wav",
-      "description": "Soft sine/triangle keys ·8 ms Strum ·70% Auto Pan."
+      "description": "Soft sine/triangle keys \u00b78 ms Strum \u00b770% Auto Pan."
     },
     {
       "name": "Synth / Velvet Melt",
       "file": "donut-theory-velvet-melt-1.9.0.wav",
-      "description": "Soft saw/triangle ·6 ms Strum ·65 ms chord glide ·80% Auto Pan."
+      "description": "Soft saw/triangle \u00b76 ms Strum \u00b765 ms chord glide \u00b780% Auto Pan."
     }
   ]
 },

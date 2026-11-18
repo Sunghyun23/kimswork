@@ -1,10 +1,10 @@
 # Donut Theory — User Manual
 
-**Version 1.10.1 · kim · MPC standalone · UID Krql**
+**Version 1.12.0 · kim · MPC standalone · UID Krql**
 
 A warm polyphonic instrument for bass, keys, leads, pads and chord playing. Its original Moog-inspired engine combines a nonlinear oscillator mixer, a four-stage ladder low-pass and rounded VCA. It is an inspired synthesis design, not an exact recreation of a named instrument or artist's recordings.
 
-The current reference device is **MPC XL / MPC OS 3.10.1.12**, installed on internal NVMe. Build, DSP, state and remote UI checks are described in the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.10.1). Complete physical Q-Link, simultaneous finger multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.
+The current reference device is **MPC XL / MPC OS 3.10.1.12**, installed on internal NVMe. Build, DSP, state and remote UI checks are described in the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.12.0). Complete physical Q-Link, simultaneous finger multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.
 
 ## First session
 
@@ -13,7 +13,7 @@ The current reference device is **MPC XL / MPC OS 3.10.1.12**, installed on inte
 3. For the approved audition feel, set MPC tempo to **88 BPM**. Both sounds have Auto Pan synchronized to **1/8**, with 70% and 80% Depth respectively. Listen in stereo.
 4. Select NOTES for normal keyboard/pad notes, or SPLIT for melody and assigned chord triggers. Screen chord pads play while held; Amp Release and effects set the tail after release.
 5. Press MAIN again for CHORD. Choose a progression, change its voicings, set a reference Key, or use SMOOTH VOICING before applying it.
-6. Use AMP for amp ADSR and FILTER for filter ADSR. These are deliberately off the main sixteen Q-Links.
+6. Use ENV for both Amp ADSR and Filter ADSR; PLAY contains performance settings. These remain off the main sixteen Q-Links.
 
 ## Install, update and remove
 
@@ -62,7 +62,7 @@ Save a copy of any project that uses the plugin, and render or replace its track
 
 ## Navigation and selection
 
-The lower MPC function-key area provides **MAIN**, **OSC**, **FILTER**, **AMP**, **MOD** and **FX**. The first key has two views: pressing it while MAIN is visible opens the single **CHORD** editor; pressing it again returns to MAIN. Choose the chord bank *inside* the editor rather than repeatedly pressing MAIN to cycle banks.
+The lower MPC function-key area provides **MAIN**, **OSC**, **ENV**, **PLAY**, **MOD** and **FX**. The first key has two views: pressing it while MAIN is visible opens the single **CHORD** editor; pressing it again returns to MAIN. Choose the chord bank *inside* the editor rather than repeatedly pressing MAIN to cycle banks.
 
 The gray MPC track/plugin/preset bar belongs to the host. The controls within the illustrated Donut Theory panel belong to the plugin.
 
@@ -89,7 +89,7 @@ Four groups are arranged in reading order: A upper left, B upper right, C lower 
 
 SCREEN mode follows the visible page. CHORD uses its own Root/Type/Voicing/Octave mapping; Program/Track keeps this synth mapping. Physical columns read top-to-bottom in the displayed left-to-right order: A = 13/9/5/1, B = 14/10/6/2, C = 15/11/7/3, D = 16/12/8/4. Older tracks can cache previous assignments; compare a new instance or reset the map if controls do not match.
 
-Filter Type, each LFO's Shape/Target, Drive Type and the shared motion Mode/Shape use touch lists. Each Rate has an independent SYNC button. Turning a synchronized Rate selects its division, while turning an unsynchronized Rate adjusts Hz. ADSRs remain on AMP/FILTER. Space, static Pan and cleanup Low-cut remain on FX. Drift changes pitch over time; Detune sets a fixed oscillator difference.
+Filter Type, each LFO's Shape/Target, Drive Type and the shared motion Mode/Shape use touch lists. Each Rate has an independent SYNC button. Turning a synchronized Rate selects its division, while turning an unsynchronized Rate adjusts Hz. Both ADSRs are on ENV. Space, static Pan and cleanup Low-cut remain on FX. Drift changes pitch over time; Detune sets a fixed oscillator difference.
 
 ## Sounds and presets
 
@@ -194,7 +194,7 @@ For bank 5–8, A edits slot 5, B slot 6, C slot 7 and D slot 8. MIDI Note stays
 
 The instrument offers 32 chord types and 96 four-chord progression presets. The original11types/32recipes stay in their original positions;64additional recipes are grouped by name into Neo, Pocket, Vamp, RnB, Modal, Gospel, Color and Turn. Use CHORD PRESET on MAIN to fill the visible four-slot bank. Each of four banks retains its own selection. The library includes minor11/13, major6/9, major9#11/13, suspended dominants, altered dominants, half-diminished, diminished7, augmented7 and minor-major7 colors. See [the complete harmony library](#harmony-library) for names and formulas.
 
-**CHORD GLIDE** in the editor enables newest-held chord connection independently for each MIDI channel. It shares the existing GLIDE time control on MAIN/AMP and the CHORD touch field. Overlap two triggers: exact common MIDI tones keep their existing voices/envelopes, and remaining tones use a minimum-distance assignment. Releasing the newest trigger returns to an older still-held chord; releasing the last ends the chord. MIDI channel1 and screen chords share a chain. Separate channels remain separate. Sequential, non-overlapping presses snap rather than sliding from release tails. Global Mono/Legato still governs ordinary melody notes separately. A zero GLIDE time gives immediate pitch changes. The underlying time control is an exponential time constant, not a guaranteed end-to-end slide duration.
+**CHORD GLIDE** in the editor enables newest-held chord connection independently for each MIDI channel. It shares the existing GLIDE time control on MAIN/PLAY and the CHORD touch field. Overlap two triggers: exact common MIDI tones keep their existing voices/envelopes, and remaining tones use a minimum-distance assignment. Releasing the newest trigger returns to an older still-held chord; releasing the last ends the chord. MIDI channel1 and screen chords share a chain. Separate channels remain separate. Sequential, non-overlapping presses snap rather than sliding from release tails. Global Mono/Legato still governs ordinary melody notes separately. A zero GLIDE time gives immediate pitch changes. The underlying time control is an exponential time constant, not a guaranteed end-to-end slide duration.
 
 **STRUM** is the existing Chord Spread, now directly editable beside GLIDE. It plays each new chord once, bass-to-top, with0–40ms between tones. For example8ms gives a five-tone chord a32ms first-to-last spread. It does not repeat automatically. With chord glide enabled, common tones continue; moved pitches start their transitions in that same ascending sequence. New extra voices use the same onset spacing. Early note-off/close/panic cancels pending starts and pitch transitions. These touch fields share existing parameters; the sixteen CHORD SCREEN Q-Links remain Root/Type/Voicing/Octave, with the Type controls now spanning all32choices.
 
@@ -262,7 +262,26 @@ The engine has **16 audio voices**, not sixteen complete chords of unlimited siz
 
 **Drift is not Detune.** Detune creates a steady offset between oscillators. Drift moves pitch over time for worn-tape instability, with a fine low-end taper for subtle settings. Vibrato is another distinct effect: regular periodic pitch movement. Motion, on MOD, adds its own slow movement and chorus contribution.
 
-### FILTER
+## ENV / PLAY and Release Pitch Drop
+
+ENV places both envelopes together: A controls Amp Attack/Decay/Sustain/Release; B controls Filter Attack/Decay/Sustain/Release; C controls Filter Cutoff/Resonance/Env Amount/Key Track. Filter Type is a touch list. The two editable ADSR diagrams and vertical faders share their existing parameters. Diagrams show envelope relationships, not a calibrated time axis or a measured waveform.
+
+PLAY keeps performance and release controls in four groups:
+
+| Screen Q-Link bank | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| A · Performance | Volume | Expression | Glide | Bend Range |
+| B · Chord Play | Trigger Base | Chord Spread | Chord Slot | Unassigned |
+| C · Voice / Input | Voice Mode | Glide Mode | Input Mode | Unassigned |
+| D · Release / Pitch Drop | Amp Release | Drop Amount | Drop Time | Unassigned |
+
+**PLAY Release and ENV Amp Release are the same value.** Filter Release is independent. To try a falling release, set Amp Release near400ms, Drop Amount12st and Drop Time250ms, then hold and release a note. Amount is the downward interval (0–24st);0 displays Off. Time spans20–2000ms and defaults to250ms. A short Amp Release can make the tail disappear before the drop completes. MAIN's Filter Cutoff/Resonance/Body/Sub group is unchanged.
+
+Normal Glide connects notes; Pitch Drop begins at the actual gate-off pitch. Sustain delays the drop until the pedal is released. Legato fallback to an older held key stays connected instead of dropping. Chord tones fall by the same interval. Pending strum notes are cancelled on release, and new/reused voices clear old drop ramps. Amount/time are captured at gate-off; later knob changes affect subsequent releases. Drop preferences persist across factory sound changes and ROLL DICE, and save with the project. Old projects open with Amount Off and Time250ms.
+
+Use Q-LINK **SCREEN** for these page-specific controls. ENV has three populated banks; PLAY has four, with unused positions unassigned. Cached old host mappings may require a fresh instance or reset to defaults. Version1.12.0 preserves the first291parameter definitions and adds only Amount291/Time292 (293total);66programs are retained.
+
+### ENV: filter response
 
 **Low-pass** uses a four-stage nonlinear ladder with a 24 dB/octave asymptotic slope. Its input and resonant stages respond to level; higher resonance naturally reduces low-frequency gain. The loop gain is limited below autonomous self-oscillation. The displayed cutoff sets the pole frequency: at zero resonance the four-stage response is approximately −12 dB there, rather than a calibrated −3 dB point. The ladder runs at 2× internal rate with output filtering to reduce nonlinear aliasing.
 
@@ -279,7 +298,7 @@ The engine has **16 audio voices**, not sixteen complete chords of unlimited siz
 
 Filter ADSR shapes brightness and is separate from Amp ADSR. Velocity-dependent Expression can also affect brightness. The **Low-cut** on FX is a final bass-cleanup filter; it does not replace this filter or follow its LFO/envelope.
 
-### AMP and play settings
+### ENV: amp envelope / PLAY: performance settings
 
 | Control | Range / purpose |
 |---|---|
@@ -598,10 +617,10 @@ ROLL DICE preserves your master Volume, reference Key, all chord settings, MIDI/
 
 The host PRESET header and internal SOUND PRESET field both show **Random Sound**. Select any factory sound to return to its recipe, including the factory sound selected before you pressed RND. Save your project to retain a generated sound; loading it restores the saved values without generating again. The 66 factory programs remain in their existing order.
 
-Compatibility: the first 288 parameter declarations remain unchanged; three command/status fields append for 291 total. Complete automatic tests and direct MPC XL remote UI checks passed. Full hardware audio, physical encoder/multitouch coverage, project round-trip and worst-case CPU certification remain outside these checks. See the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.10.1).
+Compatibility:1.10.0 preserved the first288 declarations and added three command/status fields. Version1.12.0 retains those291 and appends two Release Drop fields for293total. Complete automatic tests and direct MPC XL remote UI checks passed. Full hardware audio, physical encoder/multitouch coverage, project round-trip and worst-case CPU certification remain outside these checks. See the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.12.0).
 
 ## Bottom action area — 1.10.1
 
 The original warm artwork, type family and donut knobs remain. MAIN now places **Sound Preset / Voice / Input** in the bottom BROWSE row. **ROLL DICE / Chord Preset / slot-page arrows** share CREATE below it. Four chord pads span the bottom, each 70 px tall. The main controls use more compact spacing and 72 px knob bounds; all sixteen Q-Link assignments are unchanged. Filter/LFO/motion choices and Sync remain beside the controls they affect.
 
-The gray MPC host header is unchanged and remains separate from the plugin-owned browse row. MAIN still opens first; press its function tab again for CHORD. The sound engine, 291 parameters and 66 factory programs are unchanged from 1.10.0. Native/ARM builds and automatic/remote UI checks pass; physical encoder/multitouch, hardware audio/CPU and full project recall limitations remain.
+The gray MPC host header is unchanged and remains separate from the plugin-owned browse row. MAIN still opens first; press its function tab again for CHORD. This footer layout first shipped in1.10.1 with the engine,291parameters and66programs unchanged from1.10.0. Version1.12.0 adds Release Pitch Drop for293parameters;66programs remain. Native/ARM builds and automatic/remote UI checks pass; physical encoder/multitouch, hardware audio/CPU and full project recall limitations remain.

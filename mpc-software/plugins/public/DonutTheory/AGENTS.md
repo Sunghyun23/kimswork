@@ -36,3 +36,10 @@
 - Local1.10.1approved footer reflow: preserve original art/type,291parameters/66sounds/16maps; move global browse/actions to bottom, keep local selectors adjacent and70px pads. Groove Dice stays untouched. See handoff for geometry and actual QA.
 
 - User explicitly authorized official1.10.1 publication and website updates after device verification. Earlier local-only statements are history. Preserve original artwork and the recorded physical/audio limits.
+
+- Latest approved local1.11.0 ENV/PLAY supersedes the old FILTER/AMP detail split: ENV A/B=two ADSRs (native editable Envelope + four vertical faders each), C=Cutoff/Resonance/EnvAmount/KeyTrack; PLAY A=Volume/Expression/Glide/Bend, B=TriggerBase/ChordSpread/ChordSlot, C=VoiceMode/GlideMode/InputMode. D unassigned on both, no guide. Preserve291metadata/66programs, MAIN/CHORD/other tabs/maps/DSP and original artwork. Native Envelope field order follows pinned SDK; 81x96px fader texture stays below8192px. Public stable remains1.10.1 pending separate publication authorization.
+
+- Latest1.12.0 local candidate fills PLAY D with shared Amp Release30/Drop Amount291/Drop Time292/unused. Preserve first291declarations/66programs/UID and MAIN filters. Drop is per-voice semitone ramp from actual glide pitch at gate-off, sustain-aware, no drop during held legato fallback, strum cancellation/retrigger/reset/CC120 safe. New settings defaultOff/250ms and persist across sound generation/selection. PLAY2x2 four-bank layout supersedes1.11.0empty-D. Public stays1.10.1; see handoff/evidence.
+
+
+2026-11-18: User explicitly authorized official Donut Theory1.12.0 release and website publication. Earlier candidate-only statements are historical. ENV/PLAY and Release Pitch Drop are the current specification; preserve recorded physical/audio/CPU limits. Final publication details go in design/device-1.12.0/publication.json.

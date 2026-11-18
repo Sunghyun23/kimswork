@@ -1,5 +1,32 @@
 # Donut Theory — 프로젝트 인계 / 재개 기준
 
+## 1.12.0 local candidate — Release / Pitch Drop
+
+Latest user-approved PLAY D adds **Amp Release / Drop Amount / Drop Time / unassigned**. Amp Release is the same parameter30 used on ENV; editing either view updates the other. PLAY A/B/C keep their previous controls, arranged with D in a2×2 layout. MAIN and its filter group remain unchanged; ENV still holds both ADSRs.
+
+Drop Amount0–24st (0 displays Off); Drop Time20–2000ms, default250ms. Note-on stays at its normal pitch. At actual gate-off the current unbent glide pitch is frozen and a per-voice downward semitone ramp begins; it reaches the chosen interval in Drop Time if Amp Release leaves enough audible tail. A short Release may end the sound first. Sustain delays gate-off; a legato fallback to an older held key does not drop. Chord voices use equal intervals, pending strum notes are cancelled, new/reused voices clear the old ramp, panic/reset removes it. Existing normal Glide and pitch bend remain independent. Amount/time are snapshotted at release, so changes affect subsequent releases. Drop settings are stored with the project and preserved across factory sound changes and ROLL DICE.
+
+UID kim/Krql and first291parameter declarations are exact; append ReleaseDropAmount291 and ReleaseDropTime292 for293total. Old291states migrate to Off/250ms. Existing66factory programs and other projects remain unchanged. Source/native/ARM32/ARM64/SDK, full engine and UBSan/bridge/skin checks pass; direct device evidence is under `design/device-1.12.0/`. Physical encoder/audio/CPU certification is separate. This candidate supersedes1.11.0's empty PLAY D and unchanged-DSP statements; public stable remains1.10.1 until a separately authorized release.
+
+
+## 1.11.0 local ENV / PLAY candidate — 2026-11-18
+
+User-approved detail reorganization supersedes the older FILTER/AMP split below. Native tabs are MAIN / OSC / ENV / PLAY / MOD / FX, with the existing MAIN↔CHORD subtab. Original paper/chocolate artwork, Roboto Bold lettering and donut knobs are retained. Public stable remains **1.10.1**; this change is not a new public release.
+
+| Page / Screen Q-Link bank | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| ENV A · Amp envelope | Attack | Decay | Sustain | Release |
+| ENV B · Filter envelope | Attack | Decay | Sustain | Release |
+| ENV C · Filter response | Cutoff | Resonance | Env Amount | Key Track |
+| PLAY A · Performance | Volume | Expression | Glide | Bend Range |
+| PLAY B · Chord play | Trigger Base | Chord Spread | Chord Slot | Unassigned |
+| PLAY C · Voice / input | Voice Mode | Glide Mode | Input Mode | Unassigned |
+
+Both pages leave bank D unassigned and draw only three Q-Link guides. Filter Type is a touch list on ENV. Each envelope has its own native editable ADSR diagram and four vertical faders; both edit the same existing parameters. These diagrams show parameter relationships, not a sample-accurate live waveform or a calibrated millisecond axis. Trigger Base affects consecutive pad mapping; individual MIDI/LEARN remains on CHORD. Body/Sub remain on MAIN/OSC and are not removed.
+
+All 291 parameter declarations, 66 sounds, UID, DSP, MAIN/CHORD/OSC/MOD/FX trees, Program defaults and all non-ENV/PLAY Screen mappings remain unchanged. Existing projects may retain cached old Screen assignments; use a fresh instance or reset the host map to defaults when comparing. Local build/native/ARM/SDK and host simulator pass. Final device evidence is recorded in `design/device-1.11.0/`; physical encoder/audio/CPU coverage must not be inferred from remote testing.
+
+
 기준일: **2026-11-16 (Asia/Seoul)**. 이번 공개 배포 대상은 **1.2.3 BODY→SUB**, MPC XL 내장 NVMe 설치 완료다. 다음 프로젝트 때문에 Donut Theory를 새 저장소로 분리하거나 루트를 단일 플러그인 프로젝트로 바꾸지 않는다.
 
 ## 읽는 순서와 문서의 권위
@@ -312,3 +339,6 @@ Official SDK final export matches165files on MPC XL internalNVMe. Direct capture
 ## 1.10.1 publication authorization
 
 The owner approved distribution after seeing the actual footer implementation. The current source/manual/site use1.10.1, bottom ROLL DICE/BROWSE/CREATE and actual device captures. Historical candidate-only statements above no longer constrain publication. Groove Dice remains unchanged. Final release/asset/Pages results are recorded in design/device-1.10.1/publication.json.
+
+
+2026-11-18: User explicitly authorized official Donut Theory1.12.0 release and website publication. Earlier candidate-only statements are historical. ENV/PLAY and Release Pitch Drop are the current specification; preserve recorded physical/audio/CPU limits. Final publication details go in design/device-1.12.0/publication.json.

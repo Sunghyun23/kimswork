@@ -1,0 +1,41 @@
+
+  ┏┳┓┏━┓┏━╸  ┏━┓┏━╸┏┳┓┏━┓╺┳╸┏━╸
+  ┃┃┃┣━┛┃    ┣┳┛┣╸ ┃┃┃┃ ┃ ┃ ┣╸ 
+  ╹ ╹╹  ┗━╸  ╹┗╸┗━╸╹ ╹┗━┛ ╹ ┗━╸
+  install and manage VST2 plugins on your MPC over the network
+
+  › Reaching <local-device>:22 ...
+  ✔ Reaching <local-device>:22  SSH server is up
+  › Logging in as root ...
+  ✔ Logging in as root  ok
+  › Reading device details ...
+  ✔ Reading device details  Akai Professional MPC XL
+
+╭─ Your MPC ────────────────────────────────────────────────────────────────────────╮
+│ Address           <local-device>                                                    │
+│ Model             Akai Professional MPC XL                                        │
+│ Hardware code     ACVC                                                            │
+│ Serial number     A12509266002153                                                 │
+│ Hostname          mpc-xl                                                          │
+│ MPC version       3.10.1.12                                                       │
+│ Firmware version  9a27d579                                                        │
+│ CPU               Cortex-A55 ×8 @ 1.8 GHz (aarch64)                               │
+│ Architecture      64-bit                                                          │
+│ System            az0x (inMusic Brands AZ0x base distribution) 5.0.18 (scarthgap) │
+│ Kernel            Linux 6.18.44-imb-2026-08-10-rt6 aarch64                        │
+│ Uptime            19h 38m                                                         │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+
+  › Looking for drives ...
+  ✔ Looking for drives  2 found
+
+╭─ Drives found ────────────────────────────────────────────────────╮
+│ 1  ● nvme  internal · exfat · 188.2 GB free of 198.5 GB           │
+│ 2    SSD   removable · exfat · 864.4 GB free of 931.5 GB · noexec │
+│ ● recommended: internal storage                                   │
+╰───────────────────────────────────────────────────────────────────╯
+
+  ✔ Using nvme /nvme
+
+  › Exporting kim - VST - Donut Theory ...
+  ✔ Exporting kim - VST - Donut Theory  173 files › /private/tmp/dt1110-installed/kim - VST - Donut Theory 1.11.0.zip

@@ -1,0 +1,38 @@
+
+> build
+> astro build
+
+21:05:52 [types] Generated 30ms
+21:05:52 [build] output: "static"
+21:05:52 [build] mode: "static"
+21:05:52 [build] directory: /Users/sunghyunkim/source/kimswork/site/dist/
+21:05:52 [build] Collecting build info...
+21:05:52 [build] ✓ Completed in 38ms.
+21:05:52 [build] Building static entrypoints...
+21:05:52 [vite] ✓ built in 105ms
+21:05:52 [vite] ✓ built in 19ms
+21:05:52 [build] Rearranging server assets...
+
+ generating static routes 
+21:05:52   ├─ /404.html (+4ms) 
+21:05:52   ├─ /apps/groove-dice-pack-builder/manual/index.html (+1ms) 
+21:05:52   ├─ /apps/groove-dice-pack-builder/index.html (+1ms) 
+21:05:52   ├─ /expansions/groove-dice/workshop-sessions/index.html (+1ms) 
+21:05:52   ├─ /install/index.html (+1ms) 
+21:05:52   ├─ /plugins/crate-press/manual/index.html (+1ms) 
+21:05:52   ├─ /plugins/donut-theory/manual/index.html (+2ms) 
+21:05:52   ├─ /plugins/groove-dice/manual/index.html (+1ms) 
+21:05:52   ├─ /plugins/crate-press/index.html (+1ms) 
+21:05:52   ├─ /plugins/donut-theory/index.html (+1ms) 
+21:05:52   ├─ /plugins/groove-dice/index.html (+3ms) 
+21:05:52   ├─ /software/instruments/index.html (+1ms) 
+21:05:52   ├─ /software/effects/index.html (+0ms) 
+21:05:52   ├─ /software/apps/index.html (+0ms) 
+21:05:52   ├─ /software/expansions/index.html (+0ms) 
+21:05:52   ├─ /software/index.html (+1ms) 
+21:05:52   ├─ /index.html (+1ms) 
+21:05:52 ✓ Completed in 28ms.
+
+21:05:52 [build] ✓ Completed in 182ms.
+21:05:52 [build] 17 page(s) built in 227ms
+21:05:52 [build] Complete!

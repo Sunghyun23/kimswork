@@ -1,10 +1,8 @@
-# Donut Theory
+# Donut Theory 1.12.0
 
-**kim · 1.10.1 · UID `Krql` · MPC standalone instrument**
+Moog-inspired MPC synthesizer by **kim**, UID **Krql**. 66 factory sounds,32 chord types,96 progressions and up to16 editable chord slots.
 
-Warm bass, keys, analog-style leads and pads with an original Moog-inspired nonlinear mixer, four-stage ladder low-pass and rounded VCA. Includes 66 factory sounds, 32 chord types, 96 four-chord recipes and 4–16 playable chord slots. No external samples are required. MAIN ROLL DICE generates a complete sound with all three Sync switches ON, preserving chord settings, MIDI mapping and master Volume.
-
-[User manual](../../../docs/plugins/donut-theory/manual.md) · [Release notes](../../../docs/plugins/donut-theory/releases/1.10.1.md) · [Product page](https://kimswork.app/plugins/donut-theory/) · [Development handoff](../../../docs/plugins/donut-theory/handoff.md)
+This release combines Amp/Filter ADSR on ENV with editable curves and vertical faders. PLAY groups performance settings with Release Pitch Drop: shared Amp Release / Drop Amount / Drop Time. MAIN and its filter controls stay intact. Amount0=Off; old291parameter states migrate safely to293parameters. Existing parameter identities and factory program order are retained.
 
 ## Performance surface
 
@@ -37,14 +35,10 @@ python3 mpc-software/scripts/test_plugin.py
 python3 mpc-software/third_party/mpc-plugin-builder-sdk/tools/package.py mpc-software/plugins/public/DonutTheory
 ```
 
-Pinned shared SDK: `febd2ca5bd9eb16c4a412837196e145566bc981b`. Native/ARM32/ARM64, SDK validator, host simulator, state/engine/UBSan/analog/bridge and skin checks are required. Actual MPC XL / OS3.10.1.12 screens and runtime hashes are recorded under `design/device-1.9.0/verification.json`.
+Pinned shared SDK: `febd2ca5bd9eb16c4a412837196e145566bc981b`. Native/ARM32/ARM64, SDK validator, host simulator, state/engine/UBSan/analog/bridge and skin checks are required. Actual MPC XL / OS3.10.1.12 screens and runtime hashes are recorded under `design/device-1.12.0/verification.json`.
 
 All sixteen voices are shared. Screen pads audition while held but do not send MIDI to the MPC sequencer; record physical trigger notes instead. Full physical Q-Link coverage, simultaneous finger multi-touch, worst-case CPU, hardware audio and full MPC project round-trip certification remain outstanding. Offline demos are native engine renders, not hardware recordings.
 
 ## License and provenance
 
 Project code and original presets are MIT licensed. Custom artwork is maintained with this project. The pinned MPC SDK retains its own license. The ladder, Body and musical tools are original project implementations; no proprietary Moog code or external sample library is bundled. [Engine design and sources](../../../docs/plugins/donut-theory/engine.md) document the design and its limits.
-
-## 1.10.1 action layout
-
-The original warm design now places Sound Preset/Voice/Input, ROLL DICE and chord navigation below the four knob groups. Four70px chord pads span the bottom. Header/donut/knob source art and type family stay intact. All291parameters/66programs and Q-Link assignments remain unchanged. Version1.10.1 is the official update; see the latest handoff for device evidence.

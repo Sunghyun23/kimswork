@@ -1,0 +1,47 @@
+PASS: 16 Q-Link bindings, bank geometry, 6 function keys + chord sub-tab, CHORD PRESET label, all image references
+PASS: full-size rotating artwork, visible titles, native arrow buttons, menu fallback gestures
+PASS: explicit 66 sound / 96 chord choices and Drive/Play separator
+PASS: button hit surfaces above captions, with identical bounds and bindings
+PASS: stable old IDs, touch gates, separate root editors, declared parameter types
+PASS: readable slider labels inherit parameter bindings
+PASS: selectors do not overlap knob artwork
+PASS: append-only new parameters, OSC Pair only, momentary touch bindings
+PASS: aligned knob rows, no auxiliary overlap, equal outer gutters and tall chord hit bounds
+PASS: restored MAIN Detune alongside Drift; detailed OSC Detune and stable IDs retained
+PASS: transparent header fills, matching compact hit bounds, full-bleed art and exact header boundary
+PASS: independent knob definitions contain exactly one tick and value plate
+PASS: manual pad-location UI retired, saved parameter IDs retained and MIDI/LEARN independent
+PASS: momentary editor auditions, root-only labels, advanced safety and appended learn feedback
+PASS: category-first 66-sound bank, Init, unique recipes and per-sound low cut
+PASS: warm subtractive factory voicing, restrained drift/FM and dry bass/Init
+PASS: generator preserves manifest/binary version agreement
+PASS: dedicated CHORD sub-tab slot banks, row geometry and unchanged MAIN/Program mapping
+PASS: MAIN first, no navigation popup and modal Q-Link guides disabled
+PASS: detail guide coverage without empty trailing rows and readable radio captions
+PASS: complete quality-aware inversions, four appended octave selectors and preserved Q-Link banks
+PASS: left drawers preserve the page, show bounded rows and dismiss outside
+PASS: A OSC/B Filter-Tone/C dual-LFO/D FX-Motion and padded numeric displays
+PASS: 16-slot append-only graph, four large MAIN pad pages, one static editor mirror map and release surfaces
+PASS: one current-bank preset relay with four independent stored banks
+PASS: four navigation arrows have 44x44 hit targets, safe gaps, native-size art and full-height selectors
+PASS: in-editor bank buttons, 16 independent learn buttons and MAIN/CHORD two-tab navigation
+PASS: single editor title, intact CHORDS caption and category-first touch launchers
+PASS: all tab modal drawers render and intercept above ordinary widgets and bank arrows
+PASS: CHORD expanded widget budget <=2500, no recursive component cycles
+PASS: 24 accurate key charts, diatonic spelling, reference-only touch controls, PAD SETUP and confirmation drawers
+PASS: first208 full parameter declarations match1.2.3 fixture exactly
+PASS: 220 declarations retained, SMOOTH scope/preview/apply modal, sixteen top-note rows and unchanged Q-Links
+PASS: PREVIEW is a persistent start/stop command, with local-only gesture release
+PASS: first242 declarations/ranges retained; 32 types/96 recipes and full-range Q-Link proxies
+PASS: 64 distinct new harmonic forms/eight styles and all page construction budgets
+PASS: touch GLIDE/STRUM use existing values without stealing the sixteen chord Q-Links
+PASS: first272 declarations retained; shared motion selectors, Pan detail and unchanged MAIN sixteen Q-Links
+PASS: FX motion labels override legacy names; shape has a direct dropdown and no footer overlaps the sixteen cells
+PASS: first275 metadata preserved; front SYNC buttons and mode-aware rate mappings retain sixteen Q-Links
+PASS: approved OSC/filter/dual-LFO/motion groups; detailed ADSRs remain; first279 declarations retained
+PASS: first287full declarations unchanged; appended full-range sound browser
+PASS:288legacy declarations retained; caption-safe generator button, held feedback, unchanged16Q-Links
+PASS: explicit custom display plus same-row factory reload; transient commands and16Q-Links preserved
+PASS: approved footer browse/create/70px pads; sixteen main guides and original donut knob assets retained
+PASS: footer reflow preserves native-size WAV/TO prefix captions
+PASS: ENV native dual ADSR curves/eight vertical faders; PLAY legacy controls; exact three-bank mappings/guides and no unused D guide

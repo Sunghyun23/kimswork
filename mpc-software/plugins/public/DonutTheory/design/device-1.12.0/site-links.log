@@ -1,0 +1,5 @@
+
+> check:links
+> node scripts/check-links.mjs
+
+PASS: 274 local page, image, CSS and anchor references

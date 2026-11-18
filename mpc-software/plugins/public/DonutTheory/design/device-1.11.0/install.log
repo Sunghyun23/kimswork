@@ -1,0 +1,55 @@
+
+  ┏┳┓┏━┓┏━╸  ┏━┓┏━╸┏┳┓┏━┓╺┳╸┏━╸
+  ┃┃┃┣━┛┃    ┣┳┛┣╸ ┃┃┃┃ ┃ ┃ ┣╸ 
+  ╹ ╹╹  ┗━╸  ╹┗╸┗━╸╹ ╹┗━┛ ╹ ┗━╸
+  install and manage VST2 plugins on your MPC over the network
+
+  › Reaching <local-device>:22 ...
+  ✔ Reaching <local-device>:22  SSH server is up
+  › Logging in as root ...
+  ✔ Logging in as root  ok
+  › Reading device details ...
+  ✔ Reading device details  Akai Professional MPC XL
+
+╭─ Your MPC ────────────────────────────────────────────────────────────────────────╮
+│ Address           <local-device>                                                    │
+│ Model             Akai Professional MPC XL                                        │
+│ Hardware code     ACVC                                                            │
+│ Serial number     A12509266002153                                                 │
+│ Hostname          mpc-xl                                                          │
+│ MPC version       3.10.1.12                                                       │
+│ Firmware version  9a27d579                                                        │
+│ CPU               Cortex-A55 ×8 @ 1.8 GHz (aarch64)                               │
+│ Architecture      64-bit                                                          │
+│ System            az0x (inMusic Brands AZ0x base distribution) 5.0.18 (scarthgap) │
+│ Kernel            Linux 6.18.44-imb-2026-08-10-rt6 aarch64                        │
+│ Uptime            19h 33m                                                         │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+
+  › Looking for drives ...
+  ✔ Looking for drives  2 found
+
+╭─ Drives found ────────────────────────────────────────────────────╮
+│ 1  ● nvme  internal · exfat · 188.2 GB free of 198.5 GB           │
+│ 2    SSD   removable · exfat · 864.4 GB free of 931.5 GB · noexec │
+│ ● recommended: internal storage                                   │
+╰───────────────────────────────────────────────────────────────────╯
+
+  ✔ Using nvme /nvme
+
+
+  › Donut Theory by kim · v1.11.0 · instrument
+  › Checking space on nvme ...
+  ✔ Checking space on nvme  188.2 GB free, needs about 24.8 MB
+  › Copying kim - VST - Donut Theory (23.1 MB) ...
+  ✔ Copying kim - VST - Donut Theory (23.1 MB)
+  › Verifying files ...
+  ✔ Verifying files  173 files match
+
+  ✔ Installed 1 plugin on nvme
+
+  ● On the MPC: Preferences → Enhancements (Beta) → Enable Enhancements + External Plugin Support must be on.
+  ● Then open a plugin browser: it is listed under External Plugins. If it was already loaded on a track, remove and re-add it (or restart the MPC).
+
+  ● Run the restart command to make the MPC rescan its plugins (unsaved data is lost).
+

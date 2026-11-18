@@ -6469,5 +6469,23 @@
       "On"
     ],
     "default": 0
+  },
+  {
+    "key": "ReleaseDropAmount",
+    "name": "Drop Amount",
+    "min": 0,
+    "max": 24,
+    "default": 0,
+    "unit": "st",
+    "log": false
+  },
+  {
+    "key": "ReleaseDropTime",
+    "name": "Drop Time",
+    "min": 20,
+    "max": 2000,
+    "default": 250,
+    "unit": "ms",
+    "log": true
   }
 ]

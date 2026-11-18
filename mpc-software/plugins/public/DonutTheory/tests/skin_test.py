@@ -164,7 +164,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==291
+assert index['LearnStatus']==84 and len(params)==293
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -242,7 +242,7 @@ for key, definition in defs.items():
 
 # Guides cover each populated detail column and stop after its last control.
 for tab in t['tabs']:
- if tab['tabName'] not in ('OSC','FILTER','AMP','MOD','FX'):continue
+ if tab['tabName'] not in ('OSC','MOD','FX'):continue
  for col,rect in enumerate(tab['qlinkBoundsData']):
   x,y,w,h=map(int,rect.split())
   controls=[c for c in tab['componentDefinition']['componentsData'] if c['componentData']['type'].startswith(('knob','fader','radio','slider')) and int(c['bounds']['bounds'].split()[0])//320==col]
@@ -485,7 +485,7 @@ assert all(box(k)[1]==151 for k in ['OscPair','Mix','Detune','Drift','Cutoff','R
 assert all(box(k)[1]==335 for k in ['Rate','Depth','Lfo2RateControl','Lfo2Depth','Drive','Glide','TremRate','TremDepth'])
 assert 'DTTempoSyncLfo2RateControl' in defs
 assert all(not k.startswith('Amp')for k in byname)
-assert {'Amp Attack','Amp Decay','Amp Sustain','Amp Release'} <= {w['componentData']['name']for w in t['tabs'][3]['componentDefinition']['componentsData']}
+assert {'Amp Attack','Amp Decay','Amp Sustain','Amp Release'} <= {w['componentData']['name']for w in t['tabs'][2]['componentDefinition']['componentsData']}
 assert {'Filter Attack','Filter Decay','Filter Sustain','Filter Release'} <= {w['componentData']['name']for w in t['tabs'][2]['componentDefinition']['componentsData']}
 print('PASS: approved OSC/filter/dual-LFO/motion groups; detailed ADSRs remain; first279 declarations retained')
 
@@ -498,7 +498,7 @@ w=next(w for w in osc if w['componentData']['name']=='Sound Preset')
 assert w['handle remapping']['map'][0]['value']=='WithName[Sound Preset]/Parameter 287'
 
 assert params[:288]==json.loads((P/'tests/legacy-288-parameters.json').read_text())
-assert [x['key']for x in params[288:]]==['Randomize','Randomized','FactoryReload']
+assert [x['key']for x in params[288:291]]==['Randomize','Randomized','FactoryReload']
 w=next(w for w in children if w['componentData']['name']=='Random sound');assert w['bounds']['bounds']=='148 502 240 44' and w['bounds']['acceptsHWFocus']=='No'
 d=defs['DTRandomSound'];assert d['componentsData'][-1]['componentData']['type']=='Slider'
 assert d['componentsData'][-1]['componentData']['data']['handleName']=='ResetOnGestureEnd/Local/2/dtRandomPress'
@@ -537,3 +537,31 @@ for field in ('Shape','Target','Lfo2Shape','Lfo2Target'):
   if child['componentData']['type']=='Label'and data.get('type')=='Text':
    assert data['textStyle']['font']['height']<=18, 'Keep WAV/TO prefixes readable without native ellipsis'
 print('PASS: footer reflow preserves native-size WAV/TO prefix captions')
+
+# ENV/PLAY retain old handles while changing only the two detail screens.
+from PIL import Image
+env,play=t['tabs'][2:4]
+assert [env['tabName'],play['tabName']]==['ENV','PLAY']
+envwidgets=env['componentDefinition']['componentsData']
+curves=[w['componentData']['data']for w in envwidgets if w['componentData']['type']=='Envelope']
+assert len(curves)==2
+for curve,indices in zip(curves,[(27,28,29,30),(31,32,33,34)]):
+ assert [curve[s+'Handle']for s in ['attack','decay','sustain','release']]==[f'Parameter {i}'for i in indices]
+ assert curve['version']==1 and curve['forceHideShapeHandles']
+faders=[w for w in envwidgets if w['componentData']['type']=='DTEnvStage']
+assert len(faders)==8 and Image.open(skin/'env-fader.png').size==(64,7776)
+for tab,groups in [(env,[(27,28,29,30),(31,32,33,34),(11,12,35,36)]),(play,[(0,8,6,37),(48,49,63),(21,38,47),(30,291,292)])]:
+ assert len(tab['qlinkBoundsData'])==len(groups)
+ mapping=next(m for m in q['Screen Mode Q-Links']['map']if m['Tab']==tab['fnKeyIndex']+1 and m['SubTab']==1)['Q-Links']
+ for bank,numbers in enumerate(physical_banks):
+  expected_bank=list(groups[bank])+[-1]*(4-len(groups[bank])) if bank<len(groups) else [-1]*4
+  assert [mapping[f'Q-Link {n}']for n in numbers]==expected_bank
+ for i,group in enumerate(groups):
+  gx,gy,gw,gh=map(int,tab['qlinkBoundsData'][i].split())
+  for param in group:
+   w=next(w for w in tab['componentDefinition']['componentsData']if any(r['value'].endswith(f'Parameter {param}')for r in w['handle remapping']['map'])and w['componentData']['type'] not in ('Label','Envelope')and not defs.get(w['componentData']['type'],{}).get('hideQLinkBounds'))
+   x,y,width,height=map(int,w['bounds']['bounds'].split());assert gx<=x and gy<=y and x+width<=gx+gw and y+height<=gy+gh
+assert all(not(w['componentData']['type']=='Label'and w['componentData']['data'].get('type')=='Text'and not w['componentData']['data'].get('text'))for tab in t['tabs']for w in tab['componentDefinition']['componentsData'])
+assert params[:291]==json.loads((P/'tests/legacy-291-parameters.json').read_text())
+assert [p['key']for p in params[291:]]==['ReleaseDropAmount','ReleaseDropTime']
+print('PASS: ENV dual curves/eight faders; PLAY four banks with shared Amp Release and two appended Drop controls; first291 metadata exact')

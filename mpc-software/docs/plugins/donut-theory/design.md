@@ -1,5 +1,32 @@
 ## Current1.10.0 release — whole-sound RANDOM (2026-11-18)
 
+## 1.12.0 local candidate — Release / Pitch Drop
+
+Latest user-approved PLAY D adds **Amp Release / Drop Amount / Drop Time / unassigned**. Amp Release is the same parameter30 used on ENV; editing either view updates the other. PLAY A/B/C keep their previous controls, arranged with D in a2×2 layout. MAIN and its filter group remain unchanged; ENV still holds both ADSRs.
+
+Drop Amount0–24st (0 displays Off); Drop Time20–2000ms, default250ms. Note-on stays at its normal pitch. At actual gate-off the current unbent glide pitch is frozen and a per-voice downward semitone ramp begins; it reaches the chosen interval in Drop Time if Amp Release leaves enough audible tail. A short Release may end the sound first. Sustain delays gate-off; a legato fallback to an older held key does not drop. Chord voices use equal intervals, pending strum notes are cancelled, new/reused voices clear the old ramp, panic/reset removes it. Existing normal Glide and pitch bend remain independent. Amount/time are snapshotted at release, so changes affect subsequent releases. Drop settings are stored with the project and preserved across factory sound changes and ROLL DICE.
+
+UID kim/Krql and first291parameter declarations are exact; append ReleaseDropAmount291 and ReleaseDropTime292 for293total. Old291states migrate to Off/250ms. Existing66factory programs and other projects remain unchanged. Source/native/ARM32/ARM64/SDK, full engine and UBSan/bridge/skin checks pass; direct device evidence is under `design/device-1.12.0/`. Physical encoder/audio/CPU certification is separate. This candidate supersedes1.11.0's empty PLAY D and unchanged-DSP statements; public stable remains1.10.1 until a separately authorized release.
+
+
+## 1.11.0 local ENV / PLAY candidate — 2026-11-18
+
+User-approved detail reorganization supersedes the older FILTER/AMP split below. Native tabs are MAIN / OSC / ENV / PLAY / MOD / FX, with the existing MAIN↔CHORD subtab. Original paper/chocolate artwork, Roboto Bold lettering and donut knobs are retained. Public stable remains **1.10.1**; this change is not a new public release.
+
+| Page / Screen Q-Link bank | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| ENV A · Amp envelope | Attack | Decay | Sustain | Release |
+| ENV B · Filter envelope | Attack | Decay | Sustain | Release |
+| ENV C · Filter response | Cutoff | Resonance | Env Amount | Key Track |
+| PLAY A · Performance | Volume | Expression | Glide | Bend Range |
+| PLAY B · Chord play | Trigger Base | Chord Spread | Chord Slot | Unassigned |
+| PLAY C · Voice / input | Voice Mode | Glide Mode | Input Mode | Unassigned |
+
+Both pages leave bank D unassigned and draw only three Q-Link guides. Filter Type is a touch list on ENV. Each envelope has its own native editable ADSR diagram and four vertical faders; both edit the same existing parameters. These diagrams show parameter relationships, not a sample-accurate live waveform or a calibrated millisecond axis. Trigger Base affects consecutive pad mapping; individual MIDI/LEARN remains on CHORD. Body/Sub remain on MAIN/OSC and are not removed.
+
+All 291 parameter declarations, 66 sounds, UID, DSP, MAIN/CHORD/OSC/MOD/FX trees, Program defaults and all non-ENV/PLAY Screen mappings remain unchanged. Existing projects may retain cached old Screen assignments; use a fresh instance or reset the host map to defaults when comparing. Local build/native/ARM/SDK and host simulator pass. Final device evidence is recorded in `design/device-1.11.0/`; physical encoder/audio/CPU coverage must not be inferred from remote testing.
+
+
 User cancelled the song render and requested a single RANDOM button, then explicitly chose complete oscillator-to-FX generation rather than current-preset variation. MAIN adds a48×52px dice/RND touch button at910,26 in the header gap beside INPUT. It retains all existing controls, the donut artwork and sixteen Q-Links. A UI-local press gate gives held feedback; one Mouse Down sends the command and the top continuous surface owns release.
 
 Generated timbre correlates one of five playable envelope families (bass/keys/synth/lead/pad) with newly drawn oscillator pair/mix/detune, pulse/FM/sub/noise, filter/envelopes, Body/Drift, modulation and FX. All three Sync switches (LFO1, LFO2, shared Tremolo/Auto Pan) are forced ON; each Division is independently chosen from1/16,1/8,1/4,1/2,1bar. Cutoff, resonance, pitch modulation, drive and wet levels are bounded; this is not uniformly random full-scale noise. Free rates remain valid for later Sync-off editing.
@@ -325,3 +352,6 @@ Body is an original broad140..650Hz density stage after voice sum and before Dri
 ## Approved1.10.1 action-only reflow
 
 Preserve original warm paper/chocolate collage, donut knob artwork and Roboto Bold typography; no new visual design. MAIN browse row=Sound Preset/Voice/Input; create row=ROLL DICE/Chord Preset/slot pages; four70px chord pads below. Groovedice remains untouched. Preserve16Q-Links, hold gesture ownership, same-factory reload and modal-over-guide ordering. Geometry and implementation evidence are in the latest handoff and device-1.10.1 record.
+
+
+2026-11-18: User explicitly authorized official Donut Theory1.12.0 release and website publication. Earlier candidate-only statements are historical. ENV/PLAY and Release Pitch Drop are the current specification; preserve recorded physical/audio/CPU limits. Final publication details go in design/device-1.12.0/publication.json.
