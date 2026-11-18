@@ -1,0 +1,93 @@
+{
+  "site": "https://kimswork.app",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "path": "/software/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "path": "/software/instruments/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "path": "/plugins/donut-theory/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "path": "/plugins/donut-theory/manual/",
+      "status": 200,
+      "contentVerified": true
+    },
+    {
+      "path": "/images/donut-theory-main-device-1.9.0.webp",
+      "status": 200,
+      "byteIdentical": true,
+      "sha256": "4f9ecf08492ef96b3a293a149ff11255c09e5a60fd78affed85617a01b0918c0"
+    },
+    {
+      "path": "/images/donut-theory-chord-device-1.9.0.webp",
+      "status": 200,
+      "byteIdentical": true,
+      "sha256": "0d3e2459b0922ac7c08a75a345059a9993d0f5519e382b644206926d34fedd53"
+    },
+    {
+      "path": "/images/donut-theory-browser-device-1.9.0.webp",
+      "status": 200,
+      "byteIdentical": true,
+      "sha256": "1cd8e3c8059fec554c1e0796819bcdfd61030829fe8eef12d9abc6c89350fd49"
+    },
+    {
+      "path": "/images/donut-theory-mod-device-1.9.0.webp",
+      "status": 200,
+      "byteIdentical": true,
+      "sha256": "a5b0b9075b808cb0612803677456bc41ae11cc58f1d927e2bc8a528528c9ff02"
+    },
+    {
+      "path": "/images/donut-theory-amp-device-1.9.0.webp",
+      "status": 200,
+      "byteIdentical": true,
+      "sha256": "d4e8b427bdde7cb6e649a43c821a7c673db5ded51f18f41dc95984677742cdbd"
+    },
+    {
+      "path": "/images/donut-theory-fx-device-1.9.0.webp",
+      "status": 200,
+      "byteIdentical": true,
+      "sha256": "4127fab6a15d500eb0fd5b10555df84c1b9ac4d19f39142f8d3a59729f9c82fa"
+    },
+    {
+      "path": "/audio/donut-theory-dusty-sunday-1.9.0.wav",
+      "status": 200,
+      "byteIdentical": true,
+      "sha256": "9aa765488f8837001a002a038f1cc7d53d4f57018ee32529a74b825d4200b590"
+    },
+    {
+      "path": "/audio/donut-theory-velvet-melt-1.9.0.wav",
+      "status": 200,
+      "byteIdentical": true,
+      "sha256": "beafa165285f044952ffebb7d4862c2f2c2e6609cbbf4c0be42d634c5b9a2bbd"
+    }
+  ],
+  "version": "1.9.0",
+  "published": true,
+  "checkedAt": "2026-11-18T07:50:53.539965+00:00",
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.9.0",
+  "releaseId": 449664476,
+  "releaseCommit": "39723c8b2626550e545a50148c462ffe62bad0c1",
+  "pagesWorkflow": {
+    "id": 44261562442,
+    "conclusion": "success",
+    "url": "https://github.com/Sunghyun23/kimswork/actions/runs/44261562442"
+  },
+  "assetSHA256": "42a0e0f62bdf92273f0a26f4bbc04bf6811909f3c0678df8e5e1598785da69e1",
+  "publicZipDownload": "byte-identical to local packaged artifact; anonymous download verified",
+  "audioPlayers": "Both public players start and advance after native control clicks;14.659083seconds each",
+  "internalInstallation": "MPC XL /OS3.10.1.12 /internal NVMe;122runtime files match final build"
+}

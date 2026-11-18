@@ -1,4 +1,4 @@
-## Current release target — 1.9.0 (2026-11-18)
+## Current release — 1.9.0 (2026-11-18)
 
 The approved 1.8.0 MAIN layout/engine is retained. Two approved 88 BPM /1/8 Auto Pan Soul Studies append as built-in programs65/66: Keys / Dusty Sunday, Synth / Velvet Melt. Factory bank66; first64order/names/recipes retained. Legacy SoundPreset46 remains64choices; appended SoundCurrent287 has66choices. Total288parameters; first287declarations match the1.8fixture exactly. Sound selection preserves master/chord/key/strum/glide-preference state. See the current manual/release notes for the coherent public specification; historical sections below are development history.
 
