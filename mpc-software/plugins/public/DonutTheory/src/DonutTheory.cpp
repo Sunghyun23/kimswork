@@ -39,7 +39,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10400;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10500;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -93,12 +93,25 @@ public:
         if(count<=86)set(kOutputTrim,0);
         for(int slot=0;slot<4;++slot)if(count<=uint32_t(kChordOctave1+slot))set(kChordOctave1+slot,2);
         for(int index=91;index<kNumParams;++index)if(count<=uint32_t(index))set(index,param(index).def);
+        for(int slot=0;slot<16;++slot)if(count<=uint32_t(kHarmonyType1+slot))set(kHarmonyType1+slot,get(kChordLegacyQualities[slot]));
+        for(int bank=0;bank<4;++bank)if(count<=uint32_t(kHarmonyPreset1+bank))set(kHarmonyPreset1+bank,get(kLegacyBankProgressions[bank]));
+        legacyReplaySamples_.store(count>242?int(sr_*.5f):0,std::memory_order_release);
         if(count<=77)set(kPadMap,0); // Existing projects retain Trigger Base routing.
         set(kTransposeOpen,0);set(kTransposeApply,0);
         set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);
         stateLoading_.store(false,std::memory_order_release);return true;
     }
     void parameterChanged(int index,float value) override {
+        if(!stateLoading_.load(std::memory_order_acquire)){
+            const bool protect=legacyReplaySamples_.load(std::memory_order_acquire)>0;
+            const int oldType=slotForParameter(index,kChordLegacyQualities),oldBank=slotForParameter4(index,kLegacyBankProgressions);
+            if(oldType>=0&&!protect)setFromEngine(kHarmonyType1+oldType,value);
+            if(oldBank>=0&&!protect)setFromEngine(kHarmonyPreset1+oldBank,value);
+            if(index>=kHarmonyType1&&index<=kHarmonyType16&&value<11)setFromEngine(kChordLegacyQualities[index-kHarmonyType1],value);
+            if(index>=kHarmonyPreset1&&index<=kHarmonyPreset4&&value<32)setFromEngine(kLegacyBankProgressions[index-kHarmonyPreset1],value);
+            if(index==kHarmonyCurrent&&!protect){const bool readback=proxySyncIndex_.load()==index&&proxySyncThread_.load()==donutThreadToken();if(!readback)setFromEngine(kBankProgressions[getInt(kMainChordPage)],value);}
+            if(index>=kHarmonyEdit1&&index<=kHarmonyEdit4){const bool readback=proxySyncIndex_.load()==index&&proxySyncThread_.load()==donutThreadToken();if(!readback)setFromEngine(kChordQualities[getInt(kMainChordPage)*4+index-kHarmonyEdit1],value);}
+        }
         if(index>=kEditRoot1&&index<kEditRoot1+16&&!stateLoading_.load(std::memory_order_acquire)){
             const bool engineReadback=proxySyncIndex_.load(std::memory_order_acquire)==index&&proxySyncThread_.load(std::memory_order_acquire)==donutThreadToken();
             if(!engineReadback){const int offset=index-kEditRoot1,target=chordField(getInt(kMainChordPage)*4+offset/4,offset%4);if(get(target)!=value)setFromEngine(target,value);}
@@ -164,10 +177,11 @@ public:
     }
     void process(mpc::ProcessContext& ctx) override {
         markRenderThread();
+        const int replay=legacyReplaySamples_.load(std::memory_order_relaxed);if(replay>0)legacyReplaySamples_.store(std::max(0,replay-ctx.numFrames),std::memory_order_release);
 #ifdef DONUT_TOUCH_DIAGNOSTICS
         diagnosticFrames.fetch_add(unsigned(ctx.numFrames),std::memory_order_relaxed);
 #endif
-        for(int i=0;i<4;++i){if(getInt(kSoundPrev+i)){const int target=i<2?kSoundPreset:kBankProgressions[getInt(kMainChordPage)];const int count=i<2?64:32;setFromEngine(target,float((getInt(target)+(i%2?1:-1)+count)%count));setFromEngine(kSoundPrev+i,0);arrows_[i]=0;}}
+        for(int i=0;i<4;++i){if(getInt(kSoundPrev+i)){const int target=i<2?kSoundPreset:kBankProgressions[getInt(kMainChordPage)];const int count=i<2?64:kProgressionCount;setFromEngine(target,float((getInt(target)+(i%2?1:-1)+count)%count));setFromEngine(kSoundPrev+i,0);arrows_[i]=0;}}
         if(getInt(kSoundPreset)!=lastPatch_){lastPatch_=getInt(kSoundPreset);for(int i=1;i<kSoundPreset;++i)setFromEngine(i,kPatches[lastPatch_][i]);setFromEngine(kFXPreset,0);lastFX_=0;setFromEngine(kOscPair,getInt(kWave1)*4+getInt(kWave2));lastPair_=getInt(kOscPair);applySoundExtras(lastPatch_);clearNotes();}
         if(getInt(kOscPair)!=lastPair_){lastPair_=getInt(kOscPair);setFromEngine(kWave1,float(lastPair_/4));setFromEngine(kWave2,float(lastPair_%4));}
         else {const int pair=getInt(kWave1)*4+getInt(kWave2);if(pair!=lastPair_){lastPair_=pair;setFromEngine(kOscPair,float(pair));}}
@@ -191,6 +205,7 @@ public:
             // A vanished gesture surface cannot own release. Only stop touch
             // auditions here; physical MIDI chords remain independent of view.
             for(int i=0;i<16;++i){setFromEngine(kChordTouches[i],0);touchHeld_[i]=false;}
+            if(getBool(kChordGlide))for(int i=0;i<16;++i)endChordOwner(2048+i,0);
             for(auto& v:voices_)if(v.owner>=2048)release(v);
             lastMainPage_=getInt(kMainChordPage);
         }
@@ -201,7 +216,7 @@ public:
         for(int i=0;i<16;++i)if(lastPadMap_[i]!=getInt(kChordPadNotes[i]))mapChanged=true;
         if(lastPadMap_[16]!=getInt(kPadMap))mapChanged=true;
         if(mapChanged){
-            for(auto& v:voices_)if(v.owner>=0&&v.owner<2048){v.amp.reset();v.env.reset();v.filter.reset();v.wait=0;v.owner=-1;}
+            for(auto& v:voices_)if(v.owner>=0&&v.owner<2048){v.amp.reset();v.env.reset();v.filter.reset();v.wait=v.glideWait=0;v.owner=-1;}
             for(int i=0;i<16;++i)if(lastPadMap_[i]!=getInt(kChordPadNotes[i]))setFromEngine(kChordSlot,float(i));
             std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);cachePadMapping();
         }
@@ -234,12 +249,14 @@ public:
         static constexpr int scales[2][7]={{0,2,4,5,7,9,11},{0,2,3,5,7,8,10}};
         for(int row=0;row<4;++row){
             const int slot=getInt(kMainChordPage)*4+row,interval=(getInt(kChordRoots[slot])-getInt(kChordKeyRoot)+120)%12;
-            const int quality=getInt(kChordQualities[slot]);const bool minor=quality==0||quality==2||quality==8;int degree=0;
+            const int quality=getInt(kChordQualities[slot]);const bool minor=donut::minorType(quality);int degree=0;
             for(int step=0;step<7;++step)if(scales[getInt(kChordKeyMode)][step]==interval)degree=step+1+(minor?7:0);
             setFromEngine(kKeyDegree1+row,float(degree));
         }
         proxySyncThread_.store(donutThreadToken(),std::memory_order_release);
         for(int row=0;row<4;++row)for(int field=0;field<4;++field){const int index=kEditRoot1+row*4+field;proxySyncIndex_.store(index,std::memory_order_release);setFromEngine(index,get(chordField(getInt(kMainChordPage)*4+row,field)));}
+        for(int row=0;row<4;++row){const int index=kHarmonyEdit1+row;proxySyncIndex_.store(index,std::memory_order_release);const int type=getInt(kChordQualities[getInt(kMainChordPage)*4+row]);setFromEngine(index,float(type));setFromEngine(kHarmonyTones1+row,float(donut::chordToneCount(type)-3));}
+        proxySyncIndex_.store(kHarmonyCurrent,std::memory_order_release);setFromEngine(kHarmonyCurrent,get(kBankProgressions[getInt(kMainChordPage)]));
         proxySyncIndex_.store(-1,std::memory_order_release);proxySyncThread_.store(0,std::memory_order_release);
         for(int i=0;i<kNumParams;++i){raw_[i]=get(i);smooth_[i].setTarget(raw_[i]);}
         for(auto& v:voices_){v.amp.set(raw_[kAmpAttack],raw_[kAmpDecay],raw_[kAmpSustain]*.01f,raw_[kAmpRelease]);v.env.set(raw_[kFiltAttack],raw_[kFiltDecay],raw_[kFiltSustain]*.01f,raw_[kFiltRelease]);v.pitch.setTime(raw_[kGlide],sr_);}
@@ -257,8 +274,8 @@ public:
         for(int i=0;i<16;++i){
             if(i>=activeSlots())setFromEngine(kChordTouches[i],0);
             const bool gate=i<activeSlots()&&getBool(kChordTouches[i]);
-            if(gate&&!touchHeld_[i]){startChord(i,2048+i,0,100);setFromEngine(kChordSlot,float(i));}
-            if(!gate&&touchHeld_[i])for(auto& v:voices_)if(v.owner==2048+i)release(v);
+            if(gate&&!touchHeld_[i]){touchOrder_[i]=++clock_;startChord(i,2048+i,0,100);setFromEngine(kChordSlot,float(i));}
+            if(!gate&&touchHeld_[i])endChordOwner(2048+i,0);
             bool changed=false;for(int j=0;j<4;++j){const int value=getInt(chordField(i,j));if(lastTouchChord_[i][j]!=value)changed=true;lastTouchChord_[i][j]=value;}
             if(changed){setFromEngine(kChordSlot,float(i));if(gate&&touchHeld_[i])startChord(i,2048+i,0,100,true);}
             touchHeld_[i]=gate;
@@ -271,6 +288,7 @@ public:
             if(control){for(int i=0;i<kNumParams;++i)p_[i]=smooth_[i].process();delaySamples_=delayTime_.process();tremolo_.setFrequency(p_[kTremRate]);tapePitch_=wowFlutter_.process(p_[kDrift]);trimGain_=dbToGain(p_[kOutputTrim]);const float lowHz=std::max(5.f,p_[kLowCut]);if(std::abs(lowHz-lastLowCut_)>.01f){for(auto& f:lowCut_)f.set(lowHz,.29585f);lastLowCut_=lowHz;}}
             const float mod=lfo_.process(),vib=vibrato_.process(),drift=drift_.process();float sum=0;
             for(auto& v:voices_){
+                if(v.glideWait>0&&!--v.glideWait){if(raw_[kGlide]>0)v.pitch.setTarget(float(v.note));else v.pitch.snap(float(v.note));}
                 if(v.wait>0){--v.wait;if(v.wait==0){v.amp.noteOn();v.env.noteOn();}else continue;}
                 if(!v.amp.isActive())continue;
                 const float amp=v.amp.process(),env=v.env.process(),pitch=v.pitch.process();
@@ -348,12 +366,18 @@ public:
         if(index==kOctave||index==kTrigger){char b[32];std::snprintf(b,sizeof b,"%d %s",int(std::round(value)),param(index).unit.c_str());out=b;return true;}
         if(index==kRate&&getBool(kSync)){static const char* divisions[]={"1/16","1/8","1/4","1/2","1 bar"};out=std::string("Sync ")+divisions[getInt(kDivision)];return true;}
         if(index==kCutoff){char b[32];if(value>=1000)std::snprintf(b,sizeof b,"%.2f kHz",value/1000);else std::snprintf(b,sizeof b,"%.0f Hz",value);out=b;return true;}
-        if(slotForParameter(index,kChordRoots)>=0){static const char* names[]={"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};int n=int(std::round(value));static const char* suffix[]={"m7","maj7","m9","maj9","7","9","13","sus2","m","","7b9"};out=std::string(names[n%12])+suffix[getInt(kChordQualities[slotForParameter(index,kChordRoots)])];return true;}
+        if(slotForParameter(index,kChordRoots)>=0){static const char* names[]={"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};int n=int(std::round(value));out=std::string(names[n%12])+donut::kTypeSuffixes[getInt(kChordQualities[slotForParameter(index,kChordRoots)])];return true;}
         if(param(index).kind==mpc::Param::Kind::Float){char b[48];std::snprintf(b,sizeof b,"%.1f %s",value,param(index).unit.c_str());out=b;return true;}
         return false;
     }
+#ifdef DONUT_VOICE_TEST
+    struct VoiceSnapshot {int owner,note;float pitch,amplitude;bool held;};
+    std::array<VoiceSnapshot,N> voiceSnapshots()const{std::array<VoiceSnapshot,N> result{};for(int i=0;i<N;++i){const auto& v=voices_[i];result[i]={v.owner,v.note,v.pitch.value(),v.amp.level(),v.amp.isHeld()||v.wait>0};}return result;}
+#endif
     int activeVoices() const {int n=0;for(const auto& v:voices_)if(v.amp.isActive()||v.wait)n++;return n;}
 private:
+    std::atomic<int> legacyReplaySamples_{0};
+    static int slotForParameter4(int index,const int* list){for(int i=0;i<4;++i)if(index==list[i])return i;return -1;}
     donut::AtomicSmoothPlan smoothPlan_;
     std::atomic<bool> smoothNeedsPlan_{false};
     donut::SmoothPlan smoothAudition_{}; // owned by the render thread
@@ -403,18 +427,21 @@ private:
     void renderSmoothStep(){
         if(!smoothPlaying_)return;
         if(!getInt(kSmoothPreview)){stopSmoothPreview();return;}
-        if(smoothGate_&&smoothOff_--<=0){for(auto& v:voices_)if(v.owner==4096)release(v);smoothGate_=false;}
+        if(smoothGate_&&!getBool(kChordGlide)&&smoothOff_--<=0){for(auto& v:voices_)if(v.owner==4096)release(v);smoothGate_=false;}
         if(smoothNext_--<=0){
             if(smoothStep_>=smoothAudition_.input.count){stopSmoothPreview();setFromEngine(kSmoothStatus,1);return;}
             const int i=smoothStep_++,slot=smoothAudition_.input.start+i;const auto& chord=smoothAudition_.input.chords[slot];std::array<int,6> notes{},reuse{};int reused=0;
             const int count=donut::chordNotes(chord[0],chord[1],smoothAudition_.voice[i],smoothAudition_.octave[i]-2,notes);
-            for(int v=0;v<N&&reused<6;++v)if(voices_[v].owner==4096&&(voices_[v].amp.isActive()||voices_[v].wait))reuse[reused++]=v;
-            for(int n=0;n<count;++n)start(4096,0,notes[n],96,int(n*raw_[kSpread]*.001f*sr_),n<reused?reuse[n]:-1);
-            for(int n=count;n<reused;++n)release(voices_[reuse[n]]);
+            if(getBool(kChordGlide))connectChordNotes(notes,count,4096,0,96,4096,true);
+            else {
+                for(int v=0;v<N&&reused<6;++v)if(voices_[v].owner==4096&&(voices_[v].amp.isActive()||voices_[v].wait))reuse[reused++]=v;
+                for(int n=0;n<count;++n)start(4096,0,notes[n],96,int(n*raw_[kSpread]*.001f*sr_),n<reused?reuse[n]:-1);
+                for(int n=count;n<reused;++n)release(voices_[reuse[n]]);
+            }
             smoothNext_=smoothBeat_-1;smoothOff_=int(smoothBeat_*.8f);smoothGate_=true;
         }
     }
-    struct Voice {PolyBlepOsc a,b;WavetableSine sineA,sineB,sub,fm;donut::AnalogVoiceFilter filter;ADSR amp,env;Smoother pitch;int owner=-1,channel=0,wait=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
+    struct Voice {PolyBlepOsc a,b;WavetableSine sineA,sineB,sub,fm;donut::AnalogVoiceFilter filter;ADSR amp,env;Smoother pitch;int owner=-1,channel=0,wait=0,note=60,glideWait=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
     std::array<Voice,N> voices_{};
     std::array<Smoother,kNumParams> smooth_{};float p_[kNumParams]{},raw_[kNumParams]{};
     uint16_t held_[16][128]{};uint64_t order_[16][128]{};int velocity_[16][128]{};
@@ -444,13 +471,13 @@ private:
     void applySoundExtras(int patch){setFromEngine(kLowCut,kPatchExtras[patch][0]);setFromEngine(kDrift,kPatchExtras[patch][1]);setFromEngine(kTremRate,kPatchExtras[patch][2]);setFromEngine(kTremDepth,kPatchExtras[patch][3]);setFromEngine(kOutputTrim,kPatchExtras[patch][4]);}
     float sr_=44100,delaySamples_=22050,dcIn_=0,dcOut_=0;LFO tremolo_,lfo_,vibrato_,drift_,chorusLfo_;Xorshift32 noise_{1234567};Smoother gain_,delayTime_;DelayLine chorus_,delay_[2];
     static float flush(float x){return std::fabs(x)<1e-25f?0.f:x;}
-    void clearNotes(){smoothPlaying_=smoothGate_=false;setFromEngine(kSmoothPreview,0);for(auto& f:lowCut_)f.reset();for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}setFromEngine(kTouchStop,0);for(auto& v:voices_){v.amp.reset();v.env.reset();v.filter.reset();v.wait=0;v.owner=-1;}std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);std::fill(std::begin(bend_),std::end(bend_),0.f);std::fill(std::begin(wheel_),std::end(wheel_),0.f);}
-    void release(Voice& v){v.wait=0;v.amp.noteOff();v.env.noteOff();}
+    void clearNotes(){chordLead_.fill(-1);touchOrder_.fill(0);smoothPlaying_=smoothGate_=false;setFromEngine(kSmoothPreview,0);for(auto& f:lowCut_)f.reset();for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}setFromEngine(kTouchStop,0);for(auto& v:voices_){v.amp.reset();v.env.reset();v.filter.reset();v.wait=v.glideWait=0;v.owner=-1;}std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);std::fill(std::begin(bend_),std::end(bend_),0.f);std::fill(std::begin(wheel_),std::end(wheel_),0.f);}
+    void release(Voice& v){v.glideWait=0;v.wait=0;v.amp.noteOff();v.env.noteOff();}
     int allocate(){const int first=mono()?1:0;for(int i=first;i<N;++i)if(!voices_[i].amp.isActive()&&!voices_[i].wait)return i;int best=first;for(int i=first+1;i<N;++i)if((voices_[i].amp.isReleasing()&&!voices_[best].amp.isReleasing())||(voices_[i].amp.isReleasing()==voices_[best].amp.isReleasing()&&voices_[i].order<voices_[best].order))best=i;return best;}
-    void start(int owner,int ch,int note,int vel,int wait=0,int forced=-1,bool legato=false){
+    void start(int owner,int ch,int note,int vel,int wait=0,int forced=-1,bool legato=false,bool allowGlide=true){
         Voice& v=voices_[forced>=0?forced:allocate()];const bool sounding=v.amp.isActive(),connected=sounding&&v.amp.isHeld();
-        v.owner=owner;v.channel=ch;v.order=++clock_;v.velocity=vel/127.f;v.velocityGain=1-(1-v.velocity)*p_[kExpression]*.01f;v.dirty=true;
-        if(sounding&&raw_[kGlide]>0&&(int(std::lround(raw_[kGlideLegato]))==0||v.amp.isHeld()))v.pitch.setTarget(float(note));else v.pitch.snap(float(note));
+        v.glideWait=0;v.owner=owner;v.channel=ch;v.note=note;v.order=++clock_;v.velocity=vel/127.f;v.velocityGain=1-(1-v.velocity)*p_[kExpression]*.01f;v.dirty=true;
+        if(allowGlide&&sounding&&raw_[kGlide]>0&&(int(std::lround(raw_[kGlideLegato]))==0||v.amp.isHeld()))v.pitch.setTarget(float(note));else v.pitch.snap(float(note));
         if(!sounding)v.filter.reset();
         v.wait=wait;if(wait){v.amp.reset();v.env.reset();}else if(!legato||!connected){v.amp.noteOn();v.env.noteOn();}
     }
@@ -462,15 +489,79 @@ private:
         const int slot=n-int(std::lround(raw_[kTrigger]));return slot>=0&&slot<activeSlots()?slot:-1;
     }
     bool melodyNote(int n)const{return int(std::lround(raw_[kInputMode]))!=1&&chordSlot(n)<0;}
-    void releaseUnheldMidi(int ch){for(int i=mono()?1:0;i<N;++i){auto& v=voices_[i];if(v.owner>=0&&v.owner<2048&&v.channel==ch&&!held_[ch][v.owner%128])release(v);}}
+    void releaseUnheldMidi(int ch){if(getBool(kChordGlide)&&chordLead_[ch]>=0&&chordLead_[ch]<2048&&!held_[ch][chordLead_[ch]%128])endChordOwner(chordLead_[ch],ch);for(int i=mono()?1:0;i<N;++i){auto& v=voices_[i];if(v.owner>=0&&v.owner<2048&&v.channel==ch&&!held_[ch][v.owner%128])release(v);}}
     void monoFallback(){int bc=-1,bn=-1;uint64_t newest=0;for(int ch=0;ch<16;++ch)for(int n=0;n<128;++n)if(held_[ch][n]&&melodyNote(n)&&order_[ch][n]>=newest){newest=order_[ch][n];bc=ch;bn=n;}if(bc>=0)start(bc*128+bn,bc,bn,velocity_[bc][bn],0,0,int(std::lround(raw_[kVoiceMode]))==1);else release(voices_[0]);}
-    void startChord(int slot,int owner,int ch,int vel,bool refresh=false){
+    void startChord(int slot,int owner,int ch,int vel,bool refresh=false,bool returning=false){
+            if(getBool(kChordGlide)){
+                if(refresh&&chordLead_[ch]!=owner)return;
+                startGlidingChord(slot,owner,ch,vel,refresh,returning);return;
+            }
+            if(!refresh)chordLead_[ch]=owner;
             std::array<int,6> reuse{};int oldCount=0,used=0;
             if(refresh)for(int i=0;i<N&&oldCount<6;++i)if(voices_[i].owner==owner&&(voices_[i].amp.isHeld()||voices_[i].wait))reuse[oldCount++]=i;
             const int root=getInt(kChordRoots[slot]),quality=getInt(kChordQualities[slot]),voicing=getInt(kChordVoicings[slot]);
             std::array<int,6> notes{};const int count=donut::chordNotes(root,quality,voicing,getInt(kChordOctaves[slot])-2,notes);
             for(int i=0;i<count;++i){start(owner,ch,notes[i],vel,int(i*raw_[kSpread]*.001f*sr_),used<oldCount?reuse[used]:-1,refresh);++used;}
             for(int i=used;i<oldCount;++i)release(voices_[reuse[i]]);
+    }
+    std::array<int,16> chordLead_{};
+    std::array<uint64_t,16> touchOrder_{};
+    bool chordOwnerHeld(int owner,int ch)const{
+        if(owner>=2048&&owner<2064)return ch==0&&getBool(kChordTouches[owner-2048])&&owner-2048<activeSlots();
+        return owner>=0&&owner<2048&&owner/128==ch&&held_[ch][owner%128]&&chordSlot(owner%128)>=0;
+    }
+    int newestChord(int ch,int excluded)const{
+        uint64_t newest=0;int owner=-1;
+        for(int note=0;note<128;++note)if(ch*128+note!=excluded&&held_[ch][note]&&chordSlot(note)>=0&&order_[ch][note]>=newest){newest=order_[ch][note];owner=ch*128+note;}
+        if(ch==0)for(int slot=0;slot<activeSlots();++slot)if(2048+slot!=excluded&&getBool(kChordTouches[slot])&&touchOrder_[slot]>=newest){newest=touchOrder_[slot];owner=2048+slot;}
+        return owner;
+    }
+    void endChordOwner(int owner,int ch){
+        if(getBool(kChordGlide)&&chordLead_[ch]==owner){
+            const int previous=newestChord(ch,owner);
+            if(previous>=0){const int slot=previous>=2048?previous-2048:chordSlot(previous%128);startChord(slot,previous,ch,previous>=2048?100:velocity_[ch][previous%128],false,true);}
+            else chordLead_[ch]=-1;
+        }
+        for(int i=mono()?1:0;i<N;++i)if(voices_[i].owner==owner)release(voices_[i]);
+    }
+    void connectChordNotes(const std::array<int,6>& notes,int count,int owner,int ch,int vel,int previous,bool connect,bool rearticulate=false){
+        std::array<int,6> old{},match{};int oldCount=0;match.fill(-1);
+        if(connect)for(int i=mono()?1:0;i<N&&oldCount<6;++i)if(voices_[i].owner==previous&&voices_[i].channel==ch&&(voices_[i].amp.isHeld()||voices_[i].wait))old[oldCount++]=i;
+        int reserved=0;
+        for(int n=0;n<count;++n)for(int j=0;j<oldCount;++j)if(!(reserved&(1<<j))&&voices_[old[j]].note==notes[n]){match[n]=j;reserved|=1<<j;break;}
+        // At most five voices: bounded subset assignment minimizes travel after
+        // exact common notes are reserved. No allocations or general solver.
+        int cost[7][64],parent[7][64],choice[7][64];
+        for(int i=0;i<7;++i)for(int mask=0;mask<64;++mask){cost[i][mask]=10000;parent[i][mask]=-1;choice[i][mask]=-1;}
+        cost[0][reserved]=0;
+        for(int n=0;n<count;++n)for(int mask=0;mask<(1<<oldCount);++mask)if(cost[n][mask]<10000){
+            if(match[n]>=0){if(cost[n][mask]<cost[n+1][mask]){cost[n+1][mask]=cost[n][mask];parent[n+1][mask]=mask;choice[n+1][mask]=match[n];}continue;}
+            if(cost[n][mask]+128<cost[n+1][mask]){cost[n+1][mask]=cost[n][mask]+128;parent[n+1][mask]=mask;choice[n+1][mask]=-1;}
+            for(int j=0;j<oldCount;++j)if(!(mask&(1<<j))){const int target=mask|(1<<j),next=cost[n][mask]+std::abs(voices_[old[j]].note-notes[n]);if(next<cost[n+1][target]){cost[n+1][target]=next;parent[n+1][target]=mask;choice[n+1][target]=j;}}
+        }
+        int best=0;for(int mask=1;mask<(1<<oldCount);++mask)if(cost[count][mask]<cost[count][best])best=mask;
+        for(int n=count;n>0;--n){match[n-1]=choice[n][best];best=parent[n][best];}
+        int used=0;
+        for(int n=0;n<count;++n){
+            if(match[n]>=0){const int index=old[match[n]];used|=1<<match[n];auto& v=voices_[index];
+                if(v.note==notes[n]&&!rearticulate){v.owner=owner;v.order=++clock_;continue;}
+                const float priorPitch=v.pitch.value(),priorTarget=v.pitch.target();
+                start(owner,ch,notes[n],vel,rearticulate?int(n*raw_[kSpread]*.001f*sr_):0,index,!rearticulate,!rearticulate);
+                const int offset=int(n*raw_[kSpread]*.001f*sr_);
+                if(!rearticulate&&offset>0){if(raw_[kGlide]>0)v.pitch.setTarget(priorTarget);else v.pitch.snap(priorPitch);v.glideWait=offset;}
+            }
+        }
+        for(int j=0;j<oldCount;++j)if(!(used&(1<<j)))release(voices_[old[j]]);
+        for(int n=0;n<count;++n)if(match[n]<0)start(owner,ch,notes[n],vel,int(n*raw_[kSpread]*.001f*sr_),-1,false,false);
+    }
+    void startGlidingChord(int slot,int owner,int ch,int vel,bool refresh,bool returning){
+        int previous=chordLead_[ch];
+        if(previous<0||(!returning&&!refresh&&!chordOwnerHeld(previous,ch)))previous=newestChord(ch,owner);
+        const bool connect=previous>=0;
+        std::array<int,6> notes{};
+        const int count=donut::chordNotes(getInt(kChordRoots[slot]),getInt(kChordQualities[slot]),getInt(kChordVoicings[slot]),getInt(kChordOctaves[slot])-2,notes);
+        connectChordNotes(notes,count,owner,ch,vel,previous,connect,previous==owner&&!refresh&&!returning);
+        chordLead_[ch]=owner;
     }
     void trigger(int ch,int n,int vel){
         const int owner=ch*128+n,slot=chordSlot(n);
@@ -491,12 +582,12 @@ private:
             return; // Registration press is silent; the next press performs the chord.
         }
         if(e.isNoteOn()){if(held_[ch][n]<65535)held_[ch][n]++;order_[ch][n]=++clock_;velocity_[ch][n]=e.velocity();trigger(ch,n,e.velocity());}
-        else if(e.isNoteOff()){if(held_[ch][n])--held_[ch][n];if(held_[ch][n])return;if(!sustain_[ch]){if(mono()&&voices_[0].owner==ch*128+n)monoFallback();for(int i=mono()?1:0;i<N;++i)if(voices_[i].owner==ch*128+n)release(voices_[i]);}}
+        else if(e.isNoteOff()){if(held_[ch][n])--held_[ch][n];if(held_[ch][n])return;if(!sustain_[ch]){if(mono()&&voices_[0].owner==ch*128+n)monoFallback();endChordOwner(ch*128+n,ch);}}
         else if(e.isPitchBend())bend_[ch]=e.pitchBend()/8192.f;
         else if(e.isController()){
             if(e.controller()==64){sustain_[ch]=e.controllerValue()>=64;if(!sustain_[ch]){if(mono()&&voices_[0].channel==ch)monoFallback();releaseUnheldMidi(ch);}}
             else if(e.controller()==1)wheel_[ch]=e.controllerValue()/127.f;
-            else if(e.controller()==120||e.controller()==123){if(ch==0)stopSmoothPreview();if(ch==0)for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}std::fill(std::begin(held_[ch]),std::end(held_[ch]),0);sustain_[ch]=false;for(auto& v:voices_)if(v.channel==ch){release(v);if(e.controller()==120){v.amp.reset();v.env.reset();}}if(mono()&&voices_[0].channel==ch)monoFallback();}
+            else if(e.controller()==120||e.controller()==123){chordLead_[ch]=-1;if(ch==0)stopSmoothPreview();if(ch==0)for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}std::fill(std::begin(held_[ch]),std::end(held_[ch]),0);sustain_[ch]=false;for(auto& v:voices_)if(v.channel==ch){release(v);if(e.controller()==120){v.amp.reset();v.env.reset();}}if(mono()&&voices_[0].channel==ch)monoFallback();}
             else if(e.controller()==121){bend_[ch]=wheel_[ch]=0;sustain_[ch]=false;if(mono()&&voices_[0].channel==ch)monoFallback();releaseUnheldMidi(ch);}
         }
     }

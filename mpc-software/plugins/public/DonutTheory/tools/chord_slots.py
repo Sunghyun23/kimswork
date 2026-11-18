@@ -146,11 +146,9 @@ def install(g,tui,ql,params,out):
     put(get(w,'bounds'),'bounds',f'{x} 0 {wid} 44')
  menu=Image.open(out/'menu-chord.png').convert('RGBA')
  menu.resize((220,44),Image.Resampling.BICUBIC).save(out/'menu-chord.png')
- progression=next(c for c in children if get(cd(c),'name')=='Progression');progression_panel=next(c for c in children if get(cd(c),'type')=='DTChoicePanel'+str(by['Chord Preset'].index))
- for bank in range(1,4):
-  pair,_=clone_graph([progression,progression_panel],{by['Chord Preset'].index:by[f'Chord Preset Bank {bank+1}'].index},f'Bank{bank+1}_')
-  for c in pair:children.append(visible(c,[f'IndexedEnabling/{bank}/4/{h("Chord Pad Page")}']))
- for c in (progression,progression_panel):visible(c,[f'IndexedEnabling/0/4/{h("Chord Pad Page")}'])
+ # One current-bank relay avoids constructing four hidden96-row browsers.
+ # Bank identities remain separate in the engine; MOD still selects bank1.
+ progression=next(c for c in children if get(cd(c),'name')=='Progression')
  for c in children:
   if get(cd(c),'name')=='CHORD PRESET':put(get(c,'bounds'),'bounds','18 548 146 28');put(get(get(get(cd(c),'data'),'textStyle'),'font'),'height',18.)
  for caption,key,x in [('‹','PadPagePrev',172),('›','PadPageNext',294)]:

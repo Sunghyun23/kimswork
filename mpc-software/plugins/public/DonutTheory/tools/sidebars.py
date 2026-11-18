@@ -69,13 +69,13 @@ def install(g,tui,params,out):
    # Common pane blocks the old page, category layers themselves pass empty touches.
    comp[:]=modal([image('left sidebar','sidebar-panel.png',f'0 0 {W} 628'),hit('Dismiss outside',opened,f'{W} 0 {1280-W} 628',0,2)]+ws)
   elif p.name.startswith('Chord ') and p.name.endswith(' Voice'):
-   slot=int(p.name.split()[1]);quality=named[f'Chord {slot} Type'];ws=base(f'CHORD {slot} VOICING',opened)
-   for q,count in enumerate((4,4,5,5,4,5,5,3,3,3,5)):
+   slot=int(p.name.split()[1]);quality=named[f'Harmony Tones {chr(64+slot)}'];ws=base(f'CHORD {slot} VOICING',opened)
+   for q,count in enumerate((3,4,5)):
     choices=[(0,'Root position'),(1,'1st inversion'),(3,'2nd inversion')]
     if count>=4:choices.append((4,'3rd inversion'))
     if count>=5:choices.append((5,'4th inversion'))
     choices.append((2,'Open voicing'))
-    ck=f'DTSideVoicings{slot}-{q}';add(ck,g.component_definition([],body(p,choices,opened,f'voice{slot}-{q}'),'00000000',ignore_mouse=True));ws.append(instance(ck,invalid=[f'IndexedEnabling/{q}/11/{quality.handle}']))
+    ck=f'DTSideVoicings{slot}-{q}';add(ck,g.component_definition([],body(p,choices,opened,f'voice{slot}-{q}'),'00000000',ignore_mouse=True));ws.append(instance(ck,invalid=[f'IndexedEnabling/{q}/3/{quality.handle}']))
    comp[:]=modal(ws)
   else:comp[:]=modal(base(p.name.upper(),opened)+body(p,list(enumerate(p.choices)),opened,'choices'))
  # Remove the temporary native MenuOverlay probe; retained selectors have their artwork.

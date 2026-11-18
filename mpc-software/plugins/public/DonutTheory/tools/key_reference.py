@@ -133,5 +133,17 @@ def install(g,tui,params,out):
  modal('DTKeyTranspose',trans);page.append(instance('DTKeyTranspose','0 0 1280 628',[f'IndexedEnabling/1/2/{h("Transpose Preview")}']))
  picker('DTKeySourcePicker',sourcelocal,'Transpose From','SOURCE KEY')
 
+ # Chord performance shares existing glide time; no fifth Q-Link group.
+ editor[:]=[w for w in editor if get(cd(w),'name')!='INPUT MODE']
+ glide=command('CHORD GLIDE',h('Chord Glide'),'20 516 216 44')
+ parts=get(defs[get(cd(glide),'type')],'componentsData');mapping=get(get(parts[0],'handle remapping'),'map')[0];put(mapping,'value',h('Chord Glide'));editor.append(glide)
+ def time_field(title,param,b):
+  x,y,w,height=map(int,b.split());asset(w,height);name='DTChordTime'+str(len(defs))
+  surface=O(('version',2),('sliderType','ColourBar'),('direction','Horizontal'),('backgroundColour','00000000'),('outlineColour','00000000'),('valueColour','00000000'),('isBipolar',False),('handleName','Data'))
+  widgets=[g.entry('time art','Image',O(('version',2),('imageType','Regular'),('colour','0'),('image',f'key-{w}-{height}-off.png')),f'0 0 {w} {height}','No','Show','Always'),label(title,f'4 0 64 {height}',17),label('',f'68 0 {w-72} {height}',21,h(param)),g.entry('time drag','Slider',surface,f'0 0 {w} {height}','No','Show','Always')]
+  actions=[a for a in g.control_actions('knob overlay')if get(a,'handler')!='Q-Link'];add(name,g.component_definition(actions,widgets,'00000000'))
+  entry=instance(name,b);put(get(entry,'handle remapping'),'map',[O(('key','Data'),('value',h(param)))]);editor.append(entry)
+ time_field('GLIDE','Glide','250 516 180 44')
+ time_field('STRUM','Chord Spread','444 516 160 44')
  from smooth_voicing_ui import install as smooth_voicing
  smooth_voicing(g,tui,params,(label,button,command,background,outside,modal,instance,h,get,visible))

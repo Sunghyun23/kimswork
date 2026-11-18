@@ -11,6 +11,7 @@ void operator delete(void* p)noexcept{std::free(p);}
 void* operator new[](std::size_t n){return ::operator new(n);}
 void operator delete[](void* p)noexcept{std::free(p);}
 #endif
+#define DONUT_VOICE_TEST
 #include "../src/DonutTheory.cpp"
 struct Rig {
  std::unique_ptr<DonutTheory> p=std::make_unique<DonutTheory>();
@@ -24,6 +25,44 @@ struct Rig {
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
+ // A single strum rolls low-to-high; release cancels all delayed tones.
+ {Rig roll;roll.p->set(kInputMode,1);roll.p->set(kSpread,20);roll.p->set(kAmpAttack,1);roll.p->set(kAmpRelease,10);roll.block({mpc::MidiEvent::noteOn(0,36,100)});int audible=0;for(auto v:roll.p->voiceSnapshots())if(v.owner==36&&v.amplitude>0)++audible;assert(audible==1);
+ for(int i=0;i<7;++i)roll.block();audible=0;for(auto v:roll.p->voiceSnapshots())if(v.owner==36&&v.amplitude>0)++audible;assert(audible==2);roll.block({mpc::MidiEvent::noteOff(0,36)});for(int i=0;i<100;++i)roll.block();assert(!roll.p->activeVoices());}
+ // With chord legato, moved pitches roll in without retriggering common tones.
+ for(float glide:{0.f,80.f}){Rig roll;roll.p->set(kInputMode,1);roll.p->set(kChordGlide,1);roll.p->set(kGlide,glide);roll.p->set(kAmpRelease,10);roll.p->set(kChordOctave2,1);roll.p->set(kVoicing2,3);roll.block({mpc::MidiEvent::noteOn(0,36,100)});for(int i=0;i<100;++i)roll.block();roll.p->set(kSpread,20);roll.block({mpc::MidiEvent::noteOn(0,37,100)});
+ auto pitch=[&](int note){for(auto v:roll.p->voiceSnapshots())if(v.owner==37&&v.note==note&&v.held)return v.pitch;return -1000.f;};assert(pitch(55)==50&&pitch(59)==60&&pitch(64)==64);
+ for(int i=0;i<7;++i)roll.block();assert(pitch(55)>50&&pitch(55)<=55&&pitch(59)==60&&pitch(64)==64);for(int i=0;i<20;++i)roll.block();assert(pitch(59)<60&&pitch(59)>=59);
+ roll.block({mpc::MidiEvent::cc(0,120,0)});for(int i=0;i<100;++i)roll.block();assert(!roll.p->activeVoices());}
+ std::cout<<"PASS: one-shot ascending STRUM, delayed-tone cancellation and staggered glide with fixed common tones\n";
+
+ // All expanded selectors preserve the legacy ranges and all unrelated slots.
+ {Rig h;h.p->set(kSlotCount,3);h.block();
+ for(int bank=0;bank<4;++bank){h.p->set(kMainChordPage,bank);h.block();for(int row=0;row<4;++row)for(int type=0;type<32;++type){h.p->setNormalised(kHarmonyEdit1+row,type/31.f);h.block();assert(h.p->getInt(kChordQualities[bank*4+row])==type);std::array<int,6> n;assert(donut::chordNotes(48,type,0,0,n)==donut::kTypeSizes[type]);}}
+ for(int bank=0;bank<4;++bank)for(int n=1;n<=96;++n){const int preset=n%96;h.p->set(kMainChordPage,bank);h.block();std::array<int,16> roots{},types{},pads{};for(int i=0;i<16;++i){roots[i]=h.p->getInt(kChordRoots[i]);types[i]=h.p->getInt(kChordQualities[i]);pads[i]=h.p->getInt(kChordPadNotes[i]);}h.p->set(kHarmonyCurrent,preset);h.block();
+  for(int i=0;i<16;++i){assert(h.p->getInt(kChordPadNotes[i])==pads[i]);if(i/4==bank){assert(h.p->getInt(kChordRoots[i])==kProgressions[preset][i%4][0]&&h.p->getInt(kChordQualities[i])==kProgressions[preset][i%4][1]);}else assert(h.p->getInt(kChordRoots[i])==roots[i]&&h.p->getInt(kChordQualities[i])==types[i]);}}
+ h.p->set(kHarmonyPreset1,95);h.block();h.p->set(kHarmonyType1,31);h.p->set(kRoot1,61);h.block();const float oldType=h.p->getNormalised(kQuality1),oldPreset=h.p->getNormalised(kProgression);auto state=h.p->internalSaveState();Rig r;assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();r.p->setNormalised(kQuality1,oldType);r.p->setNormalised(kProgression,oldPreset);r.block();assert(r.p->getInt(kHarmonyType1)==31&&r.p->getInt(kHarmonyPreset1)==95&&r.p->getInt(kRoot1)==61);
+ for(int i=0;i<200;++i)r.block();r.p->set(kQuality1,6);r.block();assert(r.p->getInt(kHarmonyType1)==6);
+ Rig old;old.p->set(kProgression,7);old.block();old.p->set(kQuality1,4);old.p->set(kRoot1,61);old.block();state=old.p->internalSaveState();size_t end=12;for(int i=0;i<242;++i)end+=1+state[end]+8;state.resize(end+4);state[8]=242;state[9]=state[10]=state[11]=0;for(int b=0;b<4;++b)state[end+b]=0;
+ Rig migrated;assert(migrated.p->internalLoadState(state.data(),state.size()));migrated.p->reset();migrated.block();assert(migrated.p->getInt(kHarmonyType1)==4&&migrated.p->getInt(kHarmonyPreset1)==7&&migrated.p->getInt(kRoot1)==61&&!migrated.p->getBool(kChordGlide));
+ }
+ std::cout<<"PASS: 32 types across all editor banks, 96 presets across4banks, source isolation, legacy242 migration and normalized replay protection\n";
+
+ {Rig g;g.p->set(kInputMode,1);g.p->set(kChordGlide,1);g.p->set(kGlide,80);g.p->set(kAmpAttack,100);g.p->set(kAmpRelease,15);g.p->set(kChordOctave2,1);g.p->set(kVoicing2,3);g.block({mpc::MidiEvent::noteOn(0,36,100)});for(int i=0;i<400;++i)g.block();
+ auto before=g.p->voiceSnapshots();g.block({mpc::MidiEvent::noteOn(0,37,100)});auto after=g.p->voiceSnapshots();int held=0,sliding=0,common=0;
+ for(int i=0;i<16;++i)if(after[i].owner==37&&after[i].held){++held;if(std::abs(after[i].pitch-after[i].note)>.1f)++sliding;if(before[i].held&&before[i].note==after[i].note){++common;assert(std::abs(after[i].pitch-before[i].pitch)<.001f&&after[i].amplitude>.1f);}}
+ assert(held==5&&sliding==2&&common==3);
+ g.block({mpc::MidiEvent::noteOff(0,37)});held=0;for(auto v:g.p->voiceSnapshots())if(v.held){assert(v.owner==36);++held;}assert(held==5);g.block({mpc::MidiEvent::noteOff(0,36)});for(int i=0;i<100;++i)g.block();assert(!g.p->activeVoices());
+ // Non-overlapping presses must snap even with a long release and Always glide.
+ g.p->set(kGlideLegato,0);g.p->set(kAmpRelease,1000);g.block({mpc::MidiEvent::noteOn(0,36,100)});g.block({mpc::MidiEvent::noteOff(0,36),mpc::MidiEvent::noteOn(0,37,100)});for(auto v:g.p->voiceSnapshots())if(v.owner==37&&v.held)assert(std::abs(v.pitch-v.note)<.001f);g.block({mpc::MidiEvent::cc(0,120,0)});assert(!g.p->activeVoices());
+ // Touch-to-touch, MIDI-to-touch and native bank changes retain proper owners.
+ g.p->set(kAmpRelease,15);g.p->set(kSlotCount,1);g.block();g.p->set(kTouch1,1);g.block();g.p->set(kTouch2,1);g.block();g.p->set(kTouch2,0);g.block();for(auto v:g.p->voiceSnapshots())if(v.held)assert(v.owner==2048);g.p->set(kTouch1,0);for(int i=0;i<100;++i)g.block();assert(!g.p->activeVoices());
+ g.block({mpc::MidiEvent::noteOn(0,36,100)});g.p->set(kTouch2,1);g.block();g.p->set(kMainChordPage,1);g.block();held=0;for(auto v:g.p->voiceSnapshots())if(v.held){assert(v.owner==36);++held;}assert(held==5);g.block({mpc::MidiEvent::noteOff(0,36)});for(int i=0;i<100;++i)g.block();assert(!g.p->activeVoices());
+ // Sustain and repeated note-on counters must finish without stranded notes.
+ g.block({mpc::MidiEvent::noteOn(0,36,100),mpc::MidiEvent::cc(0,64,127)});g.block({mpc::MidiEvent::noteOn(0,37,100)});g.block({mpc::MidiEvent::noteOff(0,37)});g.block({mpc::MidiEvent::cc(0,64,0)});for(auto v:g.p->voiceSnapshots())if(v.held)assert(v.owner==36);g.block({mpc::MidiEvent::noteOff(0,36)});
+ g.block({mpc::MidiEvent::noteOn(0,36,100),mpc::MidiEvent::noteOn(0,36,100),mpc::MidiEvent::noteOn(1,37,100)});g.block({mpc::MidiEvent::noteOff(0,36)});g.block({mpc::MidiEvent::noteOff(0,36),mpc::MidiEvent::noteOff(1,37)});for(int i=0;i<100;++i)g.block();assert(!g.p->activeVoices());
+ }
+ std::cout<<"PASS: chord glide common tones, exact nearest moves, overlap-only pitch, touch/MIDI fallback, page ownership, sustain, channels and repeated notes\n";
+
  // Preview is isolated from stored chords; only APPLY mutates voice/octave.
  {for(int all=0;all<2;++all){Rig m;m.p->set(kSlotCount,3);m.p->set(kMainChordPage,2);m.p->set(kSmoothScope,all);m.p->set(kAmpRelease,10);m.block();
   std::array<std::array<int,5>,16> before{};for(int slot=0;slot<16;++slot)for(int f=0;f<5;++f)before[slot][f]=m.p->getInt(f<4?(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:kChordOctaves[slot]):kChordPadNotes[slot]);
@@ -53,7 +92,7 @@ int main(){
  std::cout<<"PASS: scoped smooth APPLY preserves roots/types/MIDI/inactive slots, preview ownership/end/stop, stale-plan rejection and safe state\n";
 
  // Key reference never changes notes. Explicit confirmation moves all active roots only.
- {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==242,"Append-only key controls");
+ {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==272,"Append-only key controls");
   for(int count=0;count<4;++count)for(int key=0;key<12;++key)for(int from=0;from<12;++from){Rig m;m.p->set(kSlotCount,count);m.block();
    std::array<std::array<float,5>,16> before{};
    for(int slot=0;slot<16;++slot){m.p->set(kChordRoots[slot],48+slot%12);m.p->set(kChordOctaves[slot],slot%5);m.p->set(kChordPadNotes[slot],80+slot);for(int f=0;f<5;++f)before[slot][f]=m.p->get(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot]);}
@@ -80,7 +119,7 @@ int main(){
  std::cout<<"PASS: 576 key/source/count transposes, reference isolation, whole-operation bounds, degree readback, state and old208 migration without render allocations\n";
 
  // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
- {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==242,"Append-only pad positions");
+ {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==272,"Append-only pad positions");
   Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
   m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
   m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);
@@ -88,7 +127,7 @@ int main(){
   size_t pos=12;for(int i=0;i<192;++i)pos+=1+state[pos]+8;state.resize(pos+4);for(int j=0;j<4;++j){state[8+j]=j?0:192;state[pos+j]=0;}
   assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();for(int slot=0;slot<16;++slot)assert(r.p->getInt(kPadPosition1+slot)==0);assert(r.p->getInt(kPadNote1)==75);
  }
- std::cout<<"PASS: manual pad locations, LEARN and sound independence, 242-param round-trip and 192-param migration\n";
+ std::cout<<"PASS: manual pad locations, LEARN and sound independence, 272-param round-trip and 192-param migration\n";
  // Osc Mix endpoints isolate the other oscillator independently of SUB.
  {for(float mix:{0.f,100.f}){Rig a,b;
    for(auto* m:{&a,&b}){m->p->setProgram(0);m->p->set(kBody,40);m->p->set(kMix,mix);m->p->set(kWave1,0);m->p->set(kWave2,2);m->p->set(kAmpAttack,1);m->p->set(kAmpSustain,100);m->p->set(kCutoff,18000);m->p->reset();}
@@ -318,10 +357,10 @@ int main(){
  t.p->set(kSoundPrev,1);t.block();assert(t.p->getInt(kSoundPreset)==62);
  t.p->set(kSoundNext,1);t.block();assert(t.p->getInt(kSoundPreset)==63);
  t.p->set(kSoundNext,1);t.block();assert(t.p->getInt(kSoundPreset)==0);
- t.p->set(kProgression,0);t.block();
- t.p->set(kChordPrev,1);t.block();assert(t.p->getInt(kProgression)==31);
- t.p->set(kChordPrev,1);t.block();assert(t.p->getInt(kProgression)==30);
- t.p->set(kChordNext,1);t.block();assert(t.p->getInt(kProgression)==31);
+ t.p->set(kHarmonyPreset1,0);t.block();
+ t.p->set(kChordPrev,1);t.block();assert(t.p->getInt(kHarmonyPreset1)==95);
+ t.p->set(kChordPrev,1);t.block();assert(t.p->getInt(kHarmonyPreset1)==94);
+ t.p->set(kChordNext,1);t.block();assert(t.p->getInt(kHarmonyPreset1)==95);
  t.p->set(kChordNext,1);t.block();assert(t.p->getInt(kProgression)==0);
  assert(t.p->getInt(kSoundPreset)==0&&t.p->getInt(kChordNext)==0);
  // Spread cancellation: release before the last chord tone starts.
@@ -349,6 +388,6 @@ int main(){
  float minPeak=1,maxPeak=0;
  for(int patch=0;patch<64;++patch){t.p->setProgram(patch);t.p->set(kInputMode,0);t.p->reset();float peak=t.block({mpc::MidiEvent::noteOn(0,60,110)});for(int i=0;i<400;++i)peak=std::max(peak,t.block({},(i%2)?32:512));assert(peak>1e-5f);minPeak=std::min(minPeak,peak);maxPeak=std::max(maxPeak,peak);}
  // All progressions support four overlapping pads with bounded voice allocation.
- t.p->set(kInputMode,1);t.p->reset();for(int prog=0;prog<32;++prog){t.p->set(kProgression,prog);t.block();for(int pad=0;pad<4;++pad)t.block({mpc::MidiEvent::noteOn(0,36+pad,100)});assert(t.p->activeVoices()<=16);for(int pad=0;pad<4;++pad)t.block({mpc::MidiEvent::noteOff(0,36+pad)});t.finish();}
- std::cout<<"PASS: channel-isolated pedals, CC121 mono fallback, unified presets/volume, synced rate display;  MIDI/chord ownership, sustain, mono fallback, mode transitions, preset independence, state, arrows, spread cancellation, sample offsets, allocation-free rendering, 64 sounds and 32 progressions. Peak range "<<minPeak<<".."<<maxPeak<<"\n";
+ t.p->set(kInputMode,1);t.p->reset();for(int prog=0;prog<kProgressionCount;++prog){t.p->set(kHarmonyPreset1,prog);t.block();for(int pad=0;pad<4;++pad)t.block({mpc::MidiEvent::noteOn(0,36+pad,100)});assert(t.p->activeVoices()<=16);for(int pad=0;pad<4;++pad)t.block({mpc::MidiEvent::noteOff(0,36+pad)});t.finish();}
+ std::cout<<"PASS: channel-isolated pedals, CC121 mono fallback, unified presets/volume, synced rate display;  MIDI/chord ownership, sustain, mono fallback, mode transitions, preset independence, state, arrows, spread cancellation, sample offsets, allocation-free rendering, 64 sounds and 96 progressions. Peak range "<<minPeak<<".."<<maxPeak<<"\n";
 }

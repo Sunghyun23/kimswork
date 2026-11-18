@@ -24,7 +24,7 @@ int main(){
  assert(best==plan.movementAfter);
  unsigned seed=73;auto random=[&](int max){seed=1664525*seed+1013904223;return int((seed>>8)%unsigned(max));};
  for(int trial=0;trial<400;++trial){SmoothInput a;a.active=(1+random(4))*4;a.scope=random(2);a.page=random(a.active/4);a.start=a.scope?0:a.page*4;a.count=a.scope?a.active:4;
-  for(auto& chord:a.chords){chord={36+random(37),random(11),0,1+random(3)};}
+  for(auto& chord:a.chords){chord={36+random(37),random(donut::kTypeCount),0,1+random(3)};}
   forbid=true;auto b=findSmoothVoicing(a);forbid=false;assert(b.valid&&b.input==a&&b.movementAfter<=b.movementBefore);assert(b.voice[0]==a.chords[a.start][2]&&b.octave[0]==a.chords[a.start][3]);
   int sum=0;for(int i=0;i<a.count;++i){SmoothCandidate c;assert(smoothCandidate(a.chords[a.start+i],b.voice[i],b.octave[i],c));assert(c.notes[c.count-1]==b.after[i]);assert(c.notes[c.count-1]-c.notes[0]<=24);sum+=std::abs(b.after[i]-b.after[(i+1)%a.count]);}
   assert(sum==b.movementAfter);

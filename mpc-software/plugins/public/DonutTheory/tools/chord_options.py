@@ -49,8 +49,8 @@ def install(g,tui,params,out):
   panel_key=f'DTChoicePanel{p.index}';entries.append(O(('key',panel_key),('value',panel(f'CHORD {slot} — OCTAVE',local,ws))))
   children.append(g.entry('Select '+p.name,panel_key,O(('version',1),('handleName','Data')),'0 0 1280 628','Children','Show','Always',remap=[('Data',p.handle)],invalidating=[f'IndexedEnabling/1/2/{local}']))
   # Show only the inversions that exist for the current chord's actual tone count.
-  voice=by[f'Chord {slot} Voice'];quality=by[f'Chord {slot} Type'];rows=[]
-  for q,count in enumerate((4,4,5,5,4,5,5,3,3,3,5)):
+  voice=by[f'Chord {slot} Voice'];quality=by[f'Harmony Tones {chr(64+slot)}'];rows=[]
+  for q,count in enumerate((3,4,5)):
    choices=[(0,'Root position'),(1,'1st inversion'),(3,'2nd inversion')]
    if count>=4:choices.append((4,'3rd inversion'))
    if count>=5:choices.append((5,'4th inversion'))
@@ -58,7 +58,7 @@ def install(g,tui,params,out):
    ws=[]
    for j,(index,text) in enumerate(choices):ws+=button(text,voice.handle,f'{20+(j%4)*310} {64+(j//4)*63} 300 56',index,6)
    rowkey=f'DTChordVoicingRows{slot}-{q}';entries.append(O(('key',rowkey),('value',g.component_definition([],ws,'00000000',ignore_mouse=True))))
-   rows.append(g.entry(rowkey,rowkey,O(('version',1),('handleName','Data')),'0 0 1280 628','Children','Hide','Always',remap=[('Data',voice.handle)],invalidating=[f'IndexedEnabling/{q}/11/{quality.handle}']))
+   rows.append(g.entry(rowkey,rowkey,O(('version',1),('handleName','Data')),'0 0 1280 628','Children','Hide','Always',remap=[('Data',voice.handle)],invalidating=[f'IndexedEnabling/{q}/3/{quality.handle}']))
   rows.append(label('INVERSION CHANGES THE BASS NOTE. OPEN SPREADS THE CHORD TONES.','20 530 1240 60',22))
   comp=panel(f'CHORD {slot} — VOICING',f'Local/2/dtChoice{voice.index}',rows)
   existing=defs[f'DTChoicePanel{voice.index}'];existing[:]=comp

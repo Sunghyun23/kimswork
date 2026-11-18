@@ -13,6 +13,16 @@ declared=json.loads((P/'parameters.json').read_text())
 for p,m in zip(params,declared):
  p.kind='choice' if 'choices' in m else 'float'
  p.choices=m.get('choices')
+# UI aliases select appended full-range controls while legacy declarations/IDs
+# remain byte-identical for existing MPC projects and automation.
+by_native={p.name:p for p in params}
+for slot in range(1,17):
+ old=by_native[f'Chord {slot} Type'];new=by_native[f'Chord {slot} Harmony'];old.name='Legacy '+old.name;new.name=f'Chord {slot} Type'
+for bank in range(1,5):
+ name='Chord Preset' if bank==1 else f'Chord Preset Bank {bank}'
+ old=by_native[name];new=by_native[f'Harmony Preset {bank}'];old.name='Legacy '+old.name;new.name=name
+for row in range(1,5):
+ letter=chr(64+row);old=by_native[f'Edit {letter} Type'];new=by_native[f'Harmony Edit {letter}'];old.name='Legacy '+old.name;new.name=f'Edit {letter} Type'
 table=g.ParamTable(params)
 pages,style,_,_,kit=g.load_ui(str(P/'ui.json'),table)
 out=P/'skins';out.mkdir(exist_ok=True)
@@ -25,6 +35,9 @@ def setv(o,k,v):
  o.append((k,v))
 pd=get(tui,'pageData');defs=get(get(pd,'componentDefinitions'),'localComponentDefinitions');tabs=get(pd,'tabs')
 by={p.name:p for p in params};meta=json.loads((P/'parameters.json').read_text());bykey={m['key']:i for i,m in enumerate(meta)}
+for slot in range(1,17):bykey['Quality'+str(slot)]=bykey['HarmonyType'+str(slot)]
+for bank in range(1,5):bykey['Progression'+('' if bank==1 else str(bank))]=bykey['HarmonyPreset'+str(bank)]
+bykey['Progression']=bykey['HarmonyCurrent']
 def handle(key):return 'Parameter '+str(bykey[key])
 def adddef(name,comp):defs.append(O(('key',name),('value',comp)))
 def label(text,bounds,size=20,color='ff352d21',kind='Text',binding=None):

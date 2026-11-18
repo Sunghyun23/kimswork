@@ -42,7 +42,7 @@ for key in ('DTMenu','DTSmallMenu','DTSelectFilter'):
 print('PASS: full-size rotating artwork, visible titles, native arrow buttons, menu fallback gestures')
 
 assert any(c['componentData']['name']=='Filter / LFO divider' for c in children)
-for key,count in [('SoundPreset',64),('Progression',32)]:
+for key,count in [('SoundPreset',64),('HarmonyCurrent',96)]:
  panel=defs['DTChoicePanel'+str(index[key])]
  assert panel['componentsData']
  rows=[defs['DTSideRow'+str(index[key])+'-'+str(i)] for i in range(count)]
@@ -50,7 +50,7 @@ for key,count in [('SoundPreset',64),('Progression',32)]:
  assert len(buttons)==count
  assert [c['componentData']['data']['buttonId'] for c in buttons]==list(range(count))
  assert all(c['componentData']['data']['numButtonsInGroup']==count for c in buttons)
-print('PASS: explicit 64 sound / 32 chord choices and Drive/Play separator')
+print('PASS: explicit 64 sound / 96 chord choices and Drive/Play separator')
 
 for name,definition in defs.items():
  if any(c['componentData']['type']=='Slider' and c['componentData']['data'].get('handleName','').startswith('ResetOnGestureEnd/') for c in definition['componentsData']):continue # continuous hold surfaces checked below
@@ -73,11 +73,11 @@ assert 'DTChordNavigation' not in defs
 editor=defs['DTAllChords']
 for i in range(1,5):
  bindings=[r['value'] for c in editor['componentsData'] for r in c['handle remapping']['map']]
- for key in ('Root','PadNote'):assert 'Parameter '+str(index[key+str(i)]) in bindings
+ for key in ('Root','PadNote'):assert 'Parameter '+str(index[('HarmonyType' if key=='Quality' else key)+str(i)]) in bindings
  for suffix,key in [('Type','Quality'),('Voice','Voicing')]:
   field=defs[f'DTChordField{i}{suffix}']
-  assert field['actions'][0]['handler']=='Q-Link' and field['actions'][0]['handleName']=='Parameter '+str(index[key+str(i)])
-  assert field['actions'][1]['handleName']=='Local/2/dtChoice'+str(index[key+str(i)])
+  assert field['actions'][0]['handler']=='Q-Link' and field['actions'][0]['handleName']=='Parameter '+str(index[('HarmonyType' if key=='Quality' else key)+str(i)])
+  assert field['actions'][1]['handleName']=='Local/2/dtChoice'+str(index[('HarmonyType' if key=='Quality' else key)+str(i)])
 for i in range(4):
  pad=next(c for c in children if c['componentData']['name']=='Chord '+str(i+1))
  assert pad['handle remapping']['map']==[{'key':'Data','value':'Parameter '+str(index['Touch'+str(i+1)])}]
@@ -161,7 +161,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==242
+assert index['LearnStatus']==84 and len(params)==272
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -219,7 +219,7 @@ print('PASS: generator preserves manifest/binary version agreement')
 chord_tab=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')
 assert (chord_tab['fnKeyIndex'],chord_tab['fnKeySubIndex'])==(0,1)
 chord_map=next(m for m in q['Screen Mode Q-Links']['map'] if (m['Tab'],m['SubTab'])==(1,2))
-expected_chords=[key+str(slot) for slot in range(1,5) for key in ('EditRoot','EditQuality','EditVoicing','EditOctave')]
+expected_chords=[key+str(slot) for slot in range(1,5) for key in ('EditRoot','HarmonyEdit','EditVoicing','EditOctave')]
 assert [chord_map['Q-Links'][f'Q-Link {n}'] for bank in physical_banks for n in bank]==[index[k] for k in expected_chords]
 assert chord_map['Bank Direction']=='Column'
 assert chord_tab['qlinkBoundsData']==[f'96 {112+i*100} 708 96' for i in range(4)]
@@ -263,7 +263,7 @@ for slot in range(1,5):
  assert [c['componentData']['type'] for c in defs[f'DTChordOctave{slot}']['componentsData']].count('Knob')==1
  assert all(c['componentData']['type']=='Label' for c in defs[f'DTChordNote{slot}']['componentsData'])
  assert defs[f'DTChordOctave{slot}']['actions'][0]['handler']=='Q-Link'
- for quality,count in enumerate((4,4,5,5,4,5,5,3,3,3,5)):
+ for quality,count in enumerate((3,4,5)):
   row=defs[f'DTSideVoicings{slot}-{quality}']
   assert row['ignoreMousePresses'] is True
   group=defs[row['componentsData'][0]['componentData']['type']]
@@ -321,11 +321,10 @@ assert (skin/'slot-36-28-off.png').is_file() and (skin/'slot-44-44-off.png').is_
 for file in ('arrow.png','slot-36-28-off.png','slot-44-44-off.png'):
  im=Image.open(skin/file).convert('RGBA');assert im.getbbox()[3]<im.height,file
 
-for page,key in enumerate(('Progression','Progression2','Progression3','Progression4')):
- selectors=[c for c in children if c['componentData']['name']=='Progression' and any(v['value']==f'Parameter {index[key]}' for v in c['handle remapping']['map'])]
- assert len(selectors)==1 and f'IndexedEnabling/{page}/4/Parameter {index["MainChordPage"]}' in selectors[0]['bounds']['additionalInvalidatingHandles']
- assert index[key]==(50 if page==0 else 172+page)
-print('PASS: four independent bank preset selectors with matching visible pad pages')
+selector=next(c for c in children if c['componentData']['name']=='Progression')
+assert any(v['value']==f"Parameter {index['HarmonyCurrent']}"for v in selector['handle remapping']['map'])
+assert len([c for c in children if c['componentData']['name']=='Progression'])==1
+print('PASS: one current-bank preset relay with four independent stored banks')
 
 # Preset arrows and bank navigation must each provide a 44x44 hit surface.
 for name in ('ChordPrev','ChordNext'):
@@ -336,10 +335,9 @@ for caption in ('‹','›'):
  hit=next(c for c in children if c['componentData']['name']==caption+' touch')
  assert tuple(map(int,hit['bounds']['bounds'].split()[2:]))==(44,44)
  x,y,w,h=map(int,hit['bounds']['bounds'].split());assert y>=534 and y+h<=580
-for page in range(4):
- selector=next(c for c in children if c['componentData']['name']=='Progression' and any(v['value']==f'Parameter {index[("Progression","Progression2","Progression3","Progression4")[page]]}' for v in c['handle remapping']['map']))
- assert selector['bounds']['bounds']=='68 580 220 44'
- for w in defs[selector['componentData']['type']]['componentsData']:assert int(w['bounds']['bounds'].split()[3])==44
+selector=next(c for c in children if c['componentData']['name']=='Progression')
+assert selector['bounds']['bounds']=='68 580 220 44'
+for w in defs[selector['componentData']['type']]['componentsData']:assert int(w['bounds']['bounds'].split()[3])==44
 assert byname['ChordPrev']['bounds']['bounds']=='18 580 44 44'
 assert byname['ChordNext']['bounds']['bounds']=='294 580 44 44'
 print('PASS: four navigation arrows have 44x44 hit targets, safe gaps, native-size art and full-height selectors')
@@ -429,3 +427,25 @@ assert sum(a.get('handler')=='Toggle Switch' and a.get('handleName')==f"Paramete
 assert preview['componentsData'][0]['handle remapping']['map']==[{'key':'Data','value':f"Parameter {index['SmoothPreview']}"}]
 assert preview['componentsData'][-1]['componentData']['type']=='Slider' and preview['componentsData'][-1]['componentData']['data']['handleName'].startswith('ResetOnGestureEnd/Local/')
 print('PASS: PREVIEW is a persistent start/stop command, with local-only gesture release')
+
+assert params[:242]==json.loads((P/'tests/legacy-242-parameters.json').read_text())
+assert all(len(params[index['HarmonyType'+str(i)]]['choices'])==32 for i in range(1,17))
+assert all(len(params[index['HarmonyPreset'+str(i)]]['choices'])==96 for i in range(1,5))
+assert all(len(params[index['Quality'+str(i)]]['choices'])==11 for i in range(1,17))
+print('PASS: first242 declarations/ranges retained; 32 types/96 recipes and full-range Q-Link proxies')
+
+from collections import Counter
+progressions=json.loads((P/'factory-presets.json').read_text())['progressions']
+assert len(progressions)==96 and len({p['name']for p in progressions})==96
+assert Counter(p['category']for p in progressions[32:])=={k:8 for k in ('Neo Soul','Hip-hop','Vamps','R&B','Modal','Gospel','Borrowed','Turnarounds')}
+fingerprint=lambda p:tuple(((note-p['chords'][0][0])%12,quality)for note,quality in p['chords'])
+assert len({fingerprint(p)for p in progressions[32:]})==64
+for tab in t['tabs']:assert expanded_widgets(tab['componentDefinition'])<=3000,tab['tabName']
+print('PASS: 64 distinct new harmonic forms/eight styles and all page construction budgets')
+
+for title,param in [('GLIDE','Glide'),('STRUM','Spread')]:
+ definition=next(d for d in defs.values()if any(w['componentData']['type']=='Label'and w['componentData']['data'].get('text')==title for w in d['componentsData'])and any(w['componentData']['name']=='time drag'for w in d['componentsData']))
+ assert definition['componentsData'][-1]['componentData']['type']=='Slider'
+ assert definition['componentsData'][-1]['bounds']['acceptsHWFocus']=='No'
+ assert all(a['handler']!='Q-Link'for a in definition['actions'])
+print('PASS: touch GLIDE/STRUM use existing values without stealing the sixteen chord Q-Links')
