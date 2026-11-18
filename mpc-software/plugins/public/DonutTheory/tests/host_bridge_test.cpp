@@ -43,5 +43,13 @@ int main(){
  assert(p->getInt(kPadNote1)==60&&p->getInt(kPadLearn)==0&&updates==0&&automations==0);
  e->getParameter(e,kPadLearn);assert(updates>0&&automations>=3); // control-thread poll publishes the registration immediately
  dispatch(effClose);
+ // Actual VST value polling plans on UI, not on the rendering thread.
+ e=VSTPluginMain(host);p=static_cast<DonutTheory*>(e->object);dispatch(effOpen);dispatch(effSetSampleRate,0,0,nullptr,44100);dispatch(effSetBlockSize,0,128);dispatch(effMainsChanged,0,1);
+ p->set(kSmoothOpen,1);updates=automations=0;
+ std::thread preparePlan([&]{render();e->getParameter(e,kSmoothOpen);assert(updates==0&&automations==0);assert(p->getInt(kSmoothStatus)==6);});preparePlan.join();
+ e->getParameter(e,kSmoothOpen);assert(p->getInt(kSmoothStatus)==1&&updates>0);std::string movement;p->formatValue(kSmoothMovement,0,movement);assert(movement=="TOP: 42 -> 0 st");
+ updates=automations=0;p->set(kSmoothApply,1);std::thread applyPlan([&]{render();assert(updates==0&&automations==0);});applyPlan.join();assert(!p->getInt(kSmoothOpen)&&p->getInt(kSmoothStatus)==3);assert(p->getInt(kRoot1)==50&&p->getInt(kRoot2)==55&&p->getInt(kRoot3)==48&&p->getInt(kRoot4)==57);
+ e->getParameter(e,kSmoothStatus);assert(updates>0&&automations>0);dispatch(effClose);
+ std::cout<<"PASS: UI value-poll smooth planning, audio apply and deferred reentrant notifications\n";
  std::cout<<"PASS: VST preset/state identity, master volume, deferred callbacks, reentrant UI refresh, idle coalescing\n";
 }

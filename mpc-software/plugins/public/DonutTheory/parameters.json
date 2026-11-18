@@ -4672,5 +4672,208 @@
     "default": 0,
     "unit": "st",
     "log": false
+  },
+  {
+    "key": "SmoothOpen",
+    "name": "Smooth Voicing",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SmoothScope",
+    "name": "Smooth Scope",
+    "choices": [
+      "Current 4",
+      "All active slots"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SmoothApply",
+    "name": "Apply Smooth Voicing",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SmoothPreview",
+    "name": "Preview Smooth Voicing",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SmoothStatus",
+    "name": "Smooth Status",
+    "choices": [
+      "Calculating",
+      "Ready",
+      "Preview playing",
+      "Applied",
+      "ADJUST CHORD REGISTER",
+      "Already smooth",
+      "Recalculating"
+    ],
+    "default": 0
+  },
+  {
+    "key": "SmoothMovement",
+    "name": "Top Note Movement",
+    "min": 0,
+    "max": 2048,
+    "default": 0,
+    "unit": "st",
+    "log": false
+  },
+  {
+    "key": "SmoothRow1",
+    "name": "Top Note 1",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow2",
+    "name": "Top Note 2",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow3",
+    "name": "Top Note 3",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow4",
+    "name": "Top Note 4",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow5",
+    "name": "Top Note 5",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow6",
+    "name": "Top Note 6",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow7",
+    "name": "Top Note 7",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow8",
+    "name": "Top Note 8",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow9",
+    "name": "Top Note 9",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow10",
+    "name": "Top Note 10",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow11",
+    "name": "Top Note 11",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow12",
+    "name": "Top Note 12",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow13",
+    "name": "Top Note 13",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow14",
+    "name": "Top Note 14",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow15",
+    "name": "Top Note 15",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "SmoothRow16",
+    "name": "Top Note 16",
+    "min": 0,
+    "max": 127,
+    "default": 0,
+    "unit": "MIDI",
+    "log": false
   }
 ]

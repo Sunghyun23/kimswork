@@ -247,6 +247,18 @@ In **Q-LINK SCREEN**, groups A–D represent the four visible slots. Each group 
 
 For bank 5–8, A edits slot 5, B slot 6, C slot 7 and D slot 8. MIDI Note stays a separate assignment field. Octave is available as a donut control and a value selection list.
 
+### Smooth voicing — 1.4.0
+
+Tap **SMOOTH VOICING** above TRANSPOSE in CHORD. Choose **CURRENT 4** for the bank you are editing, or **ALL SLOTS** for all active slots. The panel shows each selected slot's top note before and after the proposal, plus the total semitone movement around the entire loop, including its last-to-first connection. Notes use the MPC octave naming convention.
+
+The first selected chord's current voicing and octave stay fixed as the anchor. Other chords are chosen from their supported inversions/Open voicing and −2..+2 octave range. Top-note travel is minimized first; ties favor small closest-tone/bass movement, then fewer changes from the current voicings. New spans are limited to two octaves, or the original span if it was already wider. Every chord tone must remain in MIDI0–127 without clamping or collapsed notes. If the current chord register is unsafe, adjust it before trying again.
+
+**PREVIEW** auditions the proposed progression once, one chord per beat at the available host tempo (90BPM if unavailable), without writing its voicings into the stored slots. Tap PREVIEW again to stop, or close the panel with CANCEL/X/outside touch. Normal envelope/FX tails may continue after gate release. Audition shares the existing sixteen-voice instrument; dense simultaneous playing can still steal voices. It does not send or record MIDI into the MPC sequencer.
+
+**APPLY** changes only the selected slots' Voicing and Octave. Root, Type, MIDI/LEARN, input mode, Key and all unselected slots stay intact. CANCEL closes without applying. Editing a source chord or changing the scope invalidates a previous proposal and stops its audition; the control thread prepares a fresh proposal before it can be applied. Preview and Apply are transient commands and are not replayed on project load.
+
+For the default Dm9 / G13 / Cmaj9 / Am9 progression, one supported solution keeps E as the top note of all four chords, reducing loop travel from42 to0semitones. This is optimization within the existing voicing/octave choices, not arbitrary per-note editing or automatic reharmonization. The sixteen CHORD SCREEN Q-Links remain Root / Type / Voicing / Octave.
+
 ### Root, type, voicing and octave
 
 **Root** sets the chord's root note and register, over MIDI notes 24–84. **Octave** shifts the whole resulting voicing by −2 to +2 octaves without changing the trigger assignment. This lets you keep a comfortable pad layout while placing chords in a useful register.

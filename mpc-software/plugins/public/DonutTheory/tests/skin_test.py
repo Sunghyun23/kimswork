@@ -161,7 +161,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==220
+assert index['LearnStatus']==84 and len(params)==242
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -414,3 +414,18 @@ print('PASS: 24 accurate key charts, diatonic spelling, reference-only touch con
 
 assert params[:208]==json.loads((P/'tests/legacy-208-parameters.json').read_text())
 print('PASS: first208 full parameter declarations match1.2.3 fixture exactly')
+
+assert params[:220]==json.loads((P/'tests/legacy-220-parameters.json').read_text())
+assert index['SmoothOpen']==220 and index['SmoothRow16']==241
+smooth=defs['DTSmoothVoicing'];assert smooth['version']==4 and smooth['hideQLinkBounds']
+assert any(w['componentData']['name']=='Dismiss outside' and w['componentData']['data']['onImage']=='button-hit.png'for w in smooth['componentsData'])
+assert len([w for w in smooth['componentsData']if w['componentData']['type']=='Label'and any(v['value']==f"Parameter {index['SmoothRow'+str(row)]}"for row in range(1,17)for v in w['handle remapping']['map'])])==16
+for w in smooth['componentsData']:
+ x,y,wid,hei=map(int,w['bounds']['bounds'].split());assert x>=0 and y>=0 and x+wid<=1280 and y+hei<=628
+print('PASS: 220 declarations retained, SMOOTH scope/preview/apply modal, sixteen top-note rows and unchanged Q-Links')
+
+preview=next(defs[w['componentData']['type']]for w in defs['DTSmoothVoicing']['componentsData']if any(a.get('handleName')==f"Parameter {index['SmoothPreview']}"for a in defs.get(w['componentData']['type'],{}).get('actions',[])))
+assert sum(a.get('handler')=='Toggle Switch' and a.get('handleName')==f"Parameter {index['SmoothPreview']}"for a in preview['actions'])==1
+assert preview['componentsData'][0]['handle remapping']['map']==[{'key':'Data','value':f"Parameter {index['SmoothPreview']}"}]
+assert preview['componentsData'][-1]['componentData']['type']=='Slider' and preview['componentsData'][-1]['componentData']['data']['handleName'].startswith('ResetOnGestureEnd/Local/')
+print('PASS: PREVIEW is a persistent start/stop command, with local-only gesture release')

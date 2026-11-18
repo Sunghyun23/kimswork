@@ -14,3 +14,5 @@
 - 새 변경은 새 버전으로 배포한다. 이미 공개한1.2.2 ZIP/태그를 재작성하지 않는다. 다른 프로젝트 작업을 이유로 이 플러그인을 변경하지 않는다.
 
 - 1.3.0 사용자 승인: CHORD 오른쪽 Key/Major·Minor/참조용5도권·다이아토닉 표시, MIDI/LEARN은 PAD SETUP으로 이동. 기존 Root/Type/Voicing/Octave16Q-Link/가이드 범위 유지. Key 선택만으로 노트를 변경하지 않는다. TRANSPOSE 확인창에서 FROM/TO/반음/활성슬롯수를 표시하고 APPLY만 모든 활성루트를 동일간격 이동한다. 타입/전위/옥타브/패드/비활성슬롯 보존,24..84범위를 넘으면 전체거부. 208개기존선언보존, 새208..219append. 새지침은 이전208총수/구형CHORD배치보다 우선한다.
+
+- 1.4.0 SMOOTH VOICING: Current4/AllActive, first chord fixed, closed-loop top-note minimization before inner/bass/edit ties, before/after audition and explicit APPLY. Root/Type/Key/MIDI/unselected slots preserved; only voicing/octave change. Existing220declarations remain; append220..241. No solver on render: UI poll/idle publishes atomic cells, audio rejects stale plans and owns finite preview4096. Save/load clear transient commands. Keep242metadata/state/UBSan/preview ownership/atomic publication/skin budget tests.

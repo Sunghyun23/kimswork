@@ -1,6 +1,7 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <thread>
 #include <new>
 #include <cstdlib>
 static bool forbidAlloc=false;
@@ -23,8 +24,36 @@ struct Rig {
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
+ // Preview is isolated from stored chords; only APPLY mutates voice/octave.
+ {for(int all=0;all<2;++all){Rig m;m.p->set(kSlotCount,3);m.p->set(kMainChordPage,2);m.p->set(kSmoothScope,all);m.p->set(kAmpRelease,10);m.block();
+  std::array<std::array<int,5>,16> before{};for(int slot=0;slot<16;++slot)for(int f=0;f<5;++f)before[slot][f]=m.p->getInt(f<4?(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:kChordOctaves[slot]):kChordPadNotes[slot]);
+  m.p->set(kSmoothOpen,1);m.block();std::thread ui([&]{m.p->flushHostUpdates();});ui.join();assert(m.p->getInt(kSmoothStatus)==1||m.p->getInt(kSmoothStatus)==5);
+  const int start=all?0:8,count=all?16:4;std::array<int,16> top{};for(int i=0;i<count;++i)top[i]=m.p->getInt(kSmoothRow1+i);
+  m.p->set(kSmoothPreview,1);m.block();assert(m.p->getInt(kSmoothPreview)==1&&m.p->activeVoices()>=3);
+  for(int slot=0;slot<16;++slot){assert(m.p->getInt(kChordRoots[slot])==before[slot][0]);assert(m.p->getInt(kChordVoicings[slot])==before[slot][2]&&m.p->getInt(kChordOctaves[slot])==before[slot][3]);}
+  // Stop/close releases preview and cannot modify the original progression.
+  m.p->set(kSmoothPreview,0);for(int b=0;b<50;++b)m.block();assert(m.p->activeVoices()==0);
+  m.p->set(kSmoothApply,1);m.block();assert(!m.p->getInt(kSmoothOpen)&&m.p->getInt(kSmoothStatus)==3);
+  for(int slot=0;slot<16;++slot){assert(m.p->getInt(kChordRoots[slot])==before[slot][0]&&m.p->getInt(kChordQualities[slot])==before[slot][1]&&m.p->getInt(kChordPadNotes[slot])==before[slot][4]);
+   if(slot<start||slot>=start+count)assert(m.p->getInt(kChordVoicings[slot])==before[slot][2]&&m.p->getInt(kChordOctaves[slot])==before[slot][3]);
+   else{std::array<int,6> notes;const int n=donut::chordNotes(before[slot][0],before[slot][1],m.p->getInt(kChordVoicings[slot]),m.p->getInt(kChordOctaves[slot])-2,notes);assert(notes[n-1]==top[slot-start]);}}
+  assert(m.p->getInt(kChordVoicings[start])==before[start][2]&&m.p->getInt(kChordOctaves[start])==before[start][3]);
+ }
+ // A new UI result may arrive before the next audio block. Cancel the old
+ // copied audition even when the newly published result is already fresh.
+ {Rig quick;quick.p->set(kSmoothOpen,1);quick.block();std::thread a([&]{quick.p->flushHostUpdates();});a.join();quick.p->set(kSmoothPreview,1);quick.block();assert(quick.p->getInt(kSmoothPreview));
+ quick.p->set(kRoot1,51);std::thread b([&]{quick.p->flushHostUpdates();});b.join();quick.block();assert(!quick.p->getInt(kSmoothPreview));for(int i=0;i<300;++i)quick.block();assert(quick.p->activeVoices()==0);}
+ // Automatic preview end keeps a separately held MIDI note; stale plans cannot apply.
+ Rig m;m.p->set(kAmpRelease,10);m.p->set(kSmoothOpen,1);m.block();std::thread ui([&]{m.p->flushHostUpdates();});ui.join();m.block({mpc::MidiEvent::noteOn(0,92,100)});
+ m.p->set(kSmoothPreview,1);m.block();for(int b=0;b<1100;++b)m.block();assert(!m.p->getInt(kSmoothPreview)&&m.p->activeVoices()==1);m.block({mpc::MidiEvent::noteOff(0,92)});for(int b=0;b<50;++b)m.block();assert(m.p->activeVoices()==0);
+ m.p->set(kRoot1,51);m.p->set(kSmoothApply,1);m.block();assert(m.p->getInt(kSmoothOpen)&&m.p->getInt(kVoicing1)==0&&m.p->getInt(kChordOctave1)==2&&m.p->getInt(kSmoothStatus)==6);
+ std::thread ui2([&]{m.p->flushHostUpdates();});ui2.join();m.p->set(kSmoothPreview,1);m.block();m.block({mpc::MidiEvent::cc(0,123,0)});assert(!m.p->getInt(kSmoothPreview));
+ auto state=m.p->internalSaveState();Rig loaded;assert(loaded.p->internalLoadState(state.data(),state.size()));loaded.p->reset();loaded.block();assert(!loaded.p->getInt(kSmoothOpen)&&!loaded.p->getInt(kSmoothPreview)&&!loaded.p->getInt(kSmoothApply));
+ }
+ std::cout<<"PASS: scoped smooth APPLY preserves roots/types/MIDI/inactive slots, preview ownership/end/stop, stale-plan rejection and safe state\n";
+
  // Key reference never changes notes. Explicit confirmation moves all active roots only.
- {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==220,"Append-only key controls");
+ {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==242,"Append-only key controls");
   for(int count=0;count<4;++count)for(int key=0;key<12;++key)for(int from=0;from<12;++from){Rig m;m.p->set(kSlotCount,count);m.block();
    std::array<std::array<float,5>,16> before{};
    for(int slot=0;slot<16;++slot){m.p->set(kChordRoots[slot],48+slot%12);m.p->set(kChordOctaves[slot],slot%5);m.p->set(kChordPadNotes[slot],80+slot);for(int f=0;f<5;++f)before[slot][f]=m.p->get(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot]);}
@@ -51,7 +80,7 @@ int main(){
  std::cout<<"PASS: 576 key/source/count transposes, reference isolation, whole-operation bounds, degree readback, state and old208 migration without render allocations\n";
 
  // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
- {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==220,"Append-only pad positions");
+ {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==242,"Append-only pad positions");
   Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
   m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
   m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);
@@ -59,7 +88,7 @@ int main(){
   size_t pos=12;for(int i=0;i<192;++i)pos+=1+state[pos]+8;state.resize(pos+4);for(int j=0;j<4;++j){state[8+j]=j?0:192;state[pos+j]=0;}
   assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();for(int slot=0;slot<16;++slot)assert(r.p->getInt(kPadPosition1+slot)==0);assert(r.p->getInt(kPadNote1)==75);
  }
- std::cout<<"PASS: manual pad locations, LEARN and sound independence, 220-param round-trip and 192-param migration\n";
+ std::cout<<"PASS: manual pad locations, LEARN and sound independence, 242-param round-trip and 192-param migration\n";
  // Osc Mix endpoints isolate the other oscillator independently of SUB.
  {for(float mix:{0.f,100.f}){Rig a,b;
    for(auto* m:{&a,&b}){m->p->setProgram(0);m->p->set(kBody,40);m->p->set(kMix,mix);m->p->set(kWave1,0);m->p->set(kWave2,2);m->p->set(kAmpAttack,1);m->p->set(kAmpSustain,100);m->p->set(kCutoff,18000);m->p->reset();}

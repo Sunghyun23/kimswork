@@ -132,3 +132,6 @@ def install(g,tui,params,out):
  src=trans[3];parts=get(defs[get(cd(src),'type')],'componentsData');parts[:]=[w for w in parts if get(cd(w),'type')!='Label'];parts.insert(1,label('','4 0 148 44',22,h('Transpose From')));trans.pop(4)
  modal('DTKeyTranspose',trans);page.append(instance('DTKeyTranspose','0 0 1280 628',[f'IndexedEnabling/1/2/{h("Transpose Preview")}']))
  picker('DTKeySourcePicker',sourcelocal,'Transpose From','SOURCE KEY')
+
+ from smooth_voicing_ui import install as smooth_voicing
+ smooth_voicing(g,tui,params,(label,button,command,background,outside,modal,instance,h,get,visible))

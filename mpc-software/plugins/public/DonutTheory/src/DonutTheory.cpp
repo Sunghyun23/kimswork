@@ -11,6 +11,7 @@
 #include "dsp/noise.h"
 #include "Catalog.h"
 #include "ChordVoicing.h"
+#include "SmoothVoicing.h"
 #include "WowFlutter.h"
 #include "AnalogLadder.h"
 #include <array>
@@ -38,7 +39,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10300;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10400;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -79,6 +80,7 @@ public:
         setFromEngine(kTouchStop,0);setFromEngine(kPadLearn,0);
         // Canonicalise gesture normalised values too, including fractional host writes.
         set(kTransposeOpen,0);set(kTransposeApply,0);
+        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);
         return mpc::Plugin::internalSaveState();
     }
     bool internalLoadState(const uint8_t* data,size_t size) {
@@ -93,6 +95,7 @@ public:
         for(int index=91;index<kNumParams;++index)if(count<=uint32_t(index))set(index,param(index).def);
         if(count<=77)set(kPadMap,0); // Existing projects retain Trigger Base routing.
         set(kTransposeOpen,0);set(kTransposeApply,0);
+        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);
         stateLoading_.store(false,std::memory_order_release);return true;
     }
     void parameterChanged(int index,float value) override {
@@ -100,6 +103,7 @@ public:
             const bool engineReadback=proxySyncIndex_.load(std::memory_order_acquire)==index&&proxySyncThread_.load(std::memory_order_acquire)==donutThreadToken();
             if(!engineReadback){const int offset=index-kEditRoot1,target=chordField(getInt(kMainChordPage)*4+offset/4,offset%4);if(get(target)!=value)setFromEngine(target,value);}
         }
+        if(getInt(kSmoothOpen)&&(index==kSmoothOpen||index==kSmoothScope||index==kSlotCount||index==kMainChordPage||slotForParameter(index,kChordRoots)>=0||slotForParameter(index,kChordQualities)>=0||slotForParameter(index,kChordVoicings)>=0||slotForParameter(index,kChordOctaves)>=0))smoothNeedsPlan_.store(true,std::memory_order_release);
         // Queue only. Parameter writes can arrive on the audio thread.
         if(param(index).kind==mpc::Param::Kind::Choice||
            (index>=kRoot1&&index<=kVoicing4)||(index>=kPadNote1&&index<=kPadNote4))displayPending_.store(true,std::memory_order_release);
@@ -125,6 +129,7 @@ public:
     }
     void flushHostUpdates() {
         if(flushing_.test_and_set(std::memory_order_acquire))return;
+        runSmoothFromUI();
         for(int i=0;i<kNumParams;++i)
             if(changed_[i].exchange(false,std::memory_order_acq_rel))notifyHostParameterChanged(i);
         if(displayPending_.exchange(false,std::memory_order_acq_rel))requestDisplayUpdate();
@@ -225,6 +230,7 @@ public:
                 }else setFromEngine(kTransposeStatus,3);
             }
         }
+        processSmoothCommands(ctx);
         static constexpr int scales[2][7]={{0,2,4,5,7,9,11},{0,2,3,5,7,8,10}};
         for(int row=0;row<4;++row){
             const int slot=getInt(kMainChordPage)*4+row,interval=(getInt(kChordRoots[slot])-getInt(kChordKeyRoot)+120)%12;
@@ -260,6 +266,7 @@ public:
         int e=0;
         for(int s=0;s<ctx.numFrames;++s){
             while(e<ctx.numMidiEvents&&ctx.midi[e].sampleOffset<=s)handle(ctx.midi[e++]);
+            renderSmoothStep();
             const bool control=control_==0;control_=(control_+1u)&15u;
             if(control){for(int i=0;i<kNumParams;++i)p_[i]=smooth_[i].process();delaySamples_=delayTime_.process();tremolo_.setFrequency(p_[kTremRate]);tapePitch_=wowFlutter_.process(p_[kDrift]);trimGain_=dbToGain(p_[kOutputTrim]);const float lowHz=std::max(5.f,p_[kLowCut]);if(std::abs(lowHz-lastLowCut_)>.01f){for(auto& f:lowCut_)f.set(lowHz,.29585f);lastLowCut_=lowHz;}}
             const float mod=lfo_.process(),vib=vibrato_.process(),drift=drift_.process();float sum=0;
@@ -318,6 +325,14 @@ public:
         for(int page=0;page<4;++page)setFromEngine(kChordPlayingPage1+page,playing[page]?1.f:0.f);
     }
     bool formatValue(int index,float value,std::string& out) override {
+        if(index==kSmoothMovement||(index>=kSmoothRow1&&index<=kSmoothRow16)){
+            donut::SmoothPlan plan;if(!smoothPlan_.read(plan)||!plan.valid){out="—";return true;}
+            char b[64];
+            if(index==kSmoothMovement)std::snprintf(b,sizeof b,"TOP: %d -> %d st",plan.movementBefore,plan.movementAfter);
+            else {const int row=index-kSmoothRow1;if(row>=plan.input.count){out="—";return true;}static const char* names[]={"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};const int a=plan.before[row],z=plan.after[row];std::snprintf(b,sizeof b,"%02d  %s%d > %s%d",plan.input.start+row+1,names[a%12],a/12-2,names[z%12],z/12-2);}
+            out=b;return true;
+        }
+
         if(index==kTransposeDelta){char b[24];std::snprintf(b,sizeof b,"%+d semitones",int(std::lround(value)));out=b;return true;}
 
         if(index>=kEditRoot1&&index<kEditRoot1+16&&(index-kEditRoot1)%4==0){static const char* names[]={"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};const int note=int(std::lround(value));char b[24];std::snprintf(b,sizeof b,"%s%d",names[note%12],note/12-2);out=b;return true;}
@@ -339,6 +354,66 @@ public:
     }
     int activeVoices() const {int n=0;for(const auto& v:voices_)if(v.amp.isActive()||v.wait)n++;return n;}
 private:
+    donut::AtomicSmoothPlan smoothPlan_;
+    std::atomic<bool> smoothNeedsPlan_{false};
+    donut::SmoothPlan smoothAudition_{}; // owned by the render thread
+    bool smoothPlaying_=false,smoothGate_=false;
+    int smoothStep_=0,smoothNext_=0,smoothOff_=0,smoothBeat_=1;
+    donut::SmoothInput smoothInput()const{
+        donut::SmoothInput in;in.active=activeSlots();in.page=getInt(kMainChordPage);in.scope=getInt(kSmoothScope);in.start=in.scope?0:in.page*4;in.count=in.scope?in.active:4;
+        for(int slot=0;slot<16;++slot)for(int field=0;field<4;++field)in.chords[slot][field]=getInt(chordField(slot,field));return in;
+    }
+    void runSmoothFromUI(){
+        if(!getInt(kSmoothOpen)||!smoothNeedsPlan_.load(std::memory_order_acquire))return;
+        // The same host may read values on its rendering thread. Never search there.
+        const auto token=donutThreadToken();if(renderThreadOverflow_.load(std::memory_order_relaxed))return;
+        for(const auto& seen:renderThreads_)if(seen.load(std::memory_order_relaxed)==token)return;
+        if(!smoothNeedsPlan_.exchange(false,std::memory_order_acq_rel))return;
+        const auto input=smoothInput();const auto plan=donut::findSmoothVoicing(input);
+        if(!(smoothInput()==input)){smoothNeedsPlan_.store(true,std::memory_order_release);return;}
+        smoothPlan_.publish(plan);
+        bool same=true;for(int i=0;i<input.count;++i)if(plan.voice[i]!=input.chords[input.start+i][2]||plan.octave[i]!=input.chords[input.start+i][3])same=false;
+        setFromEngine(kSmoothStatus,!plan.valid?4.f:same?5.f:1.f);setFromEngine(kSmoothMovement,float(plan.movementAfter));
+        for(int i=0;i<16;++i){setFromEngine(kSmoothRow1+i,float(i<input.count?plan.after[i]:0));changed_[kSmoothRow1+i].store(true,std::memory_order_release);}
+        changed_[kSmoothMovement].store(true,std::memory_order_release);displayPending_.store(true,std::memory_order_release);
+    }
+    void stopSmoothPreview(){
+        for(auto& v:voices_)if(v.owner==4096)release(v);
+        smoothPlaying_=smoothGate_=false;setFromEngine(kSmoothPreview,0);if(getInt(kSmoothStatus)==2)setFromEngine(kSmoothStatus,1);
+    }
+    void processSmoothCommands(const mpc::ProcessContext& ctx){
+        if(!getInt(kSmoothOpen)){if(smoothPlaying_)stopSmoothPreview();setFromEngine(kSmoothPreview,0);setFromEngine(kSmoothApply,0);return;}
+        donut::SmoothPlan plan;const bool have=smoothPlan_.read(plan)&&plan.valid;
+        const auto input=smoothInput();
+        const bool matching=have&&plan.input==input&&!smoothNeedsPlan_.load(std::memory_order_acquire);
+        if(smoothPlaying_&&!(smoothAudition_.input==input))stopSmoothPreview();
+        if(!matching){if(smoothPlaying_)stopSmoothPreview();if(getInt(kSmoothPreview))setFromEngine(kSmoothPreview,0);}
+        if(getInt(kSmoothApply)){
+            setFromEngine(kSmoothApply,0);
+            if(matching){stopSmoothPreview();for(int i=0;i<plan.input.count;++i){const int slot=plan.input.start+i;setFromEngine(kChordVoicings[slot],float(plan.voice[i]));setFromEngine(kChordOctaves[slot],float(plan.octave[i]));}setFromEngine(kSmoothOpen,0);setFromEngine(kSmoothStatus,3);}
+            else {smoothNeedsPlan_.store(true,std::memory_order_release);setFromEngine(kSmoothStatus,6);}
+            return;
+        }
+        if(smoothPlaying_&&!getInt(kSmoothPreview))stopSmoothPreview();
+        if(!smoothPlaying_&&getInt(kSmoothPreview)&&matching){
+            smoothAudition_=plan;smoothPlaying_=true;smoothGate_=false;smoothStep_=smoothNext_=smoothOff_=0;
+            const double bpm=ctx.transport.tempoValid?std::clamp(ctx.transport.bpm,40.,240.):90.;smoothBeat_=std::max(1,int(sr_*60./bpm));setFromEngine(kSmoothStatus,2);
+        }else if(!matching&&smoothNeedsPlan_.load(std::memory_order_acquire))setFromEngine(kSmoothStatus,6);
+    }
+    void renderSmoothStep(){
+        if(!smoothPlaying_)return;
+        if(!getInt(kSmoothPreview)){stopSmoothPreview();return;}
+        if(smoothGate_&&smoothOff_--<=0){for(auto& v:voices_)if(v.owner==4096)release(v);smoothGate_=false;}
+        if(smoothNext_--<=0){
+            if(smoothStep_>=smoothAudition_.input.count){stopSmoothPreview();setFromEngine(kSmoothStatus,1);return;}
+            const int i=smoothStep_++,slot=smoothAudition_.input.start+i;const auto& chord=smoothAudition_.input.chords[slot];std::array<int,6> notes{},reuse{};int reused=0;
+            const int count=donut::chordNotes(chord[0],chord[1],smoothAudition_.voice[i],smoothAudition_.octave[i]-2,notes);
+            for(int v=0;v<N&&reused<6;++v)if(voices_[v].owner==4096&&(voices_[v].amp.isActive()||voices_[v].wait))reuse[reused++]=v;
+            for(int n=0;n<count;++n)start(4096,0,notes[n],96,int(n*raw_[kSpread]*.001f*sr_),n<reused?reuse[n]:-1);
+            for(int n=count;n<reused;++n)release(voices_[reuse[n]]);
+            smoothNext_=smoothBeat_-1;smoothOff_=int(smoothBeat_*.8f);smoothGate_=true;
+        }
+    }
     struct Voice {PolyBlepOsc a,b;WavetableSine sineA,sineB,sub,fm;donut::AnalogVoiceFilter filter;ADSR amp,env;Smoother pitch;int owner=-1,channel=0,wait=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
     std::array<Voice,N> voices_{};
     std::array<Smoother,kNumParams> smooth_{};float p_[kNumParams]{},raw_[kNumParams]{};
@@ -369,7 +444,7 @@ private:
     void applySoundExtras(int patch){setFromEngine(kLowCut,kPatchExtras[patch][0]);setFromEngine(kDrift,kPatchExtras[patch][1]);setFromEngine(kTremRate,kPatchExtras[patch][2]);setFromEngine(kTremDepth,kPatchExtras[patch][3]);setFromEngine(kOutputTrim,kPatchExtras[patch][4]);}
     float sr_=44100,delaySamples_=22050,dcIn_=0,dcOut_=0;LFO tremolo_,lfo_,vibrato_,drift_,chorusLfo_;Xorshift32 noise_{1234567};Smoother gain_,delayTime_;DelayLine chorus_,delay_[2];
     static float flush(float x){return std::fabs(x)<1e-25f?0.f:x;}
-    void clearNotes(){for(auto& f:lowCut_)f.reset();for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}setFromEngine(kTouchStop,0);for(auto& v:voices_){v.amp.reset();v.env.reset();v.filter.reset();v.wait=0;v.owner=-1;}std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);std::fill(std::begin(bend_),std::end(bend_),0.f);std::fill(std::begin(wheel_),std::end(wheel_),0.f);}
+    void clearNotes(){smoothPlaying_=smoothGate_=false;setFromEngine(kSmoothPreview,0);for(auto& f:lowCut_)f.reset();for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}setFromEngine(kTouchStop,0);for(auto& v:voices_){v.amp.reset();v.env.reset();v.filter.reset();v.wait=0;v.owner=-1;}std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);std::fill(std::begin(bend_),std::end(bend_),0.f);std::fill(std::begin(wheel_),std::end(wheel_),0.f);}
     void release(Voice& v){v.wait=0;v.amp.noteOff();v.env.noteOff();}
     int allocate(){const int first=mono()?1:0;for(int i=first;i<N;++i)if(!voices_[i].amp.isActive()&&!voices_[i].wait)return i;int best=first;for(int i=first+1;i<N;++i)if((voices_[i].amp.isReleasing()&&!voices_[best].amp.isReleasing())||(voices_[i].amp.isReleasing()==voices_[best].amp.isReleasing()&&voices_[i].order<voices_[best].order))best=i;return best;}
     void start(int owner,int ch,int note,int vel,int wait=0,int forced=-1,bool legato=false){
@@ -421,7 +496,7 @@ private:
         else if(e.isController()){
             if(e.controller()==64){sustain_[ch]=e.controllerValue()>=64;if(!sustain_[ch]){if(mono()&&voices_[0].channel==ch)monoFallback();releaseUnheldMidi(ch);}}
             else if(e.controller()==1)wheel_[ch]=e.controllerValue()/127.f;
-            else if(e.controller()==120||e.controller()==123){if(ch==0)for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}std::fill(std::begin(held_[ch]),std::end(held_[ch]),0);sustain_[ch]=false;for(auto& v:voices_)if(v.channel==ch){release(v);if(e.controller()==120){v.amp.reset();v.env.reset();}}if(mono()&&voices_[0].channel==ch)monoFallback();}
+            else if(e.controller()==120||e.controller()==123){if(ch==0)stopSmoothPreview();if(ch==0)for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}std::fill(std::begin(held_[ch]),std::end(held_[ch]),0);sustain_[ch]=false;for(auto& v:voices_)if(v.channel==ch){release(v);if(e.controller()==120){v.amp.reset();v.env.reset();}}if(mono()&&voices_[0].channel==ch)monoFallback();}
             else if(e.controller()==121){bend_[ch]=wheel_[ch]=0;sustain_[ch]=false;if(mono()&&voices_[0].channel==ch)monoFallback();releaseUnheldMidi(ch);}
         }
     }
