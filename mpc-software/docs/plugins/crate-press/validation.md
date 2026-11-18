@@ -63,3 +63,15 @@ Designv4removes the visiblekim badge; manufacturerkim andUIDK36Z remain. Runtime
 - `build/kim - VST - Crate Press/VST/crate-press-arm64.so`: `7f072ea20ea238ee228777f2887288dc6068894ed00ab603046a074bdf6eb624`
 - `skins/TUI.json`: `4c11be336ee584b07df65df705429ad0c54b52c39dbd709bd972731d2b9da4d6`
 - `skins/Q-Links.json`: `396651c2119c2426fa8fc2c8c7420638a1ab3af16c445a92609d26b52105751c`
+
+## Local0.2.4 footer candidate
+
+Native/ARM32/ARM64 builds and SDK validation pass. Existing native/UBSan engine,8performance,28effect-pair,bridge,state and host tests pass. New skin checks cover footer LATCH/Curve Band,44px targets and unchanged8momentary/latch surfaces. All detail-page component trees and Q-Link assignment JSON remain byte-identical to0.2.3. Actual MPC checks are recorded separately; do not mistake an offline preview for a device capture. No public Release/site update is included in this implementation request.
+
+### 0.2.4 actual MPC UI verification
+
+MPC XL /OS3.10.1.12 internalNVMe,128exported files match build. Track insert loading succeeds. Footer LATCH, LOW/MID/FULL curve selection, momentary Tape Stop held/released, Reverse+Dub Echo together, all eight latched states and LATCH-off clear were verified through remote input; final gates are off. PERFORM detail and MAIN navigation work. Actual captures and hashes are in design/device-0.2.4. Knob/fader/eight performance sprite strips and sampled original captions are byte-identical. This confirms UI state/remote interaction, not new hardware listening, physical encoder/multitouch or worst-case CPU certification. Public preview remains0.2.3; no publication performed.
+
+## 0.2.4 publication authorization
+
+The owner explicitly requested distribution after the installed original-art footer was verified. Publish as a public preview, preserving physical/audio/CPU limits. Current manual and site use actual MPC XL0.2.4 MAIN/PERFORM/latched captures. Final publication results are recorded in design/device-0.2.4/publication.json. No Groove Dice source, package or installed content is changed.

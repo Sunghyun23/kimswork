@@ -1,6 +1,6 @@
 # Crate Press
 
-Maintenance public preview 0.2.3. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
+Public preview 0.2.4. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
 
 Independent full-band character compression, Linkwitz–Riley three-band compression, selective bass-sensing or host-tempo ducking, drive, sampler coloration, wow/flutter, tone/cuts and aligned dry/wet mix. This is not a proprietary circuit model or an endorsed artist product. External sidechain input is not implemented.
 
@@ -66,3 +66,7 @@ Native skin cache updates use a plugin-local bridge: sound programs and state lo
 ## 0.2.3 maintenance update
 
 DSP, presets, parameter identities and UI are unchanged from 0.2.2. Updated package metadata and installation guidance: prefer a single complete installation under internal storage `VST2 Plugins`; remove duplicate older copies from removable drives before rescanning. Keep `VST`, `Content` and `Plugin Skins` together. This remains a public preview with the hardware limits documented in the manual.
+
+## 0.2.4 action layout
+
+Original artwork, lettering,64px knobs/I/O faders and eight performance buttons are retained. LATCH and Curve Band selectors move to the bottom utility row. Full offline tests and MPC XL remote UI checks pass; see design/device-0.2.4 and spec/validation for limits. Public preview0.2.4 includes the footer layout; physical/audio/CPU limitations remain documented.

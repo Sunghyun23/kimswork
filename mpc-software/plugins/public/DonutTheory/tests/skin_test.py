@@ -338,12 +338,12 @@ for name in ('ChordPrev','ChordNext'):
 for caption in ('‹','›'):
  hit=next(c for c in children if c['componentData']['name']==caption+' touch')
  assert tuple(map(int,hit['bounds']['bounds'].split()[2:]))==(44,44)
- x,y,w,h=map(int,hit['bounds']['bounds'].split());assert y>=534 and y+h<=580
+ x,y,w,h=map(int,hit['bounds']['bounds'].split());assert y==502 and y+h<=546
 selector=next(c for c in children if c['componentData']['name']=='Progression')
-assert selector['bounds']['bounds']=='68 580 220 44'
+assert selector['bounds']['bounds']=='618 502 244 44'
 for w in defs[selector['componentData']['type']]['componentsData']:assert int(w['bounds']['bounds'].split()[3])==44
-assert byname['ChordPrev']['bounds']['bounds']=='18 580 44 44'
-assert byname['ChordNext']['bounds']['bounds']=='294 580 44 44'
+assert byname['ChordPrev']['bounds']['bounds']=='568 502 44 44'
+assert byname['ChordNext']['bounds']['bounds']=='868 502 44 44'
 print('PASS: four navigation arrows have 44x44 hit targets, safe gaps, native-size art and full-height selectors')
 
 
@@ -476,13 +476,13 @@ assert [p['key']for p in params[275:279]]==['ModSync','ModDivision','LfoRateCont
 assert all('DTTempoSync'+name in defs for name in ['Rate','TremRate'])
 for name in ['Rate','TremRate']:
  knob=next(w for w in children if w['componentData']['name']==name)
- assert knob['componentData']['type']=='DTTempoRate'+name
+ assert knob['componentData']['type']=='Footer_DTTempoRate'+name
 print('PASS: first275 metadata preserved; front SYNC buttons and mode-aware rate mappings retain sixteen Q-Links')
 
 assert params[:279]==json.loads((P/'tests/legacy-279-parameters.json').read_text())
 assert [p['key']for p in params[279:287]]==['BodyTone','Lfo2Shape','Lfo2Rate','Lfo2Depth','Lfo2Target','Lfo2Sync','Lfo2Division','Lfo2RateControl']
-assert all(box(k)[1]==164 for k in ['OscPair','Mix','Detune','Drift','Cutoff','Resonance','BodyTone','Sub'])
-assert all(box(k)[1]==390 for k in ['Rate','Depth','Lfo2RateControl','Lfo2Depth','Drive','Glide','TremRate','TremDepth'])
+assert all(box(k)[1]==151 for k in ['OscPair','Mix','Detune','Drift','Cutoff','Resonance','BodyTone','Sub'])
+assert all(box(k)[1]==335 for k in ['Rate','Depth','Lfo2RateControl','Lfo2Depth','Drive','Glide','TremRate','TremDepth'])
 assert 'DTTempoSyncLfo2RateControl' in defs
 assert all(not k.startswith('Amp')for k in byname)
 assert {'Amp Attack','Amp Decay','Amp Sustain','Amp Release'} <= {w['componentData']['name']for w in t['tabs'][3]['componentDefinition']['componentsData']}
@@ -499,7 +499,7 @@ assert w['handle remapping']['map'][0]['value']=='WithName[Sound Preset]/Paramet
 
 assert params[:288]==json.loads((P/'tests/legacy-288-parameters.json').read_text())
 assert [x['key']for x in params[288:]]==['Randomize','Randomized','FactoryReload']
-w=next(w for w in children if w['componentData']['name']=='Random sound');assert w['bounds']['bounds']=='910 26 48 52' and w['bounds']['acceptsHWFocus']=='No'
+w=next(w for w in children if w['componentData']['name']=='Random sound');assert w['bounds']['bounds']=='148 502 240 44' and w['bounds']['acceptsHWFocus']=='No'
 d=defs['DTRandomSound'];assert d['componentsData'][-1]['componentData']['type']=='Slider'
 assert d['componentsData'][-1]['componentData']['data']['handleName']=='ResetOnGestureEnd/Local/2/dtRandomPress'
 assert d['actions'][0]['handleName']=='Parameter 288'
@@ -511,3 +511,29 @@ for name in ['DTMenu-choice-287','sliderWithFocusMenu-choice-287']:
  assert custom['bounds']['version']==2 and custom['bounds']['additionalInvalidatingHandles']==['IndexedEnabling/1/2/Parameter 289']
 for i in range(66):assert defs['DTSideRow287-'+str(i)]['actions'][-1]['handleName']=='Parameter 290'
 print('PASS: explicit custom display plus same-row factory reload; transient commands and16Q-Links preserved')
+
+# Approved action-footer reflow keeps all parameters, main links and detail controls.
+assert t['tabs'][0]['qlinkBoundsData']==['18 94 612 176','650 94 612 176','18 278 612 176','650 278 612 176']
+for key in ('SoundPrev','SoundPreset','SoundNext','VoiceMode','InputMode'):
+ assert box(key)[1:][0]==456 and box(key)[3]==44
+for i in range(16):
+ w=byname['Chord '+str(i+1)];assert w['bounds']['bounds']==f'{18+(i%4)*313} 550 305 70'
+ pad=defs[w['componentData']['type']];assert pad['componentsData'][-1]['componentData']['type']=='Slider'
+ for child in pad['componentsData']:
+  if child['componentData']['type']in('Button','Slider'):assert child['bounds']['bounds']=='0 0 305 70'
+for group,keys in enumerate([['OscPair','Mix','Detune','Drift'],['Cutoff','Resonance','BodyTone','Sub'],['Rate','Depth','Lfo2RateControl','Lfo2Depth'],['Drive','Glide','TremRate','TremDepth']]):
+ gx,gy,gw,gh=map(int,t['tabs'][0]['qlinkBoundsData'][group].split())
+ for key in keys:
+  x,y,w,h=box(key);assert gx<=x and gy<=y and x+w<=gx+gw and y+h<=gy+gh
+  control=defs[byname[key]['componentData']['type']];knob=next(v for v in control['componentsData']if v['componentData']['type']=='Knob')
+  assert knob['componentData']['data']['foregroundImage']=='knob-donut.png'
+  assert knob['bounds']['bounds']=='37 0 72 72'
+print('PASS: approved footer browse/create/70px pads; sixteen main guides and original donut knob assets retained')
+
+for field in ('Shape','Target','Lfo2Shape','Lfo2Target'):
+ widget=byname[field];footer=defs[widget['componentData']['type']]
+ for child in footer['componentsData']:
+  data=child['componentData']['data']
+  if child['componentData']['type']=='Label'and data.get('type')=='Text':
+   assert data['textStyle']['font']['height']<=18, 'Keep WAV/TO prefixes readable without native ellipsis'
+print('PASS: footer reflow preserves native-size WAV/TO prefix captions')

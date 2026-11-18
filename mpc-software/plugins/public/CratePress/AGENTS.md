@@ -13,3 +13,7 @@ Read root instructions andmpc-software/docs/plugins/crate-press/{spec,presets,va
 
 - Native MPC skins cache values. Preserve the plugin-local deferred host notification bridge: engine publish queues flags; non-render value reads/idle drain them; render-thread tokens prevent callbacks from process/read calls there. Program/state selection queues a full refresh. Keep tests/bridge.cpp.
 - Choice captions must be baked into each actual Button on/off image. Neither Label nor Image siblings may cover their touch surfaces. Do not restore the SDK radio parent MouseDown Q-Link handler over those buttons.
+
+- Local0.2.4approved footer reflow: LATCH and Curve Band controls at y488; unchanged eight performance buttons at y538. Original lettering/knobs/faders retained;380IDs/16maps/detail pages stable. Groove Dice stays untouched. See spec and validation for actual QA.
+
+- User explicitly authorized official0.2.4 publication and website updates after device verification. Earlier local-only statements are history. Preserve original artwork and the recorded physical/audio limits.

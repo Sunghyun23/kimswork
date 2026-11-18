@@ -9,14 +9,14 @@ export const plugins: Plugin[] = [{
  slug:'crate-press',name:'Crate Press',kind:'effect',category:'STEREO CHARACTER & PERFORMANCE EFFECT',
  tagline:'Press your sound into a new shape.',summary:'Character compression, three-band ducking and eight playable lo-fi effects for MPC tracks and masters.',
  description:'Bring weight and movement to drums, keys and samples with independent full-band and three-band compression, drive, sampler color and wow/flutter. Eight performance effects share the main screen with a live stereo waveform and compression curve.',
- developmentVersion:'0.2.3',release:{version:'0.2.3',tag:'crate-press/v0.2.3',asset:'crate-press-0.2.3-mpc.zip',preview:true},image:'crate-press-main-0.2.2.webp',imageAlt:'Actual Crate Press 0.2.2 master insert on MPC Live III with compact section titles and eight performance buttons',manual:'plugins/crate-press/manual/',
+ developmentVersion:'0.2.4',release:{version:'0.2.4',tag:'crate-press/v0.2.4',asset:'crate-press-0.2.4-mpc.zip',preview:true},image:'crate-press-main-0.2.4.webp',imageAlt:'Actual Crate Press 0.2.4 track insert on MPC XL with footer LATCH and curve choices above eight performance buttons',manual:'plugins/crate-press/manual/',
  intro:'Start with one of 32 programs, then use four Q-Link groups to shape the sound. Hold an effect for a brief change, or enable LATCH and combine independent tap toggles.',
- verifiedDevice:'MPC Live III / OS 3.10.1.12; partial hardware verification',
+ verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; remote footer, curve, hold and latched-state verification; hardware coverage remains partial',
  mapping:[['A · Comp / Drive','Drive','Compress','Punch','Release'],['B · Band / Duck','Low Comp','Mid Comp','High Comp','Duck'],['C · Color','Tone','High Cut','Lo-Fi','Drift'],['D · I/O / Mix','Input','Low Cut','Mix','Output']],
  features:[{title:'Compression in context.',text:'Full-band character compression and a three-band crossover let you control low, mid and high energy separately. Internal bass sensing or host-tempo pulses can duck selected bands.'},{title:'Eight effects, close at hand.',text:'Tape Stop, Reverse, Repeat, Dub Echo, Filter Dip, Crush, Wobble and Dropout can overlap. LATCH keeps independent effects engaged; turn it off to release them all.'},{title:'See the signal.',text:'MAIN permanently shows measured input/output stereo extrema, a static compressor transfer curve and gain-reduction meters. No decorative waveform animation.'},{title:'A practical starting point.',text:'32 programs cover Init, Drums, Keys, Samples, Master and Performance. Factory programs preserve your performance timing and latch preference.'}],
- changes:[{title:'0.2.3 maintenance update.',text:'Refreshed package metadata, internal-storage installation guidance and regression checks. DSP, UI, 32 programs and parameter identities are unchanged from 0.2.2. This remains a public preview.'},{title:'Quieter typography.',text:'Smaller 18 px section lettering and lighter reference-derived captions keep the controls prominent. Numeric readouts and detail-page choice captions were corrected against the running MPC interface.'},{title:'Combination testing.',text:'All 28 effect pairs were checked at three sample rates against both solo effects, with independent release and echo-tail checks. Hardware multi-touch and worst-case CPU are not certified.'}],
- limitations:['Public preview: hardware verification is partial; read the manual before using it in a critical live set.','External sidechain input is not implemented. Ducking uses internal bass detection or host tempo.','Real-device checks cover master-insert loading, project recall, visible controls, tab navigation and independent latched button states. Physical Q-Link rotation, simultaneous finger touches and track-insert audio remain unverified.','Automated audio tests pass; subjective listening and full hardware audio/latency compensation and worst-case CPU certification remain outstanding.','The transfer curve is static and pre-makeup, not the combined nonlinear effect transfer. The waveform is a 0.77-second extrema overview.','Peak Guard is a soft peak bound, not a true-peak limiter. Captured performance history is limited to eight seconds.'],
- screenshots:[{image:'crate-press-main-0.2.2.webp',alt:'Crate Press MAIN running on MPC Live III',caption:'MAIN · Actual MPC Live III capture, 0.2.2. Compact section headings, live numeric values and eight performance buttons.'},{image:'crate-press-perform-0.2.2.webp',alt:'Crate Press PERFORM settings running on MPC Live III',caption:'PERFORM · Actual MPC capture. Independent timing, feedback, texture and release controls.'}]
+ changes:[{title:'0.2.4: performance controls, together.',text:'LATCH and FULL/LOW/MID/HIGH curve selection now sit just above the eight performance buttons. The original artwork, lettering, knobs and I/O faders remain. DSP, all 380 parameters, 32 programs, detail pages and Q-Link assignments are unchanged. This remains a public preview.'},{title:'Quieter typography.',text:'Smaller 18 px section lettering and lighter reference-derived captions keep the controls prominent. Numeric readouts and detail-page choice captions were corrected against the running MPC interface.'},{title:'Combination testing.',text:'All 28 effect pairs were checked at three sample rates against both solo effects, with independent release and echo-tail checks. Hardware multi-touch and worst-case CPU are not certified.'}],
+ limitations:['Public preview: hardware verification is partial; read the manual before using it in a critical live set.','External sidechain input is not implemented. Ducking uses internal bass detection or host tempo.','Remote MPC XL checks cover track-insert loading, footer LATCH, curve selection, momentary release, two and all eight latched states, and PERFORM navigation. Earlier Live III checks cover master loading and project recall. Physical Q-Link rotation, finger multi-touch, hardware audio and worst-case CPU remain unverified.','Automated audio tests pass; subjective listening and full hardware audio/latency compensation and worst-case CPU certification remain outstanding.','The transfer curve is static and pre-makeup, not the combined nonlinear effect transfer. The waveform is a 0.77-second extrema overview.','Peak Guard is a soft peak bound, not a true-peak limiter. Captured performance history is limited to eight seconds.'],
+ screenshots:[{image:'crate-press-main-0.2.4.webp',alt:'Crate Press 0.2.4 MAIN track insert running on MPC XL',caption:'MAIN · Actual MPC XL 0.2.4 capture. Footer LATCH and curve selection above eight original performance buttons. Input is silent in this capture.'},{image:'crate-press-latched-0.2.4.webp',alt:'Actual MPC Crate Press with all eight performance effects visibly latched',caption:'LATCH · All eight effects show independent active states; turning LATCH off clears them. This visual check is separate from hardware audio certification.'},{image:'crate-press-perform-0.2.4.webp',alt:'Crate Press 0.2.4 PERFORM settings on MPC XL',caption:'PERFORM · Actual MPC XL capture. The independent timing, feedback, texture and release controls are unchanged.'}]
 },
 {
   "slug": "donut-theory",
@@ -25,17 +25,17 @@ export const plugins: Plugin[] = [{
   "tagline": "A little worn. Endlessly warm.",
   "summary": "Warm synthesis. Rich chords. Movement in every direction.",
   "description": "A Moog-inspired synthesizer for MPC bass, keys, leads and pads. Shape its nonlinear ladder engine with Body and Sub, two independent LFOs and synchronized Tremolo or Auto Pan, then build your own chord changes.",
-  "developmentVersion": "1.10.0",
+  "developmentVersion": "1.10.1",
   "release": {
-    "version": "1.10.0",
-    "tag": "donut-theory/v1.10.0",
-    "asset": "donut-theory-1.10.0-mpc.zip"
+    "version": "1.10.1",
+    "tag": "donut-theory/v1.10.1",
+    "asset": "donut-theory-1.10.1-mpc.zip"
   },
-  "image": "donut-theory-main-device-1.10.0.webp",
-  "imageAlt": "Donut Theory 1.10.0 running on MPC XL with RANDOM and all three Sync switches enabled",
+  "image": "donut-theory-main-device-1.10.1.webp",
+  "imageAlt": "Donut Theory 1.10.1 running on MPC XL with bottom browse controls, ROLL DICE and four large chord pads",
   "manual": "plugins/donut-theory/manual/",
-  "intro": "66 synthesized factory sounds, 32 chord types and 96 progression recipes. Tap RND to generate a complete oscillator-to-FX sound with synchronized motion, while keeping your chords and master level. No external samples are required.",
-  "verifiedDevice": "MPC XL / OS 3.10.1.12, internal NVMe; actual 1.10.0 RANDOM, Sync and factory-reselection remote UI checks with runtime read-back",
+  "intro": "66 synthesized factory sounds, 32 chord types and 96 progression recipes. Tap ROLL DICE to generate a complete oscillator-to-FX sound with synchronized motion, while keeping your chords and master level. No external samples are required.",
+  "verifiedDevice": "MPC XL / OS 3.10.1.12, internal NVMe; actual 1.10.1 footer, preset, chord, Voice/Input and detail-tab remote UI checks with runtime read-back",
   "mapping": [
     [
       "A · OSC / Sound",
@@ -93,9 +93,10 @@ export const plugins: Plugin[] = [{
     }
   ],
   "changes": [
+    {"title":"1.10.1: browse, create, play.","text":"Sound Preset, Voice and Input move into a bottom browse row. ROLL DICE joins chord-preset and slot navigation beneath it, followed by four 70 px chord pads. Original artwork and typography stay; compact main controls and guides make room. Sound engine, 291 parameters, 66 programs, detail pages and Q-Link assignments are unchanged."},
     {
       "title": "1.10.0: a whole new sound, one tap away.",
-      "text": "RND generates oscillators, filter and envelopes, modulation and FX within playable bounds. LFO 1, LFO 2 and shared motion Sync turn on automatically. Chords, Key, MIDI mapping, Strum, CHORD GLIDE preference and master Volume stay in place. Select any factory sound to return to a known starting point."
+      "text": "ROLL DICE generates oscillators, filter and envelopes, modulation and FX within playable bounds. LFO 1, LFO 2 and shared motion Sync turn on automatically. Chords, Key, MIDI mapping, Strum, CHORD GLIDE preference and master Volume stay in place. Select any factory sound to return to a known starting point."
     },
     {
       "title": "A clearer performance surface.",
@@ -121,32 +122,32 @@ export const plugins: Plugin[] = [{
   ],
   "screenshots": [
     {
-      "image": "donut-theory-main-device-1.10.0.webp",
-      "alt": "Actual MPC XL 1.10.0 MAIN with Random Sound, RND and three active Sync controls",
-      "caption": "MAIN · Actual 1.10.0 MPC XL capture. A generated sound with LFO 1, LFO 2 and motion Sync enabled; the sixteen Q-Links retain their layout."
+      "image": "donut-theory-main-device-1.10.1.webp",
+      "alt": "Actual MPC XL 1.10.1 MAIN with bottom ROLL DICE, Sound Preset, Voice, Input and chord controls",
+      "caption": "MAIN · Actual MPC XL 1.10.1 capture. Browse and Create controls are grouped below the original-style knobs, with four tall chord pads along the bottom."
     },
     {
-      "image": "donut-theory-chord-device-1.9.0.webp",
+      "image": "donut-theory-chord-device-1.10.1.webp",
       "alt": "Actual MPC XL Donut Theory chord editor with key reference and circle of fifths",
-      "caption": "CHORD · Unchanged editor, captured in 1.9.0. Four editable slots, Key/circle reference, transpose, Smooth Voicing, chord glide and Strum."
+      "caption": "CHORD · Actual MPC XL 1.10.1 capture of the unchanged editor. Four editable slots, Key/circle reference, transpose, Smooth Voicing, chord glide and Strum."
     },
     {
-      "image": "donut-theory-browser-device-1.9.0.webp",
-      "alt": "Actual Donut Theory category-first sound browser running on MPC XL",
-      "caption": "SOUND PRESET · Choose a category, then a sound. The host PRESET list also contains all 66 program names."
+      "image": "donut-theory-voice-device-1.10.1.webp",
+      "alt": "Actual MPC XL Donut Theory Voice Mode sidebar opened from the bottom browse row",
+      "caption": "BROWSE · Voice/Input and Sound Preset open their existing left lists from the footer. Category-first sound browsing and all 66 factory programs are retained."
     },
     {
-      "image": "donut-theory-mod-device-1.9.0.webp",
+      "image": "donut-theory-mod-device-1.10.1.webp",
       "alt": "Donut Theory MOD detail with two independent LFOs on MPC XL",
       "caption": "MOD · Independent LFOs, routing and tempo settings. MAIN keeps both rates and depths close."
     },
     {
-      "image": "donut-theory-amp-device-1.9.0.webp",
+      "image": "donut-theory-amp-device-1.10.1.webp",
       "alt": "Donut Theory AMP detail running on MPC XL",
       "caption": "AMP · Amp ADSR and playing controls live on their dedicated page."
     },
     {
-      "image": "donut-theory-fx-device-1.9.0.webp",
+      "image": "donut-theory-fx-device-1.10.1.webp",
       "alt": "Actual Donut Theory FX detail with Auto Pan and stereo balance",
       "caption": "FX · Drive, chorus, delay, cleanup Low-cut and shared Tremolo/Auto Pan with static Pan."
     }
@@ -201,7 +202,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-18-random-rules';
+export const navigationVersion = 'software-2026-11-18-action-footer';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

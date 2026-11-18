@@ -1,10 +1,10 @@
 # Donut Theory
 
-**kim · 1.10.0 · UID `Krql` · MPC standalone instrument**
+**kim · 1.10.1 · UID `Krql` · MPC standalone instrument**
 
-Warm bass, keys, analog-style leads and pads with an original Moog-inspired nonlinear mixer, four-stage ladder low-pass and rounded VCA. Includes 66 factory sounds, 32 chord types, 96 four-chord recipes and 4–16 playable chord slots. No external samples are required. MAIN RND generates a complete sound with all three Sync switches ON, preserving chord settings, MIDI mapping and master Volume.
+Warm bass, keys, analog-style leads and pads with an original Moog-inspired nonlinear mixer, four-stage ladder low-pass and rounded VCA. Includes 66 factory sounds, 32 chord types, 96 four-chord recipes and 4–16 playable chord slots. No external samples are required. MAIN ROLL DICE generates a complete sound with all three Sync switches ON, preserving chord settings, MIDI mapping and master Volume.
 
-[User manual](../../../docs/plugins/donut-theory/manual.md) · [Release notes](../../../docs/plugins/donut-theory/releases/1.10.0.md) · [Product page](https://kimswork.app/plugins/donut-theory/) · [Development handoff](../../../docs/plugins/donut-theory/handoff.md)
+[User manual](../../../docs/plugins/donut-theory/manual.md) · [Release notes](../../../docs/plugins/donut-theory/releases/1.10.1.md) · [Product page](https://kimswork.app/plugins/donut-theory/) · [Development handoff](../../../docs/plugins/donut-theory/handoff.md)
 
 ## Performance surface
 
@@ -44,3 +44,7 @@ All sixteen voices are shared. Screen pads audition while held but do not send M
 ## License and provenance
 
 Project code and original presets are MIT licensed. Custom artwork is maintained with this project. The pinned MPC SDK retains its own license. The ladder, Body and musical tools are original project implementations; no proprietary Moog code or external sample library is bundled. [Engine design and sources](../../../docs/plugins/donut-theory/engine.md) document the design and its limits.
+
+## 1.10.1 action layout
+
+The original warm design now places Sound Preset/Voice/Input, ROLL DICE and chord navigation below the four knob groups. Four70px chord pads span the bottom. Header/donut/knob source art and type family stay intact. All291parameters/66programs and Q-Link assignments remain unchanged. Version1.10.1 is the official update; see the latest handoff for device evidence.

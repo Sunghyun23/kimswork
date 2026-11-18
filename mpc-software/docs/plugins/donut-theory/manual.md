@@ -1,15 +1,15 @@
 # Donut Theory — User Manual
 
-**Version 1.10.0 · kim · MPC standalone · UID Krql**
+**Version 1.10.1 · kim · MPC standalone · UID Krql**
 
 A warm polyphonic instrument for bass, keys, leads, pads and chord playing. Its original Moog-inspired engine combines a nonlinear oscillator mixer, a four-stage ladder low-pass and rounded VCA. It is an inspired synthesis design, not an exact recreation of a named instrument or artist's recordings.
 
-The current reference device is **MPC XL / MPC OS 3.10.1.12**, installed on internal NVMe. Build, DSP, state and remote UI checks are described in the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.10.0). Complete physical Q-Link, simultaneous finger multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.
+The current reference device is **MPC XL / MPC OS 3.10.1.12**, installed on internal NVMe. Build, DSP, state and remote UI checks are described in the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.10.1). Complete physical Q-Link, simultaneous finger multi-touch, worst-case CPU, hardware audio and full project round-trip certification remain outstanding.
 
 ## First session
 
 1. Install the complete plugin folder using the instructions below. Open Donut Theory: MAIN appears first without a startup message.
-2. Tap **RND** to generate an entire sound with synchronized motion, or tap SOUND PRESET, choose Keys, then Dusty Sunday; or Synth, then Velvet Melt. These are the two new sounds in 1.9.0.
+2. Tap **ROLL DICE** to generate an entire sound with synchronized motion, or tap SOUND PRESET, choose Keys, then Dusty Sunday; or Synth, then Velvet Melt. These are the two new sounds in 1.9.0.
 3. For the approved audition feel, set MPC tempo to **88 BPM**. Both sounds have Auto Pan synchronized to **1/8**, with 70% and 80% Depth respectively. Listen in stereo.
 4. Select NOTES for normal keyboard/pad notes, or SPLIT for melody and assigned chord triggers. Screen chord pads play while held; Amp Release and effects set the tail after release.
 5. Press MAIN again for CHORD. Choose a progression, change its voicings, set a reference Key, or use SMOOTH VOICING before applying it.
@@ -590,12 +590,18 @@ New recipes are original harmonic designs for neo-soul, hip-hop, R&B, vamps, mod
 
 ## Whole-sound RANDOM — 1.10.0
 
-Tap **RND**, the dice button beside INPUT on MAIN, to generate a complete sound. It changes the oscillators, filter, envelopes, Body/Sub/Drift, modulation and effects together. Generation uses playable bass, keys, synth, lead or pad envelope families and bounded effect amounts. The existing sixteen Q-Links remain available to refine the result.
+Tap **ROLL DICE** in the bottom CREATE row on MAIN, to generate a complete sound. It changes the oscillators, filter, envelopes, Body/Sub/Drift, modulation and effects together. Generation uses playable bass, keys, synth, lead or pad envelope families and bounded effect amounts. The existing sixteen Q-Links remain available to refine the result.
 
 **LFO 1, LFO 2 and shared Tremolo/Auto Pan Sync turn ON** every time you generate. Each synchronized rate chooses its own division from 1/16, 1/8, 1/4, 1/2 or 1 bar. You can turn any Sync off afterward to edit its free Hz rate.
 
-RND preserves your master Volume, reference Key, all chord settings, MIDI/pad mapping, slot count and page, input routing, Strum and CHORD GLIDE preference. Ordinary Voice Mode and Glide time are part of the generated sound. As with factory sound selection, sounding voices release when the sound changes.
+ROLL DICE preserves your master Volume, reference Key, all chord settings, MIDI/pad mapping, slot count and page, input routing, Strum and CHORD GLIDE preference. Ordinary Voice Mode and Glide time are part of the generated sound. As with factory sound selection, sounding voices release when the sound changes.
 
 The host PRESET header and internal SOUND PRESET field both show **Random Sound**. Select any factory sound to return to its recipe, including the factory sound selected before you pressed RND. Save your project to retain a generated sound; loading it restores the saved values without generating again. The 66 factory programs remain in their existing order.
 
-Compatibility: the first 288 parameter declarations remain unchanged; three command/status fields append for 291 total. Complete automatic tests and direct MPC XL remote UI checks passed. Full hardware audio, physical encoder/multitouch coverage, project round-trip and worst-case CPU certification remain outside these checks. See the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.10.0).
+Compatibility: the first 288 parameter declarations remain unchanged; three command/status fields append for 291 total. Complete automatic tests and direct MPC XL remote UI checks passed. Full hardware audio, physical encoder/multitouch coverage, project round-trip and worst-case CPU certification remain outside these checks. See the [release notes](https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory%2Fv1.10.1).
+
+## Bottom action area — 1.10.1
+
+The original warm artwork, type family and donut knobs remain. MAIN now places **Sound Preset / Voice / Input** in the bottom BROWSE row. **ROLL DICE / Chord Preset / slot-page arrows** share CREATE below it. Four chord pads span the bottom, each 70 px tall. The main controls use more compact spacing and 72 px knob bounds; all sixteen Q-Link assignments are unchanged. Filter/LFO/motion choices and Sync remain beside the controls they affect.
+
+The gray MPC host header is unchanged and remains separate from the plugin-owned browse row. MAIN still opens first; press its function tab again for CHORD. The sound engine, 291 parameters and 66 factory programs are unchanged from 1.10.0. Native/ARM builds and automatic/remote UI checks pass; physical encoder/multitouch, hardware audio/CPU and full project recall limitations remain.

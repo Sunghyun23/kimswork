@@ -1,0 +1,3 @@
+# Donut Theory1.10.1 — release UI evidence
+
+Actual MPC XL /OS3.10.1.12 remote captures and official SDK runtime export hashes. Installed on internalNVMe;165files match the final build. Main, bottom Roll Dice, three Sync switches, factory/chord browsers, hold-pad feedback, Voice/Input choices and all detail tabs were checked. Local native/ARM/SDK/skin/host checks pass. Original header/donut/knob source art is byte-identical, with compact72px main knobs and70px pads. First three browser/pad captures include the intermediate prefix-size issue, fixed in final main.png. No physical encoder/multitouch, hardware audio/CPU or complete project-roundtrip certification is claimed. Publication is authorized; see publication.json for the final Release and asset verification.

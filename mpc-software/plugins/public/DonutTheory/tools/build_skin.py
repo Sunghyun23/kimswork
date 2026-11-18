@@ -235,6 +235,8 @@ from tempo_controls import install as tempo_controls
 tempo_controls(g,tui,ql,params,out)
 from random_sound_ui import install as random_sound_ui
 random_sound_ui(g,tui,params,out)
+from action_footer import install as action_footer
+action_footer(g,tui,out)
 # Apply display-only names after all choice/browser bindings have been generated.
 osc_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='OSC'),'componentDefinition'),'componentsData')
 for w in osc_widgets:

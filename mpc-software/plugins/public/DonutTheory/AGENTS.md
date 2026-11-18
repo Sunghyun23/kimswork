@@ -32,3 +32,7 @@
 - 1.10.0local whole-sound generator: preserve first288metadata; append Randomize288(transient), Randomized289(persisted), FactoryReload290(transient),291total. RND48x52header gap910,26; no moved controls/extraQ-Link. Generate full timbre and force LFO1/LFO2/sharedMotion Sync ON. Preserve master/key/all16chord/pad/input/Strum/ChordGlide preference. Disarm command on save/load/reset; do not regenerate a saved random sound. Same-program reselect must reload factory; status displays Random Sound. Public stable remains1.9.0until new publication authorization.
 
 - 2026-11-18: user approved official1.10.0 release and website publication. Earlier local-only statements above describe candidate history. Retain actual QA limits and explicit product tags.
+
+- Local1.10.1approved footer reflow: preserve original art/type,291parameters/66sounds/16maps; move global browse/actions to bottom, keep local selectors adjacent and70px pads. Groove Dice stays untouched. See handoff for geometry and actual QA.
+
+- User explicitly authorized official1.10.1 publication and website updates after device verification. Earlier local-only statements are history. Preserve original artwork and the recorded physical/audio limits.

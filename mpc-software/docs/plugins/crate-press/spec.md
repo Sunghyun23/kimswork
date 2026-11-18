@@ -28,3 +28,7 @@ Headerbutton624/4/140/44. Offdefault usesmomentaryhold; On usesindependenttap to
 User rejected the mixedSDK/Times typography, then excessivebold weight and dominant section headings. MAINstatic lettering is compiled fromapprovedv6art, with shadow/weight reduction. Section title ink18px; A–Dbadges38×20; control labels remainlegible22px height; numeric text isregularweight. LATCH remains inheader;8performancebuttons retained. This changes artwork only;380parameter IDs andallQ-Link assignments preserved. Currentdevelopment0.2.2.
 
 Latest verification and release record: validation.md and releases/0.2.2.md. The deferred native-skin bridge preserves real-time constraints; detail choice captions are baked into button images to preserve touch input.
+
+## Local0.2.4 — existing-art footer reflow
+
+User explicitly kept Groove Dice unchanged and requested action-placement consistency for the other plugins while preserving their established visual design. Move LATCH to18,488,140,44 and Curve Band FULL/LOW/MID/HIGH to274+66i,488,58,44. All eight existing150×82performance buttons stay at y538. MAIN groups move to y174/332and150pxheight; keep original64px knobs, native44×64I/O faders, reference-derived captions, paper/header/record art and all380parameter IDs/Q-Link maps. Monitor is compacted but remains live/read-only. Native MPC effect preset/ON/save controls stay host-owned; no invented local preset browser or random generator. No DSP change beyond metadata204. Public preview remains0.2.3 until separately authorized publication.

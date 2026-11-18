@@ -47,6 +47,8 @@ for yy in range(0,158,texture.height):
   if (yy//texture.height)%2:tile=tile.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
   paper.paste(tile,(xx,yy))
 panel=paper.copy();d=ImageDraw.Draw(panel);d.rounded_rectangle((1,1,626,156),9,outline='#997349',width=2);d.line((16,30,612,30),fill='#98764c',width=1);save(panel,'panel.png')
+# Keep the approved rail, border and paper; only remove eight pixels of inner whitespace.
+compactPanel=Image.new('RGB',(628,150));compactPanel.paste(panel.crop((0,0,628,42)),(0,0));compactPanel.paste(panel.crop((0,50,628,158)),(0,42));save(compactPanel,'panel-compact.png')
 base=Image.new('RGB',(1280,628),'#24170f');base.paste(Image.open(out/'header.png'),(0,0));draw=ImageDraw.Draw(base)
 draw.rounded_rectangle((8,70,1271,224),8,fill='#160f0b',outline='#a16b38',width=2)
 for x in (616,944):draw.line((x,82,x,213),fill='#79522e')
@@ -56,7 +58,7 @@ for x in range(24,601,72):draw.line((x,104,x,188),fill='#2c2118')
 for x in range(720,914,48):draw.line((x,112,x,202),fill='#3b2b1c')
 for y in range(112,203,18):draw.line((720,y,912,y),fill='#3b2b1c')
 draw.line((720,202,912,112),fill='#786348',width=1)
-compact=Image.new('RGB',(1280,628),'#24170f');compact.paste(Image.open(out/'header.png'),(0,0));compact.paste(base.crop((0,70,1280,226)).resize((1280,140),Image.Resampling.LANCZOS),(0,60));save(compact,'background.png')
+compact=Image.new('RGB',(1280,628),'#24170f');compact.paste(Image.open(out/'header.png'),(0,0));compact.paste(base.crop((0,70,1280,226)).resize((1280,106),Image.Resampling.LANCZOS),(0,60));save(compact,'background.png')
 # Small filmstrips use actual pixel sizes and remain below8192px texture height.
 for color,name,width in [('#d2c5a7','in',9),('#ee974b','out',5)]:
  for sign in ('pos','neg'):
@@ -118,7 +120,10 @@ for j,name in enumerate(['Low GR','Mid GR','High GR','Duck GR']):
 # Protect ALL monitor components from edits, including XYPad, without covering controls.
 resized=set()
 for e in main[1:]:
- b=get(e,'bounds');x,y,w,hh=map(int,get(b,'bounds').split());newy=round(60+(y-70)*140/156);newh=max(1,round(hh*140/156));put(b,'bounds',f'{x} {newy} {w} {newh}')
+ b=get(e,'bounds');x,y,w,hh=map(int,get(b,'bounds').split())
+ # Curve-view commands move to the footer unchanged; do not compress their native art.
+ if get(get(e,'componentData'),'name').startswith('curve '):continue
+ newy=round(60+(y-70)*106/156);newh=max(1,round(hh*106/156));put(b,'bounds',f'{x} {newy} {w} {newh}')
  c=get(e,'componentData');kind=get(c,'type');data=get(c,'data')
  if kind=='Image':files=[(get(data,'image'),get(data,'numFrames')if any(k=='numFrames'for k,_ in data)else 1)]
  elif kind=='Button':files=[(get(data,'onImage'),1),(get(data,'offImage'),1)]
@@ -128,20 +133,26 @@ for e in main[1:]:
   source=Image.open(out/name).convert('RGBA');fh=source.height//frames;result=Image.new('RGBA',(w,newh*frames))
   for frame in range(frames):result.paste(source.crop((0,frame*fh,source.width,(frame+1)*fh)).resize((w,newh),Image.Resampling.LANCZOS),(0,frame*newh))
   save(result,name);resized.add(name)
-monitor=main[1:];define('ReadOnlyMonitor',monitor);main=main[:1]+[inst('ReadOnlyMonitor','0 0 1280 202')]
+monitor=main[1:];define('ReadOnlyMonitor',monitor);main=main[:1]+[inst('ReadOnlyMonitor','0 0 1280 170')]
 # Transparent no-op parent prevents child gestures; read-only Image widgets never write.
 comp=get(defs[-1],'value');put(comp,'ignoreMousePresses',True)
 # Curve selection buttons must remain interactive; put them outside read-only monitor.
-children=get(comp,'componentsData');selectors=[e for e in children if get(get(e,'componentData'),'name').startswith('curve ')];put(comp,'componentsData',[e for e in children if e not in selectors]);main.extend(selectors)
+children=get(comp,'componentsData');selectors=[e for e in children if get(get(e,'componentData'),'name').startswith('curve ')];put(comp,'componentsData',[e for e in children if e not in selectors]);# The same baked selector lettering, padded to44px targets in the lower utility row.
+for i,entry in enumerate(selectors):
+ put(get(entry,'bounds'),'bounds',f'{274+i*66} 488 58 44');data=get(get(entry,'componentData'),'data')
+ for field in ['onImage','offImage']:
+  old=get(data,field);source=Image.open(out/old).convert('RGBA');plate=Image.new('RGBA',(58,44),'#332318');plate.alpha_composite(source,(0,7));save(plate,old)
+main.extend(selectors)
+main.append(label('CURVE','178 488 88 44',18))
 # XYPad has no safe documented read-only flag. Replace with Image filmstrip dot column instead.
 put(comp,'componentsData',[e for e in get(comp,'componentsData')if get(get(e,'componentData'),'type')!='XYPad'])
 # Native controls retained on all detail pages. Main widgets are newly laid out2x2.
-groups=[('A · COMP / DRIVE',['Drive','Compress','Punch','Release'],8,206),('B · BAND / DUCK',['Low Comp','Mid Comp','High Comp','Duck'],644,206),('C · COLOR',['Tone','High Cut','Lo-Fi','Drift'],8,372),('D · I/O / MIX',['Input','Low Cut','Mix','Output'],644,372)]
+groups=[('A · COMP / DRIVE',['Drive','Compress','Punch','Release'],8,174),('B · BAND / DUCK',['Low Comp','Mid Comp','High Comp','Duck'],644,174),('C · COLOR',['Tone','High Cut','Lo-Fi','Drift'],8,332),('D · I/O / MIX',['Input','Low Cut','Mix','Output'],644,332)]
 for group,(title,names,x,y)in enumerate(groups):
  save(approved.heading(group),f'approved-title-{group}.png')
- main.extend([img('panel.png',f'{x} {y} 628 158'),img(f'approved-title-{group}.png',f'{x+12} {y+2} 604 28')])
+ main.extend([img('panel-compact.png',f'{x} {y} 628 150'),img(f'approved-title-{group}.png',f'{x+12} {y+2} 604 28')])
  for j,name in enumerate(names):
-  xx=x+12+j*153;control='CPControl'+str(ids[name]);save(approved.control(name),f'approved-control-{ids[name]}.png');parts=[img(f'approved-control-{ids[name]}.png','0 0 148 24'),g.entry('knob','Knob',g.knob_filmstrip_data('fader.png'if name in ('Input','Mix','Output')else'knob.png',97,'Vertical'),'52 24 44 64'if name in ('Input','Mix','Output')else'42 24 64 64','No','Show','Always'),img('lcd.png','4 90 140 28'),label('','4 90 140 28',23,'fff3dfb6',handle='Data')];define(control,parts,g.control_actions('knob overlay'));main.append(inst(control,f'{xx} {y+32} 148 120',h(name)))
+  xx=x+12+j*153;control='CPControl'+str(ids[name]);save(approved.control(name),f'approved-control-{ids[name]}.png');parts=[img(f'approved-control-{ids[name]}.png','0 0 148 24'),g.entry('knob','Knob',g.knob_filmstrip_data('fader.png'if name in ('Input','Mix','Output')else'knob.png',97,'Vertical'),'52 24 44 64'if name in ('Input','Mix','Output')else'42 24 64 64','No','Show','Always'),img('lcd.png','4 90 140 28'),label('','4 90 140 28',23,'fff3dfb6',handle='Data')];define(control,parts,g.control_actions('knob overlay'));main.append(inst(control,f'{xx} {y+28} 148 120',h(name)))
 
 # Eight touch-only performance buttons. Program/Screen MAIN mapping is unchanged.
 performance=Image.open(P/'design/main-concept-v6-performance-eight.png').convert('RGB')
@@ -165,13 +176,13 @@ for i,(text,gate,cx)in enumerate(zip(labels,gateNames,centers)):
  # LATCH uses an ordinary toggle hit surface. It never receives the momentary reset handler.
  hit=Image.new('RGBA',(w,hh));save(hit,f'perform-hit-{i}.png')
  latchName='PerformLatch'+str(i);latchChildren=[img(f'perform-{i}.png',f'0 0 {w} {hh}',raw,2),g.entry('latched effect progress','Slider',copy.deepcopy(progress),f'8 {hh-7} {w-16} 3','No','Show','Always'),g.entry('latch tap','Button',g.button_data(f'perform-hit-{i}.png',f'perform-hit-{i}.png',1,1),f'0 0 {w} {hh}','Yes','Show','Always',remap=[('Data',raw)])];define(latchName,latchChildren);entry=inst(latchName,f'{x} 538 {w} {hh}');bounds=get(entry,'bounds');put(bounds,'version',2);bounds.append(('additionalInvalidatingHandles',['IndexedEnabling/1/2/'+h('LATCH')]));main.append(entry)
-# Global LATCH occupies header space, preserving all eight performance buttons.
+# Global LATCH shares the footer utility row; eight performance buttons stay intact.
 for on in(False,True):
  im=Image.new('RGB',(140,44),'#97591f'if on else'#302014');dd=ImageDraw.Draw(im);dd.rounded_rectangle((1,1,138,42),6,outline='#efb365'if on else'#997348',width=2);dd.ellipse((13,17,22,26),fill='#ffd073'if on else'#70533a');caption=approved.latch(color='#ffe4ae'if on else'#d8bd91');im.paste(caption,(33,8),caption);save(im,f'latch-{int(on)}.png')
-main.append(g.entry('LATCH','Button',g.button_data('latch-1.png','latch-0.png',1,1),'624 4 140 44','Yes','Show','Always',remap=[('Data',h('LATCH'))]))
+main.append(g.entry('LATCH','Button',g.button_data('latch-1.png','latch-0.png',1,1),'18 488 140 44','Yes','Show','Always',remap=[('Data',h('LATCH'))]))
 
 put(tabs[0],'componentDefinition',g.component_definition([],main,'ff24170f'))
-put(tabs[0],'qlinkBoundsData',[f'{x} {y} 628 158'for _,_,x,y in groups])
+put(tabs[0],'qlinkBoundsData',[f'{x} {y} 628 150'for _,_,x,y in groups])
 # Touch-readout uses native overlay; function-key detail pages preserve generated controls.
 for e in get(get(ql,'Screen Mode Q-Links'),'map'):
  tab=get(e,'Tab')-1;assignment={}

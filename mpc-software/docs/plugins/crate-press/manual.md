@@ -1,6 +1,6 @@
 # Crate Press user manual
 
-Version 0.2.3 · Public preview · Stereo effect for MPC standalone.
+Version 0.2.4 · Public preview · Stereo effect for MPC standalone.
 
 ## Install and open
 
@@ -29,7 +29,7 @@ Tap or drag a control to change it; double-tap eligible continuous controls for 
 
 MAIN always shows a measured input/output overview. Each of 64 bins stores signed stereo extrema over 12 ms, covering about 0.77 seconds. Both channels contribute; this is not a sample-resolved oscilloscope or frequency spectrum. Input is before Input gain and latency-aligned to output; Output is after processing, Mix and Output gain. Both use the same linear ±1 height scale. Very quiet signals can look flat at this scale.
 
-Choose **FULL / LOW / MID / HIGH** to inspect that compressor's static soft-knee transfer curve. The curve shares the DSP reduction calculation but is **before makeup**, and does not include dynamic attack/release, saturation, ducking or the combined effects chain. The cursor follows detector level. **COMP GR** and the four band/duck meters show reduction in positive dB; input/output peaks are dBFS. Telemetry refreshes around 30 Hz while the host processes audio. A host-suspended silent chain does not provide a continuously running scope.
+Choose **FULL / LOW / MID / HIGH** in the bottom utility row to inspect that compressor's static soft-knee transfer curve. The curve shares the DSP reduction calculation but is **before makeup**, and does not include dynamic attack/release, saturation, ducking or the combined effects chain. The cursor follows detector level. **COMP GR** and the four band/duck meters show reduction in positive dB; input/output peaks are dBFS. Telemetry refreshes around 30 Hz while the host processes audio. A host-suspended silent chain does not provide a continuously running scope.
 
 ## DUCK
 
@@ -45,7 +45,7 @@ Automatic makeup is restrained compensation, not LUFS matching. Peak Guard softl
 
 ## Eight performance buttons
 
-With **LATCH off**, press and hold a button, then release it to return. With **LATCH on**, tap each effect independently to toggle it. Multiple effects can remain on. Turning LATCH off releases all eight gates. Dub Echo retains its natural feedback tail.
+The **LATCH** switch is in the lower utility row, just above the eight performance buttons. With **LATCH off**, press and hold a button, then release it to return. With **LATCH on**, tap each effect independently to toggle it. Multiple effects can remain on. Turning LATCH off releases all eight gates. Dub Echo retains its natural feedback tail.
 
 | Button | Behavior |
 |---|---|
@@ -92,3 +92,9 @@ Independent project implementation by kim. Built with the unmodified MIT-license
 ## 0.2.3 maintenance update
 
 This update refreshes package metadata and installation documentation. DSP, presets, UI, parameter identities and performance behavior are unchanged from 0.2.2. Prefer internal storage: place the complete `kim - VST - Crate Press` folder under `VST2 Plugins`. Keep one installed copy across attached drives, preserve current work, then restart the MPC application. The previously documented partial hardware verification still applies; this update does not claim new physical Q-Link, multi-touch or audio-routing coverage.
+
+## 0.2.4 layout update
+
+LATCH and curve-view selection now sit immediately above the eight performance buttons. Original artwork, reference-derived lettering, 64 px knobs and I/O faders remain; the live monitor and panel spacing are compacted to make room. The MPC-owned preset/save/bypass header stays at the top. There is no new random generator or duplicate local preset browser.
+
+DSP, all 380 parameter identities, 32 programs, detailed pages and Q-Link assignments are unchanged. On MPC XL / OS3.10.1.12, remote checks confirm track-insert loading, curve choices, momentary hold/release, two and all eight latched states, LATCH-off clearing, and PERFORM navigation. These checks do not certify physical encoders, finger multitouch, hardware output listening/recording or worst-case CPU. The release remains a public preview.

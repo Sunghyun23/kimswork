@@ -26,7 +26,7 @@ main=q['Screen Mode Q-Links']['map'][0]['Q-Links'];program=q['Program Mode Q-Lin
 for group in range(4):
  for knob in range(4):
   n='Q-Link '+str(13+group-4*knob);assert names[main[n]]==expected[group*4+knob] and program[n]==main[n]
-assert d['pageData']['tabs'][0]['qlinkBoundsData']==['8 206 628 158','644 206 628 158','8 372 628 158','644 372 628 158']
+assert d['pageData']['tabs'][0]['qlinkBoundsData']==['8 174 628 150','644 174 628 150','8 332 628 150','644 332 628 150']
 defs=d['pageData']['componentDefinitions']['localComponentDefinitions']
 for x in defs:
  if'overlay'in x['key']:assert x['value']['hideQLinkBounds']
@@ -71,8 +71,14 @@ for f in(P/'skins').glob('*.png'):
  assert f.name in refs
  im=Image.open(f)
  if f.name.startswith(('wave-','gr'))or f.name in('curve.png','cursor.png','knob.png','fader.png'):assert max(im.size)<=8192
-print('skin regression: PASS (16assignments,4guides,alloverlays,256real-wavehandles,assetlimits)')
-summary={'status':'offline-passed','factoryPrograms':32,'parameters':380,'performanceEffects':8,'latch':'header toggle,independent8tap gates,disable releases all,restore disarms gates','combinationTests':'28pairs x3rates,each pair differs from either solo,release-one keeps the other audible,all8/staggered release/echo tail/zero allocations passed','performanceTests':'audible effects,release recovery,repeat tempo,frozen history,echo decay,independent settings,transient gate clearing passed','sampleRates':[44100,48000,96000],'waveform':'signed stereo extrema,64x12ms,30Hz,latency aligned','curve':'same DSP reduction function,4views','simulatorRuns':[{'sr':sr,'block':b,'result':'20PASS/0WARN/0FAIL'}for sr,b in[(44100,128),(44100,32),(48000,512)]],'undefinedBehaviorSanitizer':'passed','realTimeAllocations':0,'deviceVerification':'pending; no installation/restart in this iteration','humanListening':'not performed','preview':'offline runtimeTUI with engine-measured telemetry; not an MPC screenshot'}
+mainwidgets=d['pageData']['tabs'][0]['componentDefinition']['componentsData']
+latch=next(w for w in mainwidgets if w['componentData']['name']=='LATCH');assert latch['bounds']['bounds']=='18 488 140 44'
+for i,name in enumerate(['FULL','LOW','MID','HIGH']):
+ selector=next(w for w in mainwidgets if w['componentData']['name']=='curve '+name);assert selector['bounds']['bounds']==f'{274+i*66} 488 58 44'
+readonly=next(x['value']for x in defs if x['key']=='ReadOnlyMonitor');assert readonly['ignoreMousePresses']
+assert not any(w['componentData']['type']=='Button'for w in readonly['componentsData'])
+print('skin regression: PASS (16assignments,4guides,footer LATCH/curve,8unchanged performance gates,256real-wavehandles,assetlimits)')
+summary={'status':'offline-passed','factoryPrograms':32,'parameters':380,'performanceEffects':8,'latch':'footer toggle,independent8tap gates,disable releases all,restore disarms gates','combinationTests':'28pairs x3rates,each pair differs from either solo,release-one keeps the other audible,all8/staggered release/echo tail/zero allocations passed','performanceTests':'audible effects,release recovery,repeat tempo,frozen history,echo decay,independent settings,transient gate clearing passed','sampleRates':[44100,48000,96000],'waveform':'signed stereo extrema,64x12ms,30Hz,latency aligned','curve':'same DSP reduction function,4views','simulatorRuns':[{'sr':sr,'block':b,'result':'20PASS/0WARN/0FAIL'}for sr,b in[(44100,128),(44100,32),(48000,512)]],'undefinedBehaviorSanitizer':'passed','realTimeAllocations':0,'deviceVerification':'pending; no installation/restart in this iteration','humanListening':'not performed','preview':'offline runtimeTUI with engine-measured telemetry; not an MPC screenshot'}
 (B/'validation.json').write_text(json.dumps(summary,indent=2)+'\n')
 run(['python3',P/'tools/render_skin_preview.py','--performance'],'performance-preview.log')
 print('All offline checks passed. Actual MPC visual/CPU/touch/track+master verification remains pending.')

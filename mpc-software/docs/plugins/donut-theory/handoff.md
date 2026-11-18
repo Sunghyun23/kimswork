@@ -300,3 +300,15 @@ MPC XL /OS3.10.1.12, internalNVMe. Official SDK post-install export matches all1
 ## 1.10.0 release authorization
 
 The owner explicitly requested official release and website updates after candidate completion. The source release and site include whole-sound RND, three forced Sync switches, preserved chord/master settings and actual1.10.0 MAIN capture. Historical local-only statements above no longer constrain this approved publication. Runtime/build evidence and honest physical/audio limits remain unchanged. Publication IDs and asset checksums are recorded in design/device-1.10.0/publication.json after publishing.
+
+## Local1.10.1 — approved action footer
+
+User rejected the redesigned mockup typography/art and approved rearranging the original interface only. Groove Dice is the fixed reference and must not be modified. MAIN moves Sound Preset/Voice/Input to a44px browse row at y456; orange ROLL DICE and chord-preset/page actions occupy y502. All sixteen conditional hold pads use305×70cells at y550. Header/logo/donut source art and native Roboto Bold type remain; original main knob art is retained at72px to make room. Local filter/LFO/mode/Sync controls remain adjacent. Four guides follow the compact panels94/278with176px height. Detailed pages and all Q-Link assignments are byte-identical to1.10.0;291parameters/66programs/UID remain unchanged. No DSP change beyond binary version11001. Native/ARM32/ARM64 and SDK validation0errors/0warnings, skin regressions and host19PASS/0WARN/0FAIL pass. Actual device results follow. Public stable remains1.10.0; this is not a new release/site publication.
+
+### 1.10.1 final local verification
+
+Official SDK final export matches165files on MPC XL internalNVMe. Direct captures in design/device-1.10.1 show the approved original-art footer; ROLL DICE, three Sync switches, category/factory reload, chord preset/hold pad, Voice/Input choices, MAIN/CHORD and all five detail pages were checked. The initial native TO ellipsis was corrected by retaining the original18px prefix and covered by a regression check. Original background/header-donut/knob source PNGs are byte-identical. All Q-Link JSON and detailed tab component trees are byte-identical. Physical encoders/multitouch, hardware output listening/recording, full project recall and worst-case CPU were not certified. Public Release/site remain1.10.0; no push/publication performed.
+
+## 1.10.1 publication authorization
+
+The owner approved distribution after seeing the actual footer implementation. The current source/manual/site use1.10.1, bottom ROLL DICE/BROWSE/CREATE and actual device captures. Historical candidate-only statements above no longer constrain publication. Groove Dice remains unchanged. Final release/asset/Pages results are recorded in design/device-1.10.1/publication.json.
