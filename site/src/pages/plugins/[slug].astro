@@ -6,7 +6,7 @@ const {plugin:p}=Astro.props;const release=releaseLinks(p);
 ---
 <Base title={`${p.name} — MPC software | Kim’s Work`} description={p.description}>
 <section class="detail-head wrap product-overview">
-  <a class="back" href={url('#collection')}>← All plugins</a>
+  <a class="back" href={url('software/')}>← All software</a>
   <div class="eyebrow">{p.category} / MPC STANDALONE</div>
   <h1>{p.name}</h1>
   <p class="lead">{p.summary}</p>

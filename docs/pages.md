@@ -47,3 +47,7 @@ The public brand is Kim’s Work at https://kimswork.app/. Product metadata live
 ## Donut Theory1.9.0 publication
 
 Product detail and Software thumbnails use actual MPC XL1.9.0 captures. The English manual describes the current66-sound bank, dual LFO/Body/Sub layout, sync and expanded chord workflow. Two88BPM/1/8 native engine auditions are labeled as renders rather than hardware recordings. Explicit1.9.0release assets replace historical1.2.3links. Existing GitHub Pages hosting/domain/theme remain.
+
+## Homepage screenshot placement (2026-11-18)
+
+The featured product appears once on the homepage, in the lead feature. The following “More for your session” list excludes that product and links to All software. Software overview/category cards still include every matching product once, with actual screenshots. Product detail back links return to Software, rather than a homepage list that excludes the feature. Keep this rule when changing the featured product.

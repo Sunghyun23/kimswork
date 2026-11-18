@@ -39,3 +39,8 @@
 .product-card{padding:0;overflow:hidden;min-width:0}.software-thumbnail{width:100%;aspect-ratio:16/10;object-fit:contain;background:#0d0d0d;border-bottom:1px solid var(--line)}.software-card-copy{padding:22px}.software-card-copy .eyebrow{margin-top:0}.catalog-row{grid-template-columns:minmax(180px,280px) minmax(0,1fr) minmax(160px,240px);gap:28px}.catalog-thumbnail img{width:100%;aspect-ratio:16/10;object-fit:contain;background:#0d0d0d;border:1px solid var(--line)}
 @media(max-width:900px){.catalog-row{grid-template-columns:200px minmax(0,1fr)}.catalog-action{grid-column:2;text-align:left}.catalog-action p{margin-left:0}}
 @media(max-width:600px){.catalog-row{grid-template-columns:1fr;gap:16px}.catalog-thumbnail{width:100%}.catalog-action{grid-column:1}.software-card-copy{padding:20px}}
+
+/* Keep the secondary collection heading and catalogue link readable on narrow screens. */
+.catalog-heading{flex-wrap:wrap;gap:16px 28px}
+.catalog-heading h2{line-height:1.2}
+.catalog-heading>a{font-size:13px;white-space:nowrap}

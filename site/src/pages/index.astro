@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import {plugins, url} from '../data/plugins';
 const featured = plugins.find(p=>p.slug==='donut-theory')!;
+const otherPlugins = plugins.filter(p=>p.slug!==featured.slug);
 ---
 <Base title="Kim’s Work — Music software for MPC standalone" description="Independent MPC instruments, desktop tools and sound packs. Explore the Kim’s Work software collection.">
   <section class="launch wrap">
@@ -29,8 +30,8 @@ const featured = plugins.find(p=>p.slug==='donut-theory')!;
     </figure>
   </section>
   <section class="catalog wrap" id="collection">
-    <div class="section-head"><h2>Our plugins<span>What we are building, and what is available.</span></h2><span class="eyebrow">{String(plugins.length).padStart(2,'0')} / PLUGINS</span></div>
-    {plugins.map(p=><article class="catalog-row"><a class="catalog-thumbnail" href={url(`plugins/${p.slug}/`)}><img src={url(`images/${p.image}`)} alt={p.imageAlt} width="1280" height="800" loading="lazy"/></a><div><p class="eyebrow">{p.category}</p><h3>{p.name}</h3><p>{p.summary}</p></div><div class="catalog-action"><p class="release-status">{p.release ? `${p.release.preview?'Public preview':'Available'} · v${p.release.version}` : 'In development · No public download'}</p><a href={url(`plugins/${p.slug}/`)}>View features & status →</a></div></article>)}
+    <div class="section-head catalog-heading"><h2>More for your session<span>Explore our other instruments and effects.</span></h2><a href={url('software/')}>All software →</a></div>
+    {otherPlugins.map(p=><article class="catalog-row"><a class="catalog-thumbnail" href={url(`plugins/${p.slug}/`)}><img src={url(`images/${p.image}`)} alt={p.imageAlt} width="1280" height="800" loading="lazy"/></a><div><p class="eyebrow">{p.category}</p><h3>{p.name}</h3><p>{p.summary}</p></div><div class="catalog-action"><p class="release-status">{p.release ? `${p.release.preview?'Public preview':'Available'} · v${p.release.version}` : 'In development · No public download'}</p><a href={url(`plugins/${p.slug}/`)}>View features & status →</a></div></article>)}
   </section>
   <section class="note wrap"><span class="eyebrow">MADE FOR MAKING MUSIC</span><h2>Less menu diving.<br/>More music making.</h2><p>We make instruments and effects for your MPC standalone workflow. Explore each plugin for its features, tested devices, and release status. Installation instructions are available when you are ready for a published release.</p></section>
 <section class="wrap guide"><p class="eyebrow">EXPLORE THE COLLECTION</p><h2>Find your next tool.</h2><div class="software-grid"><a class="software-card" href={url('software/instruments/')}><h3>Instruments →</h3><p>Donut Theory and Groove Dice for MPC standalone.</p></a><a class="software-card" href={url('software/effects/')}><h3>Effects →</h3><p>Compression, color and playable performance effects.</p></a><a class="software-card" href={url('software/apps/')}><h3>Apps →</h3><p>Build and manage your own sound expansions.</p></a><a class="software-card" href={url('software/expansions/')}><h3>Expansions →</h3><p>Independent packs, organized by target instrument.</p></a></div></section></Base>
