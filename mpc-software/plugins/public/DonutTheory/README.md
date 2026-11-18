@@ -285,3 +285,7 @@ Chord Glide owns a newest-held chain per MIDI channel; screen holds share channe
 Build, device and validation outcomes are appended when complete. Public stable remains1.2.3 while this candidate is under test.
 
 1.5.0 candidate installed and UI-verified on MPC XL internalNVMe;120installed files match final build. Native/ARM32/ARM64, SDK0errors/0warnings and host19/0/0 pass. Actual captures and verification: [device-1.5.0](design/device-1.5.0/verification.json). Full harmony library: [32types/96recipes](../../../docs/plugins/donut-theory/harmony-library.md). Physical performance/audio/CPU are not newly certified. Public stable remains1.2.3.
+
+### 1.6.0 installed development candidate
+
+MAIN D now shares Tremolo / Auto Pan with Drive, Glide, Mod Rate and Mod Depth. Touch MODE/WAV; set base Pan on FX. No D page switching. Original272parameter declarations and MAIN/CHORD Q-Link assignments remain;275parameters total. Old projects default Tremolo/Sine/Center. Native and both ARM builds, SDK0errors/0warnings, host19/0/0 and DSP/state/UI regressions passed. Final MPC XL internalNVMe installation matches all120build files; actual screen/input evidence: [device verification](design/device-1.6.0/verification.json). Physical encoders, hardware audio and worst-case CPU are not newly certified. Public stable remains1.2.3; no public release/push/site deployment.

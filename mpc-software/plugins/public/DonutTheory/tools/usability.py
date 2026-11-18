@@ -73,7 +73,8 @@ def install(g,tui,params,out):
   get(defs['DTPad'+str(i)],'componentsData').insert(1,label(str(i+1),'8 0 28 20',17))
  # Filter/LFO and FX/Tremolo use the same four-control grouping as Q-Link.
  # Shape/Target stay with the filter; Sync/Division remain on MOD.
- children.append(label('FREE RATE · DEPTH 0 = OFF','966 356 284 28',20))
+ children.append(label('MODE','804 356 36 32',15))
+ children.append(label('WAV','1072 356 40 32',15))
  # Explanations stay inside the relevant selection screens.
  hints={'Voice Mode':'MONO / LEGATO: single-note melody in NOTES and SPLIT. POLY: multiple notes. Chord pads always play full chords.',
  'Input Mode':'NOTES: play notes. CHORDS: assigned notes play chords. SPLIT: assigned chords plus melody notes.'}
@@ -114,7 +115,7 @@ def install(g,tui,params,out):
  overlay('DTChordAdvanced',aw,advanced)
  # Explicit relationship between Space and the available detailed FX controls.
  fx=get(get(pd,'tabs')[5],'componentDefinition')
- get(fx,'componentsData').append(label('SPACE: chorus width + delay wet level. Adjust CHORUS / DELAY above.','20 574 1240 42',22))
+ # FX now uses all sixteen cells; keep explanatory text in the manual.
  # Use the same typeface as the restored interface.
  def bold(o):
   if isinstance(o,g.Obj):

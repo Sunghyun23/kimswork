@@ -68,11 +68,11 @@
           "widget": "knob"
         },
         {
-          "param": "Tremolo Rate",
+          "param": "Mod Rate",
           "widget": "knob"
         },
         {
-          "param": "Tremolo Depth",
+          "param": "Mod Depth",
           "widget": "knob"
         }
       ]
@@ -330,11 +330,11 @@
           "overlay": "menu"
         },
         {
-          "param": "Tremolo Rate",
+          "param": "Mod Rate",
           "widget": "knob"
         },
         {
-          "param": "Tremolo Depth",
+          "param": "Mod Depth",
           "widget": "knob"
         },
         {
@@ -343,6 +343,20 @@
         },
         {
           "param": "Sound Trim",
+          "widget": "knob"
+        },
+        {
+          "param": "Motion Mode",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "Motion Shape",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Pan",
           "widget": "knob"
         }
       ]

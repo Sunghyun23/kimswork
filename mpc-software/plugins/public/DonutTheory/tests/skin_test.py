@@ -161,7 +161,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==272
+assert index['LearnStatus']==84 and len(params)==275
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -281,7 +281,7 @@ for key,definition in defs.items():
 print('PASS: left drawers preserve the page, show bounded rows and dismiss outside')
 
 # Performance order and numeric plate padding are user-facing layout contracts.
-for title in ('A  SOUND / PLAY','B  AMP ENVELOPE','C  FILTER / LFO','D  FX / TREMOLO'):
+for title in ('A  SOUND / PLAY','B  AMP ENVELOPE','C  FILTER / LFO','D  FX / MOTION'):
  assert title in byname
 for name in ('DTKnob','DTEnvelope'):
  value=next(c for c in defs[name]['componentsData'] if c['componentData']['type']=='Label' and c['componentData']['data']['type']=='Value')
@@ -449,3 +449,20 @@ for title,param in [('GLIDE','Glide'),('STRUM','Spread')]:
  assert definition['componentsData'][-1]['bounds']['acceptsHWFocus']=='No'
  assert all(a['handler']!='Q-Link'for a in definition['actions'])
 print('PASS: touch GLIDE/STRUM use existing values without stealing the sixteen chord Q-Links')
+
+assert params[:272]==json.loads((P/'tests/legacy-272-parameters.json').read_text())
+assert [p['key']for p in params[272:]]==['ModMode','ModShape','Pan']
+assert params[index['ModMode']]['choices']==['Tremolo','Auto Pan']
+for key in ['ModMode','ModShape']:
+ assert 'DTChoicePanel'+str(index[key]) in defs
+ assert any(w['componentData']['name']==key for w in children)
+assert len(next(tab for tab in t['tabs']if tab['tabName']=='FX')['qlinkBoundsData'])==4
+print('PASS: first272 declarations retained; shared motion selectors, Pan detail and unchanged MAIN sixteen Q-Links')
+
+fx=next(tab['componentDefinition']['componentsData']for tab in t['tabs']if tab['tabName']=='FX')
+assert not any(w['componentData']['name'].startswith('SPACE:')for w in fx)
+for name in ['Mod Rate','Mod Depth']:
+ w=next(w for w in fx if w['componentData']['name']==name)
+ assert w['handle remapping']['map'][0]['value'].startswith('WithName['+name+']/')
+assert next(w for w in fx if w['componentData']['name']=='Motion Shape' and w['componentData']['type']!='Label')['componentData']['type'].startswith('DTSmallMenu')
+print('PASS: FX motion labels override legacy names; shape has a direct dropdown and no footer overlaps the sixteen cells')

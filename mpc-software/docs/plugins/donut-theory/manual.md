@@ -643,3 +643,9 @@ New recipes are original harmonic designs for neo-soul, hip-hop, R&B, vamps, mod
 | 94 | Turnarounds | Turn / Late Checkout | Em7b5 → A7alt → Dm11 → G7alt |
 | 95 | Turnarounds | Turn / Round Trip | C6/9 → F#7alt → Fmaj13 → G13sus4 |
 | 96 | Turnarounds | Turn / Last Cup | Fmaj9#11 → Em11 → A7alt → D9sus4 |
+
+## Shared motion — 1.6.0 development candidate
+
+MAIN D / FX–MOTION has Drive, Glide, Mod Rate and Mod Depth on its four existing Q-Links. Touch MODE to choose Tremolo (volume pulses) or Auto Pan (left/right motion). Touch WAV for Sine, Triangle, Saw, Square or S&H. Rate0.1–15Hz and Depth0–100% are shared; only the selected effect runs after the mode transition settles. Depth0 stops motion. Filter LFO remains independent. The module is free-running; it does not add tempo synchronization.
+
+For gentle floating stereo, start with Auto Pan, Sine, Rate0.3–0.6Hz and Depth20–35%. FX detail contains the base Pan knob: Center is unchanged stereo, L/R shift the balance; motion is centered on this position and clamps at the extremes. This is balance panning of the complete stereo signal, not per-note pan or stereo widening. Old projects open with Tremolo/Sine/Center. Legacy automation names Tremolo Rate/Depth refer to the same shared controls displayed as Mod Rate/Depth.

@@ -39,7 +39,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10500;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10600;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -157,6 +157,7 @@ public:
         chorus_.prepare(int(sr*.05)+2);
         for(int i=0;i<kNumParams;++i){smooth_[i].setTime(15,sr/16.0);smooth_[i].snap(get(i));}
         gain_.setTime(10,sr);gain_.snap(dbToGain(get(kVolume)));
+        panLeft_.setTime(5,sr);panRight_.setTime(5,sr);motionGain_.setTime(2,sr);
         delayTime_.setTime(100,sr/16.0);delayTime_.snap(sr*.5f);
         reset();
     }
@@ -164,6 +165,7 @@ public:
         setFromEngine(kTransposeOpen,0);setFromEngine(kTransposeApply,0);
         clearNotes();for(int i=0;i<N;++i){auto& v=voices_[i];const float phase=std::fmod(i*.61803398875f,1.f);v.a.resetPhase(phase);v.sineA.resetPhase(phase);v.b.resetPhase(std::fmod(phase+.23f,1.f));v.sineB.resetPhase(std::fmod(phase+.23f,1.f));v.sub.resetPhase(phase);v.fm.resetPhase(phase);}
         for(int i=0;i<16;++i)for(int j=0;j<4;++j)lastTouchChord_[i][j]=getInt(chordField(i,j));lastSlotCount_=activeSlots();lastMainPage_=getInt(kMainChordPage);lastLowCut_=-1;cachePadMapping();for(auto& d:delay_)d.reset();chorus_.reset();
+        panLeft_.snap(1);panRight_.snap(1);motionGain_.snap(1);
         wowFlutter_.reset();tapePitch_=0;tremolo_.reset();lfo_.reset();vibrato_.reset();drift_.reset();chorusLfo_.reset();
         setFromEngine(kOscPair,getInt(kWave1)*4+getInt(kWave2));lastPair_=getInt(kOscPair);
         lastFX_=getInt(kFXPreset);lastPatch_=getInt(kSoundPreset);for(int bank=0;bank<4;++bank)lastProgressions_[bank]=getInt(kBankProgressions[bank]);
@@ -285,7 +287,7 @@ public:
             while(e<ctx.numMidiEvents&&ctx.midi[e].sampleOffset<=s)handle(ctx.midi[e++]);
             renderSmoothStep();
             const bool control=control_==0;control_=(control_+1u)&15u;
-            if(control){for(int i=0;i<kNumParams;++i)p_[i]=smooth_[i].process();delaySamples_=delayTime_.process();tremolo_.setFrequency(p_[kTremRate]);tapePitch_=wowFlutter_.process(p_[kDrift]);trimGain_=dbToGain(p_[kOutputTrim]);const float lowHz=std::max(5.f,p_[kLowCut]);if(std::abs(lowHz-lastLowCut_)>.01f){for(auto& f:lowCut_)f.set(lowHz,.29585f);lastLowCut_=lowHz;}}
+            if(control){for(int i=0;i<kNumParams;++i)p_[i]=smooth_[i].process();delaySamples_=delayTime_.process();tremolo_.setFrequency(p_[kTremRate]);tremolo_.setShape(getInt(kModShape));tapePitch_=wowFlutter_.process(p_[kDrift]);trimGain_=dbToGain(p_[kOutputTrim]);const float lowHz=std::max(5.f,p_[kLowCut]);if(std::abs(lowHz-lastLowCut_)>.01f){for(auto& f:lowCut_)f.set(lowHz,.29585f);lastLowCut_=lowHz;}}
             const float mod=lfo_.process(),vib=vibrato_.process(),drift=drift_.process();float sum=0;
             for(auto& v:voices_){
                 if(v.glideWait>0&&!--v.glideWait){if(raw_[kGlide]>0)v.pitch.setTarget(float(v.note));else v.pitch.snap(float(v.note));}
@@ -327,8 +329,11 @@ public:
             }
             const float dc=driven-dcIn_+dcCoeff_*dcOut_;dcIn_=flush(driven);dcOut_=flush(dc);
             const float cm=std::clamp(p_[kChorus]*.006f+p_[kMotion]*.002f+p_[kSpace]*.001f,0.f,.65f);
-            const float tremGain=1.f-p_[kTremDepth]*.01f*(.5f+.5f*tremolo_.process());
-            const float tremDc=dc*tremGain;
+            const float motion=tremolo_.process();
+            const float panMode=std::clamp(p_[kModMode],0.f,1.f),depth=p_[kTremDepth]*.01f;
+            // Shared oscillator: volume modulation OR stereo balance motion.
+            motionGain_.setTarget(1.f-(1.f-panMode)*depth*(.5f+.5f*motion));
+            const float tremDc=dc*motionGain_.process();
             const float cl=chorusLfo_.process();
             const float leftCh=chorus_.readLinear(sr_*(.014f+.003f*cl));const float rightCh=chorus_.readLinear(sr_*(.018f-.003f*cl));chorus_.write(tremDc);
             float l=tremDc*(1-cm)+leftCh*cm,r=tremDc*(1-cm)+rightCh*cm;
@@ -336,6 +341,11 @@ public:
             delay_[0].write(flush(l+dr*p_[kFeedback]*.01f));delay_[1].write(flush(r+dl*p_[kFeedback]*.01f));
             const float wet=std::min(.55f,p_[kDelay]*.005f+p_[kSpace]*.003f);l+=dl*wet;r+=dr*wet;
             const float hpMix=std::clamp(p_[kLowCut]/5.f,0.f,1.f);l+=hpMix*(lowCut_[0].process(l,2)-l);r+=hpMix*(lowCut_[1].process(r,2)-r);
+            // Balance the final stereo signal without folding chorus/delay to mono.
+            const float pan=std::clamp(p_[kPan]*.01f+panMode*depth*motion,-1.f,1.f);
+            panLeft_.setTarget(pan>0?fastSin01(.25f+pan*.25f):1.f);
+            panRight_.setTarget(pan<0?fastSin01(.25f-pan*.25f):1.f);
+            l*=panLeft_.process();r*=panRight_.process();
             const float master=gain_.process()*trimGain_;ctx.outputs[0][s]=flush(fastTanh(l*master));if(ctx.numOutputs>1)ctx.outputs[1][s]=flush(fastTanh(r*master));
         }
         bool playing[4]{};
@@ -367,6 +377,7 @@ public:
         if(index==kRate&&getBool(kSync)){static const char* divisions[]={"1/16","1/8","1/4","1/2","1 bar"};out=std::string("Sync ")+divisions[getInt(kDivision)];return true;}
         if(index==kCutoff){char b[32];if(value>=1000)std::snprintf(b,sizeof b,"%.2f kHz",value/1000);else std::snprintf(b,sizeof b,"%.0f Hz",value);out=b;return true;}
         if(slotForParameter(index,kChordRoots)>=0){static const char* names[]={"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};int n=int(std::round(value));out=std::string(names[n%12])+donut::kTypeSuffixes[getInt(kChordQualities[slotForParameter(index,kChordRoots)])];return true;}
+        if(index==kPan){char b[32];if(std::abs(value)<.5f)out="Center";else {std::snprintf(b,sizeof b,"%s %.0f %%",value<0?"L":"R",std::abs(value));out=b;}return true;}
         if(param(index).kind==mpc::Param::Kind::Float){char b[48];std::snprintf(b,sizeof b,"%.1f %s",value,param(index).unit.c_str());out=b;return true;}
         return false;
     }
@@ -469,7 +480,7 @@ private:
     SVF lowCut_[2];
     float dcCoeff_=.9993f,lastLowCut_=-1,trimGain_=1;
     void applySoundExtras(int patch){setFromEngine(kLowCut,kPatchExtras[patch][0]);setFromEngine(kDrift,kPatchExtras[patch][1]);setFromEngine(kTremRate,kPatchExtras[patch][2]);setFromEngine(kTremDepth,kPatchExtras[patch][3]);setFromEngine(kOutputTrim,kPatchExtras[patch][4]);}
-    float sr_=44100,delaySamples_=22050,dcIn_=0,dcOut_=0;LFO tremolo_,lfo_,vibrato_,drift_,chorusLfo_;Xorshift32 noise_{1234567};Smoother gain_,delayTime_;DelayLine chorus_,delay_[2];
+    float sr_=44100,delaySamples_=22050,dcIn_=0,dcOut_=0;LFO tremolo_,lfo_,vibrato_,drift_,chorusLfo_;Xorshift32 noise_{1234567};Smoother gain_,delayTime_,panLeft_,panRight_,motionGain_;DelayLine chorus_,delay_[2];
     static float flush(float x){return std::fabs(x)<1e-25f?0.f:x;}
     void clearNotes(){chordLead_.fill(-1);touchOrder_.fill(0);smoothPlaying_=smoothGate_=false;setFromEngine(kSmoothPreview,0);for(auto& f:lowCut_)f.reset();for(int i=0;i<16;++i){touchHeld_[i]=false;setFromEngine(kChordTouches[i],0);}setFromEngine(kTouchStop,0);for(auto& v:voices_){v.amp.reset();v.env.reset();v.filter.reset();v.wait=v.glideWait=0;v.owner=-1;}std::memset(held_,0,sizeof held_);std::memset(order_,0,sizeof order_);std::fill(std::begin(sustain_),std::end(sustain_),false);std::fill(std::begin(bend_),std::end(bend_),0.f);std::fill(std::begin(wheel_),std::end(wheel_),0.f);}
     void release(Voice& v){v.glideWait=0;v.wait=0;v.amp.noteOff();v.env.noteOff();}

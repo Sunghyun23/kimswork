@@ -101,6 +101,10 @@ for row in range(1,5):c('HarmonyEdit'+str(row),'Harmony Edit '+chr(64+row),[t[0]
 for row in range(1,5):c('HarmonyTones'+str(row),'Harmony Tones '+chr(64+row),['Triad','Seventh','Extended'],2)
 c('ChordGlide','Chord Glide',['Off','On'])
 c('HarmonyCurrent','Current Chord Preset',[p['name']for p in progressions])
+# Shared motion controls: old tremolo rate/depth IDs and defaults stay exact.
+c('ModMode','Motion Mode',['Tremolo','Auto Pan'])
+c('ModShape','Motion Shape',['Sine','Triangle','Saw','Square','S&H'])
+f('Pan','Pan',-100,100,0,'%')
 (P/'src/ChordTypes.h').write_text('#pragma once\nnamespace donut {\nstatic constexpr int kTypeCount=32;\nstatic constexpr int kTypeSizes[32]={'+','.join(str(len(t[2]))for t in TYPES)+'};\nstatic constexpr int kTypeIntervals[32][5]={' + ','.join('{'+','.join(map(str,list(t[2])+[0]*(5-len(t[2]))))+'}'for t in TYPES)+'};\nstatic const char*const kTypeSuffixes[32]={'+','.join(json.dumps(t[1])for t in TYPES)+'};\ninline bool minorType(int q){switch(q){'+''.join('case '+str(q)+':'for q in sorted(MINOR_TYPES))+'return true;default:return false;}}\n}\n')
 (P/'parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 (P/'factory-presets.json').write_text(json.dumps(dict(sounds=patches,progressions=progressions),indent=2)+'\n')
@@ -123,7 +127,7 @@ for patch in patches:lines.append('{'+','.join(str(float(patch['values'][key]))+
 lines+=['};']
 (P/'src/Catalog.h').write_text('\n'.join(lines)+'\n')
 # Main uses four horizontal banks; custom skin generator remaps their 2x2 geometry.
-pages=[('MAIN',['OscPair','Mix','Sub','Drift','Cutoff','Resonance','Drive','Space','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Rate','Depth','TremRate','TremDepth']),('OSC',['Wave1','Wave2','Mix','Detune','Octave','Pulse','Sub','Noise','FM','Tone','VoiceMode','SoundPreset']),('FILTER',['Filter','Cutoff','Resonance','Env','FiltAttack','FiltDecay','FiltSustain','FiltRelease','KeyTrack']),('AMP',['AmpAttack','AmpDecay','AmpSustain','AmpRelease','Volume','Expression','VoiceMode','Glide','GlideLegato','Bend','InputMode','Trigger','Spread','ChordSlot']),('MOD',['Shape','Rate','Depth','Target','Sync','Division','Vibrato','Motion','Progression']),('FX',['DriveType','Drive','DriveMix','Chorus','Delay','Feedback','DelayDivision','Space','FXPreset','TremRate','TremDepth','LowCut','OutputTrim'])]
+pages=[('MAIN',['OscPair','Mix','Sub','Drift','Cutoff','Resonance','Drive','Space','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Rate','Depth','TremRate','TremDepth']),('OSC',['Wave1','Wave2','Mix','Detune','Octave','Pulse','Sub','Noise','FM','Tone','VoiceMode','SoundPreset']),('FILTER',['Filter','Cutoff','Resonance','Env','FiltAttack','FiltDecay','FiltSustain','FiltRelease','KeyTrack']),('AMP',['AmpAttack','AmpDecay','AmpSustain','AmpRelease','Volume','Expression','VoiceMode','Glide','GlideLegato','Bend','InputMode','Trigger','Spread','ChordSlot']),('MOD',['Shape','Rate','Depth','Target','Sync','Division','Vibrato','Motion','Progression']),('FX',['DriveType','Drive','DriveMix','Chorus','Delay','Feedback','DelayDivision','Space','FXPreset','TremRate','TremDepth','LowCut','OutputTrim','ModMode','ModShape','Pan'])]
 pages.append(('CHORD',[x+str(i) for i in range(1,5) for x in ['Root','Quality','Voicing']]+['Progression','Spread','InputMode','Trigger']))
 lookup={p['key']:p for p in params}
 ui={'kit':'amber','style':{'background':'ffe1d2ae','text':'ff312b20','muted':'ff514634','accent':'ffac5b2a'},'pages':[]}
@@ -132,7 +136,7 @@ for name,keys in pages:
  for key in keys:
   p=lookup[key];widget='fader' if key.startswith(('AmpAttack','AmpDecay','AmpSustain','AmpRelease','FiltAttack','FiltDecay','FiltSustain','FiltRelease')) else 'knob'
   if 'choices'in p:widget='switch' if len(p['choices'])<=4 else 'slider'
-  controls.append(dict(param=p['name'],widget=widget,**({'overlay':'menu'} if 'choices'in p else {})))
+  controls.append(dict(param={'TremRate':'Mod Rate','TremDepth':'Mod Depth'}.get(key,p['name']),widget=widget,**({'overlay':'menu'} if 'choices'in p else {})))
  ui['pages'].append(dict(name=name,controls=controls))
 (P/'ui.json').write_text(json.dumps(ui,indent=2)+'\n')
 manifest=json.loads((P/'plugin.json').read_text());manifest.update(description='Soulful polyphonic synth with up to sixteen editable chord slots and independent sound/progression presets.',url='https://github.com/Sunghyun23/kimswork')

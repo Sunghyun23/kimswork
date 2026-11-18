@@ -115,7 +115,7 @@ def install(g,tui,out):
   name=get(cd(c),'name');typ=get(cd(c),'type')
   if name in placements:bounds(c,' '.join(map(str,placements[name])))
   if name in ('TremRate','TremDepth'):
-   rem=get(get(c,'handle remapping'),'map')[0];put(rem,'value','WithName['+('TREM RATE' if name=='TremRate' else 'TREM DEPTH')+']/'+get(rem,'value'))
+   rem=get(get(c,'handle remapping'),'map')[0];put(rem,'value','WithName['+('MOD RATE' if name=='TremRate' else 'MOD DEPTH')+']/'+get(rem,'value'))
   if name.startswith(('A  ','B  ','C  ','D  ')):
    x=18 if name[0] in 'AC' else 650;y=94 if name[0] in 'AB' else 324
    bounds(c,f'{x} {y} 612 218');comp=defs[typ];put(comp,'backgroundData',g.background_data('00000000'))

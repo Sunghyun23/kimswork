@@ -6219,5 +6219,35 @@
       "Turn / Last Cup"
     ],
     "default": 0
+  },
+  {
+    "key": "ModMode",
+    "name": "Motion Mode",
+    "choices": [
+      "Tremolo",
+      "Auto Pan"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ModShape",
+    "name": "Motion Shape",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Square",
+      "S&H"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Pan",
+    "name": "Pan",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "log": false
   }
 ]

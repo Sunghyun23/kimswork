@@ -23,6 +23,9 @@ for bank in range(1,5):
  old=by_native[name];new=by_native[f'Harmony Preset {bank}'];old.name='Legacy '+old.name;new.name=name
 for row in range(1,5):
  letter=chr(64+row);old=by_native[f'Edit {letter} Type'];new=by_native[f'Harmony Edit {letter}'];old.name='Legacy '+old.name;new.name=f'Edit {letter} Type'
+for p in params:
+ if p.name=='Tremolo Rate':p.name='Mod Rate'
+ elif p.name=='Tremolo Depth':p.name='Mod Depth'
 table=g.ParamTable(params)
 pages,style,_,_,kit=g.load_ui(str(P/'ui.json'),table)
 out=P/'skins';out.mkdir(exist_ok=True)
@@ -71,7 +74,7 @@ preset('SoundPreset','SoundPrev','SoundNext',22,132)
 children.append(label('SOUND PRESET','22 108 240 24',24))
 menu('VoiceMode',440,132);menu('InputMode',596,132)
 children.append(label('VOICE','440 108 136 24',24));children.append(label('INPUT','596 108 136 24',24))
-groups=[('A  SOUND / PLAY',['OscPair','Mix','Sub','Drift'],18,174),('B  AMP ENVELOPE',['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],650,174),('C  FILTER / LFO',['Cutoff','Resonance','Rate','Depth'],18,365),('D  FX / TREMOLO',['Drive','Glide','TremRate','TremDepth'],650,365)]
+groups=[('A  SOUND / PLAY',['OscPair','Mix','Sub','Drift'],18,174),('B  AMP ENVELOPE',['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],650,174),('C  FILTER / LFO',['Cutoff','Resonance','Rate','Depth'],18,365),('D  FX / MOTION',['Drive','Glide','TremRate','TremDepth'],650,365)]
 # Real vertical filmstrip faders, one widget per ADSR parameter.
 from PIL import Image,ImageDraw
 frames=127;fw,fh=64,92
@@ -160,6 +163,17 @@ for filename,fill in [('pad-off.png',(215,194,148)),('pad-on.png',(176,111,55))]
  im=Image.new('RGBA',(195,48));d=ImageDraw.Draw(im);d.rounded_rectangle((1,1,193,46),radius=6,fill=fill,outline=(108,80,46),width=2);d.line((7,4,188,4),fill=(240,219,175),width=1);im.save(out/filename)
 from chord_editor import install as install_chord_editor
 install_chord_editor(g,tui,params,out)
+# Touch-only selectors; the existing sixteen MAIN Q-Links stay fixed.
+menu('ModMode',840,356);menu('ModShape',1114,356)
+# Native Name labels use legacy host metadata unless explicitly overridden.
+fx_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='FX'),'componentDefinition'),'componentsData')
+for w in list(fx_widgets):
+ name=get(get(w,'componentData'),'name')
+ if name in ('Mod Rate','Mod Depth'):
+  mapping=get(get(w,'handle remapping'),'map')[0];setv(mapping,'value','WithName['+name+']/'+get(mapping,'value'))
+ if name=='Motion Shape':
+  setv(get(w,'componentData'),'type','DTSmallMenu');setv(get(w,'bounds'),'bounds','734 542 136 32')
+  fx_widgets.append(label('Motion Shape','663 497 278 32',24))
 from choice_panels import install
 install(g,tui,params,out)
 from chord_editor import finish as finish_chord_editor

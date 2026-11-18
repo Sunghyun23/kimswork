@@ -25,6 +25,24 @@ struct Rig {
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
+
+ // Motion mode shares rate/depth, retains stereo, and safely migrates old states.
+ {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==275,"append-only motion");
+  Rig m;m.p->set(kMotion,0);m.p->set(kSpace,0);m.p->set(kChorus,0);m.p->set(kDelay,0);m.p->set(kDrift,0);m.p->set(kDepth,0);m.p->set(kVibrato,0);m.p->set(kAmpAttack,1);m.p->set(kAmpSustain,100);m.p->set(kAmpDecay,1);m.p->set(kTremRate,2);m.p->set(kTremDepth,100);m.p->set(kModMode,1);
+  for(int i=0;i<400;++i)m.block();m.block({mpc::MidiEvent::noteOn(0,72,100)});
+  bool left=false,right=false;
+  for(int b=0;b<1100;++b){m.block();double l=0,r=0;for(int i=0;i<128;++i){l+=m.l[i]*m.l[i];r+=m.r[i]*m.r[i];}if(l>r*20&&l>1e-8)left=true;if(r>l*20&&r>1e-8)right=true;}assert(left&&right);
+  m.p->set(kTremDepth,0);for(int i=0;i<500;++i)m.block();for(int i=0;i<128;++i)assert(std::abs(m.l[i]-m.r[i])<1e-6f);
+  for(int pan:{-100,100}){m.p->set(kPan,float(pan));for(int i=0;i<600;++i)m.block();double l=0,r=0;for(int i=0;i<128;++i){l+=m.l[i]*m.l[i];r+=m.r[i]*m.r[i];}assert(pan<0?l>r*10000:r>l*10000);}
+  m.p->set(kPan,0);m.p->set(kModMode,0);m.p->set(kTremDepth,100);for(int i=0;i<500;++i)m.block();
+  double lo=1e9,hi=0;for(int b=0;b<1100;++b){m.block();double e=0;for(int i=0;i<128;++i){assert(std::abs(m.l[i]-m.r[i])<1e-6f);e+=m.l[i]*m.l[i];}lo=std::min(lo,e);hi=std::max(hi,e);}assert(hi>lo*20);
+  for(int mode=0;mode<2;++mode)for(int shape=0;shape<5;++shape){m.p->set(kModMode,float(mode));m.p->set(kModShape,float(shape));for(int i=0;i<100;++i)m.block({},32+(i%4)*128);}
+  m.p->set(kModMode,1);m.p->set(kModShape,4);m.p->set(kPan,-32);auto state=m.p->internalSaveState();Rig loaded;assert(loaded.p->internalLoadState(state.data(),state.size()));loaded.p->reset();loaded.block();assert(loaded.p->getInt(kModMode)==1&&loaded.p->getInt(kModShape)==4&&loaded.p->get(kPan)==-32);
+  size_t end=12;for(int i=0;i<272;++i)end+=1+state[end]+8;state.resize(end+4);state[8]=16;state[9]=1;state[10]=state[11]=0;for(int b=0;b<4;++b)state[end+b]=0;
+  assert(loaded.p->internalLoadState(state.data(),state.size()));loaded.p->reset();loaded.block();assert(loaded.p->getInt(kModMode)==0&&loaded.p->getInt(kModShape)==0&&loaded.p->get(kPan)==0);
+ }
+ std::cout<<"PASS: Auto Pan alternates stereo; depth0/center unity, hard pan, Tremolo common gain, five shapes,275-state/old272 migration and allocation-free variable blocks\n";
+
  // A single strum rolls low-to-high; release cancels all delayed tones.
  {Rig roll;roll.p->set(kInputMode,1);roll.p->set(kSpread,20);roll.p->set(kAmpAttack,1);roll.p->set(kAmpRelease,10);roll.block({mpc::MidiEvent::noteOn(0,36,100)});int audible=0;for(auto v:roll.p->voiceSnapshots())if(v.owner==36&&v.amplitude>0)++audible;assert(audible==1);
  for(int i=0;i<7;++i)roll.block();audible=0;for(auto v:roll.p->voiceSnapshots())if(v.owner==36&&v.amplitude>0)++audible;assert(audible==2);roll.block({mpc::MidiEvent::noteOff(0,36)});for(int i=0;i<100;++i)roll.block();assert(!roll.p->activeVoices());}
@@ -92,7 +110,7 @@ int main(){
  std::cout<<"PASS: scoped smooth APPLY preserves roots/types/MIDI/inactive slots, preview ownership/end/stop, stale-plan rejection and safe state\n";
 
  // Key reference never changes notes. Explicit confirmation moves all active roots only.
- {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==272,"Append-only key controls");
+ {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==275,"Append-only key controls");
   for(int count=0;count<4;++count)for(int key=0;key<12;++key)for(int from=0;from<12;++from){Rig m;m.p->set(kSlotCount,count);m.block();
    std::array<std::array<float,5>,16> before{};
    for(int slot=0;slot<16;++slot){m.p->set(kChordRoots[slot],48+slot%12);m.p->set(kChordOctaves[slot],slot%5);m.p->set(kChordPadNotes[slot],80+slot);for(int f=0;f<5;++f)before[slot][f]=m.p->get(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot]);}
@@ -119,7 +137,7 @@ int main(){
  std::cout<<"PASS: 576 key/source/count transposes, reference isolation, whole-operation bounds, degree readback, state and old208 migration without render allocations\n";
 
  // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
- {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==272,"Append-only pad positions");
+ {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==275,"Append-only pad positions");
   Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
   m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
   m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);
