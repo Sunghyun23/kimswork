@@ -1,4 +1,4 @@
-# Groove Dice 1.3.4 — User manual
+# Groove Dice 1.4.0 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -6,7 +6,7 @@ Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standa
 
 Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. Other model compatibility and worst-case CPU are not certified by that test.
 
-Download the complete `groove-dice-1.3.4-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
+Download the complete `groove-dice-1.4.0-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
 The base package contains **Original Workshop**:128 independently synthesized WAV one-shots,96 kit configurations, two authored beats and93 timing templates. Ninety-six kits are combinations/settings, not96 separately recorded drum libraries. Optional expansions are separate files; the base release contains no private/commercial third-party drum library.
 
@@ -34,7 +34,7 @@ Choose **Screen** Q-Link mode to follow the current plugin page. Program/Track m
 
 Swing shifts suitable subdivisions. Snare Late and Hat Shift offset their parts. Random Nudge adds bounded timing movement. RULES constrain generated variations; they do not restrict your direct physical pad playing.
 
-Each B control has **seven playable styles**, with no LOCK position. Choose BASIC, VARIED or BUSY, plus role-specific options: downbeat/offbeat/syncopated/double-hit kicks; soft/ghost snare variations; sparse/offbeat/accented/open hats; and sparse/offbeat/snare-answer/percussion-loop patterns. Tap the LCD for its list or turn its Q-Link. Use the separate padlock to protect a choice during Dice.
+Each B control has **16 playable styles**, with no LOCK position. The original seven remain first; nine additions per part introduce pickups, ghost-note responses, hat accents and percussion phrases. Tap the LCD for the two-page list or turn its Q-Link. Use the separate padlock to protect a choice during Dice. The complete lists appear under Extended RULES below.
 
 A previously saved legacy LOCK appears as BASIC with its padlock closed and frozen notes preserved. Opening that padlock releases the legacy hold. Existing host-saved custom Q-Link assignments may still point to the old compatibility parameter; choose Screen mode or update the assignment.
 
@@ -140,10 +140,42 @@ Current release notes describe automated checks, device confirmations and remain
 
 ## 1.3.3 compatibility and verification
 
-UID KpGy and the first 639 parameter identities remain unchanged. Four seven-style RULE selectors append at 639–642 (643 parameters total); legacy selectors remain for saved projects and automation. Bank/expansion formats are unchanged. Older plugin versions cannot preserve all new controls. Keep important projects and earlier installers before updating.
+UID KpGy and the first 672 parameter identities remain unchanged. Four 16-style RULE selectors append at 672–675 (676 parameters total); earlier selectors remain as compatibility aliases for saved projects and automation. Bank/expansion formats are unchanged. Older plugin versions cannot preserve all new controls. Keep important projects and earlier installers before updating.
 
 Native, ARM32 and ARM64 builds, SDK validation, UBSan/allocation guards, state/expansion compatibility and 19 host-simulator checks pass. The owner confirmed the installed 1.3.3 MAIN locks, visible Dice changes and RULE selectors work on MPC XL OS3.10.1.12. This does not certify every physical control, output destination or maximum hardware load. Actual MPC screen captures accompany this release; offline UI renders are not represented as device captures.
 
 ## 1.3.4 update
 
 All SOUND rows now have an independent REV toggle. The original643 parameter declarations are retained; seventeen automatable reverse flags and four UI reverse relays, four retained Tune relays and four polarity relays append for672 total. Existing GDLY/GDCY bank/layer layouts remain unchanged. A separate versioned trailer stores the reverse settings of eight user-kit slots. Actual MPC remote-click verification and direct screen captures confirm page switching, category retention and independent REV/Ø highlights. Physical encoder and hardware-audio confirmation remain separate.
+
+## Extended RULES — 1.4.0
+
+Each MAIN B part now offers16playable styles, with no LOCK value. The first seven keep their earlier musical meaning; nine new rules per part add36patterns. The padlocks remain separate. Use the existing Q-Link or tap the value for the two-page left list. MAIN reading order, four Q-Links and guide bounds stay unchanged. The footer shows PAGE1/2 and PAGE2/2. Selecting a style updates the live one-bar pattern without pressing Dice; Dice can choose the new styles while honoring locks and Amount bounds.
+
+## Kick
+
+BASIC, VARIED, BUSY, DOWNBEAT, OFFBEATS, SYNCOPATE, DOUBLE HIT, ONE THREE, ANTICIPATE, LATE ANSWER, PICKUP, THREE HITS, FOUR HITS, SYNC PAIR, STAGGER, END DOUBLE.
+
+## Snare
+
+BASIC, VARIED, BUSY, SOFT, PRE GHOST, POST GHOST, 2 GHOSTS, SECOND UP, FIRST UP, LOW ACCENT, POST BOTH, EARLY PAIR, LATE PAIR, TRIPLET, DRAG IN, BAR TURN.
+
+## Hat
+
+BASIC, VARIED, BUSY, SPARSE, OFFBEATS, ACCENTED, OPEN HAT, FIRST HALF, LAST HALF, ON BEATS, UPBEATS, TWO ON ONE, ONE ON TWO, SOFT TAIL, CRESCENDO, SKIP TWO.
+
+## Perc
+
+BASIC, VARIED, BUSY, SPARSE, OFFBEATS, ANSWER, PERC LOOP, CLAP REPLY, TOM TURN, SHAKER, CALL REPLY, OFFBEAT TOM, CLAP PAIR, LATIN THREE, TOM CLAP, END PICKUP.
+
+## Musical behavior
+
+Kick variants use distinct bounded sixteenth-note motifs, keep the downbeat and avoid the snare's exact2/4beats. Snare variants always keep both backbeats, changing main accents and adding quiet pre/post, triplet, drag or bar-ending ghosts. DRAG IN alone permits close32nd ghost spacing; caps and duplicate/backbeat protection remain. Hats keep the separate Hat Rhythm division, shaping halves, beat placement, omissions or crescendo/tail accents. Explicit FILL/ROLL ornaments remain controlled by Hat Rhythm. Perc uses role7percussion, role5toms and role4claps in distinct call/reply motifs; sound kit/choke routing is unchanged.
+
+The repeating MAIN bar remains one bar. Recorded fills and other parts are preserved by a live part edit. Rules do not modify direct pad/MIDI playing. Existing Hat/Open/Ride/Crash and count-in behavior remain.
+
+## Compatibility and checks
+
+All672previous declarations/normalized ranges remain exact. Four16-choice controls append at672–675(total676); old4/8/7-choice aliases keep their ranges. Old state seeds the appended selectors; newer state retains them. Old aliases remain available for automation; legacy LOCK migration still becomes BASIC plus a closed padlock. Saved tracks may cache the previous seven-choice map; reset to defaults or compare a new instance to reach all16through Q-Link. Full-range controls, Dice and Undo share the same canonical styles. Legacy fallback values are readback aliases, not extra current styles.
+
+Native/ARM32/ARM64 and SDK validation pass; full test/UBSan/bridge/skin/host suite is required. Targeted tests compare36distinct raw and36distinct actual scheduled new patterns, with variable32/512blocks, backbeats, kick exclusions, other-part/fill preservation and old672/full-state migration. Actual-device outcomes follow separately. Owner installs must preserve all four existing expansion banks and registry; never publish personal packs. Public stable remains1.3.4 until an authorized new release.

@@ -6442,5 +6442,32 @@
       "Synth / Velvet Melt"
     ],
     "default": 0
+  },
+  {
+    "key": "Randomize",
+    "name": "Random Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Randomized",
+    "name": "Random Sound Status",
+    "choices": [
+      "Factory",
+      "Random"
+    ],
+    "default": 0
+  },
+  {
+    "key": "FactoryReload",
+    "name": "Reload Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
   }
 ]

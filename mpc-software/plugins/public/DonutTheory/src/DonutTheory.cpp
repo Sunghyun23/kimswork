@@ -16,6 +16,7 @@
 #include "AnalogLadder.h"
 #include "BodyTone.h"
 #include <array>
+#include <chrono>
 #include <algorithm>
 #if defined(_WIN32)
 #ifndef NOMINMAX
@@ -40,10 +41,11 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10900;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11000;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
+        randomSoundState_=uint32_t(std::chrono::steady_clock::now().time_since_epoch().count())^uint32_t(reinterpret_cast<std::uintptr_t>(this));if(!randomSoundState_)randomSoundState_=0x91e10da5u;
         for(int i=0;i<kFactoryProgramCount;++i){const auto* base=kPatches[i<64?i:0];addProgram(kPatchNames[i],std::vector<float>(base,base+kSoundPreset+1));}
         // Prefix programs intentionally exclude input/chord settings.
         for(int i=0;i<=kSoundPreset;++i)set(i,kPatches[0][i]);
@@ -80,7 +82,7 @@ public:
         setFromEngine(kTouchStop,0);setFromEngine(kPadLearn,0);
         // Canonicalise gesture normalised values too, including fractional host writes.
         set(kTransposeOpen,0);set(kTransposeApply,0);
-        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);
+        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);set(kRandomize,0);set(kFactoryReload,0);
         return mpc::Plugin::internalSaveState();
     }
     bool internalLoadState(const uint8_t* data,size_t size) {
@@ -99,7 +101,7 @@ public:
         legacyReplaySamples_.store(count>242?int(sr_*.5f):0,std::memory_order_release);
         if(count<=77)set(kPadMap,0); // Existing projects retain Trigger Base routing.
         set(kTransposeOpen,0);set(kTransposeApply,0);
-        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);
+        set(kSmoothOpen,0);set(kSmoothApply,0);set(kSmoothPreview,0);set(kRandomize,0);set(kFactoryReload,0);
         stateLoading_.store(false,std::memory_order_release);return true;
     }
     void parameterChanged(int index,float value) override {
@@ -111,7 +113,8 @@ public:
                     if(getBool(syncParameters_[module]))setFromEngine(divisionParameters_[module],float(std::lround(std::clamp(value,0.f,1.f)*4)));
                     else setFromEngine(rate,param(rate).toPlain(value));}
             }
-            if(index==kSoundPreset&&!protect)setFromEngine(kSoundCurrent,value);
+            if(index==kSoundPreset&&!protect){if(getBool(kRandomized))soundReload_.store(true);setFromEngine(kSoundCurrent,value);}
+            if(index==kSoundCurrent&&getBool(kRandomized))soundReload_.store(true);
             if(index==kSoundCurrent&&value<64)setFromEngine(kSoundPreset,value);
             const int oldType=slotForParameter(index,kChordLegacyQualities),oldBank=slotForParameter4(index,kLegacyBankProgressions);
             if(oldType>=0&&!protect)setFromEngine(kHarmonyType1+oldType,value);
@@ -173,6 +176,7 @@ public:
         reset();
     }
     void reset() override {
+        setFromEngine(kRandomize,0);setFromEngine(kFactoryReload,0);soundReload_.store(false);
         setFromEngine(kTransposeOpen,0);setFromEngine(kTransposeApply,0);
         clearNotes();for(int i=0;i<N;++i){auto& v=voices_[i];const float phase=std::fmod(i*.61803398875f,1.f);v.a.resetPhase(phase);v.sineA.resetPhase(phase);v.b.resetPhase(std::fmod(phase+.23f,1.f));v.sineB.resetPhase(std::fmod(phase+.23f,1.f));v.sub.resetPhase(phase);v.fm.resetPhase(phase);}
         for(int i=0;i<16;++i)for(int j=0;j<4;++j)lastTouchChord_[i][j]=getInt(chordField(i,j));lastSlotCount_=activeSlots();lastMainPage_=getInt(kMainChordPage);lastLowCut_=-1;cachePadMapping();for(auto& d:delay_)d.reset();chorus_.reset();
@@ -195,7 +199,9 @@ public:
         diagnosticFrames.fetch_add(unsigned(ctx.numFrames),std::memory_order_relaxed);
 #endif
         for(int i=0;i<4;++i){if(getInt(kSoundPrev+i)){const int target=i<2?kSoundCurrent:kBankProgressions[getInt(kMainChordPage)];const int count=i<2?kFactoryProgramCount:kProgressionCount;setFromEngine(target,float((getInt(target)+(i%2?1:-1)+count)%count));setFromEngine(kSoundPrev+i,0);arrows_[i]=0;}}
-        if(getInt(kSoundCurrent)!=lastPatch_){lastPatch_=getInt(kSoundCurrent);applyFactorySound(lastPatch_);lastFX_=0;lastPair_=getInt(kOscPair);clearNotes();}
+        if(getBool(kFactoryReload)){if(replay==0)soundReload_.store(true);setFromEngine(kFactoryReload,0);}
+        if(soundReload_.exchange(false)||getInt(kSoundCurrent)!=lastPatch_){lastPatch_=getInt(kSoundCurrent);applyFactorySound(lastPatch_);lastFX_=0;lastPair_=getInt(kOscPair);clearNotes();}
+        if(getBool(kRandomize)){if(replay==0){randomizeSound();lastPair_=getInt(kOscPair);clearNotes();}setFromEngine(kRandomize,0);}
         if(getInt(kOscPair)!=lastPair_){lastPair_=getInt(kOscPair);setFromEngine(kWave1,float(lastPair_/4));setFromEngine(kWave2,float(lastPair_%4));}
         else {const int pair=getInt(kWave1)*4+getInt(kWave2);if(pair!=lastPair_){lastPair_=pair;setFromEngine(kOscPair,float(pair));}}
         for(int bank=0;bank<4;++bank)if(getInt(kBankProgressions[bank])!=lastProgressions_[bank]){
@@ -373,6 +379,7 @@ public:
         for(int page=0;page<4;++page)setFromEngine(kChordPlayingPage1+page,playing[page]?1.f:0.f);
     }
     bool formatValue(int index,float value,std::string& out) override {
+        if(index==kSoundCurrent&&getBool(kRandomized)){out="Random Sound";return true;}
         if(index==kSmoothMovement||(index>=kSmoothRow1&&index<=kSmoothRow16)){
             donut::SmoothPlan plan;if(!smoothPlan_.read(plan)||!plan.valid){out="—";return true;}
             char b[64];
@@ -509,7 +516,44 @@ private:
     WowFlutter wowFlutter_;float tapePitch_=0;
     SVF lowCut_[2];
     float dcCoeff_=.9993f,lastLowCut_=-1,trimGain_=1;
+    uint32_t randomSoundState_=0x91e10da5u;std::atomic<bool>soundReload_{false};
+    uint32_t randomSoundBits(){auto x=randomSoundState_;x^=x<<13;x^=x>>17;x^=x<<5;return randomSoundState_=x;}
+    float randomSoundFloat(float lo,float hi){return lo+(hi-lo)*float(randomSoundBits()>>8)*(1.f/16777216.f);}
+    int randomSoundChoice(int count){return int(randomSoundBits()%unsigned(count));}
+    void randomizeSound(){
+        // Correlated ranges, not independent full-scale noise: five playable families.
+        const int family=randomSoundChoice(5);const bool bass=family==0,keys=family==1,pad=family==4;
+        auto f=[&](int key,float lo,float hi){setFromEngine(key,randomSoundFloat(lo,hi));};
+        int a=randomSoundChoice(4),b=randomSoundChoice(4);if(bass&&a==0&&b==0)b=1;
+        setFromEngine(kWave1,float(a));setFromEngine(kWave2,float(b));setFromEngine(kOscPair,float(a*4+b));
+        f(kMix,15,70);f(kDetune,-8,8);f(kDrift,0,8);f(kBodyTone,0,bass?35:42);f(kSub,bass?20:0,bass?65:18);
+        setFromEngine(kOctave,randomSoundChoice(5)==0?-1.f:0.f);f(kPulse,28,72);f(kNoise,0,keys?0.5f:1.2f);f(kFM,0,a==0&&!bass?20:0);
+        f(kTone,12,45);setFromEngine(kBody,0);setFromEngine(kMotion,0);setFromEngine(kSpace,0);f(kExpression,50,78);f(kVibrato,0,2);
+        setFromEngine(kVoiceMode,bass?0.f:family==3?1.f:2.f);f(kGlide,0,bass?100:family==3?120:0);setFromEngine(kGlideLegato,1);
+        const int filter=bass||randomSoundChoice(10)<8?0:1+randomSoundChoice(3);setFromEngine(kFilter,float(filter));
+        if(filter==2)f(kCutoff,180,850);else f(kCutoff,bass?300:650,bass?1800:pad?2800:5000);
+        f(kResonance,3,32);f(kEnv,bass?10:5,keys?40:30);f(kKeyTrack,20,65);
+        const float attacks[5][2]={{2,9},{3,25},{5,90},{3,22},{120,1200}};
+        const float decays[5][2]={{180,700},{500,2200},{350,1700},{200,700},{900,2600}};
+        const float sustains[5][2]={{35,75},{8,38},{30,78},{50,85},{50,85}};
+        const float releases[5][2]={{60,180},{200,850},{200,1000},{80,350},{800,2200}};
+        f(kAmpAttack,attacks[family][0],attacks[family][1]);f(kAmpDecay,decays[family][0],decays[family][1]);f(kAmpSustain,sustains[family][0],sustains[family][1]);f(kAmpRelease,releases[family][0],releases[family][1]);
+        f(kFiltAttack,2,pad?500:25);f(kFiltDecay,160,keys?1600:950);f(kFiltSustain,10,55);f(kFiltRelease,100,pad?1400:650);
+        const int target1=randomSoundChoice(10)<7?1:randomSoundChoice(4),target2=randomSoundChoice(10)<5?4:randomSoundChoice(5);
+        setFromEngine(kShape,float(randomSoundChoice(4)));setFromEngine(kTarget,float(target1));f(kDepth,.5f,target1==0?2.5f:12);
+        setFromEngine(kLfo2Shape,float(randomSoundChoice(5)));setFromEngine(kLfo2Target,float(target2));f(kLfo2Depth,.5f,target2==0?2.f:10);
+        setFromEngine(kSync,1);setFromEngine(kLfo2Sync,1);setFromEngine(kModSync,1);
+        setFromEngine(kDivision,float(randomSoundChoice(5)));setFromEngine(kLfo2Division,float(randomSoundChoice(5)));setFromEngine(kModDivision,float(randomSoundChoice(5)));
+        f(kRate,.1f,2);f(kLfo2Rate,.1f,2);f(kTremRate,.2f,4);
+        const int pan=bass?0:randomSoundChoice(2);setFromEngine(kModMode,float(pan));setFromEngine(kModShape,float(randomSoundChoice(4)));
+        f(kTremDepth,bass?3:pan?20:5,bass?12:pan?80:35);setFromEngine(kPan,0);
+        int drive=randomSoundChoice(10)<8?0:randomSoundChoice(3);setFromEngine(kDriveType,float(drive));f(kDrive,0,drive==2?7:20);f(kDriveMix,25,65);
+        f(kChorus,0,bass?3:22);f(kDelay,0,bass?2:14);f(kFeedback,10,28);setFromEngine(kDelayDivision,float(randomSoundChoice(4)));setFromEngine(kFXPreset,0);
+        f(kLowCut,bass?18:keys?65:85,bass?26:keys?110:160);f(kOutputTrim,3,6);
+        setFromEngine(kRandomized,1);
+    }
     void applyFactorySound(int index){
+        setFromEngine(kRandomized,0);
         const int base=index<64?index:0;
         for(int i=1;i<kSoundPreset;++i)setFromEngine(i,kPatches[base][i]);
         applySoundExtras(base);
@@ -652,7 +696,7 @@ static VstIntPtr donutDispatch(AEffect* e,VstInt32 op,VstInt32 index,VstIntPtr v
     if(op==effSetChunk)return p->internalLoadState(static_cast<const uint8_t*>(ptr),size_t(value))?1:0;
     if(op==effSetProgram){p->setProgram(int(value));p->flushHostUpdates();return 0;}
     if(op==effGetProgram){p->flushHostUpdates();return p->currentProgram();}
-    if(op==effGetProgramName){mpc::copyString(static_cast<char*>(ptr),kVstMaxProgNameLen+1,p->programName(p->currentProgram()));return 0;}
+    if(op==effGetProgramName){mpc::copyString(static_cast<char*>(ptr),kVstMaxProgNameLen+1,p->getBool(kRandomized)?"Random Sound":p->programName(p->currentProgram()));return 0;}
     if(op==effIdle_Deprecated||op==effEditIdle){p->flushHostUpdates();return 1;}
     if(op==effGetChunk){
         const auto& state=p->internalSaveState();

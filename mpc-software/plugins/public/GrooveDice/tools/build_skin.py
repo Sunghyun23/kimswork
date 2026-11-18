@@ -84,7 +84,7 @@ def group_guide(x,y):
  return f'{x+4} {y+26} 606 110'
 def knob(key,name,x,y,w=138,physical=None,dice_lock=None):
  lcdw=min(116,w-22);lcdx=(w-lcdw)//2
- bind=H(key);children=[label({'MixKick':'Kick','MixSnare':'Snare','MixHat':'Hat','MixPerc':'Perc','XQKit':'Drum Kit','XQKick':'Kick','XQSnare':'Snare','XQHat':'Hat','XQPerc':'Perc Set'}.get(key,name.removesuffix(' Picker') if key.startswith('RulePick') else name.removesuffix(' Rule')if key.startswith('Rule')else name),f'0 0 {w} 23',22),g.entry('knob','Knob',g.knob_filmstrip_data('knob-v2.png',127,'Vertical'),f'{(w-64)//2} 20 64 64','Yes','Show','Always',remap=[('Data',bind)]),image(art(lcdw,24,'olive'),f'{lcdx} 81 {lcdw} 24'),label('',f'{lcdx} 81 {lcdw} 24',18 if key.startswith('RulePick')or key in ('HatRhythm','OpenHatRule','RideRule','CrashRule')else 20 if key in ('XQKit','XQKick','XQSnare','XQHat','XQPerc')or key.startswith('Sound')else 24,'fff7e9c7',key=key)]
+ bind=H(key);children=[label({'RulePickFullKick':'Kick','RulePickFullSnare':'Snare','RulePickFullHat':'Hat','RulePickFullPerc':'Perc','MixKick':'Kick','MixSnare':'Snare','MixHat':'Hat','MixPerc':'Perc','XQKit':'Drum Kit','XQKick':'Kick','XQSnare':'Snare','XQHat':'Hat','XQPerc':'Perc Set'}.get(key,name.removesuffix(' Picker') if key.startswith('RulePick') else name.removesuffix(' Rule')if key.startswith('Rule')else name),f'0 0 {w} 23',22),g.entry('knob','Knob',g.knob_filmstrip_data('knob-v2.png',127,'Vertical'),f'{(w-64)//2} 20 64 64','Yes','Show','Always',remap=[('Data',bind)]),image(art(lcdw,24,'olive'),f'{lcdx} 81 {lcdw} 24'),label('',f'{lcdx} 81 {lcdw} 24',18 if key.startswith('RulePick')or key in ('HatRhythm','OpenHatRule','RideRule','CrashRule')else 20 if key in ('XQKit','XQKick','XQSnare','XQHat','XQPerc')or key.startswith('Sound')else 24,'fff7e9c7',key=key)]
  if dice_lock is not None:
   put(get(children[1],'bounds'),'bounds',f'{(w-64)//2-16} 20 64 64')
   children.append(button('','DiceLock'+str(dice_lock),f'{w-44} 26 44 44',toggle=True))
@@ -123,7 +123,7 @@ def value(key,b,title=None):
 # Above the instruments: read-only context. Every MAIN action lives below the four panels.
 main=base()+[image(art(1248,40,'dark'),'16 90 1248 40'),label('KIT','24 92 64 36',20,'fff7e9c7'),label('','92 92 300 36',23,'fff7e9c7','XKit'),label('PATTERN','400 92 112 36',20,'fff7e9c7'),label('','514 92 280 36',23,'fff7e9c7','Pattern'),label('','808 92 120 36',21,'fff7e9c7','Position'),label('','934 92 130 36',21,'fff7e9c7','Status'),label('','1070 92 180 36',22,'fff7e9c7','PreviewBpm')]
 
-groups=[('A · TIMING',['Swing','SnareLate','HatShift','RndNudge'],16,136),('B · RULES',['RulePickKick','RulePickSnare','RulePickHat','RulePickPerc'],650,136),('C · DRUM MIX',['MixKick','MixSnare','MixHat','MixPerc'],16,278),('D · HATS / CYMBALS',['HatRhythm','OpenHatRule','RideRule','CrashRule'],650,278)]
+groups=[('A · TIMING',['Swing','SnareLate','HatShift','RndNudge'],16,136),('B · RULES',['RulePickFullKick','RulePickFullSnare','RulePickFullHat','RulePickFullPerc'],650,136),('C · DRUM MIX',['MixKick','MixSnare','MixHat','MixPerc'],16,278),('D · HATS / CYMBALS',['HatRhythm','OpenHatRule','RideRule','CrashRule'],650,278)]
 for group,(title,groupkeys,x,y)in enumerate(groups):
  main.append(panel(title,f'{x} {y} 614 112'))
  for j,key in enumerate(groupkeys):main.append(knob(key,meta[keys[key]]['name'],x+44+j*140,y+28,138,group*4+j,dice_lock=group*4+j))
@@ -180,7 +180,7 @@ build_sound_skin(g,O,tabs,keys,get,put,H,label,image,define,instance,button,art,
 # Custom sidebars for every choice selector, placed above current content and hiding background guides.
 for tab in tabs:
  children=get(get(tab,'componentDefinition'),'componentsData')
- allowed={'XKit','Kit','Pattern','Scope','FillSlot','FillEvery','FillLength','RecMode','CountIn','GridBar','RulePickKick','RulePickSnare','RulePickHat','RulePickPerc','HatRhythm','OpenHatRule','RideRule','CrashRule'} if get(tab,'tabName')=='MAIN' else {meta[c.param.index]['key']for page in pages if page.name==get(tab,'tabName')for c in page.controls if c.param is not None}
+ allowed={'XKit','Kit','Pattern','Scope','FillSlot','FillEvery','FillLength','RecMode','CountIn','GridBar','RulePickFullKick','RulePickFullSnare','RulePickFullHat','RulePickFullPerc','HatRhythm','OpenHatRule','RideRule','CrashRule'} if get(tab,'tabName')=='MAIN' else {meta[c.param.index]['key']for page in pages if page.name==get(tab,'tabName')for c in page.controls if c.param is not None}
  if get(tab,'tabName')=='GROOVE':allowed.add('HatRhythm')
  if get(tab,'tabName')=='SOUND':allowed.add('UserKit')
  if get(tab,'tabName')=='KITS':allowed.add('KitDiceMode')
@@ -188,10 +188,10 @@ for tab in tabs:
   if 'choices'not in m or m['key']not in allowed:continue
   key=m['key'];opened='Local/2/gdChoice'+str(keys[key]);name='GDChoice'+key
   if not any(get(d,'key')==name for d in defs):
-   rows=[image(art(426,628,'dark'),'0 0 426 628'),label('EXTRA CHANGES' if key=='Scope' else m['name'].upper(),'12 8 340 44',28,'fff3dfba')]
+   rows=[image(art(426,628,'dark'),'0 0 426 628'),label('EXTRA CHANGES' if key=='Scope' else (key.removeprefix('RulePickFull').upper()+' RULES' if key.startswith('RulePickFull') else m['name'].upper()),'12 8 340 44',28,'fff3dfba')]
    rows.append(g.entry('outside dismiss','Button',g.button_data('hit.png','hit.png',0,2),'426 0 854 628','No','Show','Always',remap=[('Data',opened)]))
    for j,text in enumerate(m['choices']):
-    if key not in ('XKit','HatRhythm')and j>=8:break
+    if key not in ('XKit','HatRhythm')and not key.startswith('RulePickFull') and j>=8:break
     rowName=name+'Row'+str(j)
     if key=='Scope':text=['No extras','New Pattern','Groove Variation','Recorded Fill','Pattern + Fill + FX','FX'][j]
     parts=[button(text,key,'0 0 414 56',j,len(m['choices']),kind='dark')]
@@ -199,10 +199,16 @@ for tab in tabs:
     if key=='XKit':actions.append(g.action('Mouse Down','Toggle Switch',H('FactoryReload'),''))
     define(rowName,parts,actions);entry=instance(rowName,f'6 {62+(j%8)*60} 414 56')
     if key in ('XKit','HatRhythm'):conditional(entry,'IndexedEnabling/'+str(j//8)+'/'+str((len(m['choices'])+7)//8)+'/'+H('KitBrowserPage'if key=='XKit'else'HatRhythmPage'))
+    if key.startswith('RulePickFull'):conditional(entry,'IndexedEnabling/'+str(j//8)+'/2/Local/2/gdRulePage'+str(keys[key]))
     rows.append(entry)
+   if key.startswith('RulePickFull'):
+    local='Local/2/gdRulePage'+str(keys[key])
+    for page,text,x in [(0,'< PAGE 1 / 2',6),(1,'PAGE 2 / 2 >',218)]:
+     parts=[g.entry('page art','Button',g.button_data(art(202,48,'orange'),art(202,48,'cream'),page,2),'0 0 202 48','No','Show','Always',remap=[('Data',local)]),label(text,'0 0 202 48',20),g.entry('page touch','Button',g.button_data('hit.png','hit.png',page,2),'0 0 202 48','No','Show','Always',remap=[('Data',local)])]
+     pageName=name+'Page'+str(page);define(pageName,parts);rows.append(instance(pageName,f'{x} 568 202 48'))
    if key=='XKit':rows +=[label('','6 538 414 24',20,'fff7e8c7','KitBrowserPage'),button('< PREV','KitPagePrev','6 568 202 48',kind='cream',toggle=True),button('NEXT >','KitPageNext','218 568 202 48',kind='cream',toggle=True)]
    if key=='HatRhythm':rows +=[button('PAGE 1 / 2','HatRhythmPage','6 568 202 48',0,2),button('PAGE 2 / 2','HatRhythmPage','218 568 202 48',1,2)]
-   if key.startswith('Rule'):
+   if key.startswith('Rule') and not key.startswith('RulePickFull'):
     rows.append(label('Live styles / use padlocks to keep','12 548 402 30',19,'fff3dfba'))
    # X uses a genuine native toggle on the local handle.
    hit=g.entry('Close sidebar','Button',g.button_data('hit.png','hit.png',0,2),'360 0 66 56','No','Show','Always',remap=[('Data',opened)]);rows +=[label('X','360 0 66 56',28,'fff8e4bd'),hit];define(name,rows,modal=True)

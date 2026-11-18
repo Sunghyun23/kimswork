@@ -130,6 +130,9 @@ for slug,category,name in [('dusty-sunday','Keys','Dusty Sunday'),('velvet-melt'
  soul_sounds.append(dict(name=f'{category} / {name}',category=category,values=values))
 factory_sounds=patches+soul_sounds
 c('SoundCurrent','Full Sound Preset',[p['name']for p in factory_sounds])
+c('Randomize','Random Sound',['Off','On'])
+c('Randomized','Random Sound Status',['Factory','Random'])
+c('FactoryReload','Reload Sound',['Off','On'])
 (P/'src/ChordTypes.h').write_text('#pragma once\nnamespace donut {\nstatic constexpr int kTypeCount=32;\nstatic constexpr int kTypeSizes[32]={'+','.join(str(len(t[2]))for t in TYPES)+'};\nstatic constexpr int kTypeIntervals[32][5]={' + ','.join('{'+','.join(map(str,list(t[2])+[0]*(5-len(t[2]))))+'}'for t in TYPES)+'};\nstatic const char*const kTypeSuffixes[32]={'+','.join(json.dumps(t[1])for t in TYPES)+'};\ninline bool minorType(int q){switch(q){'+''.join('case '+str(q)+':'for q in sorted(MINOR_TYPES))+'return true;default:return false;}}\n}\n')
 (P/'parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 (P/'factory-presets.json').write_text(json.dumps(dict(sounds=factory_sounds,progressions=progressions),indent=2)+'\n')
@@ -138,7 +141,7 @@ for p in params:
  key=p['key'];nm=p['name'];d=p['default']
  if 'choices'in p:expr='mpc::choiceParam('+json.dumps(key.lower())+','+json.dumps(nm)+', {'+','.join(json.dumps(x) for x in p['choices'])+'},'+str(d)+')'
  else:expr='mpc::'+('logParam' if p['log'] else 'floatParam')+'('+json.dumps(key.lower())+','+json.dumps(nm)+','+','.join(str(p[x])+'f' if '.' in str(p[x]) else str(p[x])+'.0f' for x in ['min','max','default'])+','+json.dumps(p['unit'])+', 1)'
- lines.append('{auto editor='+expr+';editor.automatable=false;p.addParam(std::move(editor));}' if key.startswith(('Edit','PadPosition','ChordKey','Transpose','KeyDegree','Smooth','HarmonyEdit','HarmonyTones','HarmonyCurrent','LfoRateControl','ModRateControl','Lfo2RateControl')) else 'p.addParam('+expr+');')
+ lines.append('{auto editor='+expr+';editor.automatable=false;p.addParam(std::move(editor));}' if key.startswith(('Edit','PadPosition','ChordKey','Transpose','KeyDegree','Smooth','HarmonyEdit','HarmonyTones','HarmonyCurrent','LfoRateControl','ModRateControl','Lfo2RateControl','Randomize','Randomized','FactoryReload')) else 'p.addParam('+expr+');')
 lines+=['}']
 for name,prefix in [('Roots','Root'),('LegacyQualities','Quality'),('Qualities','HarmonyType'),('Voicings','Voicing'),('Octaves','ChordOctave'),('PadNotes','PadNote'),('Touches','Touch')]:lines.append('static constexpr int kChord'+name+'[16] = {'+','.join('k'+prefix+str(slot) for slot in range(1,17))+'};')
 lines.append('static constexpr int kLegacyBankProgressions[4] = {kProgression,kProgression2,kProgression3,kProgression4};')

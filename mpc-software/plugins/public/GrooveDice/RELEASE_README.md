@@ -1,6 +1,6 @@
-# Groove Dice 1.3.4
+# Groove Dice 1.4.0
 
-New in1.3.4: all seventeen SOUND sources have independent reverse switches, saved with user kits and projects. Start trims from the source end in reverse mode; Decay and Shift remain independent. SOUND has two in-place pages: Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Separate48px previous/next arrows surround a visible SOUND1/2 counter. REV stays available on both pages; approved per-row polarity Ø is on page2. Remote on-device page/REV/Ø interactions were checked; physical encoder and hardware-audio coverage remain separate.
+Retained from1.3.4: all seventeen SOUND sources have independent reverse switches, saved with user kits and projects. Start trims from the source end in reverse mode; Decay and Shift remain independent. SOUND has two in-place pages: Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Separate48px previous/next arrows surround a visible SOUND1/2 counter. REV stays available on both pages; approved per-row polarity Ø is on page2. Remote on-device page/REV/Ø interactions were checked; physical encoder and hardware-audio coverage remain separate.
 
 One-bar neo-soul and hip-hop drums for MPC standalone, with visible Dice changes and individual locks.
 
@@ -24,3 +24,5 @@ Public package: Original Workshop only — 128 independently synthesized one-sho
 UID KpGy; 672 append-only parameters, first643 unchanged. Existing projects/expansion identities are supported; old RULE LOCK values migrate to BASIC plus a closed padlock. Signed Shift reports fixed 30ms latency including direct pads. Newer state cannot be fully represented by old engines. External sidechain and generated MIDI output are not implemented.
 
 Native/ARM32/ARM64 builds and SDK validation pass. Engine, UBSan, allocation guards, sample/state/expansion/skin and real VST bridge tests pass. Host simulator:19 pass,0 warnings,0 failures. The owner confirmed 1.3.3 locks/Dice/RULE behavior on MPC XL OS3.10.1.12. Actual screenshots come directly from the authenticated MPC Remote Screen framebuffer stream, with capture provenance recorded. Complete physical-control coverage, all routes and worst-case hardware CPU are not certified. No ASan pass is claimed. See VERIFICATION.md.
+
+Version1.4.0 adds16RULES per part, with a paged left list and full-range Q-Link control. See MANUAL.md and VERIFICATION.md.

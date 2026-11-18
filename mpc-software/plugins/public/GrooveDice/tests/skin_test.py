@@ -44,7 +44,7 @@ for key,definition in defs.items():
  if definition.get('hideQLinkBounds'):
   order=list(definition);assert order.index('disableCoarseDataWheel')<order.index('hideQLinkBounds')<order.index('componentsData'),key
 assert t['tabs'][0]['qlinkBoundsData']==['20 162 606 110','654 162 606 110','20 304 606 110','654 304 606 110']
-for physical,key in zip([14,10,6,2],['RulePickKick','RulePickSnare','RulePickHat','RulePickPerc']):assert q['Program Mode Q-Links']['Q-Link '+str(physical)]==keys[key]
+for physical,key in zip([14,10,6,2],['RulePickFullKick','RulePickFullSnare','RulePickFullHat','RulePickFullPerc']):assert q['Program Mode Q-Links']['Q-Link '+str(physical)]==keys[key]
 print('PASS ordered native modal guide suppression, padded MAIN panel bounds, B RULES mapping')
 
 # Test what matters visually: all titles/badges outside, actual four controls inside.
@@ -153,9 +153,9 @@ for n in range(6):
 print('PASS explicit kit lock and explicit extra-change choices')
 
 # RULES expose seven playable touch choices without a LOCK value and MAIN B's four fixed SCREEN relays.
-for n,key in enumerate(['RulePickKick','RulePickSnare','RulePickHat','RulePickPerc']):
- assert len(m[keys[key]]['choices'])==7 and 'LOCK'not in m[keys[key]]['choices']
- assert all('GDChoice'+key+'Row'+str(j)in defs for j in range(7))
+for n,key in enumerate(['RulePickFullKick','RulePickFullSnare','RulePickFullHat','RulePickFullPerc']):
+ assert len(m[keys[key]]['choices'])==16 and 'LOCK'not in m[keys[key]]['choices']
+ assert all('GDChoice'+key+'Row'+str(j)in defs for j in range(16))
  assert not any(e['componentData'].get('type')=='Label' and '4-BAR PHRASES' in str(e)for d in defs.values()for e in d.get('componentsData',[]))
 print('PASS four7-choice rule drawers, Program B styles and live1-bar captions')
 
@@ -259,3 +259,7 @@ for prefix in ['LibraryRowButton','RoleSoundRow','DynamicKitRow']:
   assert hit['componentsData'][0]['componentData']['data']['onImage']=='hit.png'
   assert hit['componentsData'][-1]['componentData']['type']=='Slider'
 print('PASS sample/sample-list/kit-pool/library/role/kit caption center is covered by a single command surface')
+
+assert m[:672]==json.loads((P/'tests/legacy-parameters-1.3.4.json').read_text())
+assert len(m)==676
+print('PASS: first672full declarations retained, extended16style selectors append')

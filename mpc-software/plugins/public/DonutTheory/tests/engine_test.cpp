@@ -25,7 +25,22 @@ struct Rig {
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
- {static_assert(kSoundCurrent==287&&kNumParams==288,"append-only factory selection");
+ {static_assert(kRandomize==288&&kRandomized==289&&kNumParams==291,"append-only generator");Rig m;m.block();
+  m.p->set(kVolume,-20);m.p->set(kChordKeyRoot,7);m.p->set(kSpread,11);m.p->set(kChordGlide,1);m.p->set(kSlotCount,3);m.block();
+  std::array<float,kNumParams>before{};for(int i=0;i<kNumParams;++i)before[i]=m.p->get(i);
+  for(int roll=0;roll<60;++roll){m.p->set(kRandomize,1);m.block();assert(m.p->getBool(kRandomized)&&!m.p->getBool(kRandomize));
+   assert(m.p->getBool(kSync)&&m.p->getBool(kLfo2Sync)&&m.p->getBool(kModSync));
+   for(int i=0;i<16;++i)for(int field:{kChordRoots[i],kChordQualities[i],kChordVoicings[i],kChordOctaves[i],kChordPadNotes[i]})assert(m.p->get(field)==before[field]);
+   for(int key:{kVolume,kChordKeyRoot,kSpread,kChordGlide,kSlotCount,kMainChordPage,kInputMode,kTrigger,kPadMap})assert(m.p->get(key)==before[key]);
+   assert(m.p->getInt(kOscPair)==m.p->getInt(kWave1)*4+m.p->getInt(kWave2));
+   m.block({mpc::MidiEvent::noteOn(0,60,95)});float peak=0;for(int b=0;b<90;++b)peak=std::max(peak,m.block({},512));assert(peak>1e-6f);m.block({mpc::MidiEvent::noteOff(0,60)});
+  }
+  auto saved=m.p->internalSaveState();m.p->setProgram(0);assert(!m.p->getBool(kRandomized));assert(m.p->internalLoadState(saved.data(),saved.size()));m.p->reset();m.block();assert(m.p->getBool(kRandomized)&&!m.p->getBool(kRandomize));
+  for(int b=0;b<200;++b)m.block();int current=m.p->currentProgram();m.p->set(kFactoryReload,1);m.block();assert(!m.p->getBool(kRandomized)&&!m.p->getBool(kFactoryReload)&&m.p->currentProgram()==current);
+  std::cout<<"PASS:60complete sound generations, finite non-silent variable-block audio, forced sync, preserved all16chords/pads/master/key/performance, custom-state restore and same-program reload\n";
+ }
+
+ {static_assert(kSoundCurrent==287&&kNumParams==291,"append-only factory selection");
   Rig m;m.p->set(kVolume,-20);m.p->set(kRoot1,61);m.p->set(kSpread,17);m.p->set(kChordGlide,1);m.p->set(kChordKeyRoot,5);
   for(int index:{64,65}){m.p->setProgram(index);m.block();assert(m.p->currentProgram()==index);assert(std::abs(m.p->get(kVolume)+20)<.001f&&m.p->getInt(kRoot1)==61&&std::abs(m.p->get(kSpread)-17)<.001f&&m.p->getBool(kChordGlide)&&m.p->getInt(kChordKeyRoot)==5);
    assert(m.p->getInt(kModMode)==1&&m.p->getInt(kModSync)==1&&m.p->getInt(kModDivision)==1);assert(m.p->get(kTremDepth)==(index==64?70:80));assert(m.p->get(kBodyTone)==(index==64?28:22));
@@ -37,7 +52,7 @@ int main(){
   std::cout<<"PASS:66factory programs, canonical/legacy selection, retained master/chord/key/strum state, new288 and old287state migration\n";
  }
 
- {static_assert(kBodyTone==279&&kLfo2Shape==280&&kLfo2RateControl==286&&kNumParams==288,"append-only Body/LFO2");
+ {static_assert(kBodyTone==279&&kLfo2Shape==280&&kLfo2RateControl==286&&kNumParams==291,"append-only Body/LFO2");
   double response[3]{};int at=0;
   for(float frequency:{40.f,250.f,4000.f}){donut::BodyTone body;body.prepare(48000);double dry=0,wet=0;
    for(int i=0;i<96000;++i){const float x=.1f*std::sin(6.28318530718f*frequency*i/48000);float y=body.process(x,1);assert(std::isfinite(y));if(i>=48000){dry+=x*x;wet+=y*y;}}
@@ -64,7 +79,7 @@ int main(){
  std::cout<<"PASS: Body band/level compensation/zero bypass, inert legacy Body, five LFO2 targets/shapes, depth0 isolation, independent sync/free rate,288state/old279 migration and allocation-free variable blocks\n";
 
  // Mode-aware rate relays retain free Hz and control independent divisions.
- {static_assert(kModSync==275&&kModDivision==276&&kLfoRateControl==277&&kModRateControl==278&&kNumParams==288,"append-only sync");
+ {static_assert(kModSync==275&&kModDivision==276&&kLfoRateControl==277&&kModRateControl==278&&kNumParams==291,"append-only sync");
   Rig t;t.p->set(kRate,1.7f);t.p->set(kTremRate,3.2f);t.block();
   for(bool motion:{false,true}){int sync=motion?kModSync:kSync,div=motion?kModDivision:kDivision,relay=motion?kModRateControl:kLfoRateControl,rate=motion?kTremRate:kRate;
    const float free=t.p->get(rate);t.p->set(sync,1);t.block();
@@ -84,7 +99,7 @@ int main(){
 
 
  // Motion mode shares rate/depth, retains stereo, and safely migrates old states.
- {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==288,"append-only motion");
+ {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==291,"append-only motion");
   Rig m;m.p->set(kMotion,0);m.p->set(kSpace,0);m.p->set(kChorus,0);m.p->set(kDelay,0);m.p->set(kDrift,0);m.p->set(kDepth,0);m.p->set(kVibrato,0);m.p->set(kAmpAttack,1);m.p->set(kAmpSustain,100);m.p->set(kAmpDecay,1);m.p->set(kTremRate,2);m.p->set(kTremDepth,100);m.p->set(kModMode,1);
   for(int i=0;i<400;++i)m.block();m.block({mpc::MidiEvent::noteOn(0,72,100)});
   bool left=false,right=false;
@@ -167,7 +182,7 @@ int main(){
  std::cout<<"PASS: scoped smooth APPLY preserves roots/types/MIDI/inactive slots, preview ownership/end/stop, stale-plan rejection and safe state\n";
 
  // Key reference never changes notes. Explicit confirmation moves all active roots only.
- {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==288,"Append-only key controls");
+ {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==291,"Append-only key controls");
   for(int count=0;count<4;++count)for(int key=0;key<12;++key)for(int from=0;from<12;++from){Rig m;m.p->set(kSlotCount,count);m.block();
    std::array<std::array<float,5>,16> before{};
    for(int slot=0;slot<16;++slot){m.p->set(kChordRoots[slot],48+slot%12);m.p->set(kChordOctaves[slot],slot%5);m.p->set(kChordPadNotes[slot],80+slot);for(int f=0;f<5;++f)before[slot][f]=m.p->get(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot]);}
@@ -194,7 +209,7 @@ int main(){
  std::cout<<"PASS: 576 key/source/count transposes, reference isolation, whole-operation bounds, degree readback, state and old208 migration without render allocations\n";
 
  // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
- {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==288,"Append-only pad positions");
+ {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==291,"Append-only pad positions");
   Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
   m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
   m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);

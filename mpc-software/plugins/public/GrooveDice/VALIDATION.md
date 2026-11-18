@@ -1,3 +1,7 @@
+## Current1.4.0 —16RULES per part
+
+Existing seven styles stay in place; nine new choices per part add36distinct generated/scheduled patterns. The four full selectors append after672legacy declarations. [Specification and compatibility](../../../docs/plugins/groove-dice/rules.md). Release1.4.0 is approved. Final automatic/device evidence is recorded below and in design/device-1.4.0/verification.json.
+
 # 1.3.0 local update — HATS / CYMBALS
 
 MAIN D moves colour FX to the existing FX page and maps Hat Rhythm/Open Hat/Ride/Crash. First533parameter declarations are unchanged;536total. New rules have separate classified Ride/Crash/Bell sources, pinned cache lanes and original procedural fallbacks; they share the existing Cymbal output route. Ride/Bell use Hat Mix; Crash uses Perc Mix. No ninth bus/physical pad or manual auxiliary sample selector is added.
@@ -472,3 +476,13 @@ Actual MPC XL remote input found that overlaid dynamic captions swallowed center
 On the installed correction, center taps open sample lists, selecting text changes Dry Kick02 to Dry Kick01, kit-list text selects Velvet Sunday, and selected-kit checkbox text toggles the stored pool/count. A 17-note fill remains after changing kits. MAIN, both SOUND pages, sample drawer, cymbals, fill editor and Workshop Sessions were captured directly from authenticated MPC Remote Screen frames, without retouching. Image checksums and capture profile are in design/device-1.3.4/verification.json. Original Workshop was selected using the UI while all four owner packs remained installed; the visible global library totals therefore exceed the public ZIP's 128 original WAVs. No physical encoder, hardware-audio or worst-case CPU certification is implied.
 
 Public release qualification: 1.3.4 core-only ZIP, manual, release notes and website use the final installed skin and direct device captures. Publication and live download/deployment checks are tracked in the release record.
+
+## 2026-11-18 — 1.4.0 candidate final verification
+
+All36new rules have distinct raw and actual scheduled fingerprints. Variable32/512sample blocks preserve backbeats2/4, exclude kick2/4 and retain other-part/fill data. All16hat styles ×15Hat Rhythm choices remain nonempty, including UPBEATS with1/4. Full suite passes (host19PASS/0WARN/0FAIL), native/ARM32/ARM64 SDK0errors/0warnings. Real VST bridge checks4×16selector values and4004fine SCREEN increments with bounded notifications and synchronous reentrant echoes. New styles cannot collapse to legacy fallback aliases during host notifications; canonical writes notify their visible target. First672metadata stay exact;676total.
+
+Installed using official SDK on MPC XL internalNVMe and restarted. Final official export matches143public runtime files;13owner expansion files/four packs are preserved separately and excluded from public source/packages. Direct MPC remote captures under design/device-1.4.0 show the16-choice paged drawer, END DOUBLE/UPBEATS1/4, a live remote knob change to LATE ANSWER and Dice selecting EARLY PAIR/TWO ON ONE/LATIN THREE. Kit Fixed retained the kit/mix; preview was stopped afterward. These checks do not certify fresh physical encoder rotation, hardware output listening/recording, full project round-trip or worst-case CPU. Public stable remains1.3.4; no public release/site publication was made.
+
+## 1.4.0 publication approval
+
+The owner explicitly authorized release and website updates after final candidate checks. Public packaging audits143matching runtime files plus an empty generated expansion registry; the sole bank is byte-identical Original Workshop. No optional owner expansion payload is included. Current manual, direct MAIN/RULES captures and the complete16-style feature description accompany the release. Publication outcome is recorded in design/device-1.4.0/publication.json. Earlier local-only lines are historical.

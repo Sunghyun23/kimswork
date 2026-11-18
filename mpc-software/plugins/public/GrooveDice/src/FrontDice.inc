@@ -1,5 +1,5 @@
 // Visible MAIN randomisation. Per-control locks protect Dice only; manual editing stays live.
-static int frontDiceTarget(int n){static const int keys[]={kSwing,kSnareLate,kHatShift,kRndNudge,kRulePickKick,kRulePickSnare,kRulePickHat,kRulePickPerc,kMixKick,kMixSnare,kMixHat,kMixPerc,kHatRhythm,kOpenHatRule,kRideRule,kCrashRule};return keys[mpc::clamp(n,0,15)];}
+static int frontDiceTarget(int n){static const int keys[]={kSwing,kSnareLate,kHatShift,kRndNudge,kRulePickFullKick,kRulePickFullSnare,kRulePickFullHat,kRulePickFullPerc,kMixKick,kMixSnare,kMixHat,kMixPerc,kHatRhythm,kOpenHatRule,kRideRule,kCrashRule};return keys[mpc::clamp(n,0,15)];}
 static bool isFrontDiceParameter(int key){for(int n=0;n<16;++n)if(frontDiceTarget(n)==key)return true;return false;}
 bool frontDiceLocked(int n)const{return getBool(kDiceLock0+n);}
 float diceContinuous(int key,float low,float high,float step,float amount){
@@ -18,10 +18,10 @@ unsigned randomiseFrontControls(float amount){
   for(int g=0;g<4;++g)partOffset[g][n].store(0);grooveBaseValid.store(false);
  }
  if(!getBool(kPatternLock))for(int g=0;g<4;++g){
-  if(frontDiceLocked(4+g)||getInt(kRuleKickStyle+g)==0)continue;
-  int choices[7]{},count=0;for(int style=1;style<=7;++style){if(g==2&&style==7)continue;if(style==3&&amount<.5f)continue;choices[count++]=style;}
-  int old=getInt(kRuleKickStyle+g),pick=int(random()%unsigned(count));if(count>1&&choices[pick]==old)pick=(pick+1)%count;
-  int style=choices[pick];static const int intensity[]={0,1,2,3,1,2,2,3};layerSet(kRuleKickStyle+g,style);layerSet(kRuleKick+g,intensity[style]);lastRuleStyle[g].store(style);if(style!=old)dirty|=1u<<g;
+  if(frontDiceLocked(4+g)||ruleStyle(g)==0)continue;
+  int choices[16]{},count=0;for(int style=1;style<=16;++style){if(g==2&&style==7)continue;if(ruleIntensity(style)==3&&amount<.5f)continue;choices[count++]=style;}
+  int old=ruleStyle(g),pick=int(random()%unsigned(count));if(count>1&&choices[pick]==old)pick=(pick+1)%count;
+  int style=choices[pick];selectFullRule(g,style);layerSet(kRuleKick+g,ruleIntensity(style));lastRuleStyle[g].store(style);if(style!=old)dirty|=1u<<g;
  }
  if(!getBool(kKitLock)){static const float low[]={-2,-4,-8,-12},high[]={0,1,-2,-4};for(int g=0;g<4;++g)if(!frontDiceLocked(8+g)){int key=kMixKick+g;layerSet(key,diceContinuous(key,low[g],high[g],.1f,amount));}}
  if(!getBool(kPatternLock)){

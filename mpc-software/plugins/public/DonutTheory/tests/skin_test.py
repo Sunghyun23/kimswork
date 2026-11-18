@@ -164,7 +164,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==288
+assert index['LearnStatus']==84 and len(params)==291
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -496,3 +496,18 @@ print('PASS: first287full declarations unchanged; appended full-range sound brow
 osc=next(tab['componentDefinition']['componentsData']for tab in t['tabs']if tab['tabName']=='OSC')
 w=next(w for w in osc if w['componentData']['name']=='Sound Preset')
 assert w['handle remapping']['map'][0]['value']=='WithName[Sound Preset]/Parameter 287'
+
+assert params[:288]==json.loads((P/'tests/legacy-288-parameters.json').read_text())
+assert [x['key']for x in params[288:]]==['Randomize','Randomized','FactoryReload']
+w=next(w for w in children if w['componentData']['name']=='Random sound');assert w['bounds']['bounds']=='910 26 48 52' and w['bounds']['acceptsHWFocus']=='No'
+d=defs['DTRandomSound'];assert d['componentsData'][-1]['componentData']['type']=='Slider'
+assert d['componentsData'][-1]['componentData']['data']['handleName']=='ResetOnGestureEnd/Local/2/dtRandomPress'
+assert d['actions'][0]['handleName']=='Parameter 288'
+print('PASS:288legacy declarations retained; caption-safe generator button, held feedback, unchanged16Q-Links')
+
+for name in ['DTMenu-choice-287','sliderWithFocusMenu-choice-287']:
+ d=defs[name]
+ custom=next(w for w in d['componentsData']if w['componentData']['name']=='Random sound name')
+ assert custom['bounds']['version']==2 and custom['bounds']['additionalInvalidatingHandles']==['IndexedEnabling/1/2/Parameter 289']
+for i in range(66):assert defs['DTSideRow287-'+str(i)]['actions'][-1]['handleName']=='Parameter 290'
+print('PASS: explicit custom display plus same-row factory reload; transient commands and16Q-Links preserved')

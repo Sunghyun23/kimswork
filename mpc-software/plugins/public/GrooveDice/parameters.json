@@ -7024,5 +7024,101 @@
     ],
     "default": 0,
     "auto": false
+  },
+  {
+    "key": "RulePickFullKick",
+    "name": "Kick Extended Style Picker",
+    "choices": [
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "DOWNBEAT",
+      "OFFBEATS",
+      "SYNCOPATE",
+      "DOUBLE HIT",
+      "ONE THREE",
+      "ANTICIPATE",
+      "LATE ANSWER",
+      "PICKUP",
+      "THREE HITS",
+      "FOUR HITS",
+      "SYNC PAIR",
+      "STAGGER",
+      "END DOUBLE"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RulePickFullSnare",
+    "name": "Snare Extended Style Picker",
+    "choices": [
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SOFT",
+      "PRE GHOST",
+      "POST GHOST",
+      "2 GHOSTS",
+      "SECOND UP",
+      "FIRST UP",
+      "LOW ACCENT",
+      "POST BOTH",
+      "EARLY PAIR",
+      "LATE PAIR",
+      "TRIPLET",
+      "DRAG IN",
+      "BAR TURN"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "RulePickFullHat",
+    "name": "Hat Extended Style Picker",
+    "choices": [
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SPARSE",
+      "OFFBEATS",
+      "ACCENTED",
+      "OPEN HAT",
+      "FIRST HALF",
+      "LAST HALF",
+      "ON BEATS",
+      "UPBEATS",
+      "TWO ON ONE",
+      "ONE ON TWO",
+      "SOFT TAIL",
+      "CRESCENDO",
+      "SKIP TWO"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "RulePickFullPerc",
+    "name": "Perc Extended Style Picker",
+    "choices": [
+      "BASIC",
+      "VARIED",
+      "BUSY",
+      "SPARSE",
+      "OFFBEATS",
+      "ANSWER",
+      "PERC LOOP",
+      "CLAP REPLY",
+      "TOM TURN",
+      "SHAKER",
+      "CALL REPLY",
+      "OFFBEAT TOM",
+      "CLAP PAIR",
+      "LATIN THREE",
+      "TOM CLAP",
+      "END PICKUP"
+    ],
+    "default": 1,
+    "auto": true
   }
 ]

@@ -11,7 +11,7 @@ subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-saniti
 subprocess.run([str(P/'build/host_countin_test')],env=env,check=True)
 subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests/live_rules_bridge_test.cpp'),'-o',str(P/'build/live_rules_bridge_test')],check=True)
 subprocess.run([str(P/'build/live_rules_bridge_test')],env=env,check=True)
-for name in ['room_reverb_test','sample_arrows_test','velocity_pattern_test','cymbal_rules_test','sample_browser_test','state_context_test','decay_controls_test','front_dice_test','rule_selector_test','reverse_test','sound_pages_test']:
+for name in ['room_reverb_test','sample_arrows_test','velocity_pattern_test','cymbal_rules_test','sample_browser_test','state_context_test','decay_controls_test','front_dice_test','rule_selector_test','reverse_test','sound_pages_test','extended_rules_test']:
  binary=P/'build'/name
  subprocess.run(['clang++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(SDK/'framework'),str(P/'tests'/f'{name}.cpp'),'-o',str(binary)],check=True)
  subprocess.run([str(binary)],env=env,check=True)

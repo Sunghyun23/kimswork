@@ -233,6 +233,8 @@ from key_reference import install as key_reference
 key_reference(g,tui,params,out)
 from tempo_controls import install as tempo_controls
 tempo_controls(g,tui,ql,params,out)
+from random_sound_ui import install as random_sound_ui
+random_sound_ui(g,tui,params,out)
 # Apply display-only names after all choice/browser bindings have been generated.
 osc_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='OSC'),'componentDefinition'),'componentsData')
 for w in osc_widgets:

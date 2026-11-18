@@ -18,7 +18,7 @@ struct Host{std::unique_ptr<GrooveDice>p=std::make_unique<GrooveDice>();float da
 };
 static auto notes(GrooveDice&p){std::vector<std::tuple<int,int,int,int,int>>v;for(auto&c:p.notes[4])if(c.valid()){auto n=c.read();v.emplace_back(n.tick,n.role,n.velocity,n.chance,n.gate);}return v;}
 int main(){
- {Host h;auto&p=*h.p;assert(kHatGrid==292&&kPhraseState==293&&kMixKick==342&&kParamCount==672);std::vector<std::vector<std::tuple<int,int,int,int,int>>>unique;
+ {Host h;auto&p=*h.p;assert(kHatGrid==292&&kPhraseState==293&&kMixKick==342&&kParamCount==676);std::vector<std::vector<std::tuple<int,int,int,int,int>>>unique;
   for(int grid=0;grid<4;++grid){p.set(kHatGrid,grid);for(int g=0;g<4;++g)p.set(kRuleKick+g,1);for(int attempt=0;attempt<80;++attempt){p.set(kRandomAmt,attempt%2?100:10);h.pulse(kRoll);assert(p.lengths[4].load()==3840&&RuleProbe::phrase(p));int snare[4]{},kick[4]{},hat[4]{};for(auto&c:p.notes[4])if(c.valid()){auto n=c.read();int bar=n.tick/3840,t=n.tick%3840;assert(bar==0);if(n.role==0){assert(t!=960&&t!=2880);++kick[bar];}if(n.role==1){assert(t==960||t==2880);++snare[bar];}if(n.role==2)++hat[bar];}for(int bar=0;bar<1;++bar){assert(snare[bar]==2&&kick[bar]>=2&&kick[bar]<=4);assert(hat[bar]==(grid==0?4:grid==1?8:grid==2?16:18));}unique.push_back(notes(p));}}
   bool variation=false;for(size_t i=1;i<unique.size();++i)if(unique[i]!=unique[0])variation=true;assert(variation);std::cout<<"PASS320 phraseROLLs: one repeated bar, snare2/4, kick excludes2/4, all4hatgrids, bounded notes, actual variation; no audio allocations\n";
  }

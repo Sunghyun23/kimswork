@@ -1,4 +1,16 @@
-## Current release — 1.9.0 (2026-11-18)
+## Current1.10.0 release — whole-sound RANDOM (2026-11-18)
+
+User cancelled the song render and requested a single RANDOM button, then explicitly chose complete oscillator-to-FX generation rather than current-preset variation. MAIN adds a48×52px dice/RND touch button at910,26 in the header gap beside INPUT. It retains all existing controls, the donut artwork and sixteen Q-Links. A UI-local press gate gives held feedback; one Mouse Down sends the command and the top continuous surface owns release.
+
+Generated timbre correlates one of five playable envelope families (bass/keys/synth/lead/pad) with newly drawn oscillator pair/mix/detune, pulse/FM/sub/noise, filter/envelopes, Body/Drift, modulation and FX. All three Sync switches (LFO1, LFO2, shared Tremolo/Auto Pan) are forced ON; each Division is independently chosen from1/16,1/8,1/4,1/2,1bar. Cutoff, resonance, pitch modulation, drive and wet levels are bounded; this is not uniformly random full-scale noise. Free rates remain valid for later Sync-off editing.
+
+Master Volume, reference Key, all16chord root/type/voicing/octave/MIDI settings, Input/Trigger/PadMap, slot count/page, Strum and CHORD GLIDE preference are preserved. Ordinary Voice Mode/Glide time are timbral choices. Sound change releases sounding voices as factory selection does. Display reads Random Sound rather than claiming a factory recipe. Re-selecting the same factory program reloads it; factory selection clears Random status. No new factory program is inserted.
+
+First288declarations are unchanged. Randomize288 is a nonautomatable transient command, Randomized289 a persisted nonautomatable status; FactoryReload290 explicitly reapplies a selected factory row:291parameters total. Save/load/reset disarm commands without regenerating a saved sound; old288states default both fields0. RNG seeds once in the constructor; process uses fixed arrays and xorshift, without allocation, locks, file access or host calls.
+
+Native/ARM32/ARM64 and SDK0errors/0warnings; complete tests including native/UBSan60randomizations, all16chord/pad preservation, forced Sync, finite/non-silent variable-block audio, state and same-program reload pass. Host19PASS/0WARN/0FAIL and skin/guide/legacy tests pass. Actual-device outcomes are recorded separately after installation. The user authorized official release and site publication. Actual MPC XL checks and installed hashes are in design/device-1.10.0/verification.json.
+
+## Previous release — 1.9.0 (2026-11-18)
 
 The approved 1.8.0 MAIN layout/engine is retained. Two approved 88 BPM /1/8 Auto Pan Soul Studies append as built-in programs65/66: Keys / Dusty Sunday, Synth / Velvet Melt. Factory bank66; first64order/names/recipes retained. Legacy SoundPreset46 remains64choices; appended SoundCurrent287 has66choices. Total288parameters; first287declarations match the1.8fixture exactly. Sound selection preserves master/chord/key/strum/glide-preference state. See the current manual/release notes for the coherent public specification; historical sections below are development history.
 
