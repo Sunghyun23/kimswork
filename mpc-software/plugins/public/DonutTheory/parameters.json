@@ -4490,5 +4490,187 @@
       "H16"
     ],
     "default": 0
+  },
+  {
+    "key": "ChordKeyRoot",
+    "name": "Chord Key",
+    "choices": [
+      "C",
+      "C# / Db",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F# / Gb",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ChordKeyMode",
+    "name": "Chord Key Mode",
+    "choices": [
+      "Major",
+      "Minor"
+    ],
+    "default": 0
+  },
+  {
+    "key": "TransposeFrom",
+    "name": "Transpose From",
+    "choices": [
+      "C",
+      "C# / Db",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F# / Gb",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 0
+  },
+  {
+    "key": "TransposeFromMode",
+    "name": "Transpose From Mode",
+    "choices": [
+      "Major",
+      "Minor"
+    ],
+    "default": 0
+  },
+  {
+    "key": "TransposeOpen",
+    "name": "Transpose Preview",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "TransposeApply",
+    "name": "Apply Transpose",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "TransposeStatus",
+    "name": "Transpose Status",
+    "choices": [
+      "Ready",
+      "Applied",
+      "No pitch change",
+      "OUT OF RANGE \u2014 adjust source key or chord roots"
+    ],
+    "default": 0
+  },
+  {
+    "key": "KeyDegree1",
+    "name": "Chord Degree 1",
+    "choices": [
+      "\u2014",
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v",
+      "vi",
+      "vii"
+    ],
+    "default": 0
+  },
+  {
+    "key": "KeyDegree2",
+    "name": "Chord Degree 2",
+    "choices": [
+      "\u2014",
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v",
+      "vi",
+      "vii"
+    ],
+    "default": 0
+  },
+  {
+    "key": "KeyDegree3",
+    "name": "Chord Degree 3",
+    "choices": [
+      "\u2014",
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v",
+      "vi",
+      "vii"
+    ],
+    "default": 0
+  },
+  {
+    "key": "KeyDegree4",
+    "name": "Chord Degree 4",
+    "choices": [
+      "\u2014",
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v",
+      "vi",
+      "vii"
+    ],
+    "default": 0
+  },
+  {
+    "key": "TransposeDelta",
+    "name": "Transpose Interval",
+    "min": -5,
+    "max": 6,
+    "default": 0,
+    "unit": "st",
+    "log": false
   }
 ]

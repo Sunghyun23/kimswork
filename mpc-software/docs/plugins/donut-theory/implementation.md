@@ -558,3 +558,13 @@ BODY를 UI/Q-Link에서 빼고 기존 SUB를 전면 A3에 연결했다. Body의 
 Native/ARM32/ARM64 및 SDK validator0errors/0warnings. 엔진/UBSan/아날로그 엔진/호스트 브리지/host_sim19항목/전체 스킨 테스트 통과. SUB0/50/100 스펙트럼 테스트에서 220Hz 아래110Hz 성분, 레벨 증가, Body 비활성 및 렌더 무할당을 확인했다. 공장64개에 대해 이전 Mix/Sub 기여와 새 생성값의 동등성을 별도 비교해 예외0건이었다. 생성된 런타임 MAIN 프리뷰의 SUB 라벨과 배치를 확인했으며 실기 캡처라고 부르지 않는다.
 
 MPC XL / OS3.10.1.12 내장 `/nvme/VST2 Plugins/kim - VST - Donut Theory`에64파일 검증으로 설치 완료. 기기의 SUB 물리 노브와 청음은 아직 직접 확인하지 않았다. 공개 배포1.2.2는 유지한다.
+
+## 2026-11-18 — 1.3.0 candidate implementation and MPC verification
+
+Implemented the approved Key/circle layout, reference-only Major/natural-Minor selection, degree badges, explicit all-active-slot TRANSPOSE confirmation and PAD SETUP. First208 full parameter declarations match a committed1.2.3fixture;12parameters append, total220. UIDKrql, sound programs and sixteen CHORD SCREEN assignments remain unchanged. All576root/source/active-count combinations, inactive-slot/field preservation, atomic whole-operation bounds rejection, current-state/old208migration, saved gesture clearing and allocation guards passed. Full native/UBSan/analog/host-bridge/skin suite passed. Host simulator:19PASS/0WARN/0FAIL. Final native/ARM32/ARM64 builds and SDK validator0errors/0warnings. Source logs remain locally under /private/tmp/dt130-*.log.
+
+Actual MPC XL/OS3.10.1.12, internalNVMe: SDK install/restart, then official SDK export compared all114installed files byte-for-byte with the final build. Remote clicks verified MAIN on entry; KeyC->D without changing notes; confirmation+2semitones/4slots; APPLY changed Dm9/G13/Cmaj9/Am9 to Em9/A13/Dmaj9/Bm9; Major/Minor reference changes;16slots/bank13–16; PAD SETUP, LEARN arming/cancel and closing. Fixed two observed visual defects before final capture: the bottom enharmonic minor label overlapped neighbors, and a legacy MIDI heading was duplicated inside PAD SETUP. Final captured pages have both corrections.
+
+Actual1280x800frames and SHA256 provenance are in ../../../plugins/public/DonutTheory/design/device-1.3.0/verification.json. No physical encoder rotation, physical MIDI LEARN registration or new hardware-audio/CPU certification was performed. A native guide did not appear on remote knob click, so modal focus-transition behavior is not newly hardware-certified; regression checks preserve exact row bounds, static mappings and hideQLinkBounds. CHORD expands to2137widgets, below2500. No shared SDK modification.
+
+Installed development candidate1.3.0; public stable Release/site remain1.2.3. The user approved implementation; this record does not claim a newly published release.

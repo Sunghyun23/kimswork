@@ -161,7 +161,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==208
+assert index['LearnStatus']==84 and len(params)==220
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -347,9 +347,9 @@ print('PASS: four navigation arrows have 44x44 hit targets, safe gaps, native-si
 
 editor_widgets=defs['Editor_DTAllChords']['componentsData']
 for page in range(4):
- assert any(w['componentData']['type']=='Button' and w['componentData']['name']==f'{page*4+1}–{page*4+4}' and w['componentData']['data']['buttonId']==page for w in editor_widgets)
+ assert any(any(c['componentData']['type']=='Button' and c['componentData']['name']==f'{page*4+1}–{page*4+4}' and c['componentData']['data']['buttonId']==page for c in defs.get(w['componentData']['type'],{}).get('componentsData',[])) for w in editor_widgets)
 for slot in range(1,17):
- buttons=[w for w in editor_widgets if w['componentData']['type']=='Button' and w['componentData']['name']==f'LEARN {slot}']
+ buttons=[w for w in defs['DTKeyPadSetup']['componentsData'] if w['componentData']['type']=='Button' and w['componentData']['name']==f'LEARN {slot}']
  assert len(buttons)==1 and buttons[0]['componentData']['data']['buttonId']==slot and buttons[0]['componentData']['data']['numButtonsInGroup']==17
 print('PASS: in-editor bank buttons, 16 independent learn buttons and MAIN/CHORD two-tab navigation')
 
@@ -389,3 +389,28 @@ def expanded_widgets(component, stack=()):
 chord_definition=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']
 assert expanded_widgets(chord_definition)<=2500
 print('PASS: CHORD expanded widget budget <=2500, no recursive component cycles')
+
+# Key reference adds no hardware banks and retains all existing slot controls.
+assert index['ChordKeyRoot']==208 and index['TransposeDelta']==219
+assert not any(w['componentData']['name'].startswith(('MIDI ', 'LEARN '))for w in editor_widgets)
+charts=[w for w in editor_widgets if w['componentData']['name']=='Circle of fifths']
+assert len(charts)==24
+assert all(w['bounds']['bounds']=='832 108 432 440' and len(w['bounds']['additionalInvalidatingHandles'])==2 for w in charts)
+assert all(Image.open(skin/w['componentData']['data']['image']).size==(432,440)for w in charts)
+for key in ('DTKeyPicker','DTKeyPadSetup','DTKeyTranspose','DTKeySourcePicker'):
+ assert defs[key]['version']==4 and defs[key]['hideQLinkBounds']
+ assert any(w['componentData']['name']=='Dismiss outside' and w['componentData']['type']=='Button' and w['componentData']['data']['onImage']=='button-hit.png'for w in defs[key]['componentsData'])
+assert not any(w['componentData']['type']=='Label' and w['componentData']['data'].get('type')=='Text' and not w['componentData']['data'].get('text')for definition in defs.values()for w in definition['componentsData'])
+# Three shared condition fields cannot overlap a guide: entire right chart is outside x804.
+assert all(int(w['bounds']['bounds'].split()[0])>=832 for w in charts)
+import sys
+sys.path.insert(0,str(P/'tools'))
+from key_reference import diatonic
+assert diatonic(0,0)==['C','Dm','Em','F','G','Am','Bdim']
+assert diatonic(7,0)==['G','Am','Bm','C','D','Em','F#dim']
+assert diatonic(9,1)==['Am','Bdim','C','Dm','Em','F','G']
+assert diatonic(1,0)==['Db','Ebm','Fm','Gb','Ab','Bbm','Cdim']
+print('PASS: 24 accurate key charts, diatonic spelling, reference-only touch controls, PAD SETUP and confirmation drawers')
+
+assert params[:208]==json.loads((P/'tests/legacy-208-parameters.json').read_text())
+print('PASS: first208 full parameter declarations match1.2.3 fixture exactly')

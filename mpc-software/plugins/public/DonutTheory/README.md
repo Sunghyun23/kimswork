@@ -239,3 +239,21 @@ Native/ARM 빌드, SDK validator, 엔진/UBSan/bridge, host_sim19항목과 UI �
 전면 A3와 Q-Link를 SUB로 변경했다. OSC1보다 정확히 한 옥타브 아래의 독립 사인파이며 0~100%로 조절한다. OSC Mix는 오실레이터 비율만 담당한다. 기존 SUB를 전면으로 올려 동일 신호가 중복 생성되지 않는다. BODY는 UI와 DSP에서 제외하되 기존 호스트/청크 ID를 보존한다. 공장64음색은 기존 바디의 믹스·서브 기여를 명시적 Mix/Sub 값으로 옮겨 유지했다. 과거 사용자 Body 자동화의 동일 음색 복원은 보장하지 않는다.
 
 Native/ARM32/ARM64, SDK 검사, 엔진/UBSan/아날로그/브리지/호스트/스킨 검사가 통과했다. 220Hz 음의110Hz 서브, 연속 레벨 및 무할당 처리를 확인했다. MPC XL 내장 NVMe에 설치했으며 실제 SUB 물리 노브·청음 확인은 별도다. 공개 Release는1.2.2를 유지한다.
+
+## 2026-11-18 — approved key reference / transpose (1.3.0 candidate)
+
+User approved the Key/circle CHORD concept and explicit TRANSPOSE confirmation. Root/Major-or-natural-Minor selects reference only; circle and diatonic spelling are generated from musical pitch/letter data, not AI text artwork. The four visible degree badges identify scale-root membership, with case from chord quality and dash for chromatic roots. Existing four row controls and sixteen SCREEN assignments remain unchanged; MIDI/LEARN move to PAD SETUP, not deleted.
+
+TRANSPOSE FROM defaults C for older projects and is editable for preexisting progressions. TO is the selected reference key. APPLY moves all active roots by one shared nearest interval −5..+6 (tritone +6), updates FROM, and preserves type/voicing/octave/MIDI/sound and inactive slots. Out-of-range MIDI24..84 rejects the whole operation; no individual clamping. Key-mode changes do not rewrite chord quality. Modal command states are cleared on save/load; no automatic apply on project recall.
+
+Parameters208..219 append: key root/mode, source root/mode, preview/apply/status, four degree readouts, interval. First208 declarations are identical; UIDKrql and synthesis recipes unchanged. Public release remains1.2.3 until publication. Automated and device verification are recorded below as completed.
+
+## 2026-11-18 — 1.3.0 candidate implementation and MPC verification
+
+Implemented the approved Key/circle layout, reference-only Major/natural-Minor selection, degree badges, explicit all-active-slot TRANSPOSE confirmation and PAD SETUP. First208 full parameter declarations match a committed1.2.3fixture;12parameters append, total220. UIDKrql, sound programs and sixteen CHORD SCREEN assignments remain unchanged. All576root/source/active-count combinations, inactive-slot/field preservation, atomic whole-operation bounds rejection, current-state/old208migration, saved gesture clearing and allocation guards passed. Full native/UBSan/analog/host-bridge/skin suite passed. Host simulator:19PASS/0WARN/0FAIL. Final native/ARM32/ARM64 builds and SDK validator0errors/0warnings. Source logs remain locally under /private/tmp/dt130-*.log.
+
+Actual MPC XL/OS3.10.1.12, internalNVMe: SDK install/restart, then official SDK export compared all114installed files byte-for-byte with the final build. Remote clicks verified MAIN on entry; KeyC->D without changing notes; confirmation+2semitones/4slots; APPLY changed Dm9/G13/Cmaj9/Am9 to Em9/A13/Dmaj9/Bm9; Major/Minor reference changes;16slots/bank13–16; PAD SETUP, LEARN arming/cancel and closing. Fixed two observed visual defects before final capture: the bottom enharmonic minor label overlapped neighbors, and a legacy MIDI heading was duplicated inside PAD SETUP. Final captured pages have both corrections.
+
+Actual1280x800frames and SHA256 provenance are in design/device-1.3.0/verification.json. No physical encoder rotation, physical MIDI LEARN registration or new hardware-audio/CPU certification was performed. A native guide did not appear on remote knob click, so modal focus-transition behavior is not newly hardware-certified; regression checks preserve exact row bounds, static mappings and hideQLinkBounds. CHORD expands to2137widgets, below2500. No shared SDK modification.
+
+Installed development candidate1.3.0; public stable Release/site remain1.2.3. The user approved implementation; this record does not claim a newly published release.

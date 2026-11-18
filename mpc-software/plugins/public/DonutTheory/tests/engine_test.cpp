@@ -23,8 +23,35 @@ struct Rig {
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
+ // Key reference never changes notes. Explicit confirmation moves all active roots only.
+ {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==220,"Append-only key controls");
+  for(int count=0;count<4;++count)for(int key=0;key<12;++key)for(int from=0;from<12;++from){Rig m;m.p->set(kSlotCount,count);m.block();
+   std::array<std::array<float,5>,16> before{};
+   for(int slot=0;slot<16;++slot){m.p->set(kChordRoots[slot],48+slot%12);m.p->set(kChordOctaves[slot],slot%5);m.p->set(kChordPadNotes[slot],80+slot);for(int f=0;f<5;++f)before[slot][f]=m.p->get(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot]);}
+   m.p->set(kChordKeyRoot,key);m.p->set(kChordKeyMode,key%2);m.p->set(kTransposeFrom,from);m.block();
+   for(int slot=0;slot<16;++slot)assert(m.p->get(kChordRoots[slot])==before[slot][0]);
+   // An Apply write without a visible preview is inert.
+   m.p->set(kTransposeApply,1);m.block();for(int slot=0;slot<16;++slot)assert(m.p->get(kChordRoots[slot])==before[slot][0]);
+   m.p->set(kTransposeOpen,1);m.block();int delta=(key-from+18)%12-6;if(delta==-6)delta=6;assert(m.p->getInt(kTransposeDelta)==delta);
+   m.p->set(kTransposeApply,1);m.block();assert(!m.p->getInt(kTransposeOpen)&&!m.p->getInt(kTransposeApply));assert(m.p->getInt(kTransposeFrom)==key);
+   for(int slot=0;slot<16;++slot){assert(m.p->get(kChordRoots[slot])==before[slot][0]+(slot<(count+1)*4?delta:0));for(int f=1;f<5;++f)assert(m.p->get(f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot])==before[slot][f]);}
+   // Reopening at the applied key cannot compound the same transposition.
+   m.p->set(kTransposeOpen,1);m.p->set(kTransposeApply,1);m.block();assert(m.p->getInt(kTransposeStatus)==2);
+  }
+  Rig m;m.p->set(kRoot1,84);m.p->set(kChordKeyRoot,2);m.p->set(kTransposeOpen,1);m.p->set(kTransposeApply,1);m.block();assert(m.p->getInt(kRoot1)==84&&m.p->getInt(kRoot2)==55&&m.p->getInt(kTransposeOpen)==1&&m.p->getInt(kTransposeStatus)==3);
+  m.p->set(kRoot1,24);m.p->set(kChordKeyRoot,11);m.p->set(kTransposeApply,1);m.block();assert(m.p->getInt(kRoot1)==24&&m.p->getInt(kTransposeStatus)==3);
+  m.p->set(kChordKeyRoot,0);m.p->set(kRoot1,50);m.block();assert(m.p->getInt(kKeyDegree1)==9); // ii
+  m.p->set(kSlotCount,2);m.p->set(kMainChordPage,2);m.p->set(kRoot9,49);m.block();assert(m.p->getInt(kKeyDegree1)==0);
+  m.p->set(kChordKeyRoot,9);m.p->set(kChordKeyMode,1);m.p->set(kRoot9,57);m.block();assert(m.p->getInt(kKeyDegree1)==8); // i
+  auto state=m.p->internalSaveState();Rig restored;assert(restored.p->internalLoadState(state.data(),state.size()));restored.p->reset();restored.block();assert(restored.p->getInt(kChordKeyRoot)==9&&restored.p->getInt(kChordKeyMode)==1&&!restored.p->getInt(kTransposeOpen));
+  // Restore actual old 208-param state, not only the new schema defaults.
+  size_t end=12;for(int i=0;i<208;++i)end+=1+state[end]+8;state.resize(end+4);state[8]=208;state[9]=state[10]=state[11]=0;for(int b=0;b<4;++b)state[end+b]=0;
+  assert(restored.p->internalLoadState(state.data(),state.size()));restored.p->reset();restored.block();assert(restored.p->getInt(kChordKeyRoot)==0&&restored.p->getInt(kChordKeyMode)==0&&!restored.p->getInt(kTransposeApply));assert(restored.p->getInt(kRoot9)==57);
+ }
+ std::cout<<"PASS: 576 key/source/count transposes, reference isolation, whole-operation bounds, degree readback, state and old208 migration without render allocations\n";
+
  // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
- {static_assert(kPadPosition1==192&&kNumParams==208,"Append-only pad positions");
+ {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==220,"Append-only pad positions");
   Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
   m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
   m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);
@@ -32,7 +59,7 @@ int main(){
   size_t pos=12;for(int i=0;i<192;++i)pos+=1+state[pos]+8;state.resize(pos+4);for(int j=0;j<4;++j){state[8+j]=j?0:192;state[pos+j]=0;}
   assert(r.p->internalLoadState(state.data(),state.size()));r.p->reset();r.block();for(int slot=0;slot<16;++slot)assert(r.p->getInt(kPadPosition1+slot)==0);assert(r.p->getInt(kPadNote1)==75);
  }
- std::cout<<"PASS: manual pad locations, LEARN and sound independence, 208-param round-trip and 192-param migration\n";
+ std::cout<<"PASS: manual pad locations, LEARN and sound independence, 220-param round-trip and 192-param migration\n";
  // Osc Mix endpoints isolate the other oscillator independently of SUB.
  {for(float mix:{0.f,100.f}){Rig a,b;
    for(auto* m:{&a,&b}){m->p->setProgram(0);m->p->set(kBody,40);m->p->set(kMix,mix);m->p->set(kWave1,0);m->p->set(kWave2,2);m->p->set(kAmpAttack,1);m->p->set(kAmpSustain,100);m->p->set(kCutoff,18000);m->p->reset();}

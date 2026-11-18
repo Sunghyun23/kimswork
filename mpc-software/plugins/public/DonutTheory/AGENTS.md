@@ -12,3 +12,5 @@
 - native/양쪽 ARM·SDK validator·host simulator·engine/UBSan/bridge/analog/skin 결과와 실제 기기 확인을 구분한다. 사용자 확인은 사용자 확인으로 기록한다.
 - 모든 물리 입력·최악 CPU·다른 모델·전체 MPC 프로젝트 복원·원격 dropout 해결은 완료로 주장하지 않는다. 최신 상세는 handoff.md에 있다.
 - 새 변경은 새 버전으로 배포한다. 이미 공개한1.2.2 ZIP/태그를 재작성하지 않는다. 다른 프로젝트 작업을 이유로 이 플러그인을 변경하지 않는다.
+
+- 1.3.0 사용자 승인: CHORD 오른쪽 Key/Major·Minor/참조용5도권·다이아토닉 표시, MIDI/LEARN은 PAD SETUP으로 이동. 기존 Root/Type/Voicing/Octave16Q-Link/가이드 범위 유지. Key 선택만으로 노트를 변경하지 않는다. TRANSPOSE 확인창에서 FROM/TO/반음/활성슬롯수를 표시하고 APPLY만 모든 활성루트를 동일간격 이동한다. 타입/전위/옥타브/패드/비활성슬롯 보존,24..84범위를 넘으면 전체거부. 208개기존선언보존, 새208..219append. 새지침은 이전208총수/구형CHORD배치보다 우선한다.

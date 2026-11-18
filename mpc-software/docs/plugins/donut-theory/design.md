@@ -251,3 +251,11 @@ User-approved MAIN and Screen/Program Q-Link order: A = OSC Pair, OSC Mix, Body,
 
 ### 1.2.0 — engine redesign, unchanged UI
 사용자는UI 색상이 아니라 엔진을Moog-inspired로 변경하도록 확정했다. 이번 변경은믹서/필터/VCA와공장음색이며, 승인된 이미지·위젯·16개 신스Q-Link·CHORD 매핑은 바꾸지 않는다. 새모드/엔진선택기는추가하지 않는다.
+
+## 2026-11-18 — approved key reference / transpose (1.3.0 candidate)
+
+User approved the Key/circle CHORD concept and explicit TRANSPOSE confirmation. Root/Major-or-natural-Minor selects reference only; circle and diatonic spelling are generated from musical pitch/letter data, not AI text artwork. The four visible degree badges identify scale-root membership, with case from chord quality and dash for chromatic roots. Existing four row controls and sixteen SCREEN assignments remain unchanged; MIDI/LEARN move to PAD SETUP, not deleted.
+
+TRANSPOSE FROM defaults C for older projects and is editable for preexisting progressions. TO is the selected reference key. APPLY moves all active roots by one shared nearest interval −5..+6 (tritone +6), updates FROM, and preserves type/voicing/octave/MIDI/sound and inactive slots. Out-of-range MIDI24..84 rejects the whole operation; no individual clamping. Key-mode changes do not rewrite chord quality. Modal command states are cleared on save/load; no automatic apply on project recall.
+
+Parameters208..219 append: key root/mode, source root/mode, preview/apply/status, four degree readouts, interval. First208 declarations are identical; UIDKrql and synthesis recipes unchanged. Public release remains1.2.3 until publication. Automated and device verification are recorded below as completed.

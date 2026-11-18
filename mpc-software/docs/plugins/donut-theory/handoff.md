@@ -148,3 +148,21 @@ Groove Dice 예박 후속 수정(1.1.1): 실제 MPC XL 양수 예박 전환을 �
 ## 2026-11-17 배포 승인
 
 사용자가 1.2.3 정식 배포와 사이트 갱신을 승인했다. SUB 전용 물리 조작·청음은 별도 확인하지 않았다는 한계를 릴리스에 유지한다.
+
+## 2026-11-18 — approved key reference / transpose (1.3.0 candidate)
+
+User approved the Key/circle CHORD concept and explicit TRANSPOSE confirmation. Root/Major-or-natural-Minor selects reference only; circle and diatonic spelling are generated from musical pitch/letter data, not AI text artwork. The four visible degree badges identify scale-root membership, with case from chord quality and dash for chromatic roots. Existing four row controls and sixteen SCREEN assignments remain unchanged; MIDI/LEARN move to PAD SETUP, not deleted.
+
+TRANSPOSE FROM defaults C for older projects and is editable for preexisting progressions. TO is the selected reference key. APPLY moves all active roots by one shared nearest interval −5..+6 (tritone +6), updates FROM, and preserves type/voicing/octave/MIDI/sound and inactive slots. Out-of-range MIDI24..84 rejects the whole operation; no individual clamping. Key-mode changes do not rewrite chord quality. Modal command states are cleared on save/load; no automatic apply on project recall.
+
+Parameters208..219 append: key root/mode, source root/mode, preview/apply/status, four degree readouts, interval. First208 declarations are identical; UIDKrql and synthesis recipes unchanged. Public release remains1.2.3 until publication. Automated and device verification are recorded below as completed.
+
+## 2026-11-18 — 1.3.0 candidate implementation and MPC verification
+
+Implemented the approved Key/circle layout, reference-only Major/natural-Minor selection, degree badges, explicit all-active-slot TRANSPOSE confirmation and PAD SETUP. First208 full parameter declarations match a committed1.2.3fixture;12parameters append, total220. UIDKrql, sound programs and sixteen CHORD SCREEN assignments remain unchanged. All576root/source/active-count combinations, inactive-slot/field preservation, atomic whole-operation bounds rejection, current-state/old208migration, saved gesture clearing and allocation guards passed. Full native/UBSan/analog/host-bridge/skin suite passed. Host simulator:19PASS/0WARN/0FAIL. Final native/ARM32/ARM64 builds and SDK validator0errors/0warnings. Source logs remain locally under /private/tmp/dt130-*.log.
+
+Actual MPC XL/OS3.10.1.12, internalNVMe: SDK install/restart, then official SDK export compared all114installed files byte-for-byte with the final build. Remote clicks verified MAIN on entry; KeyC->D without changing notes; confirmation+2semitones/4slots; APPLY changed Dm9/G13/Cmaj9/Am9 to Em9/A13/Dmaj9/Bm9; Major/Minor reference changes;16slots/bank13–16; PAD SETUP, LEARN arming/cancel and closing. Fixed two observed visual defects before final capture: the bottom enharmonic minor label overlapped neighbors, and a legacy MIDI heading was duplicated inside PAD SETUP. Final captured pages have both corrections.
+
+Actual1280x800frames and SHA256 provenance are in ../../../plugins/public/DonutTheory/design/device-1.3.0/verification.json. No physical encoder rotation, physical MIDI LEARN registration or new hardware-audio/CPU certification was performed. A native guide did not appear on remote knob click, so modal focus-transition behavior is not newly hardware-certified; regression checks preserve exact row bounds, static mappings and hideQLinkBounds. CHORD expands to2137widgets, below2500. No shared SDK modification.
+
+Installed development candidate1.3.0; public stable Release/site remain1.2.3. The user approved implementation; this record does not claim a newly published release.

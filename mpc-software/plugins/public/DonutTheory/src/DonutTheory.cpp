@@ -38,7 +38,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10203;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=10300;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -77,6 +77,8 @@ public:
         for(int page=0;page<4;++page)setFromEngine(kChordPlayingPage1+page,0);
         for(int command=0;command<4;++command){setFromEngine(kSoundPrev+command,0);setFromEngine(kSlotsMinus+command,0);}
         setFromEngine(kTouchStop,0);setFromEngine(kPadLearn,0);
+        // Canonicalise gesture normalised values too, including fractional host writes.
+        set(kTransposeOpen,0);set(kTransposeApply,0);
         return mpc::Plugin::internalSaveState();
     }
     bool internalLoadState(const uint8_t* data,size_t size) {
@@ -90,6 +92,7 @@ public:
         for(int slot=0;slot<4;++slot)if(count<=uint32_t(kChordOctave1+slot))set(kChordOctave1+slot,2);
         for(int index=91;index<kNumParams;++index)if(count<=uint32_t(index))set(index,param(index).def);
         if(count<=77)set(kPadMap,0); // Existing projects retain Trigger Base routing.
+        set(kTransposeOpen,0);set(kTransposeApply,0);
         stateLoading_.store(false,std::memory_order_release);return true;
     }
     void parameterChanged(int index,float value) override {
@@ -140,6 +143,7 @@ public:
         reset();
     }
     void reset() override {
+        setFromEngine(kTransposeOpen,0);setFromEngine(kTransposeApply,0);
         clearNotes();for(int i=0;i<N;++i){auto& v=voices_[i];const float phase=std::fmod(i*.61803398875f,1.f);v.a.resetPhase(phase);v.sineA.resetPhase(phase);v.b.resetPhase(std::fmod(phase+.23f,1.f));v.sineB.resetPhase(std::fmod(phase+.23f,1.f));v.sub.resetPhase(phase);v.fm.resetPhase(phase);}
         for(int i=0;i<16;++i)for(int j=0;j<4;++j)lastTouchChord_[i][j]=getInt(chordField(i,j));lastSlotCount_=activeSlots();lastMainPage_=getInt(kMainChordPage);lastLowCut_=-1;cachePadMapping();for(auto& d:delay_)d.reset();chorus_.reset();
         wowFlutter_.reset();tapePitch_=0;tremolo_.reset();lfo_.reset();vibrato_.reset();drift_.reset();chorusLfo_.reset();
@@ -205,6 +209,29 @@ public:
         }
         // A triad has only two inversions, a seventh three, a five-tone chord four.
         for(int slot=0;slot<16;++slot){const int count=donut::chordToneCount(getInt(kChordQualities[slot]));const int v=getInt(kChordVoicings[slot]);if(v>=3&&v>count)setFromEngine(kChordVoicings[slot],float(count));}
+        // Key selects a reference only. Only an explicit confirmed command moves notes.
+        const int delta=(getInt(kChordKeyRoot)-getInt(kTransposeFrom)+18)%12-6;
+        const int shift=delta==-6?6:delta; // tritone defaults upward; all other moves nearest.
+        setFromEngine(kTransposeDelta,float(shift));
+        if(getInt(kTransposeApply)){
+            setFromEngine(kTransposeApply,0);
+            if(getInt(kTransposeOpen)){
+                bool valid=true;
+                for(int slot=0;slot<activeSlots();++slot){const int root=getInt(kChordRoots[slot])+shift;if(root<24||root>84)valid=false;}
+                if(valid){
+                    for(int slot=0;slot<activeSlots();++slot)setFromEngine(kChordRoots[slot],float(getInt(kChordRoots[slot])+shift));
+                    setFromEngine(kTransposeFrom,get(kChordKeyRoot));setFromEngine(kTransposeFromMode,get(kChordKeyMode));
+                    setFromEngine(kTransposeStatus,shift?1.f:2.f);setFromEngine(kTransposeOpen,0);setFromEngine(kTransposeDelta,0);
+                }else setFromEngine(kTransposeStatus,3);
+            }
+        }
+        static constexpr int scales[2][7]={{0,2,4,5,7,9,11},{0,2,3,5,7,8,10}};
+        for(int row=0;row<4;++row){
+            const int slot=getInt(kMainChordPage)*4+row,interval=(getInt(kChordRoots[slot])-getInt(kChordKeyRoot)+120)%12;
+            const int quality=getInt(kChordQualities[slot]);const bool minor=quality==0||quality==2||quality==8;int degree=0;
+            for(int step=0;step<7;++step)if(scales[getInt(kChordKeyMode)][step]==interval)degree=step+1+(minor?7:0);
+            setFromEngine(kKeyDegree1+row,float(degree));
+        }
         proxySyncThread_.store(donutThreadToken(),std::memory_order_release);
         for(int row=0;row<4;++row)for(int field=0;field<4;++field){const int index=kEditRoot1+row*4+field;proxySyncIndex_.store(index,std::memory_order_release);setFromEngine(index,get(chordField(getInt(kMainChordPage)*4+row,field)));}
         proxySyncIndex_.store(-1,std::memory_order_release);proxySyncThread_.store(0,std::memory_order_release);
@@ -291,6 +318,8 @@ public:
         for(int page=0;page<4;++page)setFromEngine(kChordPlayingPage1+page,playing[page]?1.f:0.f);
     }
     bool formatValue(int index,float value,std::string& out) override {
+        if(index==kTransposeDelta){char b[24];std::snprintf(b,sizeof b,"%+d semitones",int(std::lround(value)));out=b;return true;}
+
         if(index>=kEditRoot1&&index<kEditRoot1+16&&(index-kEditRoot1)%4==0){static const char* names[]={"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};const int note=int(std::lround(value));char b[24];std::snprintf(b,sizeof b,"%s%d",names[note%12],note/12-2);out=b;return true;}
         if(index==kLowCut){if(value<.5f)out="Off";else{char b[24];std::snprintf(b,sizeof b,"%.0f Hz",value);out=b;}return true;}
         if(index==kLearnStatus){if(getInt(kPadLearn)>0){out="PRESS PHYSICAL PAD FOR SLOT "+std::to_string(getInt(kPadLearn));return true;}if(getInt(kLearnStatus)==0){out="HOLD CHORD / TAP LEARN";return true;}return false;}

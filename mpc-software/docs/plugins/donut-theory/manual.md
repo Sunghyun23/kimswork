@@ -72,7 +72,7 @@ Save a copy of any project that uses the plugin, and render or replace its track
 3. Set **INPUT** to **NOTES** to play ordinary notes from pads or a keyboard.
 4. Adjust **Filter Cutoff**, **Sub** and **Drift**. Use **Attack** and **Release** to change how the sound starts and ends.
 5. Press and hold a large chord pad at the bottom of MAIN. Release it to end the gate; the Amp Release and effects determine the remaining tail.
-6. To play those chords from physical MPC pads, open **CHORD**, use **LEARN** for each slot, and choose **CHORDS** or **SPLIT** input mode.
+6. To play those chords from physical MPC pads, open **CHORD → PAD SETUP**, use **LEARN** for each slot, and choose **CHORDS** or **SPLIT** input mode.
 
 Start at a comfortable listening level. Sound Trim helps balance the factory bank, but velocity, note range, resonance, overlapping chords and drive can still change perceived loudness.
 
@@ -212,6 +212,19 @@ In **CHORD → ADVANCED**, **Individual** pad mapping uses each slot's assignmen
 - **CHORD → ADVANCED → ALL NOTES OFF** clears screen, keyboard and physical-pad notes, sustain and effect tails. Use it to recover from an interrupted input stream.
 
 ## Chord editor
+
+### Key reference and circle of fifths — 1.3.0
+
+The CHORD editor has a KEY selector and MAJOR/MINOR switch beside a circle of fifths. Selecting a key updates the reference diagram and seven diatonic chords; it does not change any stored chord or keyboard note. MINOR uses the natural minor scale. The outer ring shows major keys and the inner ring their relative minors. The highlighted sector identifies the selected key pair. This diagram is a reference, not a chord trigger. Enharmonic spellings are chosen for readability.
+
+The small degree under each play pad identifies its root in the selected scale. Capital/lowercase follows the stored chord's major/minor quality; a dash means its root is outside the selected scale. It is a root-degree aid, not a full harmonic-function analysis or chord-quality validator. Borrowed chords remain editable.
+
+**TRANSPOSE** opens a confirmation drawer. Set FROM to the original key of your progression; TO KEY is the selected reference key. The default FROM is C for older projects, and remembers the destination after a successful apply. The drawer shows the signed semitone movement and active slot count. APPLY moves the root of every active slot (4, 8, 12 or 16), including banks not currently visible, by the same nearest interval (−5 to +6 semitones; a tritone goes up). CANCEL and outside-touch dismissal make no note changes. Reapplying to the same key gives zero movement. Changing Major to Minor alone does not reharmonize the progression.
+
+Chord type, voicing, per-slot octave, MIDI Note/LEARN, input mode, sound and inactive slots are preserved. If any root would exceed MIDI24–84, the entire operation is rejected; adjust the source key or chord register before trying again. A held screen chord follows the edited root; a physical MIDI chord uses the new root on its next trigger, with its existing release ownership preserved.
+
+**PAD SETUP** holds the MIDI Note readouts/manual assignment and LEARN for the four slots in the selected bank. Close it to choose a different bank. The sixteen CHORD SCREEN Q-Links remain Root / Type / Voicing / Octave; Program/Track retains the synth mapping. All new drawers suppress background Q-Link guides.
+
 
 ![CHORD editor running on MPC Live III](https://kimswork.app/images/donut-theory-chords-1.2.2.webp)
 

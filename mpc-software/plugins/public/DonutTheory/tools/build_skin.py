@@ -187,6 +187,8 @@ from sidebars import install as sidebars
 sidebars(g,tui,params,out)
 from chord_slots import install as chord_slots
 chord_slots(g,tui,ql,params,out)
+from key_reference import install as key_reference
+key_reference(g,tui,params,out)
 # Manual pad-location hints retired: their per-slot 8x16 selection trees
 # inflate CHORD construction on MPC. MIDI/LEARN and stored IDs remain intact.
 # Later additions (bank arrows, pad hints) must never render or receive input
