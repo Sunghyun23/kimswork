@@ -75,7 +75,7 @@ preset('SoundPreset','SoundPrev','SoundNext',22,132)
 children.append(label('SOUND PRESET','22 108 240 24',24))
 menu('VoiceMode',440,132);menu('InputMode',596,132)
 children.append(label('VOICE','440 108 136 24',24));children.append(label('INPUT','596 108 136 24',24))
-groups=[('A  SOUND / PLAY',['OscPair','Mix','Sub','Drift'],18,174),('B  AMP ENVELOPE',['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],650,174),('C  FILTER / LFO',['Cutoff','Resonance','Rate','Depth'],18,365),('D  FX / MOTION',['Drive','Glide','TremRate','TremDepth'],650,365)]
+groups=[('A  OSC / SOUND',['OscPair','Mix','Detune','Drift'],18,174),('B  FILTER / TONE',['Cutoff','Resonance','BodyTone','Sub'],650,174),('C  LFO 1 / 2',['Rate','Depth','Lfo2RateControl','Lfo2Depth'],18,365),('D  FX / MOTION',['Drive','Glide','TremRate','TremDepth'],650,365)]
 # Real vertical filmstrip faders, one widget per ADSR parameter.
 from PIL import Image,ImageDraw
 frames=127;fw,fh=64,92
@@ -105,7 +105,7 @@ menu('Filter',740,201);menu('DriveType',962,201)
 for key,x in [('Shape',654),('Target',807),('Sync',960),('Division',1113)]:menu(key,x,393)
 for key,title in [('Filter','FLT'),('Shape','WAV'),('Target','TO'),('Sync','SYNC'),('Division','DIV')]:
  name='DTSelect'+key
- adddef(name,g.component_definition(g.control_actions('menu overlay'),[label(title,'2 0 40 30',18),dropdown('42 0 92 32',24)],'ffc9cd92'))
+ adddef(name,g.component_definition(g.control_actions('menu overlay'),[label(title,'2 0 22 30' if key=='Target' else '2 0 40 30',18),dropdown('24 0 110 32' if key=='Target' else '42 0 92 32',24)],'ffc9cd92'))
  for child in children:
   cd=get(child,'componentData')
   if get(cd,'name')==key:setv(cd,'type',name)
@@ -166,6 +166,11 @@ from chord_editor import install as install_chord_editor
 install_chord_editor(g,tui,params,out)
 # Touch-only selectors; the existing sixteen MAIN Q-Links stay fixed.
 menu('ModMode',964,356);menu('ModShape',1114,356)
+menu('Lfo2Shape',326,356);menu('Lfo2Target',476,356)
+for key,caption in [('Lfo2Shape','WAV'),('Lfo2Target','TO')]:
+ name='DTSelect'+key;adddef(name,g.component_definition(g.control_actions('menu overlay'),[label(caption,'2 0 22 30' if key=='Lfo2Target' else '2 0 40 30',18),dropdown('24 0 110 32' if key=='Lfo2Target' else '42 0 92 32',24)],'ffc9cd92'))
+ for w in children:
+  if get(get(w,'componentData'),'name')==key:setv(get(w,'componentData'),'type',name)
 # Native Name labels use legacy host metadata unless explicitly overridden.
 fx_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='FX'),'componentDefinition'),'componentsData')
 for w in list(fx_widgets):
@@ -176,6 +181,11 @@ for w in list(fx_widgets):
  if name=='Motion Shape':
   setv(get(w,'componentData'),'type','DTSmallMenu');setv(get(w,'bounds'),'bounds','734 542 136 32')
   fx_widgets.append(label('Motion Shape','663 497 278 32',24))
+mod_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='MOD'),'componentDefinition'),'componentsData')
+for w in list(mod_widgets):
+ name=get(get(w,'componentData'),'name')
+ if name in ('LFO 2 Shape','LFO 2 Target'):
+  x,y,_,_=map(int,get(get(w,'bounds'),'bounds').split());setv(get(w,'componentData'),'type','DTSmallMenu');setv(get(w,'bounds'),'bounds',f'{x+71} {y+45} 136 32');mod_widgets.append(label(name,f'{x} {y} 278 32',24))
 from choice_panels import install
 install(g,tui,params,out)
 from chord_editor import finish as finish_chord_editor

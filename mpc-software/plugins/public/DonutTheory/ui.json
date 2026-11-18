@@ -20,7 +20,7 @@
           "widget": "knob"
         },
         {
-          "param": "Sub",
+          "param": "Detune",
           "widget": "knob"
         },
         {
@@ -36,28 +36,12 @@
           "widget": "knob"
         },
         {
-          "param": "Drive",
+          "param": "Body",
           "widget": "knob"
         },
         {
-          "param": "Space",
+          "param": "Sub",
           "widget": "knob"
-        },
-        {
-          "param": "Amp Attack",
-          "widget": "fader"
-        },
-        {
-          "param": "Amp Decay",
-          "widget": "fader"
-        },
-        {
-          "param": "Amp Sustain",
-          "widget": "fader"
-        },
-        {
-          "param": "Amp Release",
-          "widget": "fader"
         },
         {
           "param": "LFO Rate Control",
@@ -65,6 +49,22 @@
         },
         {
           "param": "LFO Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "LFO 2 Rate Control",
+          "widget": "knob"
+        },
+        {
+          "param": "LFO 2 Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "Drive",
+          "widget": "knob"
+        },
+        {
+          "param": "Glide",
           "widget": "knob"
         },
         {
@@ -173,6 +173,14 @@
         {
           "param": "Key Track",
           "widget": "knob"
+        },
+        {
+          "param": "Body",
+          "widget": "knob"
+        },
+        {
+          "param": "Sub",
+          "widget": "knob"
         }
       ]
     },
@@ -279,6 +287,34 @@
         {
           "param": "Motion",
           "widget": "knob"
+        },
+        {
+          "param": "LFO 2 Shape",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "LFO 2 Rate Control",
+          "widget": "knob"
+        },
+        {
+          "param": "LFO 2 Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "LFO 2 Target",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "LFO 2 Sync",
+          "widget": "switch",
+          "overlay": "menu"
+        },
+        {
+          "param": "LFO 2 Division",
+          "widget": "slider",
+          "overlay": "menu"
         },
         {
           "param": "Chord Preset",

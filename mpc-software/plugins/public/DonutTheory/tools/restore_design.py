@@ -96,14 +96,14 @@ def install(g,tui,out):
  'SoundPrev':(405,38,36,34),'SoundPreset':(447,38,300,34),'SoundNext':(753,38,36,34),
  'VoiceMode':(792,38,136,32),'InputMode':(936,38,136,32),
  'SOUND PRESET':(420,9,330,26),'VOICE':(792,9,136,26),'INPUT':(936,9,136,26),
- 'Filter':(108,356,136,32),'DriveType':(662,356,136,32),
- 'Shape':(326,356,136,32),'Target':(476,356,136,32),'Sync':(962,356,136,32),'Division':(1112,356,136,32),
+ 'Filter':(662,126,136,32),'DriveType':(662,356,136,32),
+ 'Shape':(26,356,136,32),'Target':(176,356,136,32),'Sync':(962,356,136,32),'Division':(1112,356,136,32),
  'Vibrato':(26,126,286,28),'Expression':(332,126,286,28),
  'CHORD PRESET':(18,550,190,28),'ChordPrev':(18,586,36,34),'Progression':(60,586,220,34),'ChordNext':(286,586,36,34),
  'Stop touch chords':(1182,588,80,32),
  'Filter / LFO divider':(320,390,2,144),'FX / Tremolo divider':(952,390,2,144),
  }
- groups=[(['OscPair','Mix','Sub','Drift'],26,164,144),(['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],658,136,168),(['Cutoff','Resonance','Rate','Depth'],26,390,144),(['Drive','Glide','TremRate','TremDepth'],658,390,144)]
+ groups=[(['OscPair','Mix','Detune','Drift'],26,164,144),(['Cutoff','Resonance','BodyTone','Sub'],658,164,144),(['Rate','Depth','Lfo2RateControl','Lfo2Depth'],26,390,144),(['Drive','Glide','TremRate','TremDepth'],658,390,144)]
  for keys,x,y,h in groups:
   for j,key in enumerate(keys):placements[key]=(x+j*150,y,146,h)
  for i in range(4):placements['Chord '+str(i+1)]=(348+i*204,586,195,40);placements['Edit chord '+str(i+1)]=(390+i*204,556,110,26)

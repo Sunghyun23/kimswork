@@ -3,7 +3,7 @@ from pathlib import Path
 P=Path(__file__).resolve().parents[1];skin=P/'skins'
 t=json.loads((skin/'TUI.json').read_text())['pageData'];q=json.loads((skin/'Q-Links.json').read_text());params=json.loads((P/'parameters.json').read_text())
 index={p['key']:i for i,p in enumerate(params)}
-expected=['OscPair','Mix','Sub','Drift','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Cutoff','Resonance','LfoRateControl','Depth','Drive','Glide','ModRateControl','TremDepth']
+expected=['OscPair','Mix','Detune','Drift','Cutoff','Resonance','BodyTone','Sub','LfoRateControl','Depth','Lfo2RateControl','Lfo2Depth','Drive','Glide','ModRateControl','TremDepth']
 main=q['Screen Mode Q-Links']['map'][0];assert main['Bank Direction']=='Column'
 # SDK hardware banks are columns read top-to-bottom, not Q-Link 1..4.
 physical_banks=((13,9,5,1),(14,10,6,2),(15,11,7,3),(16,12,8,4))
@@ -117,12 +117,14 @@ print("PASS: append-only new parameters, OSC Pair only, momentary touch bindings
 
 # Equal outside gutters and aligned rows; catch the observed A-value/extra overlap.
 def box(name): return tuple(map(int,byname[name]['bounds']['bounds'].split()))
-assert box('Cutoff')[1] == box('Rate')[1] == box('Drive')[1]
-assert box('AmpAttack')[1] < box('Cutoff')[1]
-assert box('OscPair')[0] < box('AmpAttack')[0] and box('Cutoff')[0] < box('Drive')[0]
+assert box('Cutoff')[1] == box('OscPair')[1]
+assert box('Rate')[1] == box('Drive')[1]
+assert box('Cutoff')[1] < box('Rate')[1]
+assert not any(k.startswith('Amp')for k in byname)
+assert box('OscPair')[0] < box('Cutoff')[0] and box('Rate')[0] < box('Drive')[0]
 assert box('Vibrato')[1]+box('Vibrato')[3] <= box('OscPair')[1]
 assert box('Expression')[1]+box('Expression')[3] <= box('Drift')[1]
-assert [box(k)[0] for k in ('OscPair','Mix','Sub','Drift')]==sorted(box(k)[0] for k in ('OscPair','Mix','Sub','Drift'))
+assert [box(k)[0] for k in ('OscPair','Mix','Detune','Drift')]==sorted(box(k)[0] for k in ('OscPair','Mix','Detune','Drift'))
 assert box('Glide')[1]==box('Drive')[1] and 'Space' not in byname
 assert any(c['componentData']['name']=='Space' for c in t['tabs'][5]['componentDefinition']['componentsData'])
 for i in range(4):
@@ -134,9 +136,9 @@ assert 'Stop touch chords' not in byname
 print('PASS: aligned knob rows, no auxiliary overlap, equal outer gutters and tall chord hit bounds')
 
 assert index['Drift']==83 and index['Detune']==10
-assert 'Drift' in byname and 'Detune' not in byname
+assert 'Drift' in byname and 'Detune' in byname
 assert any(c['param']=='Detune' for page in json.loads((P/'ui.json').read_text())['pages'] if page['name']=='OSC' for c in page['controls'])
-print('PASS: DRIFT replaces MAIN Detune only; OSC Detune and stable IDs retained')
+print('PASS: restored MAIN Detune alongside Drift; detailed OSC Detune and stable IDs retained')
 
 # Header regression: transparent corners must not expose the previous light fill.
 for name in ('SoundPrev','SoundNext','SoundPreset','VoiceMode','InputMode'):
@@ -161,7 +163,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==279
+assert index['LearnStatus']==84 and len(params)==287
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -281,15 +283,16 @@ for key,definition in defs.items():
 print('PASS: left drawers preserve the page, show bounded rows and dismiss outside')
 
 # Performance order and numeric plate padding are user-facing layout contracts.
-for title in ('A  SOUND / PLAY','B  AMP ENVELOPE','C  FILTER / LFO','D  FX / MOTION'):
+for title in ('A  OSC / SOUND','B  FILTER / TONE','C  LFO 1 / 2','D  FX / MOTION'):
  assert title in byname
 for name in ('DTKnob','DTEnvelope'):
  value=next(c for c in defs[name]['componentsData'] if c['componentData']['type']=='Label' and c['componentData']['data']['type']=='Value')
  assert value['componentData']['data']['textStyle']['font']['height']==24
  assert value['bounds']['bounds'].split()[0]=='12' and value['bounds']['bounds'].split()[2]=='122'
-assert box('Filter')[0]<320 and box('Shape')[0]<box('Target')[0]<640
+assert box('Filter')[0]>640 and box('Shape')[0]<box('Target')[0]<320
+assert box('Lfo2Shape')[0]<box('Lfo2Target')[0]<640
 assert box('DriveType')[0]>640
-print('PASS: A Sound/B Envelope/C Filter-LFO/D FX-Tremolo and padded numeric displays')
+print('PASS: A OSC/B Filter-Tone/C dual-LFO/D FX-Motion and padded numeric displays')
 
 # One native CHORD tab owns static editor mirrors for the currently selected bank.
 assert len(t['tabs'])==7
@@ -468,9 +471,19 @@ assert next(w for w in fx if w['componentData']['name']=='Motion Shape' and w['c
 print('PASS: FX motion labels override legacy names; shape has a direct dropdown and no footer overlaps the sixteen cells')
 
 assert params[:275]==json.loads((P/'tests/legacy-275-parameters.json').read_text())
-assert [p['key']for p in params[275:]]==['ModSync','ModDivision','LfoRateControl','ModRateControl']
+assert [p['key']for p in params[275:279]]==['ModSync','ModDivision','LfoRateControl','ModRateControl']
 assert all('DTTempoSync'+name in defs for name in ['Rate','TremRate'])
 for name in ['Rate','TremRate']:
  knob=next(w for w in children if w['componentData']['name']==name)
  assert knob['componentData']['type']=='DTTempoRate'+name
 print('PASS: first275 metadata preserved; front SYNC buttons and mode-aware rate mappings retain sixteen Q-Links')
+
+assert params[:279]==json.loads((P/'tests/legacy-279-parameters.json').read_text())
+assert [p['key']for p in params[279:]]==['BodyTone','Lfo2Shape','Lfo2Rate','Lfo2Depth','Lfo2Target','Lfo2Sync','Lfo2Division','Lfo2RateControl']
+assert all(box(k)[1]==164 for k in ['OscPair','Mix','Detune','Drift','Cutoff','Resonance','BodyTone','Sub'])
+assert all(box(k)[1]==390 for k in ['Rate','Depth','Lfo2RateControl','Lfo2Depth','Drive','Glide','TremRate','TremDepth'])
+assert 'DTTempoSyncLfo2RateControl' in defs
+assert all(not k.startswith('Amp')for k in byname)
+assert {'Amp Attack','Amp Decay','Amp Sustain','Amp Release'} <= {w['componentData']['name']for w in t['tabs'][3]['componentDefinition']['componentsData']}
+assert {'Filter Attack','Filter Decay','Filter Sustain','Filter Release'} <= {w['componentData']['name']for w in t['tabs'][2]['componentDefinition']['componentsData']}
+print('PASS: approved OSC/filter/dual-LFO/motion groups; detailed ADSRs remain; first279 declarations retained')

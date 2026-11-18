@@ -655,3 +655,20 @@ For gentle floating stereo, start with Auto Pan, Sine, Rate0.3–0.6Hz and Depth
 The SYNC button beside each MAIN Rate knob is independent. With SYNC off, the knob and Q-Link set Hz. With SYNC on, they select1/16,1/8,1/4,1/2or1bar; the LCD shows the division. Turning SYNC off restores that module's previous free rate. Filter LFO reuses the MOD tab's existing Sync/Division; Motion sync applies to the selected Tremolo or Auto Pan mode. Filter and Motion can use different divisions. No dotted/triplet choices are added in this version.
 
 Tempo follows the host. Valid PPQ while playing locks phase to the song; while stopped, the oscillator continues at its tempo-derived frequency. Missing/invalid tempo uses120BPM. The old1.6free-running-only description is superseded by this section. Existing custom/cached rate Q-Link assignments can still point to the legacy Hz parameter; reset them to the current plugin defaults or use a fresh instance to obtain mode-aware rate controls. Program/Track and Screen defaults both use the new rate relays.
+
+## Main performance layout — 1.8.0 development candidate
+
+| Group | Four Q-Link controls |
+| --- | --- |
+| A · OSC / SOUND | OSC Pair, OSC Mix, Detune, Drift |
+| B · FILTER / TONE | Filter Cutoff, Resonance, Body, Sub |
+| C · LFO 1 / 2 | LFO1Rate, LFO1Depth, LFO2Rate, LFO2Depth |
+| D · FX / MOTION | Drive, Glide, Motion Rate, Motion Depth |
+
+Amp ADSR is on AMP. Filter ADSR, Env Amount and Key Track remain on FILTER. They are fully functional after moving off MAIN. C's left pair is LFO1; the right pair is independent LFO2. Select each shape and target above its pair. Each Rate's SYNC button switches its same knob/Q-Link between Hz and beat division, retaining the free frequency. Motion's SYNC and Tremolo/Auto Pan selection remain independent in D.
+
+Body adds warm low-mid density with a broad140–650Hz emphasis, gentle saturation and gain compensation. It differs from Sub, which adds the octave-below sine. Body at0 is bypassed. Start around20–35%, then add Sub sparingly; gain compensation does not promise identical loudness for every sound. Detune controls the fixed pitch offset of OSC2, while Drift makes the pitch move over time.
+
+LFO2 targets: Pitch, Filter, Pulse Width, Amp or OSC Mix. Pulse Width is audible on pulse oscillators; OSC Mix movement is most audible when the two oscillators differ. Depth0 disables its influence. LFO1/LFO2/Motion can run together with independent rates and Sync. LFO2 offers Sine/Triangle/Saw/Square/S&H and free0.05–20Hz. It retains the five1/16..1bar divisions. Factory programs start Body/LFO2 at0depth so the existing64sounds keep their baseline. Saved custom projects retain adjustments.
+
+Legacy Body automation remains inactive. New Body is a separate saved control to avoid changing old projects. MAIN default mappings changed with the new groups; reset cached custom Q-Link maps or use a fresh instance if an existing track still shows the former ADSR arrangement. CHORD mapping is unchanged.

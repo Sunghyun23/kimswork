@@ -15,7 +15,7 @@ def install(g,tui,ql,params,out):
  def add(key,value):entries.append(O(('key',key),('value',value)));defs[key]=value
  for state,fill in [('off','#dbc594'),('on','#b06f37')]:
   im=Image.new('RGBA',(74,30));d=ImageDraw.Draw(im);d.rounded_rectangle((1,1,72,28),4,fill=fill,outline='#79552c',width=2);im.save(out/f'tempo-sync-{state}.png')
- for key,sync_name in [('Rate','LFO Sync'),('TremRate','Motion Sync')]:
+ for key,sync_name in [('Rate','LFO Sync'),('Lfo2RateControl','LFO 2 Sync'),('TremRate','Motion Sync')]:
   knob=next(w for w in widgets if get(cd(w),'name')==key);definition=copy.deepcopy(defs[get(cd(knob),'type')]);unique='DTTempoRate'+key
   for w in get(definition,'componentsData'):
    data=get(cd(w),'data')
@@ -35,5 +35,5 @@ def install(g,tui,ql,params,out):
  for tab in get(pd,'tabs'):
   if get(tab,'tabName') not in ('MOD','FX'):continue
   for w in get(get(tab,'componentDefinition'),'componentsData'):
-   if get(cd(w),'name')=='LFO Rate Control':
-    rem=get(get(w,'handle remapping'),'map')[0];put(rem,'value','WithName[LFO Rate]/'+get(rem,'value'))
+   if get(cd(w),'name') in ('LFO Rate Control','LFO 2 Rate Control'):
+    rem=get(get(w,'handle remapping'),'map')[0];put(rem,'value','WithName['+('LFO 2 Rate' if get(cd(w),'name')=='LFO 2 Rate Control' else 'LFO Rate')+']/'+get(rem,'value'))

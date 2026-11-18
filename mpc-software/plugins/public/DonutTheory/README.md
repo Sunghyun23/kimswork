@@ -1,5 +1,7 @@
 ## 1.2.3 — 전면 SUB
 
+Installed development candidate: **1.8.0** on MPC XL internalNVMe. Public stable remains1.2.3. Latest design/validation is recorded below and in the handoff.
+
 A SOUND/PLAY는 OSC Pair / OSC Mix / Sub / Drift다. 기존 Body 대신 한 옥타브 아래 독립 사인 서브를 직접 조절한다. Factory64의 기존 Mix/Sub 기여를 이전했으며 Body ID는 숨긴 호환 항목으로만 유지한다. 사용자 Body 자동화는 이전과 소리가 달라질 수 있다. [릴리스와 검증 범위](../../../docs/plugins/donut-theory/releases/1.2.3.md)를 따른다.
 
 # Donut Theory
@@ -295,3 +297,12 @@ MAIN D now shares Tremolo / Auto Pan with Drive, Glide, Mod Rate and Mod Depth. 
 ### 1.7.0 installed sync candidate
 
 Filter LFO and shared Motion have independent MAIN SYNC toggles. Rate selects Hz when Off and1/16..1bar when On; free Hz returns when disabled. Same sixteen controls; Rate defaults now use mode-aware relays in Screen/Program/Track. First275metadata retained;279total. Full native regression and host19/0/0 pass; ARM32/ARM64/SDK clean. All122installed files verified on MPC XL internalNVMe. [Actual device evidence](design/device-1.7.0/verification.json). Physical encoders/hardware audio/worst-case CPU are not newly certified. Public stable remains1.2.3.
+
+### 1.8.0 approved performance layout
+
+- A: OSC Pair / OSC Mix / Detune / Drift.
+- B: Filter Cutoff / Resonance / Body / Sub.
+- C: LFO1Rate / Depth / independentLFO2Rate / Depth, per-LFO touch Shape/Target/Sync.
+- D: Drive / Glide / Motion Rate / Depth.
+
+ADSR remains on AMP/FILTER detail. Body adds compensated low-mid density; Sub is the separate octave-below sine. New Body/LFO2Depth default0, with legacyBody and first279parameter declarations preserved;287total. Native/ARM32/ARM64/SDK clean; host19/0/0 and full regressions pass. Final122installed files match the build. [Actual MPC capture and verification](design/device-1.8.0/verification.json). Physical encoders, hardware audio/CPU and full MPC project restoration are not newly certified; reset cached MAIN maps/new instance if an old track retains its previous assignments. No public push/Release/site deployment for this candidate.

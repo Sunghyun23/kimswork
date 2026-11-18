@@ -109,6 +109,15 @@ c('ModSync','Motion Sync',['Off','On'])
 c('ModDivision','Motion Division',['1/16','1/8','1/4','1/2','1 bar'],2)
 f('LfoRateControl','LFO Rate Control',0,1,0)
 f('ModRateControl','Mod Rate Control',0,1,0)
+# Body is a new active control; legacy Body remains inert for old projects.
+f('BodyTone','Body',0,100,0,'%')
+c('Lfo2Shape','LFO 2 Shape',['Sine','Triangle','Saw','Square','S&H'])
+f('Lfo2Rate','LFO 2 Rate',.05,20,1.2,'Hz',True)
+f('Lfo2Depth','LFO 2 Depth',0,100,0,'%')
+c('Lfo2Target','LFO 2 Target',['Pitch','Filter','Pulse Width','Amp','OSC Mix'],1)
+c('Lfo2Sync','LFO 2 Sync',['Off','On'])
+c('Lfo2Division','LFO 2 Division',['1/16','1/8','1/4','1/2','1 bar'],2)
+f('Lfo2RateControl','LFO 2 Rate Control',0,1,0)
 (P/'src/ChordTypes.h').write_text('#pragma once\nnamespace donut {\nstatic constexpr int kTypeCount=32;\nstatic constexpr int kTypeSizes[32]={'+','.join(str(len(t[2]))for t in TYPES)+'};\nstatic constexpr int kTypeIntervals[32][5]={' + ','.join('{'+','.join(map(str,list(t[2])+[0]*(5-len(t[2]))))+'}'for t in TYPES)+'};\nstatic const char*const kTypeSuffixes[32]={'+','.join(json.dumps(t[1])for t in TYPES)+'};\ninline bool minorType(int q){switch(q){'+''.join('case '+str(q)+':'for q in sorted(MINOR_TYPES))+'return true;default:return false;}}\n}\n')
 (P/'parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 (P/'factory-presets.json').write_text(json.dumps(dict(sounds=patches,progressions=progressions),indent=2)+'\n')
@@ -117,7 +126,7 @@ for p in params:
  key=p['key'];nm=p['name'];d=p['default']
  if 'choices'in p:expr='mpc::choiceParam('+json.dumps(key.lower())+','+json.dumps(nm)+', {'+','.join(json.dumps(x) for x in p['choices'])+'},'+str(d)+')'
  else:expr='mpc::'+('logParam' if p['log'] else 'floatParam')+'('+json.dumps(key.lower())+','+json.dumps(nm)+','+','.join(str(p[x])+'f' if '.' in str(p[x]) else str(p[x])+'.0f' for x in ['min','max','default'])+','+json.dumps(p['unit'])+', 1)'
- lines.append('{auto editor='+expr+';editor.automatable=false;p.addParam(std::move(editor));}' if key.startswith(('Edit','PadPosition','ChordKey','Transpose','KeyDegree','Smooth','HarmonyEdit','HarmonyTones','HarmonyCurrent','LfoRateControl','ModRateControl')) else 'p.addParam('+expr+');')
+ lines.append('{auto editor='+expr+';editor.automatable=false;p.addParam(std::move(editor));}' if key.startswith(('Edit','PadPosition','ChordKey','Transpose','KeyDegree','Smooth','HarmonyEdit','HarmonyTones','HarmonyCurrent','LfoRateControl','ModRateControl','Lfo2RateControl')) else 'p.addParam('+expr+');')
 lines+=['}']
 for name,prefix in [('Roots','Root'),('LegacyQualities','Quality'),('Qualities','HarmonyType'),('Voicings','Voicing'),('Octaves','ChordOctave'),('PadNotes','PadNote'),('Touches','Touch')]:lines.append('static constexpr int kChord'+name+'[16] = {'+','.join('k'+prefix+str(slot) for slot in range(1,17))+'};')
 lines.append('static constexpr int kLegacyBankProgressions[4] = {kProgression,kProgression2,kProgression3,kProgression4};')
@@ -131,7 +140,7 @@ for patch in patches:lines.append('{'+','.join(str(float(patch['values'][key]))+
 lines+=['};']
 (P/'src/Catalog.h').write_text('\n'.join(lines)+'\n')
 # Main uses four horizontal banks; custom skin generator remaps their 2x2 geometry.
-pages=[('MAIN',['OscPair','Mix','Sub','Drift','Cutoff','Resonance','Drive','Space','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Rate','Depth','TremRate','TremDepth']),('OSC',['Wave1','Wave2','Mix','Detune','Octave','Pulse','Sub','Noise','FM','Tone','VoiceMode','SoundPreset']),('FILTER',['Filter','Cutoff','Resonance','Env','FiltAttack','FiltDecay','FiltSustain','FiltRelease','KeyTrack']),('AMP',['AmpAttack','AmpDecay','AmpSustain','AmpRelease','Volume','Expression','VoiceMode','Glide','GlideLegato','Bend','InputMode','Trigger','Spread','ChordSlot']),('MOD',['Shape','Rate','Depth','Target','Sync','Division','Vibrato','Motion','Progression']),('FX',['DriveType','Drive','DriveMix','Chorus','Delay','Feedback','DelayDivision','Space','FXPreset','TremRate','TremDepth','LowCut','OutputTrim','ModMode','ModShape','Pan'])]
+pages=[('MAIN',['OscPair','Mix','Detune','Drift','Cutoff','Resonance','BodyTone','Sub','Rate','Depth','Lfo2RateControl','Lfo2Depth','Drive','Glide','TremRate','TremDepth']),('OSC',['Wave1','Wave2','Mix','Detune','Octave','Pulse','Sub','Noise','FM','Tone','VoiceMode','SoundPreset']),('FILTER',['Filter','Cutoff','Resonance','Env','FiltAttack','FiltDecay','FiltSustain','FiltRelease','KeyTrack','BodyTone','Sub']),('AMP',['AmpAttack','AmpDecay','AmpSustain','AmpRelease','Volume','Expression','VoiceMode','Glide','GlideLegato','Bend','InputMode','Trigger','Spread','ChordSlot']),('MOD',['Shape','Rate','Depth','Target','Sync','Division','Vibrato','Motion','Lfo2Shape','Lfo2RateControl','Lfo2Depth','Lfo2Target','Lfo2Sync','Lfo2Division','Progression']),('FX',['DriveType','Drive','DriveMix','Chorus','Delay','Feedback','DelayDivision','Space','FXPreset','TremRate','TremDepth','LowCut','OutputTrim','ModMode','ModShape','Pan'])]
 pages.append(('CHORD',[x+str(i) for i in range(1,5) for x in ['Root','Quality','Voicing']]+['Progression','Spread','InputMode','Trigger']))
 lookup={p['key']:p for p in params}
 ui={'kit':'amber','style':{'background':'ffe1d2ae','text':'ff312b20','muted':'ff514634','accent':'ffac5b2a'},'pages':[]}

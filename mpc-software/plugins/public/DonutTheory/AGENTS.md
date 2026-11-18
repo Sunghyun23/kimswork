@@ -24,3 +24,5 @@
 - 1.6.1 user layout correction: MAIN D Mode/Shape selectors align above the right-hand Mod Rate/Depth knobs (x964/1114); do not put Mode above Glide. Preserve four knobs and Q-Link geometry.
 
 - 1.7.0 sync: keep first275 declarations; append ModSync/ModDivision/LfoRateControl/ModRateControl275..278. Each MAIN rate has its own SYNC toggle and the same physical Rate control selects Hz or division. Preserve free Hz, use guarded nonautomatable relays for Screen/Program/Track, and prevent the per16sample Motion Hz update from overriding Sync. Test independent BPM/PPQ, stop/fallback, division routing, old275 migration and no RT allocation.
+
+- 1.8.0 latest approved MAIN: A=OscPair/Mix/Detune/Drift; B=Cutoff/Resonance/BodyTone/Sub; C=LfoRateControl/Depth/Lfo2RateControl/Lfo2Depth; D=Drive/Glide/ModRateControl/TremDepth. Move ADSRs to existing AMP/FILTER detail; retain Env/KeyTrack there. Legacy Body2 remains inert; activeBodyTone279 and independent LFO2 append280..286,total287. Preserve first279metadata, depth0/Body0 compatibility, per-LFO Sync, target smoothing, saved-state/routing tests and all guide/menu geometry checks.
