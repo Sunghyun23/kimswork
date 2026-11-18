@@ -41,6 +41,7 @@ by={p.name:p for p in params};meta=json.loads((P/'parameters.json').read_text())
 for slot in range(1,17):bykey['Quality'+str(slot)]=bykey['HarmonyType'+str(slot)]
 for bank in range(1,5):bykey['Progression'+('' if bank==1 else str(bank))]=bykey['HarmonyPreset'+str(bank)]
 bykey['Progression']=bykey['HarmonyCurrent']
+bykey['Rate']=bykey['LfoRateControl'];bykey['TremRate']=bykey['ModRateControl']
 def handle(key):return 'Parameter '+str(bykey[key])
 def adddef(name,comp):defs.append(O(('key',name),('value',comp)))
 def label(text,bounds,size=20,color='ff352d21',kind='Text',binding=None):
@@ -169,8 +170,9 @@ menu('ModMode',964,356);menu('ModShape',1114,356)
 fx_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='FX'),'componentDefinition'),'componentsData')
 for w in list(fx_widgets):
  name=get(get(w,'componentData'),'name')
- if name in ('Mod Rate','Mod Depth'):
-  mapping=get(get(w,'handle remapping'),'map')[0];setv(mapping,'value','WithName['+name+']/'+get(mapping,'value'))
+ if name in ('Mod Rate Control','Mod Depth'):
+  caption='Mod Rate' if name=='Mod Rate Control' else name
+  mapping=get(get(w,'handle remapping'),'map')[0];setv(mapping,'value','WithName['+caption+']/'+get(mapping,'value'))
  if name=='Motion Shape':
   setv(get(w,'componentData'),'type','DTSmallMenu');setv(get(w,'bounds'),'bounds','734 542 136 32')
   fx_widgets.append(label('Motion Shape','663 497 278 32',24))
@@ -216,6 +218,8 @@ from chord_slots import install as chord_slots
 chord_slots(g,tui,ql,params,out)
 from key_reference import install as key_reference
 key_reference(g,tui,params,out)
+from tempo_controls import install as tempo_controls
+tempo_controls(g,tui,ql,params,out)
 # Manual pad-location hints retired: their per-slot 8x16 selection trees
 # inflate CHORD construction on MPC. MIDI/LEARN and stored IDs remain intact.
 # Later additions (bank arrows, pad hints) must never render or receive input

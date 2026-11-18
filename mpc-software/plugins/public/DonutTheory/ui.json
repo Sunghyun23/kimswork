@@ -60,7 +60,7 @@
           "widget": "fader"
         },
         {
-          "param": "LFO Rate",
+          "param": "LFO Rate Control",
           "widget": "knob"
         },
         {
@@ -68,7 +68,7 @@
           "widget": "knob"
         },
         {
-          "param": "Mod Rate",
+          "param": "Mod Rate Control",
           "widget": "knob"
         },
         {
@@ -250,7 +250,7 @@
           "overlay": "menu"
         },
         {
-          "param": "LFO Rate",
+          "param": "LFO Rate Control",
           "widget": "knob"
         },
         {
@@ -330,7 +330,7 @@
           "overlay": "menu"
         },
         {
-          "param": "Mod Rate",
+          "param": "Mod Rate Control",
           "widget": "knob"
         },
         {

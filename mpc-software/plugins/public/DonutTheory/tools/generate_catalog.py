@@ -105,6 +105,10 @@ c('HarmonyCurrent','Current Chord Preset',[p['name']for p in progressions])
 c('ModMode','Motion Mode',['Tremolo','Auto Pan'])
 c('ModShape','Motion Shape',['Sine','Triangle','Saw','Square','S&H'])
 f('Pan','Pan',-100,100,0,'%')
+c('ModSync','Motion Sync',['Off','On'])
+c('ModDivision','Motion Division',['1/16','1/8','1/4','1/2','1 bar'],2)
+f('LfoRateControl','LFO Rate Control',0,1,0)
+f('ModRateControl','Mod Rate Control',0,1,0)
 (P/'src/ChordTypes.h').write_text('#pragma once\nnamespace donut {\nstatic constexpr int kTypeCount=32;\nstatic constexpr int kTypeSizes[32]={'+','.join(str(len(t[2]))for t in TYPES)+'};\nstatic constexpr int kTypeIntervals[32][5]={' + ','.join('{'+','.join(map(str,list(t[2])+[0]*(5-len(t[2]))))+'}'for t in TYPES)+'};\nstatic const char*const kTypeSuffixes[32]={'+','.join(json.dumps(t[1])for t in TYPES)+'};\ninline bool minorType(int q){switch(q){'+''.join('case '+str(q)+':'for q in sorted(MINOR_TYPES))+'return true;default:return false;}}\n}\n')
 (P/'parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 (P/'factory-presets.json').write_text(json.dumps(dict(sounds=patches,progressions=progressions),indent=2)+'\n')
@@ -113,7 +117,7 @@ for p in params:
  key=p['key'];nm=p['name'];d=p['default']
  if 'choices'in p:expr='mpc::choiceParam('+json.dumps(key.lower())+','+json.dumps(nm)+', {'+','.join(json.dumps(x) for x in p['choices'])+'},'+str(d)+')'
  else:expr='mpc::'+('logParam' if p['log'] else 'floatParam')+'('+json.dumps(key.lower())+','+json.dumps(nm)+','+','.join(str(p[x])+'f' if '.' in str(p[x]) else str(p[x])+'.0f' for x in ['min','max','default'])+','+json.dumps(p['unit'])+', 1)'
- lines.append('{auto editor='+expr+';editor.automatable=false;p.addParam(std::move(editor));}' if key.startswith(('Edit','PadPosition','ChordKey','Transpose','KeyDegree','Smooth','HarmonyEdit','HarmonyTones','HarmonyCurrent')) else 'p.addParam('+expr+');')
+ lines.append('{auto editor='+expr+';editor.automatable=false;p.addParam(std::move(editor));}' if key.startswith(('Edit','PadPosition','ChordKey','Transpose','KeyDegree','Smooth','HarmonyEdit','HarmonyTones','HarmonyCurrent','LfoRateControl','ModRateControl')) else 'p.addParam('+expr+');')
 lines+=['}']
 for name,prefix in [('Roots','Root'),('LegacyQualities','Quality'),('Qualities','HarmonyType'),('Voicings','Voicing'),('Octaves','ChordOctave'),('PadNotes','PadNote'),('Touches','Touch')]:lines.append('static constexpr int kChord'+name+'[16] = {'+','.join('k'+prefix+str(slot) for slot in range(1,17))+'};')
 lines.append('static constexpr int kLegacyBankProgressions[4] = {kProgression,kProgression2,kProgression3,kProgression4};')
@@ -136,7 +140,7 @@ for name,keys in pages:
  for key in keys:
   p=lookup[key];widget='fader' if key.startswith(('AmpAttack','AmpDecay','AmpSustain','AmpRelease','FiltAttack','FiltDecay','FiltSustain','FiltRelease')) else 'knob'
   if 'choices'in p:widget='switch' if len(p['choices'])<=4 else 'slider'
-  controls.append(dict(param={'TremRate':'Mod Rate','TremDepth':'Mod Depth'}.get(key,p['name']),widget=widget,**({'overlay':'menu'} if 'choices'in p else {})))
+  controls.append(dict(param={'Rate':'LFO Rate Control','TremRate':'Mod Rate Control','TremDepth':'Mod Depth'}.get(key,p['name']),widget=widget,**({'overlay':'menu'} if 'choices'in p else {})))
  ui['pages'].append(dict(name=name,controls=controls))
 (P/'ui.json').write_text(json.dumps(ui,indent=2)+'\n')
 manifest=json.loads((P/'plugin.json').read_text());manifest.update(description='Soulful polyphonic synth with up to sixteen editable chord slots and independent sound/progression presets.',url='https://github.com/Sunghyun23/kimswork')

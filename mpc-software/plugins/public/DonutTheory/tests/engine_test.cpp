@@ -17,17 +17,36 @@ struct Rig {
  std::unique_ptr<DonutTheory> p=std::make_unique<DonutTheory>();
  float l[512]{},r[512]{};float* out[2]={l,r};
  Rig(){p->set(kInputMode,0);p->set(kPadMap,0);p->prepare(44100,512);}
- float block(std::initializer_list<mpc::MidiEvent> events={},int size=128){
-  std::fill(l,l+512,0);std::fill(r,r+512,0);mpc::ProcessContext c;c.outputs=out;c.numOutputs=2;c.numFrames=size;c.sampleRate=44100;c.midi=events.begin();c.numMidiEvents=int(events.size());
+ float block(std::initializer_list<mpc::MidiEvent> events={},int size=128,mpc::Transport transport={}){
+  std::fill(l,l+512,0);std::fill(r,r+512,0);mpc::ProcessContext c;c.outputs=out;c.numOutputs=2;c.numFrames=size;c.sampleRate=44100;c.midi=events.begin();c.numMidiEvents=int(events.size());c.transport=transport;
   forbidAlloc=true;p->process(c);forbidAlloc=false;
   float peak=0;for(int i=0;i<size;++i){assert(std::isfinite(l[i])&&std::isfinite(r[i]));assert(std::abs(l[i])<=1&&std::abs(r[i])<=1);peak=std::max(peak,std::abs(l[i]));}return peak;
  }
  void finish(){for(int i=0;i<2100;++i)block();assert(p->activeVoices()==0);}
 };
 int main(){
+ // Mode-aware rate relays retain free Hz and control independent divisions.
+ {static_assert(kModSync==275&&kModDivision==276&&kLfoRateControl==277&&kModRateControl==278&&kNumParams==279,"append-only sync");
+  Rig t;t.p->set(kRate,1.7f);t.p->set(kTremRate,3.2f);t.block();
+  for(bool motion:{false,true}){int sync=motion?kModSync:kSync,div=motion?kModDivision:kDivision,relay=motion?kModRateControl:kLfoRateControl,rate=motion?kTremRate:kRate;
+   const float free=t.p->get(rate);t.p->set(sync,1);t.block();
+   for(int i=0;i<5;++i){t.p->set(relay,float(i)*.25f);t.block();assert(t.p->getInt(div)==i&&std::abs(t.p->get(rate)-free)<1e-4f);std::string text;assert(t.p->formatValue(relay,t.p->get(relay),text));assert(text.find("Hz")==std::string::npos);}
+   t.p->set(sync,0);t.block();assert(std::abs(t.p->get(rate)-free)<1e-4f);t.p->set(relay,.42f);t.block();assert(std::abs(t.p->getNormalised(rate)-.42f)<1e-4f);
+  }
+  t.p->set(kSync,1);t.p->set(kModSync,1);t.p->set(kDivision,2);t.p->set(kModDivision,1);
+  mpc::Transport tr;tr.valid=tr.playing=tr.tempoValid=tr.ppqValid=true;tr.bpm=90;tr.ppqPos=.375;
+  t.block({},129,tr);auto ph=t.p->modulationPhases();assert(std::abs(ph[0]-(.375f+129.f*1.5f/44100))<1e-4f);assert(std::abs(ph[1]-(.75f+129.f*3.f/44100))<1e-4f);
+  tr.bpm=120;tr.ppqPos=1.25;t.block({},32,tr);ph=t.p->modulationPhases();assert(std::abs(ph[0]-(.25f+32.f*2.f/44100))<1e-4f);assert(std::abs(ph[1]-(.5f+32.f*4.f/44100))<1e-4f);
+  tr.playing=false;tr.ppqPos=99;tr.tempoValid=false;t.block({},64,tr);auto next=t.p->modulationPhases();assert(std::abs(next[0]-ph[0]-64.f*2.f/44100)<1e-4f);assert(std::abs(next[1]-ph[1]-64.f*4.f/44100)<1e-4f);
+  auto state=t.p->internalSaveState();Rig restored;assert(restored.p->internalLoadState(state.data(),state.size()));restored.p->reset();restored.block();assert(restored.p->getInt(kSync)==1&&restored.p->getInt(kModSync)==1&&restored.p->getInt(kModDivision)==1);
+  size_t end=12;for(int i=0;i<275;++i)end+=1+state[end]+8;state.resize(end+4);state[8]=19;state[9]=1;state[10]=state[11]=0;for(int i=0;i<4;++i)state[end+i]=0;
+  assert(restored.p->internalLoadState(state.data(),state.size()));restored.p->reset();restored.block();assert(!restored.p->getBool(kModSync)&&restored.p->getInt(kModDivision)==2&&restored.p->getBool(kSync));
+ }
+ std::cout<<"PASS: independent sync divisions, free-rate memory, Rate Q-Link relays, BPM/PPQ phase lock, stop/fallback tempo and old275 migration\n";
+
 
  // Motion mode shares rate/depth, retains stereo, and safely migrates old states.
- {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==275,"append-only motion");
+ {static_assert(kModMode==272&&kModShape==273&&kPan==274&&kNumParams==279,"append-only motion");
   Rig m;m.p->set(kMotion,0);m.p->set(kSpace,0);m.p->set(kChorus,0);m.p->set(kDelay,0);m.p->set(kDrift,0);m.p->set(kDepth,0);m.p->set(kVibrato,0);m.p->set(kAmpAttack,1);m.p->set(kAmpSustain,100);m.p->set(kAmpDecay,1);m.p->set(kTremRate,2);m.p->set(kTremDepth,100);m.p->set(kModMode,1);
   for(int i=0;i<400;++i)m.block();m.block({mpc::MidiEvent::noteOn(0,72,100)});
   bool left=false,right=false;
@@ -110,7 +129,7 @@ int main(){
  std::cout<<"PASS: scoped smooth APPLY preserves roots/types/MIDI/inactive slots, preview ownership/end/stop, stale-plan rejection and safe state\n";
 
  // Key reference never changes notes. Explicit confirmation moves all active roots only.
- {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==275,"Append-only key controls");
+ {static_assert(kChordKeyRoot==208&&kTransposeDelta==219&&kNumParams==279,"Append-only key controls");
   for(int count=0;count<4;++count)for(int key=0;key<12;++key)for(int from=0;from<12;++from){Rig m;m.p->set(kSlotCount,count);m.block();
    std::array<std::array<float,5>,16> before{};
    for(int slot=0;slot<16;++slot){m.p->set(kChordRoots[slot],48+slot%12);m.p->set(kChordOctaves[slot],slot%5);m.p->set(kChordPadNotes[slot],80+slot);for(int f=0;f<5;++f)before[slot][f]=m.p->get(f==0?kChordRoots[slot]:f==1?kChordQualities[slot]:f==2?kChordVoicings[slot]:f==3?kChordOctaves[slot]:kChordPadNotes[slot]);}
@@ -137,7 +156,7 @@ int main(){
  std::cout<<"PASS: 576 key/source/count transposes, reference isolation, whole-operation bounds, degree readback, state and old208 migration without render allocations\n";
 
  // Manual position hints survive presets/LEARN/state and never alter MIDI routing.
- {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==275,"Append-only pad positions");
+ {static_assert(kPadPosition1==192&&kPadPosition16==207&&kChordKeyRoot==208&&kNumParams==279,"Append-only pad positions");
   Rig m;for(int slot=0;slot<16;++slot){assert(m.p->getInt(kPadPosition1+slot)==0);assert(!m.p->param(kPadPosition1+slot).automatable);m.p->set(kPadPosition1+slot,float(slot*8+1));}
   m.p->setProgram(12);m.block();assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadPosition16)==121);
   m.p->set(kPadLearn,1);m.block({mpc::MidiEvent::noteOn(0,75,100)});assert(m.p->getInt(kPadPosition1)==1&&m.p->getInt(kPadNote1)==75&&m.p->activeVoices()==0);

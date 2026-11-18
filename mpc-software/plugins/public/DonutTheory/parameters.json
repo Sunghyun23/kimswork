@@ -6249,5 +6249,44 @@
     "default": 0,
     "unit": "%",
     "log": false
+  },
+  {
+    "key": "ModSync",
+    "name": "Motion Sync",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "ModDivision",
+    "name": "Motion Division",
+    "choices": [
+      "1/16",
+      "1/8",
+      "1/4",
+      "1/2",
+      "1 bar"
+    ],
+    "default": 2
+  },
+  {
+    "key": "LfoRateControl",
+    "name": "LFO Rate Control",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "log": false
+  },
+  {
+    "key": "ModRateControl",
+    "name": "Mod Rate Control",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "log": false
   }
 ]

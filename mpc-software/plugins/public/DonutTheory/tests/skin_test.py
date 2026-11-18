@@ -3,7 +3,7 @@ from pathlib import Path
 P=Path(__file__).resolve().parents[1];skin=P/'skins'
 t=json.loads((skin/'TUI.json').read_text())['pageData'];q=json.loads((skin/'Q-Links.json').read_text());params=json.loads((P/'parameters.json').read_text())
 index={p['key']:i for i,p in enumerate(params)}
-expected=['OscPair','Mix','Sub','Drift','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Cutoff','Resonance','Rate','Depth','Drive','Glide','TremRate','TremDepth']
+expected=['OscPair','Mix','Sub','Drift','AmpAttack','AmpDecay','AmpSustain','AmpRelease','Cutoff','Resonance','LfoRateControl','Depth','Drive','Glide','ModRateControl','TremDepth']
 main=q['Screen Mode Q-Links']['map'][0];assert main['Bank Direction']=='Column'
 # SDK hardware banks are columns read top-to-bottom, not Q-Link 1..4.
 physical_banks=((13,9,5,1),(14,10,6,2),(15,11,7,3),(16,12,8,4))
@@ -161,7 +161,7 @@ for key,component in defs.items():
   assert names.count('ticks')==1 and names.count('value plate')==1, key
 print('PASS: independent knob definitions contain exactly one tick and value plate')
 
-assert index['LearnStatus']==84 and len(params)==275
+assert index['LearnStatus']==84 and len(params)==279
 assert index['PadPosition1']==192 and index['PadPosition16']==207
 chord_root=next(tab for tab in t['tabs'] if tab['tabName']=='CHORD')['componentDefinition']['componentsData']
 assert not any(w['componentData']['type'].startswith('DTPadPosition') for w in chord_root)
@@ -451,7 +451,7 @@ for title,param in [('GLIDE','Glide'),('STRUM','Spread')]:
 print('PASS: touch GLIDE/STRUM use existing values without stealing the sixteen chord Q-Links')
 
 assert params[:272]==json.loads((P/'tests/legacy-272-parameters.json').read_text())
-assert [p['key']for p in params[272:]]==['ModMode','ModShape','Pan']
+assert [p['key']for p in params[272:275]]==['ModMode','ModShape','Pan']
 assert params[index['ModMode']]['choices']==['Tremolo','Auto Pan']
 for key in ['ModMode','ModShape']:
  assert 'DTChoicePanel'+str(index[key]) in defs
@@ -461,8 +461,16 @@ print('PASS: first272 declarations retained; shared motion selectors, Pan detail
 
 fx=next(tab['componentDefinition']['componentsData']for tab in t['tabs']if tab['tabName']=='FX')
 assert not any(w['componentData']['name'].startswith('SPACE:')for w in fx)
-for name in ['Mod Rate','Mod Depth']:
+for name in ['Mod Rate Control','Mod Depth']:
  w=next(w for w in fx if w['componentData']['name']==name)
- assert w['handle remapping']['map'][0]['value'].startswith('WithName['+name+']/')
+ assert w['handle remapping']['map'][0]['value'].startswith('WithName['+('Mod Rate' if name=='Mod Rate Control' else name)+']/')
 assert next(w for w in fx if w['componentData']['name']=='Motion Shape' and w['componentData']['type']!='Label')['componentData']['type'].startswith('DTSmallMenu')
 print('PASS: FX motion labels override legacy names; shape has a direct dropdown and no footer overlaps the sixteen cells')
+
+assert params[:275]==json.loads((P/'tests/legacy-275-parameters.json').read_text())
+assert [p['key']for p in params[275:]]==['ModSync','ModDivision','LfoRateControl','ModRateControl']
+assert all('DTTempoSync'+name in defs for name in ['Rate','TremRate'])
+for name in ['Rate','TremRate']:
+ knob=next(w for w in children if w['componentData']['name']==name)
+ assert knob['componentData']['type']=='DTTempoRate'+name
+print('PASS: first275 metadata preserved; front SYNC buttons and mode-aware rate mappings retain sixteen Q-Links')

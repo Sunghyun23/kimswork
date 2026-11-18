@@ -22,3 +22,5 @@
 - 1.6.0 approved shared motion: MAIN D=Drive/Glide/Mod Rate/Mod Depth, touch Tremolo/Auto Pan +Shape, basePan onFX. No D subpage or independent simultaneous modules. First272metadata exact; append ModMode/ModShape/Pan272..274. Preserve stereo, depth0/base-pan behavior, smoothed mode/shape output, migration and zero-allocation tests.
 
 - 1.6.1 user layout correction: MAIN D Mode/Shape selectors align above the right-hand Mod Rate/Depth knobs (x964/1114); do not put Mode above Glide. Preserve four knobs and Q-Link geometry.
+
+- 1.7.0 sync: keep first275 declarations; append ModSync/ModDivision/LfoRateControl/ModRateControl275..278. Each MAIN rate has its own SYNC toggle and the same physical Rate control selects Hz or division. Preserve free Hz, use guarded nonautomatable relays for Screen/Program/Track, and prevent the per16sample Motion Hz update from overriding Sync. Test independent BPM/PPQ, stop/fallback, division routing, old275 migration and no RT allocation.
