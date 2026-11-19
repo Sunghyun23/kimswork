@@ -61,3 +61,7 @@ Latest updates: Donut Theory1.10.0 adds whole-sound RANDOM with all three Sync s
 Donut Theory1.10.1 and Crate Press0.2.4 group plugin-owned browse/performance actions at the bottom while retaining original artwork and sound engines. Groove Dice1.4.0 stays unchanged. Actual MPC XL captures and detailed verification are stored per product.
 
 Donut Theory1.12.0 combines Amp/Filter ADSR on ENV and adds Release Pitch Drop on PLAY D, with shared Amp Release and293parameters (first291retained). MAIN filters remain unchanged. Actual MPC XL captures, internal NVMe file hashes and full automated regressions accompany the release.
+
+## Licenses
+
+This monorepo uses project-level licenses rather than one blanket repository license. [Donut Theory](mpc-software/plugins/public/DonutTheory/LICENSE), [Groove Dice](mpc-software/plugins/public/GrooveDice/LICENSE), [Crate Press](mpc-software/plugins/public/CratePress/LICENSE), the [Groove Dice expansion backend](mpc-software/shared/groove-dice-expansion/LICENSE) and the [original core generator/content](mpc-software/expansions/groove-dice/public/original-workshop/LICENSE) are MIT-licensed. Original Workshop content terms and SDK notices are included in the plugin Content/Licenses directories. Third-party SDK/components keep their own notices. Pack Builder dependencies have [separate notices](mpc-software/apps/public/GrooveDicePackBuilder/THIRD_PARTY.md); optional/private sound packs retain their own source rights and are not covered by the plugin MIT license.

@@ -1,4 +1,4 @@
-# Groove Dice 1.6.1
+# Groove Dice 1.6.2
 
 Retained from1.3.4: all seventeen SOUND sources have independent reverse switches, saved with user kits and projects. Start trims from the source end in reverse mode; Decay and Shift remain independent. SOUND has two in-place pages: Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Separate48px previous/next arrows surround a visible SOUND1/2 counter. REV stays available on both pages; approved per-row polarity Ø is on page2. Remote on-device page/REV/Ø interactions were checked; physical encoder and hardware-audio coverage remain separate.
 
@@ -38,3 +38,7 @@ Version1.6.0 adds 1/4T, 1/8T and 1/16T hats, each plain, +FILL or +ROLL. Tap Hat
 ## License
 
 Groove Dice project code and Original Workshop core content are offered under MIT; see LICENSE and Content/Licenses/. Original synthesis and authored MIDI use no external audio/MIDI/model inputs. Optional expansions retain their own source rights; neither the plugin license nor a builder checkbox grants rights to another library. Pack Builder is distributed separately with its own dependency notices.
+
+## 1.6.2 expansion-safe catalog upgrades
+
+Open MPC packages declare `Content/Expansions` as user data so upgrades retain installed packs and their registry. Back up important projects and packs before upgrading; older1.6.1catalog packages did not declare this folder and should not be used for catalog upgrades. The normal SDK copy workflow still requires preserving your Content/Expansions directory. The engine, parameters, UI and original bank are unchanged.

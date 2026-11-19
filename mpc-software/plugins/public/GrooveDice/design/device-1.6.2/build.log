@@ -1,0 +1,1158 @@
+Building Groove Dice by kim  (/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice)
+  toolchain: gcc   target: native   release
+
+[1/2] Native build (for host_sim and testing on this computer)
+  [native] compiling 1 source file -> build/native/groove-dice.dylib
+In file included from /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:77:
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/Layers.inc:66:45: warning: unused variable 'layer' [-Wunused-variable]
+   66 |  for(int r=0;r<4;++r){int role=soundRole(r),layer=soundLayer(r);for(int field:{LOn,LSolo,LLock}){int relay=(field==LOn?kSoundOn0:field==LSolo?kSoundSolo0:kSoundLock0)+r;float next=role<0?0:get(soundKey(r,field));if(get(relay)!=next){set(relay,next);changed[relay].store(true);}}}
+      |                                             ^~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:249: warning: '&&' within '||' [-Wlogical-op-parentheses]
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                              ~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:249: note: place parentheses around the '&&' expression to silence this warning
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                         ^
+      |                                                                                                                                                                                                                                              (                      )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:275: warning: '&&' within '||' [-Wlogical-op-parentheses]
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                                     ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:275: note: place parentheses around the '&&' expression to silence this warning
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                                                   ^
+      |                                                                                                                                                                                                                                                                       (                           )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:124:30: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  124 |   if(i==kXKit||i>=kXSoundKick&&i<=kXSoundPerc){int q=i==kXKit?kXQKit:kXQKick+i-kXSoundKick;const auto&list=i==kXKit?kitItems():soundItems(i-kXSoundKick);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==getInt(i))pos=int(j)+1;bool prev=internal;internal=true;set(q,list.empty()?0.f:float(pos)/list.size());internal=prev;changed[q].store(true);}
+      |              ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:124:30: note: place parentheses around the '&&' expression to silence this warning
+  124 |   if(i==kXKit||i>=kXSoundKick&&i<=kXSoundPerc){int q=i==kXKit?kXQKit:kXQKick+i-kXSoundKick;const auto&list=i==kXKit?kitItems():soundItems(i-kXSoundKick);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==getInt(i))pos=int(j)+1;bool prev=internal;internal=true;set(q,list.empty()?0.f:float(pos)/list.size());internal=prev;changed[q].store(true);}
+      |                              ^
+      |                (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:117: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                  ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:117: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                     ^
+      |                                                                                                    (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:147: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                        ~~~~~~~~~~~^~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:147: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                   ^
+      |                                                                                                                                          (                    )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:175: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                               ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:175: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                                               ^
+      |                                                                                                                                                                 (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:252:98: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  252 |   for(int row=0;row<8;++row)if(command(kKitPick0+row)){int j=getInt(kXKitPage)*8+row;if(j==0||j>0&&j<=int(kitItems().size())){internal=true;set(kXKit,j==0?0:kitItems()[j-1]+1);set(kKitOpen,0);internal=false;factoryDirty.store(true);displayPending.store(true);}}
+      |                                                                                             ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:252:98: note: place parentheses around the '&&' expression to silence this warning
+  252 |   for(int row=0;row<8;++row)if(command(kKitPick0+row)){int j=getInt(kXKitPage)*8+row;if(j==0||j>0&&j<=int(kitItems().size())){internal=true;set(kXKit,j==0?0:kitItems()[j-1]+1);set(kKitOpen,0);internal=false;factoryDirty.store(true);displayPending.store(true);}}
+      |                                                                                                  ^
+      |                                                                                               (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:229: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                            ~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:229: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                                            (                    )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:257: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                 ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:257: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                                                                   (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:303: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                    ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:303: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                               ^
+      |                                                                                                                                                                                                                                                                                                      (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:325: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                         ~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:325: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                                                                                                                                           (                       )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:353: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:353: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                                                                                                                                                                     (                         )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:97: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                              ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:97: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                 ^
+      |                                                                                (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:150: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                      ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:150: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                      ^
+      |                                                                                                                                        (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:177: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                                      ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:177: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                                                 ^
+      |                                                                                                                                                                        (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:422: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:422: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                     (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:475: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:475: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:502: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:502: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:522:276: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  522 |   if(amount<=.5f)return;int bars=(lengths[b].load()+4*PPQ-1)/(4*PPQ);for(int bar=0;bar<bars;++bar)for(int attempt=0;attempt<int((amount-.5f)*8);++attempt){int pick=random()%100,role=pick<55?2:pick<75?7:pick<88?0:1;int rule=getInt(kRuleKick+ruleGroup(role));if(rule<2||rule==2&&random()%2)continue;int step=role==2?2*int(random()%8):role==0?int((random()%3)*4+6)%16:3+4*int(random()%4);Note n{bar*4*PPQ+step*240,role,role==1?35+int(random()%15):55+int(random()%30),100,80};if(n.tick>=lengths[b].load()||!roomFor(b,n))continue;for(auto&c:notes[b])if(!c.valid()){c.write(n);break;}}
+      |                                                                                                                                                                                                                                                                           ~~~~~~~~~^~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:522:276: note: place parentheses around the '&&' expression to silence this warning
+  522 |   if(amount<=.5f)return;int bars=(lengths[b].load()+4*PPQ-1)/(4*PPQ);for(int bar=0;bar<bars;++bar)for(int attempt=0;attempt<int((amount-.5f)*8);++attempt){int pick=random()%100,role=pick<55?2:pick<75?7:pick<88?0:1;int rule=getInt(kRuleKick+ruleGroup(role));if(rule<2||rule==2&&random()%2)continue;int step=role==2?2*int(random()%8):role==0?int((random()%3)*4+6)%16:3+4*int(random()%4);Note n{bar*4*PPQ+step*240,role,role==1?35+int(random()%15):55+int(random()%30),100,80};if(n.tick>=lengths[b].load()||!roomFor(b,n))continue;for(auto&c:notes[b])if(!c.valid()){c.write(n);break;}}
+      |                                                                                                                                                                                                                                                                                    ^
+      |                                                                                                                                                                                                                                                                             (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:519:51: warning: comparison of integers of different signs: 'uint32_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
+  519 |    if(!fixed){if(rule>=2&&amount>.5f&&random()%100<int((amount-.5f)*(rule==2?15:30)))continue;float factor=rule==1?.25f:rule==2?.6f:1.f;int delta=int(std::round((roleShift[n.role]+(int(random()%2001)-1000)*.001f*amount*2)*factor*currentTempo.load()/60000*PPQ));n.tick=mpc::clamp(n.tick+delta,0,lengths[b].load()-1);n.velocity=mpc::clamp(n.velocity+int((int(random()%2001)-1000)*.001f*amount*10*factor),n.role==1?20:35,127);}
+      |                                       ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+21 warnings generated.
+  [native] ok (719 KB, 6.4s)
+
+[2/2] Parameter dump (host_sim) -> build/params.json
+  host_sim dump -> build/params.json
+
+Native build only: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/native/groove-dice.dylib
+Try it:  /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk/.sdk-tools/host_sim /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/native/groove-dice.dylib test --notes 60,64,67 --wav out.wav
+gen_ui: NOTE: "kit" is set but no control uses "knob", "fader" or "switch"; nothing from the kit is drawn.
+Groove Dice native skin compiled: MAIN + fill editor,6function keys,SCREEN relay + independent Program maps
+Building Groove Dice by kim  (/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice)
+  toolchain: zig   target: all   release
+Using zig 0.17.1 (from /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk/.sdk-tools/zigenv)
+
+[1/7] Native build (for host_sim and testing on this computer)
+  [native] compiling 1 source file -> build/native/groove-dice.dylib
+In file included from /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:77:
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/Layers.inc:66:45: warning: unused variable 'layer' [-Wunused-variable]
+   66 |  for(int r=0;r<4;++r){int role=soundRole(r),layer=soundLayer(r);for(int field:{LOn,LSolo,LLock}){int relay=(field==LOn?kSoundOn0:field==LSolo?kSoundSolo0:kSoundLock0)+r;float next=role<0?0:get(soundKey(r,field));if(get(relay)!=next){set(relay,next);changed[relay].store(true);}}}
+      |                                             ^~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:249: warning: '&&' within '||' [-Wlogical-op-parentheses]
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                              ~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:249: note: place parentheses around the '&&' expression to silence this warning
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                         ^
+      |                                                                                                                                                                                                                                              (                      )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:275: warning: '&&' within '||' [-Wlogical-op-parentheses]
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                                     ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:275: note: place parentheses around the '&&' expression to silence this warning
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                                                   ^
+      |                                                                                                                                                                                                                                                                       (                           )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:124:30: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  124 |   if(i==kXKit||i>=kXSoundKick&&i<=kXSoundPerc){int q=i==kXKit?kXQKit:kXQKick+i-kXSoundKick;const auto&list=i==kXKit?kitItems():soundItems(i-kXSoundKick);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==getInt(i))pos=int(j)+1;bool prev=internal;internal=true;set(q,list.empty()?0.f:float(pos)/list.size());internal=prev;changed[q].store(true);}
+      |              ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:124:30: note: place parentheses around the '&&' expression to silence this warning
+  124 |   if(i==kXKit||i>=kXSoundKick&&i<=kXSoundPerc){int q=i==kXKit?kXQKit:kXQKick+i-kXSoundKick;const auto&list=i==kXKit?kitItems():soundItems(i-kXSoundKick);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==getInt(i))pos=int(j)+1;bool prev=internal;internal=true;set(q,list.empty()?0.f:float(pos)/list.size());internal=prev;changed[q].store(true);}
+      |                              ^
+      |                (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:117: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                  ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:117: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                     ^
+      |                                                                                                    (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:147: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                        ~~~~~~~~~~~^~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:147: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                   ^
+      |                                                                                                                                          (                    )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:175: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                               ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:175: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                                               ^
+      |                                                                                                                                                                 (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:252:98: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  252 |   for(int row=0;row<8;++row)if(command(kKitPick0+row)){int j=getInt(kXKitPage)*8+row;if(j==0||j>0&&j<=int(kitItems().size())){internal=true;set(kXKit,j==0?0:kitItems()[j-1]+1);set(kKitOpen,0);internal=false;factoryDirty.store(true);displayPending.store(true);}}
+      |                                                                                             ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:252:98: note: place parentheses around the '&&' expression to silence this warning
+  252 |   for(int row=0;row<8;++row)if(command(kKitPick0+row)){int j=getInt(kXKitPage)*8+row;if(j==0||j>0&&j<=int(kitItems().size())){internal=true;set(kXKit,j==0?0:kitItems()[j-1]+1);set(kKitOpen,0);internal=false;factoryDirty.store(true);displayPending.store(true);}}
+      |                                                                                                  ^
+      |                                                                                               (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:390:109: warning: misleading indentation; statement is not part of the previous 'for' [-Wmisleading-indentation]
+  390 |  notifyHostParameterChanged(i);if(legacyRuleAlias(i)){ruleNotifyIndex.store(-1);ruleNotifyThread.store(0);}}if(displayPending.exchange(false))requestDisplayUpdate();flushing.clear();}
+      |                                                                                                             ^
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:388:60: note: previous statement is here
+  388 |  void flushHostUpdates(){if(flushing.test_and_set())return;for(int i=0;i<kParamCount;++i)if(changed[i].exchange(false)){
+      |                                                            ^
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:229: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                            ~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:229: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                                            (                    )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:257: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                 ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:257: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                                                                   (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:303: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                    ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:303: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                               ^
+      |                                                                                                                                                                                                                                                                                                      (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:325: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                         ~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:325: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                                                                                                                                           (                       )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:353: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:353: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                                                                                                                                                                     (                         )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:97: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                              ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:97: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                 ^
+      |                                                                                (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:150: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                      ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:150: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                      ^
+      |                                                                                                                                        (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:177: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                                      ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:177: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                                                 ^
+      |                                                                                                                                                                        (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:422: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:422: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                     (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:475: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:475: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:502: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:502: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:522:276: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  522 |   if(amount<=.5f)return;int bars=(lengths[b].load()+4*PPQ-1)/(4*PPQ);for(int bar=0;bar<bars;++bar)for(int attempt=0;attempt<int((amount-.5f)*8);++attempt){int pick=random()%100,role=pick<55?2:pick<75?7:pick<88?0:1;int rule=getInt(kRuleKick+ruleGroup(role));if(rule<2||rule==2&&random()%2)continue;int step=role==2?2*int(random()%8):role==0?int((random()%3)*4+6)%16:3+4*int(random()%4);Note n{bar*4*PPQ+step*240,role,role==1?35+int(random()%15):55+int(random()%30),100,80};if(n.tick>=lengths[b].load()||!roomFor(b,n))continue;for(auto&c:notes[b])if(!c.valid()){c.write(n);break;}}
+      |                                                                                                                                                                                                                                                                           ~~~~~~~~~^~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:522:276: note: place parentheses around the '&&' expression to silence this warning
+  522 |   if(amount<=.5f)return;int bars=(lengths[b].load()+4*PPQ-1)/(4*PPQ);for(int bar=0;bar<bars;++bar)for(int attempt=0;attempt<int((amount-.5f)*8);++attempt){int pick=random()%100,role=pick<55?2:pick<75?7:pick<88?0:1;int rule=getInt(kRuleKick+ruleGroup(role));if(rule<2||rule==2&&random()%2)continue;int step=role==2?2*int(random()%8):role==0?int((random()%3)*4+6)%16:3+4*int(random()%4);Note n{bar*4*PPQ+step*240,role,role==1?35+int(random()%15):55+int(random()%30),100,80};if(n.tick>=lengths[b].load()||!roomFor(b,n))continue;for(auto&c:notes[b])if(!c.valid()){c.write(n);break;}}
+      |                                                                                                                                                                                                                                                                                    ^
+      |                                                                                                                                                                                                                                                                             (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:519:51: warning: comparison of integers of different signs: 'uint32_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
+  519 |    if(!fixed){if(rule>=2&&amount>.5f&&random()%100<int((amount-.5f)*(rule==2?15:30)))continue;float factor=rule==1?.25f:rule==2?.6f:1.f;int delta=int(std::round((roleShift[n.role]+(int(random()%2001)-1000)*.001f*amount*2)*factor*currentTempo.load()/60000*PPQ));n.tick=mpc::clamp(n.tick+delta,0,lengths[b].load()-1);n.velocity=mpc::clamp(n.velocity+int((int(random()%2001)-1000)*.001f*amount*10*factor),n.role==1?20:35,127);}
+      |                                       ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+22 warnings generated.
+  [native] ok (1.4 MB, 8.2s)
+
+[2/7] Parameter dump (host_sim) -> build/params.json
+  host_sim dump -> build/params.json
+
+[3/7] arm32 build (MPC Live/X/One (32-bit))
+  [arm32] compiling 1 source file -> build/kim - VST - Groove Dice/VST/groove-dice-arm32.so
+In file included from /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:77:
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/Layers.inc:66:45: warning: unused variable 'layer' [-Wunused-variable]
+   66 |  for(int r=0;r<4;++r){int role=soundRole(r),layer=soundLayer(r);for(int field:{LOn,LSolo,LLock}){int relay=(field==LOn?kSoundOn0:field==LSolo?kSoundSolo0:kSoundLock0)+r;float next=role<0?0:get(soundKey(r,field));if(get(relay)!=next){set(relay,next);changed[relay].store(true);}}}
+      |                                             ^~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:249: warning: '&&' within '||' [-Wlogical-op-parentheses]
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                              ~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:249: note: place parentheses around the '&&' expression to silence this warning
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                         ^
+      |                                                                                                                                                                                                                                              (                      )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:275: warning: '&&' within '||' [-Wlogical-op-parentheses]
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                                     ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:275: note: place parentheses around the '&&' expression to silence this warning
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                                                   ^
+      |                                                                                                                                                                                                                                                                       (                           )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:124:30: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  124 |   if(i==kXKit||i>=kXSoundKick&&i<=kXSoundPerc){int q=i==kXKit?kXQKit:kXQKick+i-kXSoundKick;const auto&list=i==kXKit?kitItems():soundItems(i-kXSoundKick);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==getInt(i))pos=int(j)+1;bool prev=internal;internal=true;set(q,list.empty()?0.f:float(pos)/list.size());internal=prev;changed[q].store(true);}
+      |              ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:124:30: note: place parentheses around the '&&' expression to silence this warning
+  124 |   if(i==kXKit||i>=kXSoundKick&&i<=kXSoundPerc){int q=i==kXKit?kXQKit:kXQKick+i-kXSoundKick;const auto&list=i==kXKit?kitItems():soundItems(i-kXSoundKick);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==getInt(i))pos=int(j)+1;bool prev=internal;internal=true;set(q,list.empty()?0.f:float(pos)/list.size());internal=prev;changed[q].store(true);}
+      |                              ^
+      |                (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:117: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                  ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:117: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                     ^
+      |                                                                                                    (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:147: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                        ~~~~~~~~~~~^~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:147: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                   ^
+      |                                                                                                                                          (                    )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:175: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                               ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:175: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                                               ^
+      |                                                                                                                                                                 (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:252:98: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  252 |   for(int row=0;row<8;++row)if(command(kKitPick0+row)){int j=getInt(kXKitPage)*8+row;if(j==0||j>0&&j<=int(kitItems().size())){internal=true;set(kXKit,j==0?0:kitItems()[j-1]+1);set(kKitOpen,0);internal=false;factoryDirty.store(true);displayPending.store(true);}}
+      |                                                                                             ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:252:98: note: place parentheses around the '&&' expression to silence this warning
+  252 |   for(int row=0;row<8;++row)if(command(kKitPick0+row)){int j=getInt(kXKitPage)*8+row;if(j==0||j>0&&j<=int(kitItems().size())){internal=true;set(kXKit,j==0?0:kitItems()[j-1]+1);set(kKitOpen,0);internal=false;factoryDirty.store(true);displayPending.store(true);}}
+      |                                                                                                  ^
+      |                                                                                               (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:390:109: warning: misleading indentation; statement is not part of the previous 'for' [-Wmisleading-indentation]
+  390 |  notifyHostParameterChanged(i);if(legacyRuleAlias(i)){ruleNotifyIndex.store(-1);ruleNotifyThread.store(0);}}if(displayPending.exchange(false))requestDisplayUpdate();flushing.clear();}
+      |                                                                                                             ^
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:388:60: note: previous statement is here
+  388 |  void flushHostUpdates(){if(flushing.test_and_set())return;for(int i=0;i<kParamCount;++i)if(changed[i].exchange(false)){
+      |                                                            ^
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:229: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                            ~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:229: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                                            (                    )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:257: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                 ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:257: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                                                                   (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:303: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                    ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:303: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                               ^
+      |                                                                                                                                                                                                                                                                                                      (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:325: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                         ~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:325: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                                                                                                                                           (                       )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:353: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:353: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                                                                                                                                                                     (                         )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:97: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                              ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:97: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                 ^
+      |                                                                                (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:150: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                      ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:150: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                      ^
+      |                                                                                                                                        (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:177: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                                      ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:177: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                                                 ^
+      |                                                                                                                                                                        (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:422: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:422: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                     (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:475: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:475: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:502: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:502: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:522:276: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  522 |   if(amount<=.5f)return;int bars=(lengths[b].load()+4*PPQ-1)/(4*PPQ);for(int bar=0;bar<bars;++bar)for(int attempt=0;attempt<int((amount-.5f)*8);++attempt){int pick=random()%100,role=pick<55?2:pick<75?7:pick<88?0:1;int rule=getInt(kRuleKick+ruleGroup(role));if(rule<2||rule==2&&random()%2)continue;int step=role==2?2*int(random()%8):role==0?int((random()%3)*4+6)%16:3+4*int(random()%4);Note n{bar*4*PPQ+step*240,role,role==1?35+int(random()%15):55+int(random()%30),100,80};if(n.tick>=lengths[b].load()||!roomFor(b,n))continue;for(auto&c:notes[b])if(!c.valid()){c.write(n);break;}}
+      |                                                                                                                                                                                                                                                                           ~~~~~~~~~^~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:522:276: note: place parentheses around the '&&' expression to silence this warning
+  522 |   if(amount<=.5f)return;int bars=(lengths[b].load()+4*PPQ-1)/(4*PPQ);for(int bar=0;bar<bars;++bar)for(int attempt=0;attempt<int((amount-.5f)*8);++attempt){int pick=random()%100,role=pick<55?2:pick<75?7:pick<88?0:1;int rule=getInt(kRuleKick+ruleGroup(role));if(rule<2||rule==2&&random()%2)continue;int step=role==2?2*int(random()%8):role==0?int((random()%3)*4+6)%16:3+4*int(random()%4);Note n{bar*4*PPQ+step*240,role,role==1?35+int(random()%15):55+int(random()%30),100,80};if(n.tick>=lengths[b].load()||!roomFor(b,n))continue;for(auto&c:notes[b])if(!c.valid()){c.write(n);break;}}
+      |                                                                                                                                                                                                                                                                                    ^
+      |                                                                                                                                                                                                                                                                             (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:519:51: warning: comparison of integers of different signs: 'uint32_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
+  519 |    if(!fixed){if(rule>=2&&amount>.5f&&random()%100<int((amount-.5f)*(rule==2?15:30)))continue;float factor=rule==1?.25f:rule==2?.6f:1.f;int delta=int(std::round((roleShift[n.role]+(int(random()%2001)-1000)*.001f*amount*2)*factor*currentTempo.load()/60000*PPQ));n.tick=mpc::clamp(n.tick+delta,0,lengths[b].load()-1);n.velocity=mpc::clamp(n.velocity+int((int(random()%2001)-1000)*.001f*amount*10*factor),n.role==1?20:35,127);}
+      |                                       ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+22 warnings generated.
+  [arm32] ok (1.1 MB, 5.3s)
+
+[4/7] arm64 build (MPC Live II/One+/Key 61/X SE/3 (64-bit))
+  [arm64] compiling 1 source file -> build/kim - VST - Groove Dice/VST/groove-dice-arm64.so
+In file included from /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:77:
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/Layers.inc:66:45: warning: unused variable 'layer' [-Wunused-variable]
+   66 |  for(int r=0;r<4;++r){int role=soundRole(r),layer=soundLayer(r);for(int field:{LOn,LSolo,LLock}){int relay=(field==LOn?kSoundOn0:field==LSolo?kSoundSolo0:kSoundLock0)+r;float next=role<0?0:get(soundKey(r,field));if(get(relay)!=next){set(relay,next);changed[relay].store(true);}}}
+      |                                             ^~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:249: warning: '&&' within '||' [-Wlogical-op-parentheses]
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                              ~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:249: note: place parentheses around the '&&' expression to silence this warning
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                         ^
+      |                                                                                                                                                                                                                                              (                      )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:275: warning: '&&' within '||' [-Wlogical-op-parentheses]
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                                     ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:97:275: note: place parentheses around the '&&' expression to silence this warning
+   97 |  bool diceAllows(int key)const{if(!diceWriting)return true;key=canonical(key);int role=key>=kXSample0&&key<=kXSample7?key-kXSample0:key>=kSample0&&key<kSample0+8*9?(key-kSample0)/9:-1;if(role>=0&&getBool(kRoleLock0+role))return false;if(key>=kDrive&&key<=kDuck||key>=kLowCut&&key<=kModDepth)return false;int lock=diceValueLock(key);return lock<kDiceLock0||lock>kDiceLock15||!getBool(lock);}
+      |                                                                                                                                                                                                                                                                                   ^
+      |                                                                                                                                                                                                                                                                       (                           )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:124:30: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  124 |   if(i==kXKit||i>=kXSoundKick&&i<=kXSoundPerc){int q=i==kXKit?kXQKit:kXQKick+i-kXSoundKick;const auto&list=i==kXKit?kitItems():soundItems(i-kXSoundKick);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==getInt(i))pos=int(j)+1;bool prev=internal;internal=true;set(q,list.empty()?0.f:float(pos)/list.size());internal=prev;changed[q].store(true);}
+      |              ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:124:30: note: place parentheses around the '&&' expression to silence this warning
+  124 |   if(i==kXKit||i>=kXSoundKick&&i<=kXSoundPerc){int q=i==kXKit?kXQKit:kXQKick+i-kXSoundKick;const auto&list=i==kXKit?kitItems():soundItems(i-kXSoundKick);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==getInt(i))pos=int(j)+1;bool prev=internal;internal=true;set(q,list.empty()?0.f:float(pos)/list.size());internal=prev;changed[q].store(true);}
+      |                              ^
+      |                (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:117: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                  ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:117: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                     ^
+      |                                                                                                    (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:147: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                        ~~~~~~~~~~~^~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:147: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                   ^
+      |                                                                                                                                          (                    )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:175: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                               ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:180:175: note: place parentheses around the '&&' expression to silence this warning
+  180 |   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
+      |                                                                                                                                                                               ^
+      |                                                                                                                                                                 (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:252:98: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  252 |   for(int row=0;row<8;++row)if(command(kKitPick0+row)){int j=getInt(kXKitPage)*8+row;if(j==0||j>0&&j<=int(kitItems().size())){internal=true;set(kXKit,j==0?0:kitItems()[j-1]+1);set(kKitOpen,0);internal=false;factoryDirty.store(true);displayPending.store(true);}}
+      |                                                                                             ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:252:98: note: place parentheses around the '&&' expression to silence this warning
+  252 |   for(int row=0;row<8;++row)if(command(kKitPick0+row)){int j=getInt(kXKitPage)*8+row;if(j==0||j>0&&j<=int(kitItems().size())){internal=true;set(kXKit,j==0?0:kitItems()[j-1]+1);set(kKitOpen,0);internal=false;factoryDirty.store(true);displayPending.store(true);}}
+      |                                                                                                  ^
+      |                                                                                               (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:390:109: warning: misleading indentation; statement is not part of the previous 'for' [-Wmisleading-indentation]
+  390 |  notifyHostParameterChanged(i);if(legacyRuleAlias(i)){ruleNotifyIndex.store(-1);ruleNotifyThread.store(0);}}if(displayPending.exchange(false))requestDisplayUpdate();flushing.clear();}
+      |                                                                                                             ^
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:388:60: note: previous statement is here
+  388 |  void flushHostUpdates(){if(flushing.test_and_set())return;for(int i=0;i<kParamCount;++i)if(changed[i].exchange(false)){
+      |                                                            ^
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:229: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                            ~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:229: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                                            (                    )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:257: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                 ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:257: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                                                                   (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:303: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                    ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:303: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                               ^
+      |                                                                                                                                                                                                                                                                                                      (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:325: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                         ~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:325: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                                                                                                                                           (                       )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:353: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:470:353: note: place parentheses around the '&&' expression to silence this warning
+  470 |  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
+      |                                                                                                                                                                                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                                                                                                                                                                     (                         )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:97: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                              ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:97: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                 ^
+      |                                                                                (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:150: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                      ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:150: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                      ^
+      |                                                                                                                                        (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:177: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                                      ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:471:177: note: place parentheses around the '&&' expression to silence this warning
+  471 |  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
+      |                                                                                                                                                                                 ^
+      |                                                                                                                                                                        (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:422: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:422: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                     (                                   )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:475: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:475: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (                             )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:502: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~^~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:475:502: note: place parentheses around the '&&' expression to silence this warning
+  475 |  void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:522:276: warning: '&&' within '||' [-Wlogical-op-parentheses]
+  522 |   if(amount<=.5f)return;int bars=(lengths[b].load()+4*PPQ-1)/(4*PPQ);for(int bar=0;bar<bars;++bar)for(int attempt=0;attempt<int((amount-.5f)*8);++attempt){int pick=random()%100,role=pick<55?2:pick<75?7:pick<88?0:1;int rule=getInt(kRuleKick+ruleGroup(role));if(rule<2||rule==2&&random()%2)continue;int step=role==2?2*int(random()%8):role==0?int((random()%3)*4+6)%16:3+4*int(random()%4);Note n{bar*4*PPQ+step*240,role,role==1?35+int(random()%15):55+int(random()%30),100,80};if(n.tick>=lengths[b].load()||!roomFor(b,n))continue;for(auto&c:notes[b])if(!c.valid()){c.write(n);break;}}
+      |                                                                                                                                                                                                                                                                           ~~~~~~~~~^~~~~~~~~~~~
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:522:276: note: place parentheses around the '&&' expression to silence this warning
+  522 |   if(amount<=.5f)return;int bars=(lengths[b].load()+4*PPQ-1)/(4*PPQ);for(int bar=0;bar<bars;++bar)for(int attempt=0;attempt<int((amount-.5f)*8);++attempt){int pick=random()%100,role=pick<55?2:pick<75?7:pick<88?0:1;int rule=getInt(kRuleKick+ruleGroup(role));if(rule<2||rule==2&&random()%2)continue;int step=role==2?2*int(random()%8):role==0?int((random()%3)*4+6)%16:3+4*int(random()%4);Note n{bar*4*PPQ+step*240,role,role==1?35+int(random()%15):55+int(random()%30),100,80};if(n.tick>=lengths[b].load()||!roomFor(b,n))continue;for(auto&c:notes[b])if(!c.valid()){c.write(n);break;}}
+      |                                                                                                                                                                                                                                                                                    ^
+      |                                                                                                                                                                                                                                                                             (                  )
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/src/GrooveDice.cpp:519:51: warning: comparison of integers of different signs: 'uint32_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
+  519 |    if(!fixed){if(rule>=2&&amount>.5f&&random()%100<int((amount-.5f)*(rule==2?15:30)))continue;float factor=rule==1?.25f:rule==2?.6f:1.f;int delta=int(std::round((roleShift[n.role]+(int(random()%2001)-1000)*.001f*amount*2)*factor*currentTempo.load()/60000*PPQ));n.tick=mpc::clamp(n.tick+delta,0,lengths[b].load()-1);n.velocity=mpc::clamp(n.velocity+int((int(random()%2001)-1000)*.001f*amount*10*factor),n.role==1?20:35,127);}
+      |                                       ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+22 warnings generated.
+  [arm64] ok (1.2 MB, 5.7s)
+
+[5/7] Assemble output folder: build/kim - VST - Groove Dice/
+  copied plugin.json
+  copying hand-written skins/ -> Plugin Skins/ (gen_ui.py not run)
+  copied 11 asset files from assets/ into Plugin Skins/
+  copied 9 files from Content/ into Content/
+
+[6/7] version.xml
+  version 1.6.2.0, uiversion 0.1.0.0
+
+[7/7] Validate
+Validating /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/kim - VST - Groove Dice
+OK     plugin.json: Groove Dice by kim (instrument, uid KpGy)
+OK     folder name "kim - VST - Groove Dice"
+OK     file32: groove-dice-arm32.so is a 32-bit ARM shared object
+OK     file32: needed libraries: libm.so.6, libc.so.6, ld-linux-armhf.so.3, libpthread.so.0, libdl.so.2
+OK     file32: max GLIBC requirement 2.29
+OK     file32: exports VSTPluginMain
+OK     file64: groove-dice-arm64.so is a 64-bit AArch64 shared object
+OK     file64: needed libraries: libm.so.6, libc.so.6, libpthread.so.0, libdl.so.2
+OK     file64: max GLIBC requirement 2.29
+OK     file64: exports VSTPluginMain
+OK     uid matches the binary (KpGy)
+OK     name matches the binary (Groove Dice)
+OK     manufacturer matches the binary (kim)
+OK     kind matches the binary (instrument)
+OK     numInputs matches the binary (0)
+OK     numOutputs matches the binary (16)
+OK     TUI.json: all parameter handles are within 0..781
+OK     TUI.json: image background.png present
+OK     TUI.json: image dice-icon.png present
+OK     TUI.json: image dice-locked.png present
+OK     TUI.json: image dice-unlocked.png present
+OK     TUI.json: image hit.png present
+OK     TUI.json: image knob-v2.png present
+OK     TUI.json: image material-v2-100-29-dark.png present
+OK     TUI.json: image material-v2-100-29-orange.png present
+OK     TUI.json: image material-v2-100-40-cream.png present
+OK     TUI.json: image material-v2-100-40-olive.png present
+OK     TUI.json: image material-v2-100-40-orange.png present
+OK     TUI.json: image material-v2-1024-48-dark.png present
+OK     TUI.json: image material-v2-106-28-cream.png present
+OK     TUI.json: image material-v2-106-28-orange.png present
+OK     TUI.json: image material-v2-110-42-cream.png present
+OK     TUI.json: image material-v2-110-42-orange.png present
+OK     TUI.json: image material-v2-112-60-cream.png present
+OK     TUI.json: image material-v2-112-60-orange.png present
+OK     TUI.json: image material-v2-116-24-olive.png present
+OK     TUI.json: image material-v2-120-42-cream.png present
+OK     TUI.json: image material-v2-120-42-orange.png present
+OK     TUI.json: image material-v2-1248-108-card.png present
+OK     TUI.json: image material-v2-1248-40-dark.png present
+OK     TUI.json: image material-v2-128-44-dark.png present
+OK     TUI.json: image material-v2-128-44-orange.png present
+OK     TUI.json: image material-v2-128-60-cream.png present
+OK     TUI.json: image material-v2-128-60-orange.png present
+OK     TUI.json: image material-v2-130-42-cream.png present
+OK     TUI.json: image material-v2-130-42-olive.png present
+OK     TUI.json: image material-v2-130-42-orange.png present
+OK     TUI.json: image material-v2-130-60-cream.png present
+OK     TUI.json: image material-v2-130-60-orange.png present
+OK     TUI.json: image material-v2-132-38-cream.png present
+OK     TUI.json: image material-v2-132-38-orange.png present
+OK     TUI.json: image material-v2-132-48-cream.png present
+OK     TUI.json: image material-v2-132-48-orange.png present
+OK     TUI.json: image material-v2-134-48-cream.png present
+OK     TUI.json: image material-v2-134-48-orange.png present
+OK     TUI.json: image material-v2-138-38-cream.png present
+OK     TUI.json: image material-v2-138-38-orange.png present
+OK     TUI.json: image material-v2-138-40-dark.png present
+OK     TUI.json: image material-v2-138-40-orange.png present
+OK     TUI.json: image material-v2-156-42-cream.png present
+OK     TUI.json: image material-v2-156-42-orange.png present
+OK     TUI.json: image material-v2-156-60-cream.png present
+OK     TUI.json: image material-v2-156-60-olive.png present
+OK     TUI.json: image material-v2-156-60-orange.png present
+OK     TUI.json: image material-v2-160-50-cream.png present
+OK     TUI.json: image material-v2-160-50-orange.png present
+OK     TUI.json: image material-v2-168-60-cream.png present
+OK     TUI.json: image material-v2-168-60-orange.png present
+OK     TUI.json: image material-v2-176-40-cream.png present
+OK     TUI.json: image material-v2-176-40-orange.png present
+OK     TUI.json: image material-v2-176-42-cream.png present
+OK     TUI.json: image material-v2-176-42-orange.png present
+OK     TUI.json: image material-v2-176-60-cream.png present
+OK     TUI.json: image material-v2-176-60-orange.png present
+OK     TUI.json: image material-v2-180-42-dark.png present
+OK     TUI.json: image material-v2-180-42-olive.png present
+OK     TUI.json: image material-v2-180-42-orange.png present
+OK     TUI.json: image material-v2-184-60-cream.png present
+OK     TUI.json: image material-v2-184-60-orange.png present
+OK     TUI.json: image material-v2-188-40-dark.png present
+OK     TUI.json: image material-v2-188-40-orange.png present
+OK     TUI.json: image material-v2-192-40-cream.png present
+OK     TUI.json: image material-v2-192-40-orange.png present
+OK     TUI.json: image material-v2-202-40-cream.png present
+OK     TUI.json: image material-v2-202-40-orange.png present
+OK     TUI.json: image material-v2-202-46-cream.png present
+OK     TUI.json: image material-v2-202-46-orange.png present
+OK     TUI.json: image material-v2-202-48-cream.png present
+OK     TUI.json: image material-v2-202-48-orange.png present
+OK     TUI.json: image material-v2-202-60-cream.png present
+OK     TUI.json: image material-v2-202-60-olive.png present
+OK     TUI.json: image material-v2-202-60-orange.png present
+OK     TUI.json: image material-v2-204-40-cream.png present
+OK     TUI.json: image material-v2-204-40-orange.png present
+OK     TUI.json: image material-v2-212-48-olive.png present
+OK     TUI.json: image material-v2-212-48-orange.png present
+OK     TUI.json: image material-v2-212-50-olive.png present
+OK     TUI.json: image material-v2-212-50-orange.png present
+OK     TUI.json: image material-v2-216-42-olive.png present
+OK     TUI.json: image material-v2-216-42-red.png present
+OK     TUI.json: image material-v2-220-60-olive.png present
+OK     TUI.json: image material-v2-220-60-orange.png present
+OK     TUI.json: image material-v2-224-40-olive.png present
+OK     TUI.json: image material-v2-224-40-orange.png present
+OK     TUI.json: image material-v2-224-60-dark.png present
+OK     TUI.json: image material-v2-224-60-orange.png present
+OK     TUI.json: image material-v2-252-60-olive.png present
+OK     TUI.json: image material-v2-256-48-dark.png present
+OK     TUI.json: image material-v2-256-48-olive.png present
+OK     TUI.json: image material-v2-256-48-orange.png present
+OK     TUI.json: image material-v2-260-28-cream.png present
+OK     TUI.json: image material-v2-260-28-orange.png present
+OK     TUI.json: image material-v2-264-40-olive.png present
+OK     TUI.json: image material-v2-264-40-orange.png present
+OK     TUI.json: image material-v2-264-42-cream.png present
+OK     TUI.json: image material-v2-264-42-orange.png present
+OK     TUI.json: image material-v2-300-42-cream.png present
+OK     TUI.json: image material-v2-300-42-orange.png present
+OK     TUI.json: image material-v2-300-54-cream.png present
+OK     TUI.json: image material-v2-300-54-olive.png present
+OK     TUI.json: image material-v2-300-54-orange.png present
+OK     TUI.json: image material-v2-304-48-cream.png present
+OK     TUI.json: image material-v2-304-48-orange.png present
+OK     TUI.json: image material-v2-400-30-olive.png present
+OK     TUI.json: image material-v2-414-41-cream.png present
+OK     TUI.json: image material-v2-414-41-orange.png present
+OK     TUI.json: image material-v2-414-46-olive.png present
+OK     TUI.json: image material-v2-414-46-orange.png present
+OK     TUI.json: image material-v2-414-48-cream.png present
+OK     TUI.json: image material-v2-414-48-orange.png present
+OK     TUI.json: image material-v2-414-56-dark.png present
+OK     TUI.json: image material-v2-414-56-orange.png present
+OK     TUI.json: image material-v2-426-628-dark.png present
+OK     TUI.json: image material-v2-44-22-orange.png present
+OK     TUI.json: image material-v2-44-42-cream.png present
+OK     TUI.json: image material-v2-44-42-orange.png present
+OK     TUI.json: image material-v2-44-44-cream.png present
+OK     TUI.json: image material-v2-44-44-dark.png present
+OK     TUI.json: image material-v2-44-44-orange.png present
+OK     TUI.json: image material-v2-48-40-cream.png present
+OK     TUI.json: image material-v2-48-40-orange.png present
+OK     TUI.json: image material-v2-48-48-cream.png present
+OK     TUI.json: image material-v2-48-48-orange.png present
+OK     TUI.json: image material-v2-48-60-cream.png present
+OK     TUI.json: image material-v2-48-60-orange.png present
+OK     TUI.json: image material-v2-54-40-cream.png present
+OK     TUI.json: image material-v2-54-40-orange.png present
+OK     TUI.json: image material-v2-54-54-cream.png present
+OK     TUI.json: image material-v2-54-54-orange.png present
+OK     TUI.json: image material-v2-60-38-dark.png present
+OK     TUI.json: image material-v2-60-38-orange.png present
+OK     TUI.json: image material-v2-600-50-olive.png present
+OK     TUI.json: image material-v2-614-138-card.png present
+OK     TUI.json: image material-v2-664-50-olive.png present
+OK     TUI.json: image material-v2-72-60-olive.png present
+OK     TUI.json: image material-v2-80-36-olive.png present
+OK     TUI.json: image material-v2-80-36-orange.png present
+OK     TUI.json: image material-v2-90-42-cream.png present
+OK     TUI.json: image material-v2-90-42-orange.png present
+OK     TUI.json: 6 tabs
+OK     Q-Links.json: 6 tab maps, all values in range
+OK     version.xml uiversion 0.1.0.0
+OK     Content/: 9 files, 18.8 MB (loaded by the plugin at run time, see framework/mpc_resources.h)
+0 errors, 0 warnings
+
+========================================================================
+Build finished: kim - VST - Groove Dice
+  Output folder: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/kim - VST - Groove Dice
+    plugin.json                              485 B
+    version.xml                              152 B
+    Content/Banks/core.id                    22 B
+    Content/Banks/core.manifest.json         344 B
+    Content/Banks/core.name                  18 B
+    Content/Banks/default.gdbank             18.8 MB
+    Content/Documentation/PACK_BUILDER.md    4 KB
+    Content/Licenses/Groove-Dice-MIT.txt     1 KB
+    Content/Licenses/MPC-SDK-MIT.txt         1 KB
+    Content/Licenses/Original-Workshop-MIT.txt 1 KB
+    Content/Licenses/Original-Workshop-Provenance.txt 895 B
+    Plugin Skins/Q-Links.json                5 KB
+    Plugin Skins/README.md                   1 KB
+    Plugin Skins/TUI.json                    7.4 MB
+    Plugin Skins/background-branded-prompt.txt 821 B
+    Plugin Skins/background-branded-source-v2.png 1.7 MB
+    Plugin Skins/background-branded-source.png 1.9 MB
+    Plugin Skins/background-source.png       2.2 MB
+    Plugin Skins/background-v2-prompt.txt    330 B
+    Plugin Skins/background.png              830 KB
+    Plugin Skins/bakelite-knob-prompt-v1.txt 512 B
+    Plugin Skins/bakelite-knob-source-v1.png 1.6 MB
+    Plugin Skins/button-100-42-cream.png     303 B
+    Plugin Skins/button-100-42-olive.png     297 B
+    Plugin Skins/button-100-42-orange.png    302 B
+    Plugin Skins/button-120-42-cream.png     302 B
+    Plugin Skins/button-120-42-orange.png    302 B
+    Plugin Skins/button-138-25-olive.png     264 B
+    Plugin Skins/button-146-50-cream.png     342 B
+    Plugin Skins/button-146-50-orange.png    341 B
+    Plugin Skins/button-160-32-olive.png     285 B
+    Plugin Skins/button-174-30-cream.png     289 B
+    Plugin Skins/button-174-30-orange.png    289 B
+    Plugin Skins/button-174-42-cream.png     323 B
+    Plugin Skins/button-174-42-orange.png    322 B
+    Plugin Skins/button-184-42-cream.png     326 B
+    Plugin Skins/button-184-42-orange.png    325 B
+    Plugin Skins/button-210-32-cream.png     302 B
+    Plugin Skins/button-210-32-orange.png    301 B
+    Plugin Skins/button-220-42-olive.png     322 B
+    Plugin Skins/button-220-44-cream.png     343 B
+    Plugin Skins/button-220-44-orange.png    342 B
+    Plugin Skins/button-236-42-olive.png     335 B
+    Plugin Skins/button-240-44-cream.png     352 B
+    Plugin Skins/button-240-44-orange.png    352 B
+    Plugin Skins/button-256-44-cream.png     364 B
+    Plugin Skins/button-256-44-orange.png    363 B
+    Plugin Skins/button-260-36-olive.png     311 B
+    Plugin Skins/button-264-32-cream.png     316 B
+    Plugin Skins/button-264-32-orange.png    315 B
+    Plugin Skins/button-264-36-cream.png     326 B
+    Plugin Skins/button-264-36-orange.png    326 B
+    Plugin Skins/button-264-42-cream.png     357 B
+    Plugin Skins/button-264-42-orange.png    356 B
+    Plugin Skins/button-290-42-cream.png     365 B
+    Plugin Skins/button-290-42-orange.png    364 B
+    Plugin Skins/button-300-44-orange.png    372 B
+    Plugin Skins/button-300-54-cream.png     406 B
+    Plugin Skins/button-300-54-orange.png    405 B
+    Plugin Skins/button-300-62-dark.png      435 B
+    Plugin Skins/button-300-62-orange.png    432 B
+    Plugin Skins/button-320-42-olive.png     360 B
+    Plugin Skins/button-330-42-olive.png     359 B
+    Plugin Skins/button-330-44-olive.png     365 B
+    Plugin Skins/button-330-44-orange.png    372 B
+    Plugin Skins/button-330-44-red.png       375 B
+    Plugin Skins/button-352-44-orange.png    381 B
+    Plugin Skins/button-400-30-olive.png     321 B
+    Plugin Skins/button-414-42-cream.png     384 B
+    Plugin Skins/button-414-42-orange.png    383 B
+    Plugin Skins/button-414-56-dark.png      438 B
+    Plugin Skins/button-414-56-orange.png    436 B
+    Plugin Skins/button-426-628-dark.png     3 KB
+    Plugin Skins/button-44-42-cream.png      264 B
+    Plugin Skins/button-44-42-orange.png     264 B
+    Plugin Skins/button-450-42-orange.png    389 B
+    Plugin Skins/button-60-26-dark.png       242 B
+    Plugin Skins/button-60-26-orange.png     240 B
+    Plugin Skins/button-60-38-dark.png       263 B
+    Plugin Skins/button-60-38-orange.png     261 B
+    Plugin Skins/button-90-42-cream.png      297 B
+    Plugin Skins/button-90-42-orange.png     296 B
+    Plugin Skins/dice-icon-prompt-v1.txt     304 B
+    Plugin Skins/dice-icon-source-v1.png     1.8 MB
+    Plugin Skins/dice-icon.png               4 KB
+    Plugin Skins/dice-locked.png             1 KB
+    Plugin Skins/dice-unlocked.png           958 B
+    Plugin Skins/flag-Follow-210-32.png      472 B
+    Plugin Skins/flag-KitLock-90-42.png      469 B
+    Plugin Skins/flag-PatternLock-90-42.png  469 B
+    Plugin Skins/flag-Preview-264-32.png     513 B
+    Plugin Skins/hit.png                     70 B
+    Plugin Skins/imagegen-prompts-v020.json  2 KB
+    Plugin Skins/knob-v2.png                 71 KB
+    Plugin Skins/knob.png                    15 KB
+    Plugin Skins/material-v2-100-29-dark.png 917 B
+    Plugin Skins/material-v2-100-29-orange.png 922 B
+    Plugin Skins/material-v2-100-40-cream.png 1 KB
+    Plugin Skins/material-v2-100-40-olive.png 1 KB
+    Plugin Skins/material-v2-100-40-orange.png 1 KB
+    Plugin Skins/material-v2-1024-48-dark.png 11 KB
+    Plugin Skins/material-v2-106-28-cream.png 860 B
+    Plugin Skins/material-v2-106-28-orange.png 876 B
+    Plugin Skins/material-v2-106-60-cream.png 2 KB
+    Plugin Skins/material-v2-106-60-orange.png 2 KB
+    Plugin Skins/material-v2-110-42-cream.png 2 KB
+    Plugin Skins/material-v2-110-42-orange.png 1 KB
+    Plugin Skins/material-v2-112-42-olive.png 1 KB
+    Plugin Skins/material-v2-112-42-orange.png 1 KB
+    Plugin Skins/material-v2-112-60-cream.png 2 KB
+    Plugin Skins/material-v2-112-60-olive.png 2 KB
+    Plugin Skins/material-v2-112-60-orange.png 2 KB
+    Plugin Skins/material-v2-116-24-olive.png 825 B
+    Plugin Skins/material-v2-120-42-cream.png 2 KB
+    Plugin Skins/material-v2-120-42-orange.png 1 KB
+    Plugin Skins/material-v2-1248-106-card.png 34 KB
+    Plugin Skins/material-v2-1248-108-card.png 35 KB
+    Plugin Skins/material-v2-1248-160-card.png 57 KB
+    Plugin Skins/material-v2-1248-38-cream.png 8 KB
+    Plugin Skins/material-v2-1248-40-dark.png 9 KB
+    Plugin Skins/material-v2-1248-48-cream.png 11 KB
+    Plugin Skins/material-v2-1248-48-dark.png 12 KB
+    Plugin Skins/material-v2-128-44-dark.png 2 KB
+    Plugin Skins/material-v2-128-44-orange.png 2 KB
+    Plugin Skins/material-v2-128-60-cream.png 2 KB
+    Plugin Skins/material-v2-128-60-orange.png 2 KB
+    Plugin Skins/material-v2-130-42-cream.png 2 KB
+    Plugin Skins/material-v2-130-42-olive.png 2 KB
+    Plugin Skins/material-v2-130-42-orange.png 2 KB
+    Plugin Skins/material-v2-130-60-cream.png 2 KB
+    Plugin Skins/material-v2-130-60-orange.png 2 KB
+    Plugin Skins/material-v2-132-38-cream.png 2 KB
+    Plugin Skins/material-v2-132-38-orange.png 2 KB
+    Plugin Skins/material-v2-132-44-dark.png 2 KB
+    Plugin Skins/material-v2-132-44-orange.png 2 KB
+    Plugin Skins/material-v2-132-48-cream.png 2 KB
+    Plugin Skins/material-v2-132-48-orange.png 2 KB
+    Plugin Skins/material-v2-134-48-cream.png 2 KB
+    Plugin Skins/material-v2-134-48-orange.png 2 KB
+    Plugin Skins/material-v2-138-38-cream.png 2 KB
+    Plugin Skins/material-v2-138-38-orange.png 2 KB
+    Plugin Skins/material-v2-138-40-dark.png 2 KB
+    Plugin Skins/material-v2-138-40-orange.png 2 KB
+    Plugin Skins/material-v2-149-58-dark.png 3 KB
+    Plugin Skins/material-v2-149-58-orange.png 2 KB
+    Plugin Skins/material-v2-150-42-cream.png 2 KB
+    Plugin Skins/material-v2-150-42-orange.png 2 KB
+    Plugin Skins/material-v2-150-60-cream.png 3 KB
+    Plugin Skins/material-v2-150-60-orange.png 3 KB
+    Plugin Skins/material-v2-152-50-olive.png 2 KB
+    Plugin Skins/material-v2-152-50-orange.png 2 KB
+    Plugin Skins/material-v2-156-42-cream.png 2 KB
+    Plugin Skins/material-v2-156-42-orange.png 2 KB
+    Plugin Skins/material-v2-156-60-cream.png 3 KB
+    Plugin Skins/material-v2-156-60-olive.png 3 KB
+    Plugin Skins/material-v2-156-60-orange.png 3 KB
+    Plugin Skins/material-v2-160-40-dark.png 2 KB
+    Plugin Skins/material-v2-160-40-orange.png 2 KB
+    Plugin Skins/material-v2-160-42-cream.png 2 KB
+    Plugin Skins/material-v2-160-42-orange.png 2 KB
+    Plugin Skins/material-v2-160-50-cream.png 2 KB
+    Plugin Skins/material-v2-160-50-orange.png 2 KB
+    Plugin Skins/material-v2-164-40-cream.png 2 KB
+    Plugin Skins/material-v2-164-40-orange.png 2 KB
+    Plugin Skins/material-v2-166-42-cream.png 2 KB
+    Plugin Skins/material-v2-166-42-orange.png 2 KB
+    Plugin Skins/material-v2-166-60-cream.png 3 KB
+    Plugin Skins/material-v2-166-60-orange.png 3 KB
+    Plugin Skins/material-v2-168-60-cream.png 3 KB
+    Plugin Skins/material-v2-168-60-orange.png 3 KB
+    Plugin Skins/material-v2-174-30-cream.png 1 KB
+    Plugin Skins/material-v2-174-30-orange.png 1 KB
+    Plugin Skins/material-v2-174-42-cream.png 2 KB
+    Plugin Skins/material-v2-174-42-orange.png 2 KB
+    Plugin Skins/material-v2-176-40-cream.png 2 KB
+    Plugin Skins/material-v2-176-40-olive.png 2 KB
+    Plugin Skins/material-v2-176-40-orange.png 2 KB
+    Plugin Skins/material-v2-176-42-cream.png 2 KB
+    Plugin Skins/material-v2-176-42-orange.png 2 KB
+    Plugin Skins/material-v2-176-60-cream.png 3 KB
+    Plugin Skins/material-v2-176-60-orange.png 3 KB
+    Plugin Skins/material-v2-180-42-dark.png 2 KB
+    Plugin Skins/material-v2-180-42-olive.png 2 KB
+    Plugin Skins/material-v2-180-42-orange.png 2 KB
+    Plugin Skins/material-v2-184-42-cream.png 2 KB
+    Plugin Skins/material-v2-184-42-orange.png 2 KB
+    Plugin Skins/material-v2-184-60-cream.png 3 KB
+    Plugin Skins/material-v2-184-60-olive.png 3 KB
+    Plugin Skins/material-v2-184-60-orange.png 3 KB
+    Plugin Skins/material-v2-188-40-dark.png 2 KB
+    Plugin Skins/material-v2-188-40-orange.png 2 KB
+    Plugin Skins/material-v2-192-40-cream.png 2 KB
+    Plugin Skins/material-v2-192-40-orange.png 2 KB
+    Plugin Skins/material-v2-202-40-cream.png 2 KB
+    Plugin Skins/material-v2-202-40-orange.png 2 KB
+    Plugin Skins/material-v2-202-46-cream.png 2 KB
+    Plugin Skins/material-v2-202-46-orange.png 2 KB
+    Plugin Skins/material-v2-202-48-cream.png 3 KB
+    Plugin Skins/material-v2-202-48-orange.png 3 KB
+    Plugin Skins/material-v2-202-60-cream.png 3 KB
+    Plugin Skins/material-v2-202-60-olive.png 3 KB
+    Plugin Skins/material-v2-202-60-orange.png 3 KB
+    Plugin Skins/material-v2-204-40-cream.png 2 KB
+    Plugin Skins/material-v2-204-40-orange.png 2 KB
+    Plugin Skins/material-v2-210-32-cream.png 1 KB
+    Plugin Skins/material-v2-210-32-orange.png 2 KB
+    Plugin Skins/material-v2-210-40-cream.png 2 KB
+    Plugin Skins/material-v2-210-40-orange.png 2 KB
+    Plugin Skins/material-v2-212-48-olive.png 3 KB
+    Plugin Skins/material-v2-212-48-orange.png 3 KB
+    Plugin Skins/material-v2-212-50-olive.png 3 KB
+    Plugin Skins/material-v2-212-50-orange.png 3 KB
+    Plugin Skins/material-v2-212-60-olive.png 4 KB
+    Plugin Skins/material-v2-216-42-olive.png 2 KB
+    Plugin Skins/material-v2-216-42-red.png  2 KB
+    Plugin Skins/material-v2-220-42-cream.png 3 KB
+    Plugin Skins/material-v2-220-42-olive.png 2 KB
+    Plugin Skins/material-v2-220-42-orange.png 2 KB
+    Plugin Skins/material-v2-220-44-cream.png 2 KB
+    Plugin Skins/material-v2-220-44-orange.png 2 KB
+    Plugin Skins/material-v2-220-60-olive.png 4 KB
+    Plugin Skins/material-v2-220-60-orange.png 4 KB
+    Plugin Skins/material-v2-224-40-olive.png 2 KB
+    Plugin Skins/material-v2-224-40-orange.png 2 KB
+    Plugin Skins/material-v2-224-58-olive.png 4 KB
+    Plugin Skins/material-v2-224-60-dark.png 4 KB
+    Plugin Skins/material-v2-224-60-orange.png 4 KB
+    Plugin Skins/material-v2-230-40-olive.png 2 KB
+    Plugin Skins/material-v2-236-42-olive.png 2 KB
+    Plugin Skins/material-v2-236-42-red.png  2 KB
+    Plugin Skins/material-v2-240-40-cream.png 2 KB
+    Plugin Skins/material-v2-240-40-orange.png 2 KB
+    Plugin Skins/material-v2-248-42-olive.png 3 KB
+    Plugin Skins/material-v2-248-60-olive.png 4 KB
+    Plugin Skins/material-v2-250-42-olive.png 3 KB
+    Plugin Skins/material-v2-250-60-olive.png 4 KB
+    Plugin Skins/material-v2-252-60-olive.png 4 KB
+    Plugin Skins/material-v2-256-40-cream.png 2 KB
+    Plugin Skins/material-v2-256-40-orange.png 3 KB
+    Plugin Skins/material-v2-256-48-dark.png 3 KB
+    Plugin Skins/material-v2-256-48-olive.png 3 KB
+    Plugin Skins/material-v2-256-48-orange.png 3 KB
+    Plugin Skins/material-v2-260-28-cream.png 1 KB
+    Plugin Skins/material-v2-260-28-orange.png 1 KB
+    Plugin Skins/material-v2-260-40-dark.png 2 KB
+    Plugin Skins/material-v2-260-40-orange.png 3 KB
+    Plugin Skins/material-v2-264-32-cream.png 2 KB
+    Plugin Skins/material-v2-264-32-orange.png 2 KB
+    Plugin Skins/material-v2-264-40-olive.png 3 KB
+    Plugin Skins/material-v2-264-40-orange.png 3 KB
+    Plugin Skins/material-v2-264-42-cream.png 3 KB
+    Plugin Skins/material-v2-264-42-orange.png 3 KB
+    Plugin Skins/material-v2-264-60-olive.png 4 KB
+    Plugin Skins/material-v2-264-60-orange.png 4 KB
+    Plugin Skins/material-v2-272-42-olive.png 3 KB
+    Plugin Skins/material-v2-272-60-olive.png 4 KB
+    Plugin Skins/material-v2-282-40-olive.png 3 KB
+    Plugin Skins/material-v2-282-40-orange.png 3 KB
+    Plugin Skins/material-v2-282-42-dark.png 3 KB
+    Plugin Skins/material-v2-282-42-orange.png 3 KB
+    Plugin Skins/material-v2-282-60-dark.png 5 KB
+    Plugin Skins/material-v2-282-60-orange.png 5 KB
+    Plugin Skins/material-v2-284-40-cream.png 3 KB
+    Plugin Skins/material-v2-284-40-orange.png 3 KB
+    Plugin Skins/material-v2-288-42-olive.png 3 KB
+    Plugin Skins/material-v2-288-42-orange.png 3 KB
+    Plugin Skins/material-v2-288-60-olive.png 5 KB
+    Plugin Skins/material-v2-288-60-orange.png 5 KB
+    Plugin Skins/material-v2-290-42-cream.png 3 KB
+    Plugin Skins/material-v2-290-42-orange.png 3 KB
+    Plugin Skins/material-v2-300-42-cream.png 3 KB
+    Plugin Skins/material-v2-300-42-orange.png 3 KB
+    Plugin Skins/material-v2-300-44-orange.png 3 KB
+    Plugin Skins/material-v2-300-54-cream.png 3 KB
+    Plugin Skins/material-v2-300-54-olive.png 4 KB
+    Plugin Skins/material-v2-300-54-orange.png 4 KB
+    Plugin Skins/material-v2-300-62-dark.png 5 KB
+    Plugin Skins/material-v2-300-62-orange.png 5 KB
+    Plugin Skins/material-v2-304-48-cream.png 4 KB
+    Plugin Skins/material-v2-304-48-orange.png 3 KB
+    Plugin Skins/material-v2-330-40-olive.png 3 KB
+    Plugin Skins/material-v2-330-40-orange.png 3 KB
+    Plugin Skins/material-v2-330-40-red.png  3 KB
+    Plugin Skins/material-v2-330-42-orange.png 3 KB
+    Plugin Skins/material-v2-330-42-red.png  3 KB
+    Plugin Skins/material-v2-350-50-cream.png 4 KB
+    Plugin Skins/material-v2-350-50-orange.png 4 KB
+    Plugin Skins/material-v2-352-40-orange.png 3 KB
+    Plugin Skins/material-v2-360-58-olive.png 5 KB
+    Plugin Skins/material-v2-360-60-dark.png 6 KB
+    Plugin Skins/material-v2-360-60-orange.png 6 KB
+    Plugin Skins/material-v2-400-30-olive.png 2 KB
+    Plugin Skins/material-v2-400-50-olive.png 5 KB
+    Plugin Skins/material-v2-400-50-orange.png 5 KB
+    Plugin Skins/material-v2-414-40-cream.png 4 KB
+    Plugin Skins/material-v2-414-40-orange.png 4 KB
+    Plugin Skins/material-v2-414-41-cream.png 4 KB
+    Plugin Skins/material-v2-414-41-orange.png 4 KB
+    Plugin Skins/material-v2-414-46-olive.png 4 KB
+    Plugin Skins/material-v2-414-46-orange.png 4 KB
+    Plugin Skins/material-v2-414-48-cream.png 5 KB
+    Plugin Skins/material-v2-414-48-orange.png 5 KB
+    Plugin Skins/material-v2-414-56-dark.png 6 KB
+    Plugin Skins/material-v2-414-56-orange.png 6 KB
+    Plugin Skins/material-v2-426-628-dark.png 99 KB
+    Plugin Skins/material-v2-432-42-dark.png 4 KB
+    Plugin Skins/material-v2-432-60-dark.png 7 KB
+    Plugin Skins/material-v2-44-22-orange.png 521 B
+    Plugin Skins/material-v2-44-42-cream.png 874 B
+    Plugin Skins/material-v2-44-42-orange.png 884 B
+    Plugin Skins/material-v2-44-44-cream.png 771 B
+    Plugin Skins/material-v2-44-44-dark.png  919 B
+    Plugin Skins/material-v2-44-44-orange.png 928 B
+    Plugin Skins/material-v2-44-60-cream.png 1 KB
+    Plugin Skins/material-v2-44-60-orange.png 1 KB
+    Plugin Skins/material-v2-450-32-olive.png 3 KB
+    Plugin Skins/material-v2-450-40-orange.png 4 KB
+    Plugin Skins/material-v2-458-50-cream.png 5 KB
+    Plugin Skins/material-v2-458-50-orange.png 5 KB
+    Plugin Skins/material-v2-48-40-cream.png 861 B
+    Plugin Skins/material-v2-48-40-orange.png 918 B
+    Plugin Skins/material-v2-48-48-cream.png 962 B
+    Plugin Skins/material-v2-48-48-orange.png 992 B
+    Plugin Skins/material-v2-48-60-cream.png 1 KB
+    Plugin Skins/material-v2-48-60-orange.png 1 KB
+    Plugin Skins/material-v2-50-44-dark.png  985 B
+    Plugin Skins/material-v2-50-44-orange.png 986 B
+    Plugin Skins/material-v2-54-40-cream.png 907 B
+    Plugin Skins/material-v2-54-40-orange.png 971 B
+    Plugin Skins/material-v2-54-54-cream.png 947 B
+    Plugin Skins/material-v2-54-54-orange.png 1 KB
+    Plugin Skins/material-v2-60-38-dark.png  1000 B
+    Plugin Skins/material-v2-60-38-orange.png 1008 B
+    Plugin Skins/material-v2-60-42-olive.png 1011 B
+    Plugin Skins/material-v2-60-60-olive.png 1 KB
+    Plugin Skins/material-v2-600-50-olive.png 7 KB
+    Plugin Skins/material-v2-608-40-dark.png 5 KB
+    Plugin Skins/material-v2-608-40-orange.png 5 KB
+    Plugin Skins/material-v2-614-132-card.png 26 KB
+    Plugin Skins/material-v2-614-138-card.png 27 KB
+    Plugin Skins/material-v2-624-40-cream.png 5 KB
+    Plugin Skins/material-v2-624-40-orange.png 5 KB
+    Plugin Skins/material-v2-664-50-olive.png 7 KB
+    Plugin Skins/material-v2-72-42-cream.png 1 KB
+    Plugin Skins/material-v2-72-42-orange.png 1 KB
+    Plugin Skins/material-v2-72-60-olive.png 2 KB
+    Plugin Skins/material-v2-74-42-cream.png 1 KB
+    Plugin Skins/material-v2-74-42-orange.png 1 KB
+    Plugin Skins/material-v2-74-60-cream.png 1 KB
+    Plugin Skins/material-v2-74-60-orange.png 2 KB
+    Plugin Skins/material-v2-80-36-olive.png 1 KB
+    Plugin Skins/material-v2-80-36-orange.png 1007 B
+    Plugin Skins/material-v2-90-42-cream.png 1 KB
+    Plugin Skins/material-v2-90-42-orange.png 1 KB
+    Plugin Skins/sample-touch.png            2 KB
+    VST/groove-dice-arm32.so                 1.1 MB
+    VST/groove-dice-arm64.so                 1.2 MB
+  Native test build: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/native/groove-dice.dylib
+
+Next:
+  * Make a zip for sharing:   python tools/package.py mpc-software/plugins/public/GrooveDice
+  * Or copy the output folder into a folder named "VST2 Plugins" on your MPC's drive (see INSTALL.txt in the zip).
+SDK ready: /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk @ febd2ca5bd9eb16c4a412837196e145566bc981b
+Removed 200 unreferenced runtime files; 10245183 bytes. Source assets retained.

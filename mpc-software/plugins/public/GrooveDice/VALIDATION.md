@@ -1,3 +1,7 @@
+## 1.6.2 persistent expansion regression — 2026-11-19
+
+The prior1.6.1Open MPC manifests omitted user_data. Actual generated installers in isolated Linux reproduce loss of an original-only fixture pack in1.6.1and verify byte-for-byte retention of the pack, nested files and registry across1.6.2upgrade/reinstall/uninstall, on both CPU packages. New public-only MPC XL3.10.1.12captures show128WAV/95MIDI. Host19PASS/0WARN/0FAIL; skin/build checks pass; engine/782parameters/UI/core bank unchanged except native version10602. Owner NVMe was untouched; temporary SD public installation is backed up/restored and verified before completion. Physical encoders/audio/worst CPU remain separately uncertified. See design/device-1.6.2/.
+
 ## 1.6.1 documentation/licensing distribution patch
 
 No engine/UI/parameter/bank changes beyond native version metadata. Existing1.6.0hardware evidence remains historical, not a new1.6.1hardware certification. Current checks are recorded in design/release-1.6.1/.

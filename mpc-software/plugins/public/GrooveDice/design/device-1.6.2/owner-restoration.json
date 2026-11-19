@@ -1,0 +1,8 @@
+{
+  "restored": true,
+  "filesMatchedSha256": 167,
+  "ownerVersion": "1.6.0",
+  "ownerNvmeChanged": false,
+  "privatePayloadsPublished": 0,
+  "method": "Official SDK export before temporary SD public install; official SDK restoration; export after and compare every file SHA256."
+}

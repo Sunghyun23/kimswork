@@ -1,0 +1,86 @@
+{
+  "version": "1.6.2",
+  "user_data": [
+    "Content/Expansions"
+  ],
+  "upgradeTest": {
+    "pass": true,
+    "mode": "Linux isolated fake device; actual unmodified generated installers",
+    "results": [
+      {
+        "arch": "armv7",
+        "old161LosesPack": true,
+        "new162UpgradePreservesAllUserBytes": true,
+        "repeatInstallPreserves": true,
+        "uninstallPreservesPacks": true,
+        "retainedFiles": 5
+      },
+      {
+        "arch": "aarch64",
+        "old161LosesPack": true,
+        "new162UpgradePreservesAllUserBytes": true,
+        "repeatInstallPreserves": true,
+        "uninstallPreservesPacks": true,
+        "retainedFiles": 5
+      }
+    ]
+  },
+  "testContainer": "python@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b",
+  "actualDevice": {
+    "model": "MPC XL",
+    "firmware": "3.10.1.12",
+    "installedProfile": "public SDK ZIP only on temporary SD copy",
+    "wav": 128,
+    "midi": 95,
+    "ownerNvmeChanged": false,
+    "ownerSdBackupFiles": 167,
+    "restoration": "Complete: all167SD files SHA256-identical to pre-test backup; NVMe untouched",
+    "newHardwareAudioPhysicalQlinkCpuCertification": false
+  },
+  "captures": [
+    {
+      "file": "public-main.png",
+      "sha256": "46dc58e9b3daf5902baa76cfd6c0cce8fef657702a19e8146d6cfd5f27a5482a"
+    },
+    {
+      "file": "public-triplets.png",
+      "sha256": "a47d425ab5b33a6d6f576e4c53e01eca992f37ce175aa496250c9fd6018106fa"
+    },
+    {
+      "file": "public-groove.png",
+      "sha256": "9377e96c237ecd9eadc177389c916a3be8642a07391ddd71fd4ec02b86838221"
+    },
+    {
+      "file": "public-sound.png",
+      "sha256": "ad79495c772fd89ad7bc3afb6cdf79e6066f98865f2ce995292f9ad134e5e09b"
+    },
+    {
+      "file": "public-sound2.png",
+      "sha256": "ee27780e633d06f3c770943f58dd43c95639c02bf334d2362d6e5ee70ade7903"
+    },
+    {
+      "file": "public-browser.png",
+      "sha256": "b1ccde2b85039724d0163d1bc509207c8117d53c8c5a96d11202cac88ba223fa"
+    },
+    {
+      "file": "public-cymbals.png",
+      "sha256": "42bf4fb2cd80e2de7ea5833e07698cec12f2a4af91a8eee93dba0069a3c32843"
+    },
+    {
+      "file": "public-fill.png",
+      "sha256": "f20075ddcbdfc460bdd7b919f76888c499080ab2bf3dfe5756015fd1689d9d38"
+    },
+    {
+      "file": "public-kits.png",
+      "sha256": "c522767f61550db8088d87dad914c4d9508c0f4eec7f75f176c7eacca0ea80c5"
+    },
+    {
+      "file": "public-fx.png",
+      "sha256": "5defb312e23280ae40d11e9d5a32033ef31b76877ebceb5d6b6d72736406ef01"
+    },
+    {
+      "file": "public-routing.png",
+      "sha256": "f2b6facba6eea68a4f2e4fee6cf5eada8f9ef9843a8e3c945f9919f5b410aa98"
+    }
+  ]
+}

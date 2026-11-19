@@ -1,4 +1,4 @@
-# Groove Dice 1.6.1 — User manual
+# Groove Dice 1.6.2 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -121,6 +121,9 @@ There are16mono channels arranged as eight stereo pairs. With Separate Out off, 
 Keep Pack ID stable when updating. Original source files stay external and unchanged. See bundled `PACK_BUILDER.md` for folder layout, supported WAV/MIDI, installation/removal and missing-pack recovery. Own expansion packs are independent files; no engine rebuild or core-bank merge is needed. Personal source libraries remain personal unless their terms permit redistribution.
 
 ## Save, update and expansions
+
+Open MPC1.6.2+ packages mark `Content/Expansions` as persistent user data. The standard catalog installer copies your installed packs and registry into the updated folder before replacing the old installation. Back up important packs/projects anyway. Avoid using the older1.6.1catalog packages for upgrades: they omitted this declaration. For manual SDK-folder replacement, preserve and restore your own Content/Expansions directory; an ordinary folder copy is not the catalog installer.
+
 
 SAVE KIT copies current settings into one of eight internal user slots; LOAD KIT recalls it. **This is not disk saving.** Save the MPC project or use the host preset save function to preserve it.
 

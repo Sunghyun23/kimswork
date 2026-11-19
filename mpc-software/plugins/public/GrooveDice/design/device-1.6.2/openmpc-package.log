@@ -1,0 +1,27 @@
+MPC OS compatibility: 3.x only (not 2.x: TUI:data:(local widget) version 1 has field(s) 2.15.1 does not use: actions, overlayType, polarityType, scaleType, showMinusSign, withNumbers; TUI:data:Button version 2 (2.15.1 uses 1))
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/open-mpc/1.6.2/groove-dice-1.6.2-mpc-armv7.zip (166 files, 18.3 MB)
+MPC OS compatibility: 3.x only (not 2.x: Gen2 runs MPC OS 3.x only)
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/open-mpc/1.6.2/groove-dice-1.6.2-mpc-aarch64.zip (166 files, 18.3 MB)
+made armv7+aarch64 zips for 1.6.2 in /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/open-mpc/1.6.2
+OK: groove-dice 1.6.2 (0 warnings)
+OK: groove-dice 1.6.2 (0 warnings)
+{
+  "version": "1.6.2",
+  "sourceZip": "groove-dice-1.6.2-mpc.zip",
+  "sourceSha256": "6b05a640bcdfa17d24544c556df66dfa3c55242e888cb3ed6308b8bfa477dc49",
+  "user_data": [
+    "Content/Expansions"
+  ],
+  "packages": [
+    {
+      "file": "groove-dice-1.6.2-mpc-armv7.zip",
+      "sha256": "e3298327e25e500c6246b13cc68b9c82310cd300b948503a07379ffb6520c7de",
+      "bytes": 18293666
+    },
+    {
+      "file": "groove-dice-1.6.2-mpc-aarch64.zip",
+      "sha256": "803c8c8cb11595284921a0c3a74131ec2abb50df940282f142ac8348f92fe1e4",
+      "bytes": 18333949
+    }
+  ]
+}
