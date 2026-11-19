@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "checks": [
+    "/plugins/donut-theory/",
+    "/",
+    "/software/",
+    "/software/instruments/",
+    "/plugins/donut-theory/manual/",
+    "/plugins/groove-dice/",
+    "/plugins/crate-press/",
+    "image:donut-theory-poly-device-1.14.1.webp",
+    "image:donut-theory-mono-device-1.14.1.webp",
+    "image:donut-theory-sync-device-1.14.1.webp",
+    "image:donut-theory-presets-device-1.14.1.webp",
+    "image:donut-theory-osc-device-1.14.1.webp",
+    "image:donut-theory-env-device-1.14.1.webp",
+    "image:donut-theory-mod-device-1.14.1.webp",
+    "image:donut-theory-fx-device-1.14.1.webp",
+    "image:donut-theory-chord-device-1.14.1.webp",
+    "website-download-link"
+  ],
+  "downloadHashVerifiedFromWebsiteLink": true,
+  "unchangedPublicVersions": {
+    "GrooveDice": "1.6.0",
+    "CratePress": "0.2.4"
+  }
+}

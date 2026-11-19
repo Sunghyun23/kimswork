@@ -1,0 +1,39 @@
+{
+  "id": 450865347,
+  "project": "DonutTheory",
+  "version": "1.14.1",
+  "tag": "donut-theory/v1.14.1",
+  "commit": "0937a4f6460df811a004257f08cfe8bb069ca7ea",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.14.1",
+  "assets": [
+    {
+      "name": "donut-theory-1.14.1-mpc.zip",
+      "size": 6082078,
+      "digest": "sha256:0e6f4cf9c0263e79de6010415a907e9b82c20f47122317dec18145dd65e05ef0",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.14.1/donut-theory-1.14.1-mpc.zip"
+    },
+    {
+      "name": "donut-theory-1.14.1-mpc.zip.sha256",
+      "size": 94,
+      "digest": "sha256:daa23f2fbf098c213ab9698ade4accb1ec9135d7a7f6d23077aa862349ef6cc0",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.14.1/donut-theory-1.14.1-mpc.zip.sha256"
+    }
+  ],
+  "publicRelease": true,
+  "stable": true,
+  "privatePayloadsInPublic": 0,
+  "publicAssetDigestsVerified": true,
+  "date": "2026-11-19",
+  "pagesRun": 44456002969,
+  "pagesConclusion": "success",
+  "responsiveChecks": 77,
+  "publicChecks": 17,
+  "verifiedRuntimeFilesPerDrive": {
+    "nvme": 255,
+    "36C7-1ACA": 255
+  },
+  "verificationLimits": [
+    "Remote actual-device UI and touch checks; no new physical encoder, hardware audio, worst-case CPU or full project recall certification.",
+    "SD file installation verified; SD-specific execution origin not established."
+  ]
+}
