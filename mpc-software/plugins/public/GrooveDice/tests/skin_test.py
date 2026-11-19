@@ -2,7 +2,7 @@ from pathlib import Path
 import json
 from PIL import Image
 P=Path(__file__).resolve().parents[1];S=P/'skins';m=json.loads((P/'parameters.json').read_text());keys={p['key']:i for i,p in enumerate(m)};t=json.loads((S/'TUI.json').read_text())['pageData'];q=json.loads((S/'Q-Links.json').read_text());defs={d['key']:d['value']for d in t['componentDefinitions']['localComponentDefinitions']}
-assert [p['tabName']for p in t['tabs']]==['MAIN','GROOVE','SOUND','KITS','FX','ROUTING'];assert len({(p['fnKeyIndex'],p['fnKeySubIndex'])for p in t['tabs']})==6
+assert [p['tabName']for p in t['tabs']]==['MAIN','PERFORM','GROOVE','SOUND','KITS','FX','ROUTING'];assert len({(p['fnKeyIndex'],p['fnKeySubIndex'])for p in t['tabs']})==7
 for group in range(4):
  for knob in range(4):assert q['Screen Mode Q-Links']['map'][0]['Q-Links'][f'Q-Link {13+group-4*knob}']==keys[f'Q{group*4+knob+1}']
 assert Image.open(S/'background.png').size==(1280,628)
@@ -29,7 +29,7 @@ roll=[]
 for key,value in defs.items():
  children=value.get('componentsData',[])
  if any(a.get('handleName')=='Parameter '+str(keys['Roll'])for a in value.get('actions',[])):roll.append(value)
-assert len(roll)==1
+assert len(roll)==3
 print('PASS SOUND16 Q-Link layout,97paged kit choices and native caption-safe ROLL hit target')
 
 assert defs['RoleSoundBrowser']['hideQLinkBounds']
@@ -55,7 +55,7 @@ def inside(a,b):
 def overlaps(a,b):
  x,y,w,h=a;xx,yy,ww,hh=b;return x<xx+ww and xx<x+w and y<yy+hh and yy<y+h
 for tab in t['tabs']:
- if tab['tabName']=='SOUND':continue
+ if tab['tabName']in ('SOUND','PERFORM'):continue
  entries=defs['GDMain']['componentsData']if tab['tabName']=='MAIN'else tab['componentDefinition']['componentsData']
  panels=[e for e in entries if e['componentData']['type'].startswith('panel-')]
  nonempty=[guide for guide in tab['qlinkBoundsData']if tuple(map(float,guide.split()))[2:]!=(0.,0.)]
@@ -227,7 +227,7 @@ for name in ['SoundOverview','SoundDetailPage','CymbalOverview','CymbalDetailPag
  assert len(buttons)==2,(name,'page arrows')
  assert sorted(rect(e)[0]for e in buttons)==[16.,220.]
  assert all(e['componentData']['type']!='SoundDetailsPanel'for e in children)
-assert t['tabs'][2]['qlinkBoundsData']==[f'212 {132+r*110} 1052 108'for r in range(4)]
+assert next(tab for tab in t['tabs']if tab['tabName']=='SOUND')['qlinkBoundsData']==[f'212 {132+r*110} 1052 108'for r in range(4)]
 print('PASS SOUND page1/2 explicit 48px previous/next arrows, fixed page display and retained native guides')
 
 # Keep the expanded SOUND tree bounded; hidden pages must not explode native widget count.
@@ -237,7 +237,7 @@ def expanded_count(entries,path=()):
   name=entry['componentData']['type'];assert name not in path,'Recursive skin definition'
   count+=1+expanded_count(defs.get(name,{}).get('componentsData',[]),path+(name,))
  return count
-assert expanded_count(t['tabs'][2]['componentDefinition']['componentsData'])<2000
+assert expanded_count(next(tab for tab in t['tabs']if tab['tabName']=='SOUND')['componentDefinition']['componentsData'])<2000
 print('PASS SOUND expanded widget tree below2000 including hidden pages/browser')
 
 # Runtime-value captions must sit below the final command press surface.
@@ -258,7 +258,7 @@ for prefix in ['LibraryRowButton','RoleSoundRow','DynamicKitRow']:
 print('PASS sample/sample-list/kit-pool/library/role/kit caption center is covered by a single command surface')
 
 assert m[:672]==json.loads((P/'tests/legacy-parameters-1.3.4.json').read_text())
-assert len(m)==782
+assert keys['PerformOpen']==782 and m[:782]==json.loads((P/'tests/legacy-parameters-1.6.2.json').read_text())
 print('PASS: first672full declarations retained, extended16style selectors append')
 
 assert m[:676]==json.loads((P/'tests/legacy-676-parameters.json').read_text())
@@ -271,3 +271,25 @@ for d in defs.values():
   for binding in c.get('handle remapping',{}).get('map',[]):
    assert binding.get('value')not in {'Parameter '+str(i)for i in range(676,777)if m[i]['key'].startswith(('DiceValueLock','SoundValueLock','FillDiceLock'))}
 print('PASS MAIN-only value locks, separate ROLL FILL/FX, legacy777metadata retained')
+
+performance=next(tab for tab in t['tabs']if tab['tabName']=='PERFORM')
+assert (performance['fnKeyIndex'],performance['fnKeySubIndex'])==(0,1)
+assignment=next(e for e in q['Screen Mode Q-Links']['map']if e['Tab']==1 and e['SubTab']==2)['Q-Links']
+for n in range(1,17):assert assignment['Q-Link '+str(n)]==(keys['PerformQ'+str((13-n)//4)]if n in (13,9,5,1)else -1)
+assert defs['GDPerformance']['hideQLinkBounds']
+for pad in range(1,9):
+ d=defs['PerfPad'+str(pad)];actions=d['actions'];assert len(actions)==1 and actions[0]['handleName']=='Parameter '+str(keys['PerformHit'+str(pad-1)])
+ surface=d['componentsData'][-1];assert surface['componentData']['type']=='Slider';assert surface['componentData']['data']['handleName']=='ResetOnGestureEnd/Parameter '+str(keys['PerformHit'+str(pad-1)])
+ assert not any('GENERATE'in str(e)for e in d['componentsData'])
+for entry in defs['GDPerformance']['componentsData']:
+ x,y,w,h=rect(entry);assert x>=0 and y>=0 and x+w<=1280 and y+h<=628
+assert keys['PerformOpen']==782 and len(m)==880
+print('PASS PERFORM bank B bottom-up8hold pads, release-safe caption surfaces, separated generators,4Q-Link relays and exact legacy782 metadata')
+
+for native,entries in [(False,defs['GDPerformance']['componentsData']),(True,performance['componentDefinition']['componentsData'])]:
+ controls=[e for e in entries if e['componentData']['type'].startswith('KnobPerformQ')]
+ assert len(controls)==4
+ for n,e in enumerate(controls):
+  actions=defs[e['componentData']['type']]['actions'];expected=keys[('PerformQ'+str(n))if native else('Q'+str(n+1))]
+  assert any(a['handler']=='Q-Link'and a['handleName']=='Parameter '+str(expected)for a in actions)
+print('PASS MAIN-context and native-PERFORM knobs bank the actual assigned Q-Link handles; hidden banks cannot alter MAIN rules')

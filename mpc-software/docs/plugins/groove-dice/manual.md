@@ -1,4 +1,4 @@
-# Groove Dice 1.6.2 — User manual
+# Groove Dice 1.7.0 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -6,7 +6,7 @@ Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standa
 
 Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. Other model compatibility and worst-case CPU are not certified by that test.
 
-Download the complete `groove-dice-1.6.0-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
+Download the complete `groove-dice-1.7.0-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
 The base package contains **Original Workshop**:128 independently synthesized WAV one-shots,96 kit configurations, two authored beats and93 timing templates. Ninety-six kits are combinations/settings, not96 separately recorded drum libraries. Optional expansions are separate files; the base release contains no private/commercial third-party drum library.
 
@@ -98,7 +98,7 @@ Open **EDIT FILL** from MAIN. Select fill A–D and its duration (1beat/2beats/1
 
 The fill editor shows the recorded note count and grid. Its first four rows are Snare / Tom / Perc / Clap; PERC / DRUMS switches to Kick / Closed Hat / Open Hat / Cymbal. Both views edit the same fill, so every recorded role is accessible. Select a note and edit Nudge, Velocity, Gate and Chance. In Screen Q-Link mode A controls fill slot/length/mode/count-in, and B controls the selected note's timing/velocity/gate/chance. C/D are intentionally unassigned. Changing page must not leave MAIN's sound controls active there.
 
-MAIN’s **PLAY FILL** or the fill editor’s **AUDITION** queues the selected fill for the next bar once, then returns to the base groove. Fill Every can schedule periodic fills from the GROOVE page. Independent recorded fills are preserved by a Pattern-only roll; Fill/All scope explicitly permits fill variation.
+MAIN’s **PLAY FILL** or the fill editor’s **AUDITION** queues the selected fill for the next bar once, then returns to the base groove. Fill Every can schedule periodic fills from the GROOVE page. In1.7.0, global Dice regenerates unlocked fill slots; recorded/edited fills lock automatically. Older projects also load populated fill slots locked to protect existing work.
 
 Internal fill notes are saved in the plugin/project state. They are not MIDI clips recorded into MPC's sequencer. Save the MPC project or a host preset for persistence.
 
@@ -204,10 +204,25 @@ Native/ARM32/ARM64 and SDK validation pass; full test/UBSan/bridge/skin/host sui
 
 **ROLL DICE** changes eligible MAIN controls and regenerates the repeating one-bar main pattern. MAIN padlocks preserve individual values; LOCK PATTERN preserves its notes. With LOCK KIT off, Dice can choose sounds within the selected pack/kit pool. LOCK KIT preserves the kit and MAIN mix trims. Random Amount0 changes nothing.
 
-All four recorded/edited fill banks and all seven master/kit FX values are preserved, including during Whole Kit replacement. The former Extra scope selector has been removed; there is no hidden Fill/FX scope.
+From1.7.0, unlocked fills/rolls regenerate with global Dice; locked slots and all seven FX values are preserved, including during Whole Kit replacement. The former Extra scope selector remains removed.
 
 Use **ROLL FILL** at the bottom of the fill editor to vary the selected A–D bank only. It uses Random Amount, respects existing rhythm-role protection and is blocked during recording. **ROLL FX** at the bottom of FX changes Drive/Dust/Room/Duck only. Both actions support UNDO and do not roll the kit or main pattern.
 
-Individual Dice padlocks belong to MAIN's sixteen controls. SOUND retains its meaningful kit/role/layer protections; GROOVE remains the detailed timing, density, ghosts, velocity and fill-frequency page. UNLOCK ALL opens individual and upper-level protection without changing any sound or note.
+MAIN has sixteen value padlocks, and PERFORM has eight sequence padlocks. SOUND retains its meaningful kit/role/layer protections; GROOVE remains the detailed timing, density, ghosts, velocity and fill-frequency page. UNLOCK ALL opens individual and upper-level protection without changing any sound or note.
 
 779append-only parameters retain all earlier ranges and IDs. Obsolete candidate lock fields remain for saved-state compatibility but are not displayed as misleading locks. Native/ARM builds, SDK validation, full regression/UBSan and SDK host19PASS/0WARN/0FAIL pass. Actual MPC XL3.10.1.12 checks cover all pages, MAIN roll/fill/FX preservation, dedicated ROLL FILL/ROLL FX, Undo and native preset selection. Physical encoders, hardware audio and worst-case CPU are not newly certified. The public ZIP includes Original Workshop only.
+
+
+## PERFORM: play, capture and export (1.7.0)
+
+Open PERFORM from MAIN's bottom button, or press the first native function key again. Screen Q-Link group A controls the selected slot's Rate/Velocity/Humanize/Length; the other three groups are inactive on that native page. SELECT TO EDIT makes screen pads select without sounding; physical MIDI pads still perform.
+
+B1–B4 are four momentary snare rolls. B5–B8 are fills A–D, queued at the next beat and played once. B9 toggles the loop; B10 stops this instance. A-bank direct drums remain unchanged. These labels describe the intended layout, not automatic bank detection: if the MPC root/scale/pad notes differ, select a slot and use LEARN PAD; ROUTING has LEARN LOOP and LEARN STOP. The plugin never changes MPC Pad Perform settings.
+
+ROLL DICE now regenerates unlocked fills and rolls together with the main groove. During playback the update commits at the next bar. Locked slots remain; recorded/edited fills lock automatically. Older projects also load populated fill slots locked to protect existing work. GENERATE in the selected-slot panel explicitly changes that slot. UNDO restores all previous sequences. Main knob/RULE edits remain live. This supersedes the1.5.1 fill-preservation policy.
+
+CAPTURE records the actual generated groove, fills, snare rolls and directly played drum notes internally. Press again to stop; EXPORT MIDI writes the take to `Content/Captures/Groove-Dice-<timestamp>-<serial>.mid` inside this installed plugin folder. MIDI SAVED confirms export; EXPORT FAILED preserves the take for retry. Captures are temporary until exported; the limit is32768note-ons. The SMF is type0,960PPQ, with the starting tempo. Tempo changes during a take are not exported as a tempo map.
+
+Use the MPC browser to find the installed plugin folder on that drive, open Content/Captures and import the .mid to a track using Groove Dice. Switch off automatic playback before playing the imported sequence to avoid doubling. Exported notes follow drum assignments; Ride/Crash/Bell use reserved replay notes96/97/98. This is file import/export, not live plugin MIDI output.
+
+Keep `Content/Expansions` and `Content/Captures` when manually replacing an SDK folder. Open MPC portable installers declare both as user_data. Public packages contain neither owner expansions nor captured performances. See [complete performance specification](https://github.com/Sunghyun23/kimswork/blob/main/mpc-software/docs/plugins/groove-dice/performance.md).

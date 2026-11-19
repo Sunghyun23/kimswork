@@ -1,0 +1,29 @@
+{
+  "version": "1.7.0",
+  "status": "final implementation; remote MPC validation complete; physical tests not certified",
+  "vendor": "kim",
+  "uid": "KpGy",
+  "parameters": 880,
+  "legacyParametersExact": 782,
+  "hostSimulator": {
+    "passCount": 19,
+    "warnings": 0,
+    "failures": 0
+  },
+  "automatedRegression": "full final source suite passed, including UBSan/allocation guards, legacy state, bridge and skin checks",
+  "linuxInstaller": "both CPUs preserve expansions and captured MIDI on upgrade/reinstall/uninstall",
+  "nvmeInstalledFiles": 205,
+  "ownerDataFilesPreservedInStaging": 13,
+  "sd": "not accessed or changed after latest user prohibition",
+  "physicalPads": "not newly verified; user confirmation pending",
+  "physicalQLinks": "not newly verified",
+  "hardwareAudio": "not newly verified",
+  "publicRelease": "release prepared; publication recorded separately",
+  "fullHostMidiImport": "not newly verified",
+  "deviceMidi": {
+    "notePairs": 129,
+    "format": 0,
+    "ppq": 960,
+    "independentlyParsed": true
+  }
+}

@@ -184,23 +184,42 @@ export const plugins: Plugin[] = [{
 },
 {
  slug:'groove-dice', name:'Groove Dice',manual:'plugins/groove-dice/manual/', category:'DRUM & GROOVE INSTRUMENT',
- tagline:'A new groove, one roll away.',
- summary:'Roll a musical groove. Lock what you love. Shape every drum.',
- description:'A one-bar neo-soul and hip-hop drum instrument for MPC. Roll new timing, rules, mix and cymbal accents, protect individual controls with a padlock, and build your sound from layered original drums.',
- developmentVersion:'1.6.2', release:{version:'1.6.2',tag:'groove-dice/v1.6.2',asset:'groove-dice-1.6.2-mpc.zip'}, image:'groove-dice-main-device-1.6.2.webp',
- imageAlt:'Actual MPC XL Groove Dice1.6.2 with only128original sounds and95MIDI assets',
+ tagline:'Roll a groove. Play it your way.',
+ summary:'Generate a groove, perform fills and snare rolls, then export your take as MIDI.',
+ description:'A neo-soul and hip-hop drum instrument for MPC. Generate a musical one-bar groove, perform four fills and four snare rolls from touch or assigned pads, and capture the result for MIDI export.',
+ developmentVersion:'1.7.0', release:{version:'1.7.0',tag:'groove-dice/v1.7.0',asset:'groove-dice-1.7.0-mpc.zip'}, image:'groove-dice-perform-device-1.7.0.webp',
+ imageAlt:'Actual MPC XL Groove Dice 1.7.0 PERFORM screen with four fills and four snare rolls; public Original Workshop only',
  intro:'Includes 128 original synthesized one-shots, 96 kit combinations, two authored beats and 93 timing templates. Optional .gdexp packs stay separate. No commercial or personal sample library is bundled.',
- verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; 1.6.0 three-page Triplet browser and live remote UI checks; automated timing, VST/Q-Link bridge, state/Undo and count-in regressions; earlier SOUND/REV/polarity checks',
+ verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; actual remote touch checks for loop/fill/roll, generation/locks, native presets, editing and MIDI export. Public-only screenshots. Physical pad/encoder coverage and worst-case hardware CPU are not newly certified.',
  mapping:[['A · Timing','Swing','Snare Late','Hat Shift','Rnd Nudge'],['B · Rules','Kick','Snare','Hat','Perc'],['C · Drum Mix','Kick Level','Snare Level','Hat Level','Perc Level'],['D · Hats / Cymbals','Hat Rhythm','Open Hat','Ride','Crash']],
  features:[
-  {title:'Roll the values you can see.',text:'Sixteen MAIN padlocks decide which controls Dice may change. Open a lock to explore; close it to preserve that value. Timing and mix stay within musical bounds, with strong/weak/medium/weak velocity accents. Undo restores the preceding roll.'},
-  {title:'Sixteen rules for every part.',text:'Kick, Snare, Hat and Perc each offer 16 playable rules. Choose through Q-Link or an eight-at-a-time left browser. Explore pickups, ghost notes, dynamic hats and percussion replies while keeping snare backbeats on 2 and 4 and kicks around them.'},
-  {title:'Give the hats a phrase.',text:'Choose 24 straight, dotted and triplet rhythms, each with basic, Fill and Roll variants. Quarter-, eighth- and sixteenth-note triplets share the same live Hat Rhythm control. Add restrained open hats, replace automatic hats with Ride/Bell, or mark starts and fill endings with Crash. Character processing remains on FX.'},
-  {title:'Find a sample. Hear it. Shape it.',text:'Tap a sound name for its browser, step with arrows or turn a Q-Link. Two in-place pages offer Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Every source has independent REV, with polarity on page2 and a single-layer preview. Four kick/snare layers and independent Ride/Crash/Bell sources keep sound design close.'},
-  {title:'Choose where the next kit comes from.',text:'Use one pack, every installed pack or up to 64 selected kits. Roll a whole kit or mix parts, keeping linked hats and a four-role percussion ensemble. Kit Fixed and layer locks protect your selections.'},
-  {title:'Record a fill. Keep it yours.',text:'Play physical pads into four independent fill slots, up to four bars each. Two grid views expose all eight drum roles. Main-pattern rolls preserve all recorded fills. Use ROLL FILL separately.'}
- ],
+  {
+    "title": "Roll a musical starting point.",
+    "text": "Sixteen rules per drum part, metrical velocity accents and 24 straight/dotted/triplet hat rhythms create a repeating one-bar groove. MAIN locks preserve the timing, rules and mix you want to keep."
+  },
+  {
+    "title": "Play the changes.",
+    "text": "PERFORM gives you four fills, four momentary snare rolls and loop/stop controls. Touch the screen or assign physical pads. A roll replaces the snare while held; a fill plays once and returns to the groove."
+  },
+  {
+    "title": "Keep your favorite phrases.",
+    "text": "Global Dice regenerates unlocked fills and rolls with the main groove. Lock a slot to keep it, or explicitly generate just that slot. Recorded and edited fills lock automatically; populated older-project fills load protected. Four Screen Q-Links edit the selected slot."
+  },
+  {
+    "title": "Turn a performance into MIDI.",
+    "text": "CAPTURE records the actual drum events, including fills and rolls. EXPORT MIDI saves a .mid file for import into an MPC track. Keep the take before closing the instance; live plugin MIDI output remains unavailable in the host."
+  },
+  {
+    "title": "Shape every drum.",
+    "text": "Four kick/snare layers, linked hats, a percussion ensemble and independent Ride/Crash/Bell sources. Browse and audition sounds, then use two SOUND pages for tuning, trim, Decay, Shift and filters. REV and polarity remain independent."
+  },
+  {
+    "title": "Build a library that is yours.",
+    "text": "Original Workshop includes 128 original sounds and 96 kit combinations. Add independent .gdexp packs with the optional macOS/Windows Pack Builder. Dice can choose sounds from one pack, every pack or selected kits."
+  }
+],
  changes:[
+  {title:'1.7.0: generate, perform, capture.',text:'Four fills and four snare rolls with pad triggers, selected-slot Q-Links, generation and locks. Dice now regenerates open performance slots at the next bar. Capture and export actual MIDI notes; expansion packs and captured takes are preserved by portable upgrades. Existing 782 declarations remain exact; 880 parameters total.'},
   {title:'1.6.2: keep your expansion packs.',text:'Open MPC packages now preserve Content/Expansions during upgrades, including the pack registry. Actual Linux installer tests reproduce the old loss and verify upgrade, reinstall and uninstall preservation for both CPUs. Fresh MPC screenshots show only the public core: 128 sounds and 95 MIDI assets.'},
   {title:'1.6.1: your own packs, documented.',text:'Includes a complete Pack Builder workflow and clear MIT notices for the plugin and original core content. Pack Builder is a separate optional desktop app for macOS Apple Silicon and Windows x64. Engine, UI, 782 parameters, Q-Link maps and the core bank stay unchanged.'},
   {title:'1.6.0: hats in threes.',text:'Nine new Triplet choices: 1/4T, 1/8T and 1/16T, each basic, +FILL or +ROLL. The three-page browser, MAIN D1, GROOVE, Dice and Undo use the same 24-choice range. Old projects keep their notes and legacy parameter ranges. Momentary Fill/FX rolls clear after execution.'},
@@ -211,67 +230,72 @@ export const plugins: Plugin[] = [{
   {title:'A complete sound workflow.',text:'Tap-to-browse lists, synchronized arrows/Q-Link, isolated previews, Decay on every sound row and editable Ride/Crash/Bell sources. Dice pools can be limited to selected kits. The blank-skin and overlapping kit-caption defects are fixed.'},
   {title:'One repeating bar, with room to perform.',text:'Live rules, metrical velocities, hats/cymbals and independent recorded fills build on the one-bar engine. ROOM is a stereo diffused reverb. FOLLOW retains automatic record-count-in detection.'}
  ],
- limitations:['Signed Shift reports a fixed 30ms baseline latency, including direct pads. Hardware compensation and playing feel are not certified.','Remote UI checks cover page/REV/polarity operation; full physical Q-Link coverage, worst-case CPU and every output destination remain unverified.','A stopped recording intentionally started inside a bar may wait for a host bar anchor/seek; use aligned starts or punch in during running playback.','External sidechain input and generated MIDI output to the MPC sequencer are not implemented.','Install optional packs using Pack Builder or the Python CLI, then reopen the plugin. This is not native MPC XPN registration.'],
+ limitations:['CAPTURE holds up to 32768 note-ons. Export before closing the instance; the MIDI file uses the starting tempo and has no tempo-change map. Full MPC file import is not newly hardware-tested.','Signed Shift reports a fixed 30ms baseline latency, including direct pads. Hardware compensation and playing feel are not certified.','Remote UI checks cover page/REV/polarity operation; full physical Q-Link coverage, worst-case CPU and every output destination remain unverified.','A stopped recording intentionally started inside a bar may wait for a host bar anchor/seek; use aligned starts or punch in during running playback.','External sidechain input and generated MIDI output to the MPC sequencer are not implemented.','Install optional packs using Pack Builder or the Python CLI, then reopen the plugin. This is not native MPC XPN registration.'],
  screenshots:[
   {
-    "image": "groove-dice-main-device-1.6.2.webp",
-    "alt": "Groove Dice public-only main screen on actual MPC XL",
-    "caption": "MAIN \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-perform-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 perform screen, public core only",
+    "caption": "PERFORM \u00b7 Four fills, four snare rolls and selected-slot controls. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-triplets-device-1.6.2.webp",
-    "alt": "Groove Dice public-only triplets screen on actual MPC XL",
-    "caption": "TRIPLETS \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-main-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 main screen, public core only",
+    "caption": "MAIN \u00b7 The original four groups remain in place. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-groove-device-1.6.2.webp",
-    "alt": "Groove Dice public-only groove screen on actual MPC XL",
-    "caption": "GROOVE \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-roll-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 roll screen, public core only",
+    "caption": "ROLL \u00b7 The held pad changes color while other drum parts continue. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-sound-device-1.6.2.webp",
-    "alt": "Groove Dice public-only sound screen on actual MPC XL",
-    "caption": "SOUND \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-capture-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 capture screen, public core only",
+    "caption": "CAPTURE \u00b7 Actual MIDI export completed on the MPC. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-sound2-device-1.6.2.webp",
-    "alt": "Groove Dice public-only sound2 screen on actual MPC XL",
-    "caption": "SOUND2 \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-groove-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 groove screen, public core only",
+    "caption": "GROOVE \u00b7 Timing, density and variation details. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-browser-device-1.6.2.webp",
-    "alt": "Groove Dice public-only browser screen on actual MPC XL",
-    "caption": "BROWSER \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-sound-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 sound screen, public core only",
+    "caption": "SOUND 1/2 \u00b7 Sample, Level, Tune and Shift. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-cymbals-device-1.6.2.webp",
-    "alt": "Groove Dice public-only cymbals screen on actual MPC XL",
-    "caption": "CYMBALS \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-sound2-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 sound2 screen, public core only",
+    "caption": "SOUND 2/2 \u00b7 Start, Decay and filters. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-fill-device-1.6.2.webp",
-    "alt": "Groove Dice public-only fill screen on actual MPC XL",
-    "caption": "FILL \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-cymbals-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 cymbals screen, public core only",
+    "caption": "CYMBALS \u00b7 Independent Ride, Crash and Bell sources. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-kits-device-1.6.2.webp",
-    "alt": "Groove Dice public-only kits screen on actual MPC XL",
-    "caption": "KITS \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-fill-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 fill screen, public core only",
+    "caption": "FILL EDIT \u00b7 Recorded notes remain editable. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-fx-device-1.6.2.webp",
-    "alt": "Groove Dice public-only fx screen on actual MPC XL",
-    "caption": "FX \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-kits-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 kits screen, public core only",
+    "caption": "KITS \u00b7 Original presets and separate expansion packs. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   },
   {
-    "image": "groove-dice-routing-device-1.6.2.webp",
-    "alt": "Groove Dice public-only routing screen on actual MPC XL",
-    "caption": "ROUTING \u00b7 Actual MPC XL / OS3.10.1.12, version1.6.2. Original Workshop only:128WAV,2authored beats and93timing templates; no owner expansion packs."
+    "image": "groove-dice-fx-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 fx screen, public core only",
+    "caption": "FX \u00b7 Drive, Dust and stereo Room. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
+  },
+  {
+    "image": "groove-dice-routing-device-1.7.0.webp",
+    "alt": "Actual MPC XL Groove Dice1.7.0 routing screen, public core only",
+    "caption": "ROUTING \u00b7 Drum outputs and performance pad learning. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, no owner packs."
   }
 ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-19-groove-162';
+export const navigationVersion = 'software-2026-11-20-groove-170';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

@@ -2,7 +2,7 @@
 #include "musical_test.cpp"
 #undef main
 int main(){
- Host h;auto&p=*h.p;assert(kHatRhythm==294&&kHatPhraseState==295&&kMixKick==342&&kParamCount==782);
+ Host h;auto&p=*h.p;assert(kHatRhythm==294&&kHatPhraseState==295&&kMixKick==342&&kPerformOpen==782);
  for(int g=0;g<4;++g)p.set(kRuleKick+g,1);
  // Touch/automation and SCREEN relay select exactly the same15 choices; Duck stays independent.
  float duck=p.get(kDuck);

@@ -13,7 +13,7 @@ site/                                      Astro catalog, manuals, GitHub Pages
 mpc-software/
   plugins/public/DonutTheory/               Released synth (1.12.0)
   plugins/public/CratePress/                Stereo effect (0.2.4 public preview)
-  plugins/public/GrooveDice/                Drum instrument (1.4.0 stable)
+  plugins/public/GrooveDice/                Drum instrument (1.7.0 stable)
   plugins/private/                         Other local-only plugin projects
   apps/public/GrooveDicePackBuilder/        Standalone desktop pack authoring app
   expansions/groove-dice/
@@ -25,7 +25,7 @@ mpc-software/
   third_party/mpc-plugin-builder-sdk/       One pinned, unmodified SDK checkout
 ```
 
-Private projects and expansion payloads are Git-ignored and excluded from public packages. A `private` directory is not a GitHub access-control mechanism. Groove Dice public packages use the independently created Original Workshop core only. Groove Dice 1.4.0 ships only the original core; optional personal packs remain private.
+Private projects and expansion payloads are Git-ignored and excluded from public packages. A `private` directory is not a GitHub access-control mechanism. Groove Dice public packages use the independently created Original Workshop core only. Groove Dice 1.7.0 ships only the original core; optional personal packs remain private.
 
 ## Development
 

@@ -3,6 +3,7 @@
 SDK install text is reused without modifying the shared SDK. No network publishing.
 """
 from pathlib import Path
+import shutil
 import argparse,importlib.util,json,zipfile,sys
 P=Path(__file__).resolve().parents[1];sys.path.insert(0,str(P/'tools'));import expansions
 SDK=P.parents[2]/'third_party/mpc-plugin-builder-sdk'
@@ -13,6 +14,8 @@ def main():
  public=root/'public'/base.name;personal=root/'personal'/base.name
  for path in [public,personal]:path.parent.mkdir(parents=True,exist_ok=True)
  expansions.assemble(base,public,None,False)
+ # Captured user performances are never public content.
+ if(public/'Content/Captures').exists():shutil.rmtree(public/'Content/Captures')
  actual=set()
  if args.personal:
   extras=P.parents[2]/'expansions/groove-dice/private/splat-to-clat/work/personal'

@@ -1,0 +1,62 @@
+[
+  {
+    "file": "public-main.png",
+    "sha256": "6e0d023b1dafab977760d73b50491215684356f1cec5b4b0734dbe40642e3872",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-perform.png",
+    "sha256": "f7b1363eba123e4dbb082a03418bdf689820dc6f43ce6d6762238f22dc7a426f",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-roll.png",
+    "sha256": "fb81481845968a6503fefd8c079f77154565bcccda32a97440a9080030fae9d0",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-capture.png",
+    "sha256": "5c63ee6cacf52f13990a88558b8b3cef0b5cd6bcaf441494df2cd70cb1f40d45",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-groove.png",
+    "sha256": "6c56c72c2f750ab7d5a5c806d86d23af12dc382aac0d851e3cf1a3724f4f611f",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-sound.png",
+    "sha256": "f9c6ac53ad99e799cd7e3094c64b58e274f922e65bdd6b35d3c8164cd9337358",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-sound2.png",
+    "sha256": "3e9dcf47bfcca3c9e7c87bd3063527394f4de1e242f02c245b87b9c936302f8f",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-cymbals.png",
+    "sha256": "f16dfd56294488bb948fc03f44b6a0910960b7d04e039541e689c331c2e498b2",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-fill.png",
+    "sha256": "f5752b22de3efb55e6a015f35fd50cd4bf5a9173be5ef26414353e6a444c6491",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-kits.png",
+    "sha256": "be3ceea5eb24d1e68f21eb4592dfa756e1218a4dc8f9ce449a0b71f1fad0de61",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-fx.png",
+    "sha256": "7477d2f08176261ef87d7d8b69104993e5737909ee427a24b60899d982d8f2d9",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  },
+  {
+    "file": "public-routing.png",
+    "sha256": "2bd0edd29380894ae121d46c3e704d1527c5ac8368f9780f55354674b828dc66",
+    "source": "actual MPC Remote Screen framebuffer; public-only NVMe installation"
+  }
+]

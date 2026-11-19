@@ -1,0 +1,26 @@
+{
+  "pass": true,
+  "mode": "Linux isolated fake device; actual unmodified generated installers",
+  "results": [
+    {
+      "arch": "armv7",
+      "old161LosesPack": true,
+      "newVersion": "1.7.0",
+      "newUpgradePreservesAllUserBytes": true,
+      "capturedMidiPreserved": true,
+      "repeatInstallPreserves": true,
+      "uninstallPreservesPacks": true,
+      "retainedFiles": 5
+    },
+    {
+      "arch": "aarch64",
+      "old161LosesPack": true,
+      "newVersion": "1.7.0",
+      "newUpgradePreservesAllUserBytes": true,
+      "capturedMidiPreserved": true,
+      "repeatInstallPreserves": true,
+      "uninstallPreservesPacks": true,
+      "retainedFiles": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "version": "1.7.0",
+  "drive": "nvme",
+  "allInstalledFilesMatchStaging": true,
+  "installedFiles": 205,
+  "originalOwnerDataFilesPreserved": 13,
+  "sdAccessed": false,
+  "ssdChanged": false,
+  "otherPluginsChanged": false,
+  "privateDataExcludedFromPublishedEvidence": true
+}

@@ -19,3 +19,5 @@ site/.astro/
 !/mpc-software/expansions/*/private/README.md
 mpc-software/expansions/*/public/*/work/
 mpc-software/expansions/*/public/*/dist/
+
+mpc-software/plugins/public/GrooveDice/Content/Captures/

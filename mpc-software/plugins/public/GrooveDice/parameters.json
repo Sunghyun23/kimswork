@@ -8203,5 +8203,1031 @@
     ],
     "default": 0,
     "auto": false
+  },
+  {
+    "key": "PerformOpen",
+    "name": "Performance Screen",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformSelect",
+    "name": "Performance Slot",
+    "choices": [
+      "ROLL A",
+      "ROLL B",
+      "ROLL C",
+      "ROLL D",
+      "FILL A",
+      "FILL B",
+      "FILL C",
+      "FILL D"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformEdit",
+    "name": "Select To Edit",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformHit0",
+    "name": "Performance Trigger 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock0",
+    "name": "Performance Lock 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate0",
+    "name": "Generate Performance 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate0",
+    "name": "Performance Rate 1",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity0",
+    "name": "Performance Velocity 1",
+    "min": 30,
+    "max": 127,
+    "default": 95,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize0",
+    "name": "Performance Humanize 1",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength0",
+    "name": "Performance Length 1",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformHit1",
+    "name": "Performance Trigger 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock1",
+    "name": "Performance Lock 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate1",
+    "name": "Generate Performance 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate1",
+    "name": "Performance Rate 2",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 4,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity1",
+    "name": "Performance Velocity 2",
+    "min": 30,
+    "max": 127,
+    "default": 95,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize1",
+    "name": "Performance Humanize 2",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength1",
+    "name": "Performance Length 2",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformHit2",
+    "name": "Performance Trigger 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock2",
+    "name": "Performance Lock 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate2",
+    "name": "Generate Performance 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate2",
+    "name": "Performance Rate 3",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 3,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity2",
+    "name": "Performance Velocity 3",
+    "min": 30,
+    "max": 127,
+    "default": 95,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize2",
+    "name": "Performance Humanize 3",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength2",
+    "name": "Performance Length 3",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformHit3",
+    "name": "Performance Trigger 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock3",
+    "name": "Performance Lock 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate3",
+    "name": "Generate Performance 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate3",
+    "name": "Performance Rate 4",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 5,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity3",
+    "name": "Performance Velocity 4",
+    "min": 30,
+    "max": 127,
+    "default": 95,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize3",
+    "name": "Performance Humanize 4",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength3",
+    "name": "Performance Length 4",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformHit4",
+    "name": "Performance Trigger 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock4",
+    "name": "Performance Lock 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate4",
+    "name": "Generate Performance 5",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate4",
+    "name": "Performance Rate 5",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity4",
+    "name": "Performance Velocity 5",
+    "min": 30,
+    "max": 127,
+    "default": 100,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize4",
+    "name": "Performance Humanize 5",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength4",
+    "name": "Performance Length 5",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHit5",
+    "name": "Performance Trigger 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock5",
+    "name": "Performance Lock 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate5",
+    "name": "Generate Performance 6",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate5",
+    "name": "Performance Rate 6",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity5",
+    "name": "Performance Velocity 6",
+    "min": 30,
+    "max": 127,
+    "default": 100,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize5",
+    "name": "Performance Humanize 6",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength5",
+    "name": "Performance Length 6",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "PerformHit6",
+    "name": "Performance Trigger 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock6",
+    "name": "Performance Lock 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate6",
+    "name": "Generate Performance 7",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate6",
+    "name": "Performance Rate 7",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 3,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity6",
+    "name": "Performance Velocity 7",
+    "min": 30,
+    "max": 127,
+    "default": 100,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize6",
+    "name": "Performance Humanize 7",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength6",
+    "name": "Performance Length 7",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformHit7",
+    "name": "Performance Trigger 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock7",
+    "name": "Performance Lock 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate7",
+    "name": "Generate Performance 8",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate7",
+    "name": "Performance Rate 8",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 4,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity7",
+    "name": "Performance Velocity 8",
+    "min": 30,
+    "max": 127,
+    "default": 100,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize7",
+    "name": "Performance Humanize 8",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength7",
+    "name": "Performance Length 8",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformQ0",
+    "name": "Performance Control 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "PerformQ1",
+    "name": "Performance Control 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "PerformQ2",
+    "name": "Performance Control 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "PerformQ3",
+    "name": "Performance Control 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 3,
+    "auto": false
+  },
+  {
+    "key": "PerformNote0",
+    "name": "Performance Pad Note 1",
+    "min": 0,
+    "max": 127,
+    "default": 52,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote1",
+    "name": "Performance Pad Note 2",
+    "min": 0,
+    "max": 127,
+    "default": 53,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote2",
+    "name": "Performance Pad Note 3",
+    "min": 0,
+    "max": 127,
+    "default": 55,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote3",
+    "name": "Performance Pad Note 4",
+    "min": 0,
+    "max": 127,
+    "default": 57,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote4",
+    "name": "Performance Pad Note 5",
+    "min": 0,
+    "max": 127,
+    "default": 59,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote5",
+    "name": "Performance Pad Note 6",
+    "min": 0,
+    "max": 127,
+    "default": 60,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote6",
+    "name": "Performance Pad Note 7",
+    "min": 0,
+    "max": 127,
+    "default": 62,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote7",
+    "name": "Performance Pad Note 8",
+    "min": 0,
+    "max": 127,
+    "default": 64,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote8",
+    "name": "Performance Pad Note 9",
+    "min": 0,
+    "max": 127,
+    "default": 65,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformNote9",
+    "name": "Performance Pad Note 10",
+    "min": 0,
+    "max": 127,
+    "default": 67,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLoop",
+    "name": "Loop On Off",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformStop",
+    "name": "Performance Stop",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerateAll",
+    "name": "Generate Unlocked",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerateSelected",
+    "name": "Generate Selected",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformUnlock",
+    "name": "Unlock Performance",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLockSelected",
+    "name": "Lock Selected",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLearn",
+    "name": "Learn Selected Pad",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Capture",
+    "name": "Capture Performance",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ExportMidi",
+    "name": "Export MIDI",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRecord",
+    "name": "Record Selected Fill",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformEditFill",
+    "name": "Edit Selected Fill",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformStatus",
+    "name": "Performance Status",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "CaptureInfo",
+    "name": "Capture Status",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformPadInfo",
+    "name": "Pad Assignment",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLoopState",
+    "name": "Performance Loop State",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState0",
+    "name": "Performance State 1",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState1",
+    "name": "Performance State 2",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState2",
+    "name": "Performance State 3",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState3",
+    "name": "Performance State 4",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState4",
+    "name": "Performance State 5",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState5",
+    "name": "Performance State 6",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState6",
+    "name": "Performance State 7",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState7",
+    "name": "Performance State 8",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLearnLoop",
+    "name": "Learn Loop Pad",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLearnStop",
+    "name": "Learn Stop Pad",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
   }
 ]

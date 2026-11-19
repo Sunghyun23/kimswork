@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <limits>
 #include <pthread.h>
+#include "MidiCapture.h"
 
 class GrooveDice final : public mpc::Plugin {
 public:
@@ -52,7 +53,7 @@ public:
  std::atomic<int> recordState{0},recorded{0},fired{0};
  std::atomic<float> position{0},currentTempo{92};std::atomic<int>lastMidiNote{-1},lastMidiRole{-1};
 
- static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Groove Dice";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','p','G','y');i.version=10602;i.latencySamples=1323;i.isInstrument=true;i.numInputs=0;i.numOutputs=16;return i;}
+ static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Groove Dice";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','p','G','y');i.version=10700;i.latencySamples=1323;i.isInstrument=true;i.numInputs=0;i.numOutputs=16;return i;}
  GrooveDice():mpc::Plugin(description()){
   declareParameters(*this);
   for(auto& n:lengths)n.store(4*PPQ);
@@ -64,6 +65,7 @@ public:
   if(bank.loaded&&bank.patternCount){clearBank(5);lengths[5].store(bank.patternLength);for(int i=0;i<bank.patternCount;++i){auto n=bank.pattern[i];notes[5][i].write({n.tick,n.role,n.velocity,100,n.gate});}}
   for(int b=4;b<7;++b){factoryLengths[b-4]=lengths[b].load();baseLengths[b].store(lengths[b].load());for(int i=0;i<MaxNotes;++i){factoryBases[b-4][i*2]=notes[b][i].data.load();factoryBases[b-4][i*2+1]=notes[b][i].gate.load();bases[b][i].data.store(notes[b][i].data.load());bases[b][i].gate.store(notes[b][i].gate.load());}baseValid[b].store(true);}
   displayNames.build(library,bank);
+  initPerformance();
   initLayers();initCymbals();
   std::vector<float> init;for(int i=0;i<numParams();++i)init.push_back(param(i).def);
   for(int key:{kDrive,kDust,kRoom,kDuck,kLowCut,kModDepth})init[key]=0;
@@ -81,8 +83,9 @@ public:
  #include "DicePool.inc"
  #include "FrontDice.inc"
  #include "RuleSelectors.inc"
+ #include "Performance.inc"
  void prepare(double rate,int)override{sr=rate;setLatency(int(std::llround(rate*.030)));for(auto&fx:roomFx)fx.prepare(rate);}
- void reset()override{set(kUnlockDice,0);set(kRollFill,0);set(kRollFx,0);
+ void reset()override{resetPerformance();set(kUnlockDice,0);set(kRollFill,0);set(kRollFx,0);
   hostRecordGate.reset();cymbalStart=-1;cymbalFillEnd=-1;for(auto&fx:roomFx)fx.reset();lastAutoBar=-1;budgets={};lastHat=-1e12;for(auto& v:voices)deactivate(v);lastEnd=-1e12;lastRawEnd=-1e12;transportOffset=0;previewPpq=0;fillStart=-1;fillEnd=-1;recStart=-1;recEnd=-1;recordState.store(0);recorded.store(0);ducker=0;hitCounter=lastKickHit=0;auditionPending=-1;mixGain.fill(1);
   // Saved editor context is restored; a newly created instance defaults to MAIN.
   for(int i=0;i<kParamCount;++i)last[i]=getNormalised(i);
@@ -104,8 +107,8 @@ public:
  void mirrorLegacy(int i){int old=legacy(i);if(old>=0){bool prev=internal;internal=true;mpc::Plugin::set(old,get(i));internal=prev;}}
  void syncHatSelection(){
   bool previous=internal;internal=true;int v=getInt(kHatRhythmFull);
-  if(v<15){mpc::Plugin::set(kHatRhythm,v);mpc::Plugin::set(kHatRhythmPage,v/8);changed[kHatRhythm].store(true);changed[kHatRhythmPage].store(true);}
-  mpc::Plugin::set(kHatRhythmFullPage,v/8);changed[kHatRhythmFullPage].store(true);internal=previous;
+  if(v<15){if(getInt(kHatRhythm)!=v)mpc::Plugin::set(kHatRhythm,v);if(getInt(kHatRhythmPage)!=v/8)mpc::Plugin::set(kHatRhythmPage,v/8);changed[kHatRhythm].store(true);changed[kHatRhythmPage].store(true);}
+  if(getInt(kHatRhythmFullPage)!=v/8)mpc::Plugin::set(kHatRhythmFullPage,v/8);changed[kHatRhythmFullPage].store(true);internal=previous;
  }
  void set(int i,float value){int key=canonical(i);if(!diceAllows(key))return;clearOrphan(key);mpc::Plugin::set(key,value);mirrorLegacy(key);if(key==kHatRhythmFull)syncHatSelection();}
  void setNormalised(int i,float value){if(!diceAllows(i))return;mpc::Plugin::setNormalised(i,value);mirrorLegacy(i);if(i==kHatRhythmFull)syncHatSelection();}
@@ -117,6 +120,7 @@ public:
  void parameterChanged(int i,float plain)override{
   if(internal||restoring.load()||loadGuardFrames.load()>0)return;
   if(legacyRuleAlias(i)&&ruleNotifyIndex.load()==i&&ruleNotifyThread.load()==uintptr_t(pthread_self()))return;
+  if(performanceParameter(i,plain))return;
   if(ruleSelectorParameter(i))return;
   if(layerParameter(i,plain))return;
   clearOrphan(canonical(i));if(canonical(i)!=i){float raw=getNormalised(i);set(canonical(i),plain);bool prev=internal;internal=true;mpc::Plugin::setNormalised(i,raw);internal=prev;return;}mirrorLegacy(i);
@@ -139,10 +143,11 @@ public:
   if(i==kPattern){internal=true;set(kXBeat,0);internal=false;}
   if(i==kEditor||(i>=kXSample0&&!(i>=kRuleKickStyle&&i<=kRulePercStyle)))displayPending.store(true);
   for(int r=0;r<8;++r)if(i==kSample0+r*9){missingSample[r].store(false);internal=true;set(kXKit,0);set(kXSample0+r,0);internal=false;displayPending.store(true);}
-  if(i>=kQ1&&i<=kQ16){int target=proxyTarget(i-kQ1);if(target>=0){float before=getNormalised(target);internal=true;setNormalised(target,plain);internal=false;if(target>=kXQKit&&target<=kXQPerc)parameterChanged(target,plain);if(target>=kRuleKickStyle&&target<=kRulePercStyle)syncRuleStyle(target-kRuleKickStyle);if(isRuleSelector(target))ruleSelectorParameter(target);if(target==kHatRhythmFull)liveDirty.fetch_or(4);if(getNormalised(target)!=before&&!(target>=kRuleKickStyle&&target<=kRulePercStyle)&&!isRuleSelector(target)){changed[target].store(true);if(param(target).kind==mpc::Param::Kind::Choice)displayPending.store(true);}if(target==kHatRhythmFull){internal=true;set(kHatRhythmFullPage,getInt(kHatRhythmFull)/8);internal=false;changed[kHatRhythmFullPage].store(true);}if(target>=kXSoundKick&&target<=kXSoundPerc){soundRequests[target-kXSoundKick].store(get(target));soundDirty.fetch_or(1u<<(target-kXSoundKick));}if(target>=kSwing&&target<=kRndNudge)grooveBaseValid.store(false);if(target>=kNoteNudge&&target<=kNoteChance)noteDirty.fetch_or(1u<<(target-kNoteNudge));}else{internal=true;setNormalised(i,0);internal=false;}}
+  if(i>=kQ1&&i<=kQ16){int target=proxyTarget(i-kQ1);if(target>=0){float before=getNormalised(target);internal=true;setNormalised(target,plain);internal=false;if(target>=kXQKit&&target<=kXQPerc)parameterChanged(target,plain);if(target>=kRuleKickStyle&&target<=kRulePercStyle)syncRuleStyle(target-kRuleKickStyle);if(isRuleSelector(target))ruleSelectorParameter(target);if(target>=kPerformHit0&&target<=kPerformLength7&&(getInt(kPerformSelect)<4||generatedFills[getInt(kPerformSelect)-4].load()))rollRegenerate.fetch_or(1u<<getInt(kPerformSelect));if(target>=kPerformHit0&&target<=kPerformLength7&&getInt(kPerformSelect)>=4&&!generatedFills[getInt(kPerformSelect)-4].load())fillTimingDirty.store(true);if(target==kHatRhythmFull)liveDirty.fetch_or(4);if(getNormalised(target)!=before&&!(target>=kRuleKickStyle&&target<=kRulePercStyle)&&!isRuleSelector(target)){changed[target].store(true);if(param(target).kind==mpc::Param::Kind::Choice)displayPending.store(true);}if(target==kHatRhythmFull){internal=true;set(kHatRhythmFullPage,getInt(kHatRhythmFull)/8);internal=false;changed[kHatRhythmFullPage].store(true);}if(target>=kXSoundKick&&target<=kXSoundPerc){soundRequests[target-kXSoundKick].store(get(target));soundDirty.fetch_or(1u<<(target-kXSoundKick));}if(target>=kSwing&&target<=kRndNudge)grooveBaseValid.store(false);if(target>=kNoteNudge&&target<=kNoteChance)noteDirty.fetch_or(1u<<(target-kNoteNudge));}else{internal=true;setNormalised(i,0);internal=false;}}
   else if(i>=kNoteNudge&&i<=kNoteChance)noteDirty.fetch_or(1u<<(i-kNoteNudge));
  }
  bool formatValue(int i,float plain,std::string& out)override{
+  if(performanceFormat(i,out))return true;
   if(poolFormat(i,out)||layerFormat(i,out))return true;
   if(canonical(i)!=i)return formatValue(canonical(i),plain,out);
   if(i==kXQKit){int index=getInt(kXKit);if(index>0&&index<=int(library.factoryKits.size())){out=kitCaption(index);}else out="Custom Kit";return true;}
@@ -204,9 +209,10 @@ public:
   double start=hostRunning?rawStart+transportOffset:previewPpq;
   if(!run&&!hostCountIn)start=previewPpq;
   double end=start+step*c.numFrames;position.store(float(start));
-  if(run&&std::abs(start-lastEnd)>.02&&lastEnd>-1e10){pendingRoll.store(false);displayPending.store(true);rollAt=-1;lastAutoBar=-1;budgets={};lastHat=-1e12;fillStart=fillEnd=-1;cymbalFillEnd=-1;recordState.store(0);recStart=recEnd=-1;for(auto&v:voices)deactivate(v);}
-  if(!run&&wasRunning){pendingRoll.store(false);displayPending.store(true);rollAt=-1;lastAutoBar=-1;budgets={};lastHat=-1e12;fillStart=fillEnd=-1;cymbalFillEnd=-1;recStart=recEnd=-1;recordState.store(0);for(auto&v:voices)deactivate(v);}
+  if(run&&std::abs(start-lastEnd)>.02&&lastEnd>-1e10){stopCaptureAt(performanceNow);pendingRoll.store(false);displayPending.store(true);rollAt=-1;lastAutoBar=-1;budgets={};lastHat=-1e12;fillStart=fillEnd=-1;cymbalFillEnd=-1;recordState.store(0);recStart=recEnd=-1;for(auto&v:voices)deactivate(v);}
+  if(!run&&wasRunning){stopCaptureAt(performanceNow);pendingRoll.store(false);displayPending.store(true);rollAt=-1;lastAutoBar=-1;budgets={};lastHat=-1e12;fillStart=fillEnd=-1;cymbalFillEnd=-1;recStart=recEnd=-1;recordState.store(0);for(auto&v:voices)deactivate(v);}
   wasRunning=run;
+  performanceBlock(start,end,step,run,hostCountIn,hostRunning);
   int guard=loadGuardFrames.load();bool loading=guard>0;if(loading){loadGuardFrames.fetch_sub(std::min(guard,c.numFrames));if(guard<=c.numFrames){for(auto&t:proxySeenTarget)t=-1;for(auto&t:soundSeenTarget)t.store(-1);}}
   const auto command=[&](int i){float x=getNormalised(i);bool changed=x!=last[i];last[i]=x;
    // Dedicated roll actions are momentary, not saved musical settings. Consume
@@ -214,6 +220,7 @@ public:
    if(i==kRollFill||i==kRollFx){changed=changed&&x>.5f;if(x!=0){layerSet(i,0);last[i]=0;}}
    if(changed&&!loading){lastAction.store(i);actionCount.fetch_add(1);this->changed[kActionInfo].store(true);}return changed&&!loading;};
   if(command(kUnlockDice)&&getBool(kUnlockDice)){
+   for(int n=0;n<8;++n)layerSet(performanceLock(n),0);
    for(int key:kExtraDiceValueLocks)layerSet(key,0);
    for(int key=kDiceLock0;key<=kDiceLock15;++key)layerSet(key,0);
    layerSet(kKitLock,0);layerSet(kPatternLock,0);
@@ -259,7 +266,8 @@ public:
   if(!loading&&getInt(kXSoundPage)>pages){internal=true;set(kXSoundPage,pages);internal=false;}
   for(int row=0;row<8;++row)if(command(kSoundPick0+row)){int visible=getInt(kXSoundPage)*8+row;const auto&list=soundItems(sg);int index=visible<int(list.size())?list[visible]+1:0;if(index>0){internal=true;set(kXSoundKick+sg,index);set(kSoundOpen,0);internal=false;soundRequests[sg].store(float(index));soundDirty.fetch_or(1u<<sg);}}
   unsigned sd=soundDirty.exchange(0);for(int g=0;g<4;++g)if(sd&(1u<<g))applySound(g,int(std::lround(soundRequests[g].load())));
-  if(command(kRoll)){pendingRoll.store(false);snapshotUndo();roll();liveDirty.store(0);}
+  if(command(kRoll)){if(run){pendingRoll.store(true);rollAt=std::ceil((start+1e-8)/4)*4;}else{pendingRoll.store(false);snapshotUndo();roll();liveDirty.store(0);}}
+  if(pendingRoll.load()&&run&&rollAt>=start-1e-8&&rollAt<end){snapshotUndo();roll();liveDirty.store(0);pendingRoll.store(false);rollAt=-1;}
   if(command(kUndo)){pendingRoll.store(false);liveDirty.store(0);if(haveUndo)restoreUndo();}
   if(command(kKeep)){keep=true;}
   if(command(kSaveKit))saveKit();if(command(kLoadKit))loadKit();
@@ -271,8 +279,8 @@ public:
    recEnd=recStart+double(recLength)/PPQ;recordState.store(1);recorded.store(0);recCleared=false;
   }
   if(command(kTrigger))queueFill(start);
-  bool gridSelect=command(kGridSelect),gridTap=command(kGridTap);if(gridSelect||gridTap){baseValid[getInt(kFillSlot)].store(false);int cell=getInt(kGridSelect)-1;if(cell>=0){int role=gridRole(getInt(kFillGridPage),cell/16),step=cell%16+getInt(kGridBar)*16;int selected=-1;for(int i=0;i<MaxNotes;++i)if(notes[getInt(kFillSlot)][i].valid()){auto n=notes[getInt(kFillSlot)][i].read();if(n.role==role&&n.tick/240==step){selected=i;break;}}if(selected<0){for(int i=0;i<MaxNotes;++i)if(!notes[getInt(kFillSlot)][i].valid()){selected=i;notes[getInt(kFillSlot)][i].write({step*240,role,100,100,80});break;}}if(selected>=0){internal=true;set(kNoteSelect,selected);internal=false;mirrorNote();}}}
-  if(command(kNoteDelete)){baseValid[getInt(kFillSlot)].store(false);int slot=getInt(kFillSlot),n=getInt(kNoteSelect);notes[slot][n].data.store(0);}
+  bool gridSelect=command(kGridSelect),gridTap=command(kGridTap);if(gridSelect||gridTap){baseValid[getInt(kFillSlot)].store(false);int cell=getInt(kGridSelect)-1;if(cell>=0){int role=gridRole(getInt(kFillGridPage),cell/16),step=cell%16+getInt(kGridBar)*16;int selected=-1;for(int i=0;i<MaxNotes;++i)if(notes[getInt(kFillSlot)][i].valid()){auto n=notes[getInt(kFillSlot)][i].read();if(n.role==role&&n.tick/240==step){selected=i;break;}}if(selected<0){for(int i=0;i<MaxNotes;++i)if(!notes[getInt(kFillSlot)][i].valid()){selected=i;markRecordedFill(getInt(kFillSlot));notes[getInt(kFillSlot)][i].write({step*240,role,100,100,80});break;}}if(selected>=0){internal=true;set(kNoteSelect,selected);internal=false;mirrorNote();}}}
+  if(command(kNoteDelete)){markRecordedFill(getInt(kFillSlot));baseValid[getInt(kFillSlot)].store(false);int slot=getInt(kFillSlot),n=getInt(kNoteSelect);notes[slot][n].data.store(0);}
   if(getInt(kKit)!=lastKit){lastKit=getInt(kKit);internal=true;for(int v=0;v<8;++v){set(kSample0+v*9,lastKit);set(kXSample0+v,0);}internal=false;}
   unsigned live=liveDirty.exchange(0);if(live&&!loading)refreshMain(live);
   int slot=getInt(kFillSlot),li=getInt(kFillLength);
@@ -285,7 +293,7 @@ public:
   if(recStart>=0&&start>=recEnd-1e-9)finishRecord();
   // Schedule in advance of rendering this block, including neighboring cycles for negative nudges.
   eventCount=0;
-  if(run){if(lastEnd<-1.e10||std::abs(start-lastEnd)>.02)cymbalStart=start;queueAutoFill(start,end);scheduleBank(4+getInt(kPattern),start,end,step,false);if(fillStart>=0)scheduleBank(activeFill,start,end,step,true);scheduleCymbals(start,end,step);}
+  if(run){if(lastEnd<-1.e10||std::abs(start-lastEnd)>.02)cymbalStart=start;queueAutoFill(start,end);scheduleBank(4+getInt(kPattern),start,end,step,false);if(fillStart>=0&&!performanceFill)scheduleBank(activeFill,start,end,step,true);scheduleCymbals(start,end,step);}
   for(int v=0;v<8;++v)if(command(kPad0+v*9)){addEvent(0,v,100,true);}
   runSamplePreview();
   int midi=0;
@@ -298,14 +306,15 @@ public:
   for(int kind=0;kind<3;++kind){levelTarget[14+kind]=std::pow(10.f,get(kCym0Level+kind*LayerFields)/20.f);audible[14+kind]=cymbalAudible(kind);}
   const float gainSmooth=float(1.-std::exp(-1./(sr*.020)));
   for(int frame=0;frame<c.numFrames;++frame){
-   const double now=start+frame*step;
-   if(run&&recStart>=0&&now>=recStart&&now<recEnd&&!recCleared){if(recMode==0)clearBank(recSlot);lengths[recSlot].store(recLength);recCleared=true;recordState.store(2);}
+   const double now=start+frame*step;performanceNow=now;
+   if(run&&recStart>=0&&now>=recStart&&now<recEnd&&!recCleared){if(recMode==0)clearBank(recSlot);markRecordedFill(recSlot);lengths[recSlot].store(recLength);recCleared=true;recordState.store(2);}
    if(run&&recStart>=0&&now>=recEnd)finishRecord();
    if(fillStart>=0&&now>=fillStart&&now<fillEnd&&recordState.load()!=1&&recordState.load()!=2)recordState.store(5);
    if(fillEnd>=0&&now>=fillEnd){fillStart=fillEnd=-1;if(recordState.load()==5||recordState.load()==4)recordState.store(0);}
 
-   while(midi<c.numMidiEvents&&c.midi[midi].sampleOffset<=frame){auto e=c.midi[midi++];if(e.isNoteOn()){int r=mapNote(e.note());lastMidiNote.store(e.note());lastMidiRole.store(r);displayPending.store(true);if(r>=0){trigger(r,e.velocity());recordInput(now,r,e.velocity());}}if(e.isAllNotesOff()){for(auto&v:voices)deactivate(v);recStart=recEnd=-1;fillStart=fillEnd=-1;cymbalFillEnd=-1;recordState.store(0);}}
-   for(int e=0;e<eventCount;++e)if(events[e].offset==frame){trigger(events[e].role,events[e].velocity,events[e].gate);if(events[e].input)recordInput(now,events[e].role,events[e].velocity);}
+   while(midi<c.numMidiEvents&&c.midi[midi].sampleOffset<=frame){auto e=c.midi[midi++];if(performanceMidi(e,now,hostCountIn))continue;if(e.isNoteOn()){int r=mapNote(e.note());lastMidiNote.store(e.note());lastMidiRole.store(r);displayPending.store(true);if(r>=0){trigger(r,e.velocity());recordInput(now,r,e.velocity());}}if(e.isAllNotesOff()){stopPerformance();for(auto&v:voices)deactivate(v);recStart=recEnd=-1;fillStart=fillEnd=-1;cymbalFillEnd=-1;recordState.store(0);}}
+   performanceFrame(now,step,run,hostCountIn);
+   for(int e=0;e<eventCount;++e)if(events[e].offset==frame&&!performanceSuppress(events[e].role,now)){trigger(events[e].role,events[e].velocity,events[e].gate);if(events[e].input)recordInput(now,events[e].role,events[e].velocity);}
    driveS+=.002f*(drive-driveS);dustS+=.002f*(dust-dustS);roomS+=.002f*(roomAmount-roomS);duckS+=.002f*(duck-duckS);
    for(int g=0;g<4;++g)mixGain[g]+=gainSmooth*(mixTarget[g]-mixGain[g]);
    float bus[8][2]{};
@@ -323,9 +332,10 @@ public:
     for(int ch=0;ch<2;++ch){float x=dry[ch]+wet[ch]*roomS*.65f;if(hpAlpha>0){high[out][ch]+=hpAlpha*(x-high[out][ch]);x-=high[out][ch];}if(std::abs(x)<1.e-20f)x=0;x*=master*modulation;if(out*2+ch<c.numOutputs)c.outputs[out*2+ch][frame]+=mpc::clamp(x,-.99f,.99f);}
    }
   }
+  if(!run&&(performanceActive.load()>=0||performanceQueued.load()>=0||capture.state.load()==1))previewPpq=end;
   if(run){previewPpq=end;lastEnd=end;if(hostRunning)lastRawEnd=rawStart+step*c.numFrames;else lastRawEnd=-1e12;}else {lastEnd=-1e12;lastRawEnd=-1e12;transportOffset=0;}
   if(recStart>=0&&end>=recEnd)finishRecord();
-  syncProxies();syncLayerUi();
+  syncPerformance();syncProxies();syncLayerUi();
   int state=recordState.load(),count=countNotes(getInt(kFillSlot)),bar=int(position.load()/4);if(state!=lastUiState||count!=lastUiCount||bar!=lastUiBar){lastUiState=state;lastUiCount=count;lastUiBar=bar;displayPending.store(true);}
  }
  // Explicit little-endian extra state. Atomics avoid races with host save queries.
@@ -341,10 +351,10 @@ public:
   put(0x47444234);for(int b=0;b<7;++b){put(baseValid[b].load()?1:0);put(baseLengths[b].load());for(auto&n:bases[b]){put(n.data.load());put(n.gate.load());}}put(grooveBaseValid.load()?1:0);for(auto&x:grooveBase){float v=x.load();uint32_t bits;std::memcpy(&bits,&v,4);put(bits);}
   put(0x47525035);for(int g=0;g<4;++g){put(partSeed[g].load());for(auto&x:partOffset[g]){float v=x.load();uint32_t bits;std::memcpy(&bits,&v,4);put(bits);}}
   const char magic[]="GDXP0001";out.insert(out.end(),magic,magic+8);auto text=[&](const std::string&s,int n){for(int j=0;j<n;++j)out.push_back(j<int(s.size())?uint8_t(s[j]):0);};int kit=getInt(kXKit);text(kit>0&&kit<=int(library.factoryKits.size())?library.factoryKits[kit-1].id:orphanKit.load()?unresolvedKit:std::string(),128);auto*pack=filteredPack();text(pack?pack->id:orphanPack.load()?unresolvedPack:std::string(),64);
-  saveLayerState(out);saveCymbalState(out);savePoolState(out);saveReverseState(out);
+  saveLayerState(out);saveCymbalState(out);savePoolState(out);saveReverseState(out);savePerformanceState(out);
  }
  void loadExtraState(const uint8_t* data,size_t size)override{
-  loadReverseState(data,size);loadPoolState(data,size);
+  bool hadPerformance=loadPerformanceState(data,size);loadReverseState(data,size);loadPoolState(data,size);
   const uint8_t*cymbalState=nullptr;if(size>=CymbalTrailerSize&&!std::memcmp(data+size-CymbalTrailerSize,"GDCY0001",8)){cymbalState=data+size-CymbalTrailerSize;size-=CymbalTrailerSize;}loadCymbalState(cymbalState);
   const uint8_t*layerState=nullptr;if(size>=LayerTrailerSize&&!std::memcmp(data+size-LayerTrailerSize,"GDLY0001",8)){layerState=data+size-LayerTrailerSize;size-=LayerTrailerSize;}
   loadLayerState(layerState);
@@ -366,14 +376,14 @@ public:
   if(hasBase&&read()==0x47444234){for(int b=0;b<7;++b){bool valid=read()!=0;int length=int(read());baseLengths[b].store(mpc::clamp(length,0,16*PPQ));for(auto&n:bases[b]){n.data.store(read());n.gate.store(mpc::clamp(read(),5u,500u));}baseValid[b].store(valid&&length>=PPQ&&length<=16*PPQ);}bool valid=read()!=0;for(int n=0;n<4;++n){uint32_t bits=read();float v;std::memcpy(&v,&bits,4);if(!std::isfinite(v)){valid=false;v=param(kSwing+n).def;}grooveBase[n].store(v);}grooveBaseValid.store(valid);}
   if(hasRules&&read()==0x47525035){for(int g=0;g<4;++g){partSeed[g].store(read());for(auto&x:partOffset[g]){uint32_t bits=read();float v;std::memcpy(&v,&bits,4);x.store(std::isfinite(v)?mpc::clamp(v,-10.f,10.f):0.f);}}}
   internal=true;if(packState){size_t n=0;while(n<128&&packState[n])++n;std::string id(reinterpret_cast<const char*>(packState),n);int kit=0;for(size_t j=0;j<library.factoryKits.size();++j)if(library.factoryKits[j].id==id)kit=int(j)+1;if(!id.empty()&&kit==0){unresolvedKit=id;orphanKit.store(true);}if(!id.empty()&&getInt(kXKit)!=kit)set(kXKit,kit);n=0;while(n<64&&packState[128+n])++n;id.assign(reinterpret_cast<const char*>(packState+128),n);int pack=0;for(size_t j=0;j<library.packs.size();++j)if(library.packs[j].id==id)pack=int(j)+1;if(!id.empty()&&pack==0){unresolvedPack=id;orphanPack.store(true);}if(!id.empty()&&getInt(kPackFilter)!=pack)set(kPackFilter,pack);}else if(getInt(kXKit)>0){int kit=0;for(size_t j=0;j<library.factoryKits.size();++j){bool same=true;for(int r=0;r<8;++r)same&=library.factoryKits[j].sounds[r]==getInt(kXSample0+r);if(same){kit=int(j)+1;break;}}set(kXKit,kit);}internal=false;
-
+  if(!hadPerformance)for(int b=0;b<4;++b)if(countNotes(b)>0)markRecordedFill(b);
  }
  // Commands are gestures, never saved musical state. Serialize idle values without
  // touching the live gates: resetting a gate here would execute a second command.
  std::vector<uint8_t> commandState;
  const std::vector<uint8_t>& internalSaveState(){
   commandState=mpc::Plugin::internalSaveState();size_t pos=12;
-  for(int i=0;i<kParamCount;++i){size_t n=commandState[pos++];pos+=n;if(i==kUnlockDice||i==kRollFill||i==kRollFx)std::fill(commandState.begin()+pos,commandState.begin()+pos+8,0);pos+=8;}
+  for(int i=0;i<kParamCount;++i){size_t n=commandState[pos++];pos+=n;if(i==kUnlockDice||i==kRollFill||i==kRollFx||performanceTransient(i)||i==kPerformLoopState||(i>=kPerformState0&&i<=kPerformState7))std::fill(commandState.begin()+pos,commandState.begin()+pos+8,0);pos+=8;}
   return commandState;
  }
  bool internalLoadState(const uint8_t* data,size_t size){if(!data||size<12||std::memcmp(data,"MPCP",4))return false;restoringHasX=false;{size_t pos=12;uint32_t count=0,version=0;for(int k=0;k<4;++k){count|=uint32_t(data[8+k])<<(8*k);version|=uint32_t(data[4+k])<<(8*k);}for(uint32_t j=0;j<count&&pos<size;++j){size_t n=data[pos++];if(n>size-pos||size-pos-n<(version>=2?8u:4u))break;if(n==4&&!std::memcmp(data+pos,"XKit",4))restoringHasX=true;pos+=n+(version>=2?8:4);}}restoring.store(true);loadGuardFrames.store(int(sr*.5));for(int i=kFactoryKit;i<kParamCount;++i)mpc::Plugin::set(i,param(i).def);factoryDirty.store(false);bool ok=mpc::Plugin::internalLoadState(data,size);set(kUnlockDice,0);set(kRollFill,0);set(kRollFx,0);if(ok){bool hasFullRhythm=false,hasRhythm=false,hasStyles=false,hasCymbals=false,hasRulePick=false;size_t pos=12;uint32_t n=0,version=0;for(int k=0;k<4;++k){n|=uint32_t(data[8+k])<<(8*k);version|=uint32_t(data[4+k])<<(8*k);}for(uint32_t j=0;j<n&&pos<size;++j){size_t len=data[pos++];if(len>size-pos||size-pos-len<(version>=2?8u:4u))break;if(len==12&&!std::memcmp(data+pos,"RulePickKick",12))hasRulePick=true;if(len==11&&!std::memcmp(data+pos,"OpenHatRule",11))hasCymbals=true;if(len==13&&!std::memcmp(data+pos,"HatRhythmFull",13))hasFullRhythm=true;if(len==9&&!std::memcmp(data+pos,"HatRhythm",9))hasRhythm=true;if(len==13&&!std::memcmp(data+pos,"RuleKickStyle",13))hasStyles=true;pos+=len+(version>=2?8:4);}if(!hasStyles){bool old=internal;internal=true;for(int g=0;g<4;++g)set(kRuleKickStyle+g,getInt(kRuleKick+g));internal=old;}if(!hasCymbals&&getInt(kRuleHatStyle)==7)set(kOpenHatRule,2);if(!hasRhythm){static const int legacy[]={0,3,6,8};set(kHatRhythm,legacy[getInt(kHatGrid)]);set(kHatRhythmPage,getInt(kHatRhythm)/8);}if(!hasFullRhythm){set(kHatRhythmFull,getInt(kHatRhythm));int old=getInt(kHatPhraseState),full=0;for(int b=0;b<3;++b)full|=((old>>(4*b))&15)<<(5*b);set(kHatPhraseFullState,full);}syncHatSelection();for(int g=0;g<4;++g)if(n<=uint32_t(kRulePickFullKick+g))layerSet(kRulePickFullKick+g,std::max(0,getInt(kRuleKickStyle+g)-1));for(int g=0;g<4;++g){if(!hasRulePick&&getInt(kRuleKickStyle+g)==0)layerSet(kDiceLock4+g,1);if(!hasRulePick){syncRuleSelector(g,true);if(!getBool(kEditor)&&!getBool(kPoolOpen)&&!getBool(kSampleBrowserOpen))layerSet(kQ5+g,getNormalised(kRulePickKick+g));}ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}}factoryDirty.store(false);soundDirty.store(0);liveDirty.store(0);
@@ -389,7 +399,7 @@ public:
  if(legacyRuleAlias(i)){ruleNotifyThread.store(uintptr_t(pthread_self()));ruleNotifyIndex.store(i);}
  notifyHostParameterChanged(i);if(legacyRuleAlias(i)){ruleNotifyIndex.store(-1);ruleNotifyThread.store(0);}}if(displayPending.exchange(false))requestDisplayUpdate();flushing.clear();}
  int countNotes(int b)const{int n=0;for(auto& v:notes[mpc::clamp(b,0,6)])if(v.valid())++n;return n;}
- int proxyTarget(int n)const{if(getBool(kPoolOpen)||getBool(kSampleBrowserOpen))return -1;static const int edit[]={kFillSlot,kFillLength,kRecMode,kCountIn,kNoteNudge,kNoteVelocity,kNoteGate,kNoteChance};return getBool(kEditor)?(n<8?edit[n]:-1):frontDiceTarget(n);}
+ int proxyTarget(int n)const{if(getBool(kPerformOpen))return n<4?performanceTarget(n):-1;if(getBool(kPoolOpen)||getBool(kSampleBrowserOpen))return -1;static const int edit[]={kFillSlot,kFillLength,kRecMode,kCountIn,kNoteNudge,kNoteVelocity,kNoteGate,kNoteChance};return getBool(kEditor)?(n<8?edit[n]:-1):frontDiceTarget(n);}
 private:
  std::vector<int>allKits;std::array<std::vector<int>,4>allSounds;int lastPackFilter=-1;std::array<std::atomic<int>,5>catalogSeen{{-1,-1,-1,-1,-1}};
  const groove::Library::Pack* filteredPack()const{int p=getInt(kPackFilter);return p>0&&p<=int(library.packs.size())?&library.packs[p-1]:nullptr;}
@@ -458,21 +468,21 @@ private:
  double tempoForStep(double step)const{return step*60*sr;}
  void queueFill(double start){if(recordState.load()==1||recordState.load()==2)return;activeFill=getInt(kFillSlot);fillStart=std::ceil((start+1e-7)/4)*4;fillEnd=fillStart+double(lengths[activeFill].load())/PPQ;recordState.store(4);}
  void recordInput(double beat,int role,int vel){if(recStart<0||beat<recStart||beat>=recEnd||!recCleared)return;baseValid[recSlot].store(false);int tick=mpc::clamp(int(std::llround((beat-recStart)*PPQ)),0,recLength-1);for(auto& n:notes[recSlot])if(!n.valid()){n.write({tick,role,vel,100,80});recorded.fetch_add(1);return;}recordState.store(6);}
- void finishRecord(){recStart=recEnd=-1;if(recordState.load()!=6)recordState.store(3);mirrorNote();}
+ void finishRecord(){markRecordedFill(recSlot);recStart=recEnd=-1;if(recordState.load()!=6)recordState.store(3);mirrorNote();}
  void deactivate(Voice& v){if(v.librarySlot>=0){library.release(v.librarySlot);v.librarySlot=-1;}v.active=false;}
- void trigger(int role,int vel,int gateMs=80){if(role>=8&&role<=10)triggerCymbal(role==8?0:role==9?1:2,vel,gateMs);else triggerLayers(role,vel,gateMs);}
+ void trigger(int role,int vel,int gateMs=80){capturePerformance(role,vel,gateMs);if(role>=8&&role<=10)triggerCymbal(role==8?0:role==9?1:2,vel,gateMs);else triggerLayers(role,vel,gateMs);}
 
  int steal=0;
  void syncProxies(){syncRuleSelectors();for(int row=0;row<8;++row){int j=getInt(kXKitPage)*8+row;bool selected=j==0?getInt(kXKit)==0:j<=int(kitItems().size())&&kitItems()[j-1]+1==getInt(kXKit);if(get(kKitRow0+row)!=(selected?1:0)){bool prev=internal;internal=true;set(kKitRow0+row,selected?1:0);internal=prev;changed[kKitRow0+row].store(true);}}syncSoundSelectors();internal=true;for(int q=0;q<5;++q){int key=q==0?kXKit:kXSoundKick+q-1,id=getInt(key),old=catalogSeen[q].load();if(old!=id){const auto&list=q==0?kitItems():soundItems(q-1);int pos=0;for(size_t j=0;j<list.size();++j)if(list[j]+1==id)pos=int(j)+1;float expected=getNormalised(kXQKit+q),value=list.empty()?0.f:float(pos)/list.size();if(getInt(key)==id&&catalogSeen[q].compare_exchange_strong(old,id)&&values_[kXQKit+q]->compare_exchange_strong(expected,value))changed[kXQKit+q].store(true);}}for(int n=0;n<16;++n){int t=proxyTarget(n);float value=t>=0?getNormalised(t):0;if(proxySeenTarget[n]!=t||proxySeenValue[n]!=value){if(getNormalised(kQ1+n)!=value){setNormalised(kQ1+n,value);changed[kQ1+n].store(true);}proxySeenTarget[n]=t;proxySeenValue[n]=value;}}for(int cell=0;cell<64;++cell){bool hit=false;for(auto& note:notes[getInt(kFillSlot)])if(note.valid()){auto e=note.read();if(e.role==gridRole(getInt(kFillGridPage),cell/16)&&e.tick/240==cell%16+getInt(kGridBar)*16){hit=true;break;}}if(get(kGrid0+cell)!=(hit?1:0)){set(kGrid0+cell,hit?1:0);changed[kGrid0+cell].store(true);}}
   set(kStatus,0);set(kRecordedCount,0);set(kPosition,0);internal=false;}
  void mirrorNote(bool preserve=false){int slot=getInt(kFillSlot),n=getInt(kNoteSelect);if(!notes[slot][n].valid())return;auto e=notes[slot][n].read();internal=true;float nudge=float((e.tick-std::round(e.tick/240.)*240.)/PPQ*60000./currentTempo.load());if(!preserve||getInt(kNoteNudge)!=int(std::lround(nudge)))set(kNoteNudge,nudge);if(!preserve||getInt(kNoteVelocity)!=e.velocity)set(kNoteVelocity,e.velocity);if(!preserve||getInt(kNoteGate)!=e.gate)set(kNoteGate,e.gate);if(!preserve||getInt(kNoteChance)!=e.chance)set(kNoteChance,e.chance);internal=false;}
- void editNote(unsigned dirty){int slot=getInt(kFillSlot);baseValid[slot].store(false);int i=getInt(kNoteSelect);if(!notes[slot][i].valid())return;auto n=notes[slot][i].read();if(dirty&1)n.tick=mpc::clamp(int(std::round(n.tick/240.))*240+int(std::round(get(kNoteNudge)*currentTempo.load()/60000.*PPQ)),0,lengths[slot].load()-1);if(dirty&2)n.velocity=getInt(kNoteVelocity);if(dirty&4)n.gate=getInt(kNoteGate);if(dirty&8)n.chance=getInt(kNoteChance);notes[slot][i].write(n);}
+ void editNote(unsigned dirty){int slot=getInt(kFillSlot);markRecordedFill(slot);baseValid[slot].store(false);int i=getInt(kNoteSelect);if(!notes[slot][i].valid())return;auto n=notes[slot][i].read();layerSet(performanceLock(4+slot),1);if(dirty&1)n.tick=mpc::clamp(int(std::round(n.tick/240.))*240+int(std::round(get(kNoteNudge)*currentTempo.load()/60000.*PPQ)),0,lengths[slot].load()-1);if(dirty&2)n.velocity=getInt(kNoteVelocity);if(dirty&4)n.gate=getInt(kNoteGate);if(dirty&8)n.chance=getInt(kNoteChance);notes[slot][i].write(n);}
  bool kitAudioParam(int i)const{if(i>=kReverse0&&i<=kReverse16)return true;if(i>=kCym0Sample&&i<=kCym2Invert)return true;if(i>=kRoleOn0&&i<=kL5Invert)return true;if(canonical(i)!=i)return kitAudioParam(canonical(i));if(i>=kXQKit&&i<=kXQPerc||i>=kXSoundKick&&i<=kXSoundPerc||i==kXKit||i==kKit||i>=kDrive&&i<=kDuck||i>=kLowCut&&i<=kModDepth||i>=kXSample0&&i<=kXSample7)return true;for(int r=0;r<8;++r)if(i>=kLevel0+r*9&&i<=kChoke0+r*9)return true;return false;}
  void queueAudioUi(){for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)changed[i].store(true);displayPending.store(true);}
  void factoryValues(const groove::Library::FactoryKit& kit,std::vector<float>& values){for(int kind=0;kind<3;++kind){values[kCym0Level+kind*LayerFields]=kit.parts[6][0];values[kCym0Tune+kind*LayerFields]=kit.parts[6][1];values[kCym0Decay+kind*LayerFields]=std::max(800.f,kit.parts[6][2]);}for(int r=0;r<8;++r){values[kXSample0+r]=kit.sounds[r];int keys[]={kLevel0,kTune0,kDecay0,kPan0,kChoke0};for(int n=0;n<5;++n)values[keys[n]+r*9]=kit.parts[r][n];}int fx[]={kDrive,kDust,kRoom,kDuck,kLowCut,kModRate,kModDepth};for(int n=0;n<7;++n)values[fx[n]]=kit.fx[n];}
  bool applyFactory(int index,bool resetLayers=true){if(index<=0)return true;if(index>int(library.factoryKits.size())){diceResult.store(2);displayPending.store(true);return false;}auto&kit=library.factoryKits[index-1];if(resetLayers){for(int key=kReverse0;key<=kReverse16;++key)layerSet(key,0);for(int key=kCym0Sample;key<=kCym2Invert;++key)layerSet(key,param(key).def);for(auto&m:cymbalMissing)m.store(0);for(int kind=0;kind<3;++kind){layerSet(kCym0Level+kind*LayerFields,kit.parts[6][0]);layerSet(kCym0Tune+kind*LayerFields,kit.parts[6][1]);layerSet(kCym0Decay+kind*LayerFields,std::max(800.f,kit.parts[6][2]));}for(int key=kRoleOn0;key<=kL5Invert;++key)layerSet(key,param(key).def);for(auto&missing:layerMissing)missing.store(0);}for(int r=0;r<8;++r){if(!resetLayers&&getBool(kRoleLock0+r))continue;if(diceAllows(kXSample0+r)){set(kXSample0+r,kit.sounds[r]);missingSample[r]=false;}int keys[]={kLevel0,kTune0,kDecay0,kPan0,kChoke0};for(int n=0;n<5;++n)set(keys[n]+r*9,kit.parts[r][n]);}int fx[]={kDrive,kDust,kRoom,kDuck,kLowCut,kModRate,kModDepth};for(int n=0;n<7;++n)set(fx[n],kit.fx[n]);diceResult.store(0);queueAudioUi();return true;}
- void snapshotUndo(){undoRandom=randomState.load();undoKeep=keep.load();for(int g=0;g<4;++g){undoPartSeed[g]=partSeed[g].load();for(int n=0;n<4;++n)undoOffset[g][n]=partOffset[g][n].load();}int k=0;for(int b=0;b<7;++b){undoNotes[k++]=lengths[b].load();for(auto&n:notes[b]){undoNotes[k++]=n.data.load();undoNotes[k++]=n.gate.load();}}for(int i=0;i<kParamCount;++i)undoValues[i]=getNormalised(i);haveUndo=true;}
- void restoreUndo(){randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
+ void snapshotUndo(){snapshotPerformanceUndo();undoRandom=randomState.load();undoKeep=keep.load();for(int g=0;g<4;++g){undoPartSeed[g]=partSeed[g].load();for(int n=0;n<4;++n)undoOffset[g][n]=partOffset[g][n].load();}int k=0;for(int b=0;b<7;++b){undoNotes[k++]=lengths[b].load();for(auto&n:notes[b]){undoNotes[k++]=n.data.load();undoNotes[k++]=n.gate.load();}}for(int i=0;i<kParamCount;++i)undoValues[i]=getNormalised(i);haveUndo=true;}
+ void restoreUndo(){restorePerformanceUndo();randomState.store(undoRandom);keep.store(undoKeep);for(int g=0;g<4;++g){partSeed[g].store(undoPartSeed[g]);for(int n=0;n<4;++n)partOffset[g][n].store(undoOffset[g][n]);}int k=0;for(int b=0;b<7;++b){lengths[b].store(undoNotes[k++]);for(auto&n:notes[b]){n.data.store(undoNotes[k++]);n.gate.store(undoNotes[k++]);}}internal=true;for(int i=0;i<kParamCount;++i)if(isFrontDiceParameter(i)||i>=kRuleKickStyle&&i<=kRulePercStyle||kitAudioParam(i)||i>=kXSoundKick&&i<=kXSoundPerc||i>=kSwing&&i<=kDuck||i==kXBeat||i==kXGroove||i==kPhraseState||i==kHatPhraseState||i==kHatPhraseFullState)setNormalised(i,undoValues[i]);for(int g=0;g<4;++g)set(kRuleKick+g,ruleIntensity(ruleStyle(g)));syncHatSelection();internal=false;for(int g=0;g<4;++g){lastRuleStyle[g].store(ruleStyle(g));ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}liveDirty.store(0);lastKit=getInt(kKit);factoryDirty.store(false);mirrorNote();queueAudioUi();}
  void roll(){DiceWriteScope diceScope;float amt=get(kRandomAmt)*.01f;internal=true;
   diceRolls.fetch_add(1);diceResult.store(0);if(amt<=0){diceResult.store(1);internal=false;displayPending.store(true);return;}
   keep=false;
@@ -485,7 +495,7 @@ private:
   // Global Dice always regenerates the main loop. Recorded fills and FX are owned by separate commands.
   if(!getBool(kPatternLock)&&!rhythmLocked){for(int g=0;g<4;++g)if(getInt(kRuleKick+g)>0)partSeed[g].store(random());refreshMain(15);}
   else if(frontDirty&&!getBool(kPatternLock))refreshMain(frontDirty);
-  internal=false;queueAudioUi();
+  regeneratePerformance();internal=false;queueAudioUi();
  }
  bool soundMatches(int g,const groove::Library::SoundChoice&c)const{int count=g==3?4:g==2?2:1;for(int j=0;j<count;++j){int role=g==3?(j==0?7:j+3):g==2?2+j:g;if(c.sounds[j]!=getInt(kXSample0+role))return false;}return true;}
  void syncSoundSelectors(){internal=true;for(int g=0;g<4;++g){if(soundDirty.load()&(1u<<g))continue;float expected=getNormalised(kXSoundKick+g);int index=0,old=int(std::lround(param(kXSoundKick+g).toPlain(expected)));if(old>0&&old<=int(library.soundPools[g].size())&&soundMatches(g,library.soundPools[g][old-1]))continue;for(size_t j=0;j<library.soundPools[g].size();++j)if(soundMatches(g,library.soundPools[g][j])){index=int(j)+1;break;}if(old!=index&&values_[kXSoundKick+g]->compare_exchange_strong(expected,param(kXSoundKick+g).toNormalised(float(index))))changed[kXSoundKick+g].store(true);mirrorLegacy(kXSoundKick+g);}internal=false;}
@@ -507,7 +517,7 @@ private:
  int phraseGrid(int b)const{int rhythm=phraseRhythm(b);if(rhythm>=0){if(rhythm%3)return 3;static const int grids[]={0,1,2,2,2,2,2,2};return grids[rhythm/3];}return std::min(4,(getInt(kPhraseState)>>(3+3*(b-4)))&7);}
  int phraseOrigin(int b)const{return(getInt(kPhraseState)>>(12+2*(b-4)))&3;}
  #include "OneBarLoop.inc"
- void mutate(int b,float amount){
+ void mutate(int b,float amount){if(b<4&&amount>0)markRecordedFill(b);
   if(amount<=0||b<0||b>=4)return;
   bool allLocked=true;for(int g=0;g<4;++g)if(getInt(kRuleKick+g)>0)allLocked=false;if(allLocked)return;
   std::array<Note,MaxNotes>locked{};int lockedCount=0;for(auto&c:notes[b])if(c.valid()){auto n=c.read();if(getInt(kRuleKick+ruleGroup(n.role))==0)locked[lockedCount++]=n;}
@@ -526,7 +536,7 @@ private:
  void generateSound(int sample){auto& s=sounds[sample];s.sampleRate=44100;s.channels.resize(1);auto& x=s.channels[0];int role=sample/8;x.resize(role==3?22050:11025);uint32_t seed=123+sample;double phase=0;for(size_t i=0;i<x.size();++i){seed=1664525*seed+1013904223;float noise=float(int32_t(seed))/2147483648.f;double t=i/44100.;phase+=6.283185307*(role==0?45+90*std::exp(-t*60):180)/44100.;x[i]=float((role==0?std::sin(phase):role==1?.7*noise+.3*std::sin(phase):noise)*std::exp(-t*(role==3?12:role==0?20:role==1?35:90))*.6);}}
 };
 #ifndef GROOVE_DICE_TEST
-static VstIntPtr grooveDispatch(AEffect*e,VstInt32 op,VstInt32 index,VstIntPtr value,void*ptr,float opt){auto*p=static_cast<GrooveDice*>(e->object);if(op==effOpen){auto result=mpc::detail::dispatcher(e,op,index,value,ptr,opt);p->requestHostIdle();return result;}if(op==effSetProgram){p->selectFactoryProgram(int(value));return 0;}if(op==effGetProgram)return p->activeFactoryProgram();if(op==effGetProgramName){mpc::copyString(static_cast<char*>(ptr),kVstMaxProgNameLen+1,p->programName(p->activeFactoryProgram()));return 0;}if(op==effGetChunk){if(!ptr)return 0;const auto&state=p->internalSaveState();*static_cast<void**>(ptr)=const_cast<uint8_t*>(state.data());return VstIntPtr(state.size());}if(op==effSetChunk)return p->internalLoadState(static_cast<const uint8_t*>(ptr),size_t(value))?1:0;if(op==effIdle_Deprecated||op==effEditIdle){p->flushHostUpdates();return 1;}if(op==effGetParamName&&p->isRuleSelector(index)){mpc::copyString(static_cast<char*>(ptr),64,p->param(kRuleKickStyle+(p->isFullRuleSelector(index)?index-kRulePickFullKick:index-kRulePickKick)).name.c_str());return 0;}if(op==effGetParamName&&index>=kSoundQ0&&index<=kSoundQ15){p->flushFromValueRead();int t=p->soundTarget(index-kSoundQ0);mpc::copyString(static_cast<char*>(ptr),64,t>=0?p->param(p->isRuleSelector(t)?kRuleKickStyle+(p->isFullRuleSelector(t)?t-kRulePickFullKick:t-kRulePickKick):t).name.c_str():"Unused");return 0;}if(op==effGetParamName&&index>=kQ1&&index<=kQ16){p->flushFromValueRead();int t=p->proxyTarget(index-kQ1);mpc::copyString(static_cast<char*>(ptr),64,t>=0?p->param(p->isRuleSelector(t)?kRuleKickStyle+(p->isFullRuleSelector(t)?t-kRulePickFullKick:t-kRulePickKick):t).name.c_str():"Unused");return 0;}if(op==effGetParamDisplay||op==effGetParamName)p->flushFromValueRead();return mpc::detail::dispatcher(e,op,index,value,ptr,opt);}
+static VstIntPtr grooveDispatch(AEffect*e,VstInt32 op,VstInt32 index,VstIntPtr value,void*ptr,float opt){auto*p=static_cast<GrooveDice*>(e->object);if(op==effOpen){auto result=mpc::detail::dispatcher(e,op,index,value,ptr,opt);p->requestHostIdle();return result;}if(op==effSetProgram){p->selectFactoryProgram(int(value));return 0;}if(op==effGetProgram)return p->activeFactoryProgram();if(op==effGetProgramName){mpc::copyString(static_cast<char*>(ptr),kVstMaxProgNameLen+1,p->programName(p->activeFactoryProgram()));return 0;}if(op==effGetChunk){if(!ptr)return 0;const auto&state=p->internalSaveState();*static_cast<void**>(ptr)=const_cast<uint8_t*>(state.data());return VstIntPtr(state.size());}if(op==effSetChunk)return p->internalLoadState(static_cast<const uint8_t*>(ptr),size_t(value))?1:0;if(op==effIdle_Deprecated||op==effEditIdle){p->flushHostUpdates();return 1;}if(op==effGetParamName&&index>=kPerformQ0&&index<=kPerformQ3){static const char*names[]={"Rate","Velocity","Humanize","Length"};mpc::copyString(static_cast<char*>(ptr),64,names[index-kPerformQ0]);return 0;}if(op==effGetParamName&&p->isRuleSelector(index)){mpc::copyString(static_cast<char*>(ptr),64,p->param(kRuleKickStyle+(p->isFullRuleSelector(index)?index-kRulePickFullKick:index-kRulePickKick)).name.c_str());return 0;}if(op==effGetParamName&&index>=kSoundQ0&&index<=kSoundQ15){p->flushFromValueRead();int t=p->soundTarget(index-kSoundQ0);mpc::copyString(static_cast<char*>(ptr),64,t>=0?p->param(p->isRuleSelector(t)?kRuleKickStyle+(p->isFullRuleSelector(t)?t-kRulePickFullKick:t-kRulePickKick):t).name.c_str():"Unused");return 0;}if(op==effGetParamName&&index>=kQ1&&index<=kQ16){p->flushFromValueRead();int t=p->proxyTarget(index-kQ1);mpc::copyString(static_cast<char*>(ptr),64,t>=0?p->param(p->isRuleSelector(t)?kRuleKickStyle+(p->isFullRuleSelector(t)?t-kRulePickFullKick:t-kRulePickKick):t).name.c_str():"Unused");return 0;}if(op==effGetParamDisplay||op==effGetParamName)p->flushFromValueRead();return mpc::detail::dispatcher(e,op,index,value,ptr,opt);}
 static float grooveGet(AEffect*e,VstInt32 index){static_cast<GrooveDice*>(e->object)->flushFromValueRead();return mpc::detail::getParameter(e,index);}
 extern "C" MPC_EXPORT AEffect* VSTPluginMain(audioMasterCallback host){if(host&&host(nullptr,audioMasterVersion,0,0,nullptr,0)==0)return nullptr;auto*e=mpc::detail::createEffect(new GrooveDice(),host);if(e){e->dispatcher=&grooveDispatch;e->getParameter=&grooveGet;}return e;}
 #if defined(__APPLE__)

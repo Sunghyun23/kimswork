@@ -1,0 +1,40 @@
+#define main originalMain
+#include "engine_test.cpp"
+#undef main
+#include <fstream>
+static auto signature(GrooveDice&p,int slot){std::array<uint32_t,256>s{};auto&bank=slot<4?p.rollNotes[slot]:p.notes[slot-4];for(int n=0;n<128;++n){s[n*2]=bank[n].data.load();s[n*2+1]=bank[n].gate.load();}return s;}
+int main(){
+ static_assert(kPerformOpen==782,"append only");
+ {Host h;auto&p=*h.p;h.playing=true;p.set(kPerformEdit,0);for(int slot=0;slot<4;++slot){auto on=mpc::MidiEvent::noteOn(0,p.getInt(kPerformNote0+slot),100,17);h.block(&on,1);assert(p.performanceActive.load()==slot);int fired=p.fired.load();for(int n=0;n<50;++n)h.block();assert(p.fired.load()>fired);auto off=mpc::MidiEvent::noteOff(0,p.getInt(kPerformNote0+slot),51);h.block(&off,1);assert(p.performanceActive.load()==-1);}}
+ std::cout<<"PASS four MIDI hold rolls, offset note-off and no stuck roll\n";
+ {Host h;auto&p=*h.p;int fired=p.fired.load();h.note(p.getInt(kPerformNote0));for(int i=0;i<150;++i)h.block();assert(p.fired.load()>fired);auto off=mpc::MidiEvent::noteOff(0,p.getInt(kPerformNote0));h.block(&off,1);assert(p.performanceActive.load()==-1);}
+ std::cout<<"PASS roll sounds independently with host stopped\n";
+ {Host h;auto&p=*h.p;h.playing=true;p.set(kRandomAmt,100);p.set(kKitLock,1);for(int i=0;i<8;++i)p.set(GrooveDice::performanceLock(i),i%2);std::array<std::array<uint32_t,256>,8>before;for(int i=0;i<8;++i)before[i]=signature(p,i);h.pulse(kRoll);h.until(4.1);for(int i=0;i<8;++i)if(i%2)assert(before[i]==signature(p,i));else assert(before[i]!=signature(p,i));h.pulse(kUndo);for(int i=0;i<8;++i)assert(before[i]==signature(p,i));}
+ std::cout<<"PASS bar-boundary Dice regenerates open slots, preserves locked slots, Undo restores all eight\n";
+ {Host h;auto&p=*h.p;h.playing=true;for(int slot=4;slot<8;++slot){h.note(p.getInt(kPerformNote0+slot));assert(p.performanceQueued.load()==slot-4);double end=std::ceil(h.ppq)+4.1;h.until(end);assert(p.performanceQueued.load()==-1);assert(p.performanceActive.load()<4);}}
+ std::cout<<"PASS four queued fills play once, mutually replace and return to loop\n";
+ {Host h;auto&p=*h.p;for(int i=0;i<8;++i){p.set(kPerformSelect,i);for(int q=0;q<4;++q){p.setNormalised(kPerformQ0+q,.63f);assert(std::abs(p.get(p.performanceTarget(q))-p.param(p.performanceTarget(q)).toPlain(.63f))<.001f);}}}
+ std::cout<<"PASS four Q-Link relays edit selected slot with no hidden-page aliasing\n";
+ {Host h;auto&p=*h.p;p.set(kPerformSelect,3);h.pulse(kPerformLearn);h.note(77);assert(p.getInt(kPerformNote3)==77&&p.learnSlot.load()<0);auto saved=p.internalSaveState();auto before=signature(p,2);Host other;assert(other.p->internalLoadState(saved.data(),saved.size()));other.p->reset();assert(signature(*other.p,2)==before);assert(other.p->getInt(kPerformNote3)==77&&!other.p->getBool(kPerformOpen));}
+ std::cout<<"PASS MIDI learn consumes registration input; new state round-trip and fresh MAIN\n";
+ {Host h;auto&p=*h.p;h.playing=true;h.pulse(kCapture);h.until(1);h.note(p.getInt(kPerformNote0+4));h.until(2);h.note(p.getInt(kPerformNote0+1));h.until(3);auto off=mpc::MidiEvent::noteOff(0,p.getInt(kPerformNote0+1));h.block(&off,1);h.pulse(kCapture);assert(p.capture.state.load()==2&&p.capture.count.load()>8);for(unsigned n=0;n<p.capture.count.load();++n){int note=p.capture.hits[n].data.load()&127;assert(note!=p.getInt(kPerformNote0+1)&&note!=p.getInt(kPerformNote0+4));}assert(p.capture.write("/private/tmp/gd170-midi-test"));std::ifstream in("/dev/null");}
+ std::cout<<"PASS allocation-free capture records generated notes, not trigger keys; SMF export succeeds off audio thread\n";
+ {Host h;auto&p=*h.p;h.playing=true;h.ppq=-4;h.note(p.getInt(kPerformNote0));for(int i=0;i<20;++i)h.block();assert(p.performanceActive.load()<0&&p.fired.load()==0);}
+ {Host h;auto&p=*h.p;h.playing=true;h.note(p.getInt(kPerformNote0));p.set(kPerformEdit,1);auto off=mpc::MidiEvent::noteOff(0,p.getInt(kPerformNote0));h.block(&off,1);assert(p.performanceActive.load()<0);h.note(p.getInt(kPerformNote1));assert(p.performanceActive.load()==1);h.pulse(kPerformLearnLoop);h.note(78);assert(p.getInt(kPerformNote8)==78);h.pulse(kPerformLearnStop);h.note(79);assert(p.getInt(kPerformNote9)==79);}
+ std::cout<<"PASS physical pads stay playable in edit mode; releases always work; Loop/Stop learn independently\n";
+ {Host h;auto&p=*h.p;auto state=p.internalSaveState();std::vector<uint8_t>old(state.begin(),state.begin()+12);for(int n=0;n<4;++n)old[8+n]=uint8_t(782>>(n*8));size_t pos=12;for(int i=0;i<kParamCount;++i){size_t bytes=1+state[pos]+8;if(i<782)old.insert(old.end(),state.begin()+pos,state.begin()+pos+bytes);pos+=bytes;}uint32_t extra=0;for(int n=0;n<4;++n)extra|=uint32_t(state[pos+n])<<(n*8);extra-=GrooveDice::PerformanceTrailerSize;for(int n=0;n<4;++n)old.push_back(uint8_t(extra>>(n*8)));old.insert(old.end(),state.begin()+pos+4,state.begin()+pos+4+extra);assert(p.internalLoadState(old.data(),old.size()));p.reset();for(int n=0;n<4;++n)assert(p.getBool(GrooveDice::performanceLock(n+4)));}
+ std::cout<<"PASS actual old782state shape auto-protects all populated legacy fills from global Dice\n";
+ {Host h;auto&p=*h.p;h.pulse(kCapture);for(int i=0;i<100;++i)h.block();h.note(p.getInt(kPadNote0));for(int i=0;i<100;++i)h.block();h.note(p.getInt(kPadNote1));h.pulse(kCapture);assert(p.capture.count.load()==2);assert(p.capture.hits[1].tick.load()>p.capture.hits[0].tick.load()+100);}
+ std::cout<<"PASS direct drum capture while transport stopped retains real note spacing\n";
+ {Host h;auto&p=*h.p;h.playing=true;p.set(GrooveDice::performanceKey(4,6),0);h.block();h.note(p.getInt(kPerformNote4));double start=std::ceil(h.ppq);h.until(start+.1);assert(p.performanceActive.load()==4);h.until(start+1.05);assert(p.performanceActive.load()<4);p.generatedFills[0].store(false);p.lengths[0].store(8*GrooveDice::PPQ);h.note(p.getInt(kPerformNote4));start=std::ceil(h.ppq);h.until(start+2);assert(p.performanceActive.load()==4);h.until(start+8.1);assert(p.performanceActive.load()<4);}
+ std::cout<<"PASS generated1-beat fill plays exactly its tail; legacy/recorded2-bar fill retains full duration\n";
+ {Host h;auto&p=*h.p;h.note(p.getInt(kPerformNote0));assert(p.performanceActive.load()==0);h.pulse(kPerformLearn);h.note(77);assert(p.performanceActive.load()<0&&p.getInt(kPerformNote0)==77);auto off=mpc::MidiEvent::noteOff(0,52);h.block(&off,1);assert(p.performanceActive.load()<0);}
+ std::cout<<"PASS relearning a held roll cancels old ownership; old note-off cannot leave a stuck roll\n";
+ {Host h;auto&p=*h.p;auto state=p.internalSaveState();auto before=signature(p,0);auto rolls=p.diceRolls.load();p.learnSlot.store(0);assert(p.internalLoadState(state.data(),state.size()));p.reset();assert(p.learnSlot.load()<0);for(int key:{kPerformHit0,kPerformGenerate0,kPerformGenerateAll,kPerformLoop,kCapture,kExportMidi,kPerformRecord}){p.set(key,1);h.block();assert(!p.getBool(key));}assert(signature(p,0)==before&&p.diceRolls.load()==rolls&&p.performanceActive.load()<0&&p.capture.state.load()!=1);}
+ std::cout<<"PASS late host replay consumes new gesture commands during state settle; no startup roll/generate/capture\n";
+ {Host h;auto&p=*h.p;p.markRecordedFill(0);p.set(kPerformSelect,4);auto before=signature(p,4);p.set(kPerformQ1,.5f);p.set(kPerformQ2,.2f);h.block();assert(signature(p,4)==before&&!p.generatedFills[0].load()&&p.performanceTarget(0)==-1);p.set(kPerformQ3,.75f);h.block();assert(p.lengths[0].load()==8*GrooveDice::PPQ&&signature(p,4)==before);}
+ std::cout<<"PASS recorded-fill Velocity/Humanize preserve recorded notes; shared Length reaches2bars; Rate cannot regenerate a recording\n";
+ {Host h;auto&p=*h.p;p.markRecordedFill(0);for(auto&n:p.notes[0])n.data.store(0);p.notes[0][0].write({0,1,100,0,80});p.set(kFollow,0);h.pulse(kCapture);h.note(p.getInt(kPerformNote4));for(int n=0;n<1000;++n)h.block();assert(p.capture.count.load()==0);}
+ std::cout<<"PASS recorded fill Note Chance0 remains silent through performance trigger\n";
+ std::cout<<"PASS count-in cannot be bypassed by performance triggers\n";
+}

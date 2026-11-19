@@ -56,7 +56,7 @@ def button(text,key,b,index=1,count=1,kind='cream',toggle=False):
  if key=='Roll':
   put(get(parts[1],'bounds'),'bounds',f'52 0 {w-68} {h}');parts.append(image('dice-icon.png',f'18 {(h-32)//2} 48 32'))
  if toggle:
-  if key in ('Preview','Follow','KitLock','PatternLock','Separate','SoundDetails','SoundInvert','CymbalView','SampleBrowserOpen','FillGridPage','PoolOpen')or key.startswith(('SoundOn','SoundSolo','SoundLock','SoundRev','SoundPolarity','DiceLock','DiceValueLock','SoundValueLock','FillDiceLock')):
+  if key in ('Preview','Follow','KitLock','PatternLock','Separate','SoundDetails','SoundInvert','CymbalView','SampleBrowserOpen','FillGridPage','PoolOpen','PerformEdit')or key.startswith(('SoundOn','SoundSolo','SoundLock','SoundRev','SoundPolarity','DiceLock','DiceValueLock','SoundValueLock','FillDiceLock')):
    parts.append(g.entry('caption toggle hit','Button',g.button_data('hit.png','hit.png',1,1),f'0 0 {w} {h}','No','Show','Always',remap=[('Data',H(key))]));define('Btn'+str(counter),parts);return instance('Btn'+str(counter),b)
   # Independent UI-local press gate: the continuous surface owns release.
   # The engine command still toggles exactly once on Mouse Down (never on release).
@@ -137,7 +137,7 @@ main.append(conditional(label('HATS REST ON RIDE','1036 279 216 22',16,'ff6a4930
 define('SelectPoolButton',[g.entry('selected pool','Button',g.button_data(art(192,40,'orange'),art(192,40,'cream'),2,3),'0 0 192 40','No','Show','Always',remap=[('Data',H('DicePool'))]),label('SELECT KITS','0 0 192 40',22)], [g.action('Mouse Down','Toggle Switch',H('PoolOpen'),'')])
 main +=[label('SOUNDS','16 420 88 60',17,'fff7e9c7'),button('<','KitPrev','108 420 48 60',toggle=True),value('XKit','164 420 252 60'),button('>','KitNext','424 420 48 60',toggle=True),button('LOCK KIT','KitLock','484 420 130 60',toggle=True),button('<','PackPrev','626 420 48 60',toggle=True),label('','682 420 290 60',21,'fff7e9c7','PackInfo'),button('>','PackNext','980 420 48 60',toggle=True),button('SAVE KIT','SaveKit','1040 420 224 60',kind='dark',toggle=True),
 button('UNLOCK ALL','UnlockDice','16 488 128 60',toggle=True),button('ROLL DICE','Roll','152 488 220 60',kind='orange',toggle=True),label('USE SOUNDS FROM','384 484 560 22',17,'fff7e9c7'),button('THIS PACK','DicePool','384 508 176 40',0,3),button('ALL PACKS','DicePool','568 508 176 40',1,3),instance('SelectPoolButton','752 508 192 40'),button('UNDO','Undo','956 488 112 60',toggle=True),button('LOCK PATTERN','PatternLock','1080 488 184 60',toggle=True),
-label('PLAY','16 556 88 60',17,'fff7e9c7'),button('MPC SYNC','Follow','108 556 156 60',toggle=True),button('PLAY LOOP','Preview','272 556 168 60',toggle=True),value('FillSlot','448 556 72 60'),button('PLAY FILL','Trigger','528 556 156 60',kind='orange',toggle=True),button('EDIT FILL','Editor','692 556 176 60',toggle=True),label('','880 556 384 60',20,'fff7e9c7','ActionInfo')]
+label('PLAY','16 556 88 60',17,'fff7e9c7'),button('MPC SYNC','Follow','108 556 156 60',toggle=True),button('PLAY LOOP','Preview','272 556 168 60',toggle=True),value('FillSlot','448 556 72 60'),button('PLAY FILL','Trigger','528 556 156 60',kind='orange',toggle=True),button('PERFORM','PerformOpen','692 556 176 60',toggle=True),label('','880 556 384 60',20,'fff7e9c7','ActionInfo')]
 
 
 # Fill editor is an engine-backed context panel. Fixed SCREEN relay params map to its real parameters.
@@ -160,6 +160,10 @@ for row in range(4):
 editor +=[button('MAIN','Editor','16 520 176 42',index=0,count=2,toggle=True),button('REC FILL','Record','202 520 216 42',kind='red',toggle=True),button('AUDITION','Trigger','428 520 180 42',kind='orange',toggle=True),button('CANCEL','Cancel','618 520 130 42',toggle=True),button('DELETE','NoteDelete','758 520 130 42',toggle=True),button('UNDO','Undo','898 520 110 42',toggle=True),label('','1018 520 246 42',25,'fff5e5c3',key='Status')]+[button('ROLL FILL','RollFill','16 570 212 48',kind='orange',toggle=True),image(art(1024,48,'dark'),'240 570 1024 48'),label('','252 570 1000 48',23,'fff7e9c7','ActionInfo')]
 define('GDMain',main);define('GDFill',editor,modal=True)
 mainRoot=[instance('GDMain',invalid=['IndexedEnabling/0/2/'+H('Editor')]),instance('GDFill',invalid=['IndexedEnabling/1/2/'+H('Editor')])]
+from performance_skin import build_performance_skin
+performance=build_performance_skin(g,O,keys,get,put,H,label,image,define,instance,button,art,knob,conditional,base,defs)
+define('GDPerformance',performance,modal=True)
+mainRoot.append(instance('GDPerformance',invalid=['IndexedEnabling/1/2/'+H('PerformOpen')]))
 put(tabs[0],'componentDefinition',g.component_definition([],mainRoot,'ffeed9b3'));put(tabs[0],'qlinkBoundsData',[group_guide(x,y)for _,_,x,y in groups])
 # Retain native first-key FILL fallback, with direct fixed mapping; main editor relay works without invented tab actions.
 put(tabs[1],'fnKeyIndex',0);put(tabs[1],'fnKeySubIndex',1);put(tabs[1],'componentDefinition',g.component_definition([],editor,'ffeed9b3'));put(tabs[1],'qlinkBoundsData',[group_guide(16,186),group_guide(650,186),'0 0 0 0','0 0 0 0'])
@@ -179,7 +183,7 @@ for ti,tab in enumerate(tabs[2:],2):
  if page.name=='GROOVE':
   children +=[label('HAT RHYTHM · LIVE','16 526 664 28',21,'fff5e5c3'),value('HatRhythmFull','16 566 664 50')]
  if page.name=='KITS':children +=[value('KitDiceMode','16 446 600 50'),button('<','PackPrev','650 526 54 54',toggle=True),label('','710 526 494 54',21,'fff7e8c7','PackInfo'),button('>','PackNext','1210 526 54 54',toggle=True),button('SAVE KIT','SaveKit','16 526 300 54',kind='orange',toggle=True),button('LOAD KIT','LoadKit','334 526 300 54',toggle=True)]
- if page.name=='ROUTING':children.append(button('SEPARATE OUT','Separate','1000 574 264 42',toggle=True))
+ if page.name=='ROUTING':children +=[button('LEARN LOOP','PerformLearnLoop','16 574 220 42',toggle=True),button('LEARN STOP','PerformLearnStop','248 574 220 42',toggle=True),label('','480 574 506 42',19,'fff7e9c7','PerformPadInfo'),button('SEPARATE OUT','Separate','1000 574 264 42',toggle=True)]
  put(tab,'componentDefinition',g.component_definition([],children,'ffeed9b3'));put(tab,'qlinkBoundsData',bounds)
 
 from sound_skin import build_sound_skin
@@ -281,5 +285,12 @@ assignment={13+group-4*knob:keys[groups[group][1][knob]]for group in range(4)for
 put(ql,'Program Mode Q-Links',O(*[('Q-Link '+str(n),assignment[n])for n in range(1,17)]))
 # EDIT/REC is the single context panel onMAIN; no duplicate nativeFILL subtab.
 tabs.pop(1);entries.pop(1)
+# PERFORM shares the first physical function key with MAIN; other five keys stay fixed.
+perfTab=copy.deepcopy(tabs[0]);put(perfTab,'tabName','PERFORM');put(perfTab,'fnKeyIndex',0);put(perfTab,'fnKeySubIndex',1);nativePerformance=build_performance_skin(g,O,keys,get,put,H,label,image,define,instance,button,art,knob,conditional,base,defs,native=True)
+for entry in nativePerformance[:]:
+ typ=get(get(entry,'componentData'),'type');definition=next((get(d,'value')for d in defs if get(d,'key')==typ),None)
+ if definition and any(get(a,'handleName') in (H('PerformOpen'),H('Editor'),H('PerformEditFill')) for a in get(definition,'actions')):nativePerformance.remove(entry)
+put(perfTab,'componentDefinition',g.component_definition([],nativePerformance,'ffeed9b3'));put(perfTab,'qlinkBoundsData',['804 188 460 254','0 0 0 0','0 0 0 0','0 0 0 0']);tabs.insert(1,perfTab)
+perfQ=copy.deepcopy(entries[0]);put(perfQ,'Tab',1);put(perfQ,'SubTab',2);put(perfQ,'Q-Links',O(*[('Q-Link '+str(n),keys['PerformQ'+str((13-n)//4)] if n in (13,9,5,1) else -1)for n in range(1,17)]));entries.insert(1,perfQ)
 (out/'TUI.json').write_text(g.dump_json(tui)+'\n');(out/'Q-Links.json').write_text(g.dump_json(ql)+'\n')
 print('Groove Dice native skin compiled: MAIN + fill editor,6function keys,SCREEN relay + independent Program maps')

@@ -1,0 +1,21 @@
+{
+  "version": "1.7.0",
+  "sourceZip": "groove-dice-1.7.0-mpc.zip",
+  "sourceSha256": "974039d18d585fd539e6d1df3864ae23ec4145c6754fc65d683ad9e617fb21f4",
+  "user_data": [
+    "Content/Expansions",
+    "Content/Captures"
+  ],
+  "packages": [
+    {
+      "file": "groove-dice-1.7.0-mpc-armv7.zip",
+      "sha256": "947d026396be86a8f1643e145ccbb03736591f67b6ca1fafec52ecf40ac284d1",
+      "bytes": 18523961
+    },
+    {
+      "file": "groove-dice-1.7.0-mpc-aarch64.zip",
+      "sha256": "a351c53514cc9a795012781e05589fdc9941a589a4696f88667f02a5be9b39e3",
+      "bytes": 18568294
+    }
+  ]
+}

@@ -12,7 +12,7 @@ static std::vector<uint8_t> legacyChunk(GrooveDice&p){
  out.insert(out.end(),state.begin()+pos,state.end());return out;
 }
 int main(){
- static_assert(kHatRhythmFull==779&&kHatPhraseFullState==780&&kHatRhythmFullPage==781&&kParamCount==782);
+ static_assert(kHatRhythmFull==779&&kHatPhraseFullState==780&&kHatRhythmFullPage==781&&kPerformOpen==782);
  Host h;auto&p=*h.p;for(int g=0;g<4;++g)p.set(kRuleKick+g,1);p.set(kRuleHatStyle,1);p.set(kVariation,0);
  for(int rhythm=0;rhythm<24;++rhythm){
   p.setNormalised(kQ13,rhythm/23.f);h.block();assert(p.getInt(kHatRhythmFull)==rhythm&&p.getInt(kHatRhythmFullPage)==rhythm/8);
