@@ -1,0 +1,115 @@
+{
+  "id": "donut-theory",
+  "name": "Donut Theory",
+  "author": "kim",
+  "repo": "Sunghyun23/kimswork",
+  "kind": "instrument",
+  "license": "MIT",
+  "summary": "Analog-inspired synthesizer for bass, keys, leads and pads, with two oscillators, dual LFOs and up to 16 editable chord slots. Requires MPC OS 3.10.1 or later.",
+  "screenshot": "https://raw.githubusercontent.com/Sunghyun23/kimswork/4a45d8883cc942d9d9db1e81a0f55e04067917ff/mpc-software/plugins/public/DonutTheory/design/device-1.14.2/dt1142-poly-final.png",
+  "homepage": "https://kimswork.app/plugins/donut-theory/",
+  "style": "synth",
+  "min_os": "3.10.1",
+  "tags": [
+    "synth",
+    "analog",
+    "chords"
+  ],
+  "source_available": false,
+  "distribution": "release",
+  "versions": [
+    {
+      "version": "1.14.2",
+      "size": 5853833,
+      "defer": true,
+      "sha256": "eeab4bc62577ba486da9a2f94892f5f229425f7a12dbf3c2d6e7a3d8b03429d7",
+      "param_compat": 1,
+      "max_glibc": "2.27",
+      "cpu": null,
+      "requires": "",
+      "manifest": {
+        "schema": 1,
+        "id": "donut-theory",
+        "name": "Donut Theory",
+        "version": "1.14.2",
+        "kind": "instrument",
+        "uid": "4b72716c",
+        "manufacturer": "kim",
+        "layout": "portable",
+        "so": "VST/donut-theory-arm32.so",
+        "skin": "kim - VST - Donut Theory",
+        "folder": "portable/kim - VST - Donut Theory",
+        "extras": [],
+        "user_data": [],
+        "retire": [],
+        "user_files": [],
+        "arch": "armv7",
+        "max_glibc": "2.27",
+        "os_compat": [
+          "3.x"
+        ],
+        "param_compat": 1,
+        "about": "Soulful polyphonic synth with up to sixteen editable chord slots and independent sound/progression presets.",
+        "requires": "",
+        "source_repo": "Sunghyun23/kimswork",
+        "license": "MIT",
+        "cpu": null,
+        "vst2": true
+      },
+      "os_compat": [
+        "3.x"
+      ],
+      "os_compat_why": [
+        "TUI:data:(local widget) version 1 has field(s) 2.15.1 does not use: actions, attackHandle, attackShapeHandle, backgroundColour, curveType, decayHandle, decayShapeHandle, envelopeName, envelopeStyle, envelopeType, fillColour, forceCurveShape, forceHideShapeHandles, handleArrowFillColourOnPressed, handleArrowLineColourOnPressed, handleFillColour, handleFillColourOnPressed, handleHeight, handleLineColour, handleLineColourOnPressed, handleLineWidth, handleLineWidthOnPressed, handleShape, handleTextColour, handleTextColourOnPressed, handleWidth, highlightColour, lineColour, lineWidth, overlayType, polarityType, releaseHandle, releaseShapeHandle, scaleColour, scaleType, showMinusSign, sustainHandle, textStyle, withNumbers",
+        "TUI:data:Button version 2 (2.15.1 uses 1)",
+        "TUI:data:Knob version 3 (2.15.1 uses 1, 2)",
+        "TUI:data:Knob version 4 (2.15.1 uses 1, 2)",
+        "TUI:data:Label version 1 has field(s) 2.15.1 does not use: text"
+      ],
+      "assets": {
+        "armv7": {
+          "sha256": "eeab4bc62577ba486da9a2f94892f5f229425f7a12dbf3c2d6e7a3d8b03429d7",
+          "size": 5853833,
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.14.2/donut-theory-1.14.2-mpc-armv7.zip"
+        },
+        "aarch64": {
+          "sha256": "46bdafd19fa6b5b0bc3cb51f87304a4b824ee07544f23de96653144592eeed3a",
+          "size": 5869791,
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.14.2/donut-theory-1.14.2-mpc-aarch64.zip"
+        }
+      },
+      "gen2": true,
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.14.2/donut-theory-1.14.2-mpc-armv7.zip",
+      "date": "2026-11-19",
+      "channel": "stable",
+      "notes": "# Donut Theory 1.14.2\n\n- Aligned front selectors to one or two knob columns, with consistent heights and spacing.\n- FREE/SYNC now sits directly above its Rate control on the performance and MOD pages. Motion Sync no longer occupies the section title.\n- Standardized the footer VOICE, Dice Target and input selector widths.\n- Added consistent list text/arrow padding and a compact TIME layout that leaves room for numeric units.\n- Original artwork, fonts, knob geometry, sound engine, 391 parameter definitions and all Q-Link assignments are preserved.\n\nNative/ARM32/ARM64 builds and SDK validation pass with no errors or warnings. Skin checks pass; host simulator:19PASS/0WARN/0FAIL. Actual MPC XL / OS3.10.1.12 remote checks cover all seven pages, selector rendering, focus, Sync switching and representative sidebars. NVMe and SD copies each passed247-file installation verification. Physical encoder/audio/CPU and full project recall certification remain separate.\n\nRequires MPC standalone OS3.10.1+ and Enhancements / External Plugin Support. Copy the complete folder to `VST2 Plugins` and restart/rescan after saving work. Keep one active copy across attached drives. UID kim/Krql,66factory programs and existing state meanings are unchanged.\n",
+      "yanked": false,
+      "warnings": [],
+      "downloads": 2,
+      "depends": [],
+      "conflicts": [],
+      "tested": [],
+      "vst2": {
+        "folder": "kim - VST - Donut Theory"
+      }
+    }
+  ],
+  "maintenance": {
+    "archived": false,
+    "open_issues": 0,
+    "unanswered": 0
+  },
+  "tier": "listed",
+  "verified_on": [],
+  "bar_missing": [
+    "cpu-bench",
+    "tested",
+    "tested-gen2"
+  ],
+  "featured": false,
+  "latest": "1.14.2",
+  "latest_beta": null,
+  "updated": "2026-11-19",
+  "added": "2026-11-19",
+  "downloads": 2
+}

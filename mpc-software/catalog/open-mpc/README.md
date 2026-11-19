@@ -4,7 +4,7 @@ Donut Theory is the first submission. Groove Dice and Crate Press are outside th
 
 The source catalog registry entry is `donut-theory.json`. A one-file topic-branch PR submits it to `open-mpc/mpc-vst-plugins`; maintainers decide acceptance. Registration is not automatic publication on their site.
 
-Submitted: https://github.com/open-mpc/mpc-vst-plugins/pull/1030 (awaiting upstream review/merge). Source diff contains only `catalog/plugins/donut-theory.json`. Package/registry/live-release resolution passed; the local upstream full suite ran216tests with49failures on macOS, including upstream shell parsing/installer failures. GitHub workflow44514755498 is `action_required`, awaiting upstream execution approval. Linux CI and review remain upstream decisions; see the submission body and CI record.
+Merged: https://github.com/open-mpc/mpc-vst-plugins/pull/1030 on2026-11-19 (merge864411da8fb0d88ad150d316ac6fea5f279113ea). Live catalog: https://open-mpc.github.io/p/donut-theory.html ; latest1.14.2, Listed tier. Upstream PR CI44514755498 and catalog build44517697971 succeeded. Package/registry/live-release resolution and published checksum match passed. The earlier macOS local upstream suite failures remain historical evidence, not the current upstream CI state. No Verified claim was added. See submission.json and published-entry.json.
 
 ## Packaging future releases
 

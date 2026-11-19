@@ -1,10 +1,16 @@
 {
-  "checkRuns": [],
+  "checkRuns": [
+    {
+      "name": "Catalog build",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
   "workflowRuns": [
     {
       "id": 44514755498,
       "status": "completed",
-      "conclusion": "action_required",
+      "conclusion": "success",
       "html_url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44514755498",
       "head_sha": "57a6a2718aa18eefe3762c8fd9f0b687a6912128"
     }

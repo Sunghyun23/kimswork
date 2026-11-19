@@ -1,8 +1,18 @@
 {
   "number": 1030,
   "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1030",
-  "state": "open",
+  "state": "closed",
   "head_sha": "57a6a2718aa18eefe3762c8fd9f0b687a6912128",
   "head_ref": "catalog/donut-theory",
-  "base_sha": "1d6bb4e4b795dd5961f18394616da812a8d32780"
+  "base_sha": "1d6bb4e4b795dd5961f18394616da812a8d32780",
+  "merged": true,
+  "merged_at": "2026-11-19T11:45:43Z",
+  "merge_commit_sha": "864411da8fb0d88ad150d316ac6fea5f279113ea",
+  "html_url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1030",
+  "catalogPublished": true,
+  "catalogUrl": "https://open-mpc.github.io/p/donut-theory.html",
+  "catalogVersion": "1.14.2",
+  "tier": "listed",
+  "catalogBuildRun": 44517697971,
+  "catalogBuildConclusion": "success"
 }
