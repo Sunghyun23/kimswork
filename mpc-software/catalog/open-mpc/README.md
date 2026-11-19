@@ -1,6 +1,6 @@
 # Open MPC catalog integration
 
-Donut Theory is registered. Groove Dice1.6.1is the second submission, with explicit MIT source/core notices, original-only packages and optional Pack Builder documentation. Submitted PR: https://github.com/open-mpc/mpc-vst-plugins/pull/1035 ; upstream Linux CI44527338657passed, awaiting upstream review/merge. The public Release and updated kimswork.app guide are live. Crate Press0.2.5is the third submission in preparation: explicit MIT project/SDK notices, unchanged effect engine/UI, per-CPU packages and retained public-preview status. Pack Builder companion-app registration remains a separate future task.
+Donut Theory is registered. Groove Dice1.6.1is the second submission, with explicit MIT source/core notices, original-only packages and optional Pack Builder documentation. Submitted PR: https://github.com/open-mpc/mpc-vst-plugins/pull/1035 ; upstream Linux CI44527338657passed, awaiting upstream review/merge. The public Release and updated kimswork.app guide are live. Crate Press0.2.5is submitted as PR https://github.com/open-mpc/mpc-vst-plugins/pull/1036 ; Linux CI44529150797passed, awaiting review/merge. It retains public-preview status, with explicit MIT notices, unchanged engine/UI and validated per-CPU packages. Pack Builder companion-app registration remains a separate future task.
 
 The source catalog registry entry is `donut-theory.json`. A one-file topic-branch PR submits it to `open-mpc/mpc-vst-plugins`; maintainers decide acceptance. Registration is not automatic publication on their site.
 
@@ -27,3 +27,7 @@ The converter adds Open MPC standard installers and metadata. They are catalog t
 ## Groove Dice releases
 
 Apply the same per-CPU conversion to the **public profile ZIP** emitted by Groove Dice tools/package_profiles.py, never the installed owner folder. Use id/stem groove-dice, SPDX MIT and explicit `groove-dice-*-mpc-armv7.zip` asset pattern. Include the core-content notices and Content/Documentation/PACK_BUILDER.md in both CPU packages. Pack Builder is optional and distributed separately for macOS Apple Silicon/Windows x64; link its pinned release/manual and do not relicense its dependencies or user packs. Check that only default.gdbank is present, its SHA matches the original procedural core and the expansion registry is empty. Do not run legacy installer scripts on the MPC. Reference: groove-dice-submission-body.md and the project design/release-1.6.1 audit.
+
+## Crate Press releases
+
+Use the same SDK conversion/checks with id/stem crate-press and `crate-press-*-mpc-armv7.zip`. Preserve kim/K36Z,380parameters and32programs. Both source and runtime carry project/SDK MIT notices. Release0.2.5is a GitHub prerelease: do not silently promote to stable or add tested.json; beta/Experimental filtering is expected in Open MPC until an authorized stable release. Prior actual0.2.4screens stay correctly labeled. Do not run upstream legacy installers/benchmarks on the MPC. See crate-press-submission-body.md and the project design/release-0.2.5 audit.

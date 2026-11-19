@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "checks": [
+    "/plugins/crate-press/",
+    "/",
+    "/software/",
+    "/software/effects/",
+    "/plugins/crate-press/manual/",
+    "/plugins/donut-theory/",
+    "/plugins/groove-dice/",
+    "website-sdk-download-hash",
+    "actual-image:crate-press-main-0.2.4.webp",
+    "actual-image:crate-press-latched-0.2.4.webp",
+    "actual-image:crate-press-perform-0.2.4.webp"
+  ],
+  "previewRetained": true,
+  "sdkDownloadHashVerified": true,
+  "otherVersionsUnchanged": {
+    "DonutTheory": "1.14.2",
+    "GrooveDice": "1.6.1"
+  }
+}

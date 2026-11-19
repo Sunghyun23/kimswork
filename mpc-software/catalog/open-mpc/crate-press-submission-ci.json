@@ -1,0 +1,14 @@
+{
+  "workflowRuns": [
+    {
+      "id": 44529150797,
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44529150797",
+      "head_sha": "92da01b977a1f7d82218aa3fe21e2082bfdba912"
+    }
+  ],
+  "changedFiles": [
+    "catalog/plugins/crate-press.json"
+  ]
+}
