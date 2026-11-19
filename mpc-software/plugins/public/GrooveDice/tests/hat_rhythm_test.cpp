@@ -2,12 +2,12 @@
 #include "musical_test.cpp"
 #undef main
 int main(){
- Host h;auto&p=*h.p;assert(kHatRhythm==294&&kHatPhraseState==295&&kMixKick==342&&kParamCount==779);
+ Host h;auto&p=*h.p;assert(kHatRhythm==294&&kHatPhraseState==295&&kMixKick==342&&kParamCount==782);
  for(int g=0;g<4;++g)p.set(kRuleKick+g,1);
  // Touch/automation and SCREEN relay select exactly the same15 choices; Duck stays independent.
  float duck=p.get(kDuck);
- for(int v=0;v<15;++v){p.setNormalised(kQ13,v/14.f);h.block();assert(p.getInt(kHatRhythm)==v&&p.getInt(kHatRhythmPage)==v/8);assert(p.get(kDuck)==duck);}
- assert(p.proxyTarget(12)==kHatRhythm);p.set(kEditor,1);assert(p.proxyTarget(15)==-1);p.set(kEditor,0);
+ for(int v=0;v<15;++v){p.setNormalised(kQ13,v/23.f);h.block();assert(p.getInt(kHatRhythm)==v&&p.getInt(kHatRhythmPage)==v/8);assert(p.get(kDuck)==duck);}
+ assert(p.proxyTarget(12)==kHatRhythmFull);p.set(kEditor,1);assert(p.proxyTarget(15)==-1);p.set(kEditor,0);
  for(int v=0;v<15;++v){
   p.set(kHatRhythm,v);for(int attempt=0;attempt<20;++attempt){p.set(kRandomAmt,attempt%2?100:10);h.pulse(kRoll);assert(p.lengths[4].load()==3840);assert(((p.getInt(kHatPhraseState)&15)-1)==v);int snare=0,hats=0;
    static const int strides[]={960,480,240,720,360};int stride=strides[v/3];

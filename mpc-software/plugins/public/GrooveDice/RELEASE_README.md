@@ -1,4 +1,4 @@
-# Groove Dice 1.5.1
+# Groove Dice 1.6.0
 
 Retained from1.3.4: all seventeen SOUND sources have independent reverse switches, saved with user kits and projects. Start trims from the source end in reverse mode; Decay and Shift remain independent. SOUND has two in-place pages: Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Separate48px previous/next arrows surround a visible SOUND1/2 counter. REV stays available on both pages; approved per-row polarity Ø is on page2. Remote on-device page/REV/Ø interactions were checked; physical encoder and hardware-audio coverage remain separate.
 
@@ -6,7 +6,7 @@ One-bar neo-soul and hip-hop drums for MPC standalone, with visible Dice changes
 
 - Sixteen MAIN padlocks protect individual knob values. Open controls change visibly when Roll Dice is pressed; musical bounds preserve backbeats, practical mix levels and restrained timing.
 - Sixteen playable RULE styles per part. LOCK is removed from the knob/list/Q-Link range and handled by the separate padlock. Existing saved LOCK states migrate safely.
-- MAIN D: Hat Rhythm, Open Hat, Ride and Crash. Fifteen straight/dotted/fill/roll hat rhythms, ride/bell patterns and structural crash accents. Drive, Dust and real stereo Room reverb remain on FX.
+- MAIN D: Hat Rhythm, Open Hat, Ride and Crash. Twenty-four straight/dotted/triplet/fill/roll hat rhythms, ride/bell patterns and structural crash accents. Drive, Dust and real stereo Room reverb remain on FX.
 - SOUND1/2: Sample, Level, Tune and Shift. SOUND2/2: Start, Decay, Low Cut and High Cut. Every source keeps one fixed SCREEN Q-Link group. Separate48px arrows and a visible counter switch all rows together; no separate Detail modal. REV is available on both pages; polarity Ø is on page2.
 - Independent Ride/Crash/Bell source editing. Four kick/snare layers, linked hats and a four-role percussion set.
 - Dice sound range: This Pack, All Packs or up to 64 selected kits. Whole-kit or mixed-part selection respects kit/layer locks.
@@ -21,10 +21,12 @@ Public package: Original Workshop only — 128 independently synthesized one-sho
 
 ## Compatibility and validation
 
-UID KpGy; 779 append-only parameters; existing parameter IDs and ranges retained. Existing projects/expansion identities are supported; old RULE LOCK values migrate to BASIC plus a closed padlock. Signed Shift reports fixed 30ms latency including direct pads. Newer state cannot be fully represented by old engines. External sidechain and generated MIDI output are not implemented.
+UID KpGy; 782 append-only parameters; existing parameter IDs and ranges retained. Existing projects/expansion identities are supported; old RULE LOCK values migrate to BASIC plus a closed padlock. Signed Shift reports fixed 30ms latency including direct pads. Newer state cannot be fully represented by old engines. External sidechain and generated MIDI output are not implemented.
 
 Native/ARM32/ARM64 builds and SDK validation pass. Engine, UBSan, allocation guards, sample/state/expansion/skin and real VST bridge tests pass. Host simulator:19 pass,0 warnings,0 failures. The owner confirmed 1.3.3 locks/Dice/RULE behavior on MPC XL OS3.10.1.12. Actual screenshots come directly from the authenticated MPC Remote Screen framebuffer stream, with capture provenance recorded. Complete physical-control coverage, all routes and worst-case hardware CPU are not certified. No ASan pass is claimed. See VERIFICATION.md.
 
 Version1.4.0 adds16RULES per part, with a paged left list and full-range Q-Link control. See MANUAL.md and VERIFICATION.md.
 
-Global Dice preserves every fill and FX value. Use dedicated ROLL FILL or ROLL FX with Undo. Only MAIN has individual Dice padlocks; meaningful kit/role/layer protection remains. UNLOCK ALL changes protection only. See MANUAL.md for the complete1.5.1policy.
+Global Dice preserves every fill and FX value. Use dedicated ROLL FILL or ROLL FX with Undo. Only MAIN has individual Dice padlocks; meaningful kit/role/layer protection remains. UNLOCK ALL changes protection only. See MANUAL.md for the complete Dice policy.
+
+Version1.6.0 adds 1/4T, 1/8T and 1/16T hats, each plain, +FILL or +ROLL. Tap Hat Rhythm for three pages of eight choices, or turn MAIN D1 in Screen mode. Triplets retain their spacing independently of straight swing. Live changes, MAIN Dice locks and Undo share the full selector; old779-parameter snapshots migrate without replacing their notes.

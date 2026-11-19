@@ -1,0 +1,163 @@
+Validating /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/kim - VST - Groove Dice
+OK     plugin.json: Groove Dice by kim (instrument, uid KpGy)
+OK     folder name "kim - VST - Groove Dice"
+OK     file32: groove-dice-arm32.so is a 32-bit ARM shared object
+OK     file32: needed libraries: libm.so.6, libc.so.6, ld-linux-armhf.so.3, libpthread.so.0, libdl.so.2
+OK     file32: max GLIBC requirement 2.29
+OK     file32: exports VSTPluginMain
+OK     file64: groove-dice-arm64.so is a 64-bit AArch64 shared object
+OK     file64: needed libraries: libm.so.6, libc.so.6, libpthread.so.0, libdl.so.2
+OK     file64: max GLIBC requirement 2.29
+OK     file64: exports VSTPluginMain
+OK     uid matches the binary (KpGy)
+OK     name matches the binary (Groove Dice)
+OK     manufacturer matches the binary (kim)
+OK     kind matches the binary (instrument)
+OK     numInputs matches the binary (0)
+OK     numOutputs matches the binary (16)
+OK     TUI.json: all parameter handles are within 0..778
+OK     TUI.json: image background.png present
+OK     TUI.json: image dice-icon.png present
+OK     TUI.json: image dice-locked.png present
+OK     TUI.json: image dice-unlocked.png present
+OK     TUI.json: image hit.png present
+OK     TUI.json: image knob-v2.png present
+OK     TUI.json: image material-v2-100-29-dark.png present
+OK     TUI.json: image material-v2-100-29-orange.png present
+OK     TUI.json: image material-v2-100-40-cream.png present
+OK     TUI.json: image material-v2-100-40-olive.png present
+OK     TUI.json: image material-v2-100-40-orange.png present
+OK     TUI.json: image material-v2-1024-48-dark.png present
+OK     TUI.json: image material-v2-106-28-cream.png present
+OK     TUI.json: image material-v2-106-28-orange.png present
+OK     TUI.json: image material-v2-110-42-cream.png present
+OK     TUI.json: image material-v2-110-42-orange.png present
+OK     TUI.json: image material-v2-112-60-cream.png present
+OK     TUI.json: image material-v2-112-60-orange.png present
+OK     TUI.json: image material-v2-116-24-olive.png present
+OK     TUI.json: image material-v2-120-42-cream.png present
+OK     TUI.json: image material-v2-120-42-orange.png present
+OK     TUI.json: image material-v2-1248-108-card.png present
+OK     TUI.json: image material-v2-1248-40-dark.png present
+OK     TUI.json: image material-v2-128-44-dark.png present
+OK     TUI.json: image material-v2-128-44-orange.png present
+OK     TUI.json: image material-v2-128-60-cream.png present
+OK     TUI.json: image material-v2-128-60-orange.png present
+OK     TUI.json: image material-v2-130-42-cream.png present
+OK     TUI.json: image material-v2-130-42-olive.png present
+OK     TUI.json: image material-v2-130-42-orange.png present
+OK     TUI.json: image material-v2-130-60-cream.png present
+OK     TUI.json: image material-v2-130-60-orange.png present
+OK     TUI.json: image material-v2-132-38-cream.png present
+OK     TUI.json: image material-v2-132-38-orange.png present
+OK     TUI.json: image material-v2-132-48-cream.png present
+OK     TUI.json: image material-v2-132-48-orange.png present
+OK     TUI.json: image material-v2-138-38-cream.png present
+OK     TUI.json: image material-v2-138-38-orange.png present
+OK     TUI.json: image material-v2-138-40-dark.png present
+OK     TUI.json: image material-v2-138-40-orange.png present
+OK     TUI.json: image material-v2-156-42-cream.png present
+OK     TUI.json: image material-v2-156-42-orange.png present
+OK     TUI.json: image material-v2-156-60-cream.png present
+OK     TUI.json: image material-v2-156-60-olive.png present
+OK     TUI.json: image material-v2-156-60-orange.png present
+OK     TUI.json: image material-v2-160-50-cream.png present
+OK     TUI.json: image material-v2-160-50-orange.png present
+OK     TUI.json: image material-v2-168-60-cream.png present
+OK     TUI.json: image material-v2-168-60-orange.png present
+OK     TUI.json: image material-v2-176-40-cream.png present
+OK     TUI.json: image material-v2-176-40-orange.png present
+OK     TUI.json: image material-v2-176-42-cream.png present
+OK     TUI.json: image material-v2-176-42-orange.png present
+OK     TUI.json: image material-v2-176-60-cream.png present
+OK     TUI.json: image material-v2-176-60-orange.png present
+OK     TUI.json: image material-v2-180-42-dark.png present
+OK     TUI.json: image material-v2-180-42-olive.png present
+OK     TUI.json: image material-v2-180-42-orange.png present
+OK     TUI.json: image material-v2-184-60-cream.png present
+OK     TUI.json: image material-v2-184-60-orange.png present
+OK     TUI.json: image material-v2-188-40-dark.png present
+OK     TUI.json: image material-v2-188-40-orange.png present
+OK     TUI.json: image material-v2-192-40-cream.png present
+OK     TUI.json: image material-v2-192-40-orange.png present
+OK     TUI.json: image material-v2-202-40-cream.png present
+OK     TUI.json: image material-v2-202-40-orange.png present
+OK     TUI.json: image material-v2-202-46-cream.png present
+OK     TUI.json: image material-v2-202-46-orange.png present
+OK     TUI.json: image material-v2-202-48-cream.png present
+OK     TUI.json: image material-v2-202-48-orange.png present
+OK     TUI.json: image material-v2-202-60-cream.png present
+OK     TUI.json: image material-v2-202-60-olive.png present
+OK     TUI.json: image material-v2-202-60-orange.png present
+OK     TUI.json: image material-v2-204-40-cream.png present
+OK     TUI.json: image material-v2-204-40-orange.png present
+OK     TUI.json: image material-v2-212-48-olive.png present
+OK     TUI.json: image material-v2-212-48-orange.png present
+OK     TUI.json: image material-v2-212-50-olive.png present
+OK     TUI.json: image material-v2-212-50-orange.png present
+OK     TUI.json: image material-v2-216-42-olive.png present
+OK     TUI.json: image material-v2-216-42-red.png present
+OK     TUI.json: image material-v2-220-60-olive.png present
+OK     TUI.json: image material-v2-220-60-orange.png present
+OK     TUI.json: image material-v2-224-40-olive.png present
+OK     TUI.json: image material-v2-224-40-orange.png present
+OK     TUI.json: image material-v2-224-60-dark.png present
+OK     TUI.json: image material-v2-224-60-orange.png present
+OK     TUI.json: image material-v2-252-60-olive.png present
+OK     TUI.json: image material-v2-256-48-dark.png present
+OK     TUI.json: image material-v2-256-48-olive.png present
+OK     TUI.json: image material-v2-256-48-orange.png present
+OK     TUI.json: image material-v2-260-28-cream.png present
+OK     TUI.json: image material-v2-260-28-orange.png present
+OK     TUI.json: image material-v2-264-40-olive.png present
+OK     TUI.json: image material-v2-264-40-orange.png present
+OK     TUI.json: image material-v2-264-42-cream.png present
+OK     TUI.json: image material-v2-264-42-orange.png present
+OK     TUI.json: image material-v2-300-42-cream.png present
+OK     TUI.json: image material-v2-300-42-orange.png present
+OK     TUI.json: image material-v2-300-54-cream.png present
+OK     TUI.json: image material-v2-300-54-olive.png present
+OK     TUI.json: image material-v2-300-54-orange.png present
+OK     TUI.json: image material-v2-304-48-cream.png present
+OK     TUI.json: image material-v2-304-48-orange.png present
+OK     TUI.json: image material-v2-400-30-olive.png present
+OK     TUI.json: image material-v2-414-41-cream.png present
+OK     TUI.json: image material-v2-414-41-orange.png present
+OK     TUI.json: image material-v2-414-46-olive.png present
+OK     TUI.json: image material-v2-414-46-orange.png present
+OK     TUI.json: image material-v2-414-48-cream.png present
+OK     TUI.json: image material-v2-414-48-orange.png present
+OK     TUI.json: image material-v2-414-56-dark.png present
+OK     TUI.json: image material-v2-414-56-orange.png present
+OK     TUI.json: image material-v2-426-628-dark.png present
+OK     TUI.json: image material-v2-44-22-orange.png present
+OK     TUI.json: image material-v2-44-42-cream.png present
+OK     TUI.json: image material-v2-44-42-orange.png present
+OK     TUI.json: image material-v2-44-44-cream.png present
+OK     TUI.json: image material-v2-44-44-dark.png present
+OK     TUI.json: image material-v2-44-44-orange.png present
+OK     TUI.json: image material-v2-48-40-cream.png present
+OK     TUI.json: image material-v2-48-40-orange.png present
+OK     TUI.json: image material-v2-48-48-cream.png present
+OK     TUI.json: image material-v2-48-48-orange.png present
+OK     TUI.json: image material-v2-48-60-cream.png present
+OK     TUI.json: image material-v2-48-60-orange.png present
+OK     TUI.json: image material-v2-54-40-cream.png present
+OK     TUI.json: image material-v2-54-40-orange.png present
+OK     TUI.json: image material-v2-54-54-cream.png present
+OK     TUI.json: image material-v2-54-54-orange.png present
+OK     TUI.json: image material-v2-60-38-dark.png present
+OK     TUI.json: image material-v2-60-38-orange.png present
+OK     TUI.json: image material-v2-600-50-olive.png present
+OK     TUI.json: image material-v2-614-138-card.png present
+OK     TUI.json: image material-v2-664-50-olive.png present
+OK     TUI.json: image material-v2-72-60-olive.png present
+OK     TUI.json: image material-v2-80-36-olive.png present
+OK     TUI.json: image material-v2-80-36-orange.png present
+OK     TUI.json: image material-v2-90-42-cream.png present
+OK     TUI.json: image material-v2-90-42-orange.png present
+OK     TUI.json: 6 tabs
+OK     Q-Links.json: 6 tab maps, all values in range
+OK     version.xml uiversion 0.1.0.0
+OK     Content/: 6 files, 18.8 MB (loaded by the plugin at run time, see framework/mpc_resources.h)
+0 errors, 0 warnings

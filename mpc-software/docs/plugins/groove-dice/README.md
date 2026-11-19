@@ -9,3 +9,5 @@ Public source project; stable version 1.0.0. See the Release for actual verifica
 - [Licenses and provenance](../../../plugins/public/GrooveDice/THIRD_PARTY.md)
 
 - [User manual](manual.md)
+
+- [Version1.6.0 — Triplet hats](releases/1.6.0.md)

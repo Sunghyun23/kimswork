@@ -1,0 +1,24 @@
+PASS6tabs,16MAIN relay Q-Links,64px native knobs,1280x628background,grid64cells,editor guide hiding and page bounds
+PASS SOUND16 Q-Link layout,97paged kit choices and native caption-safe ROLL hit target
+PASS MAIN C four role selectors, caption-safe paged role popup and preserved GROOVE D fill/variation controls
+PASS ordered native modal guide suppression, padded MAIN panel bounds, B RULES mapping
+PASS every page: headers/badges excluded; four control bounds contained; nativeQ gutter reserved
+PASS spacious60px lower BROWSE/CREATE/PLAY actions; no redundant screen drum pads
+PASS 126 independent press/release visuals; exactly one engine command per press
+PASS MAIN D1 HatRhythm,15paged choices, guide suppression, DUCK retained in FX
+PASS MAIN C mix,16 SOUND relays,4 row guides with native-Q gutter, two editing pages and bounds
+PASS named sample plate,44px previous/next targets, tap-list and preview press surfaces and row bounds
+PASS each sample selector focuses its own SCREEN Q-Link row
+PASS explicit kit/pattern locks and dedicated fill/FX actions; no global Extra selector
+PASS four7-choice rule drawers, Program B styles and live1-bar captions
+PASS MAIN D Hat/Open/Ride/Crash, native mappings and guide-hiding drawers; Drive/Dust/Room absent from MAIN and preserved on FX
+PASS sample tap-list, preview buttons and both modal guide suppression
+PASS all rows: page1 Sample/Level/Tune/Shift; page2 Start/Decay/LowCut/HighCut
+PASS captionless hit targets omit empty fixed-Text widgets
+PASS16persistent44px locks inside control bounds with no knob overlap
+PASS REV44px toggles for all sound rows; Hat detail rows exclude duplicate buttons
+PASS SOUND page1/2 explicit 48px previous/next arrows, fixed page display and retained native guides
+PASS SOUND expanded widget tree below2000 including hidden pages/browser
+PASS sample/sample-list/kit-pool/library/role/kit caption center is covered by a single command surface
+PASS: first672full declarations retained, extended16style selectors append
+PASS MAIN-only value locks, separate ROLL FILL/FX, legacy777metadata retained

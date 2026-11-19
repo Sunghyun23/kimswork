@@ -1,0 +1,28 @@
+{
+  "version": "1.5.1",
+  "engineAndMetadataUnchanged": true,
+  "uiAndBanksUnchanged": true,
+  "reproducedSyncSnapback": false,
+  "checks": {
+    "directAndNativeVstRelativeTurns": true,
+    "ubsan": true,
+    "renderAllocationGuards": true,
+    "existingLiveBridge": true,
+    "existingHatRhythms": 15,
+    "existingHatRollGenerations": 300,
+    "dottedTickSpacings": [
+      720,
+      360
+    ],
+    "freeHzModRate": true,
+    "skin": true,
+    "sdkErrors": 0,
+    "sdkWarnings": 0
+  },
+  "tripletHatOptionPresent": false,
+  "newTripletOptionAdded": false,
+  "deviceVerified": false,
+  "installed": false,
+  "published": false,
+  "nativeLibrarySha256": "804457054cd50316d91f7df313077e3643817901b7fc51db86624af8245b5b32"
+}

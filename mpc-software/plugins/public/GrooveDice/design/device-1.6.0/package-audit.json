@@ -1,0 +1,13 @@
+{
+  "version": "1.6.0",
+  "zip": "groove-dice-1.6.0-mpc.zip",
+  "bytes": 18742612,
+  "sha256": "781f7418b8ce25fff3a4e7f3e22de60947c03d413d5d7fddbfa50fc68d59187c",
+  "zipEntries": 161,
+  "publicBanks": [
+    "kim - VST - Groove Dice/Content/Banks/default.gdbank"
+  ],
+  "privatePayloads": 0,
+  "expansionRegistryEmpty": true,
+  "runtimeMatchesBuiltArmAndSkin": true
+}

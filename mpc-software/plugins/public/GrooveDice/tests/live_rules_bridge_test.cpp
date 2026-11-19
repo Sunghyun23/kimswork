@@ -20,7 +20,7 @@ int main(){auto*e=VSTPluginMain(host);assert(e);auto*p=static_cast<GrooveDice*>(
  }
  // Many small relative inputs must reach every choice without storms or feedback.
  for(int g=0;g<4;++g){int reached=0;for(int n=0;n<=1000;++n){notifications.store(0);audioNotifications.store(0);e->setParameter(e,kQ5+g,n*.001f);block();e->getParameter(e,kQ5+g);reached|=1<<p->ruleStyle(g);assert(audioNotifications.load()==0&&notifications.load()<=16);}assert(reached==131070);}
- for(int group=0;group<4;++group){int count[]={15,4,5,6},target[]={kHatRhythm,kOpenHatRule,kRideRule,kCrashRule};unsigned reached=0;for(int n=0;n<=1000;++n){notifications.store(0);audioNotifications.store(0);e->setParameter(e,kQ13+group,n*.001f);block();e->getParameter(e,kQ13+group);reached|=1u<<p->getInt(target[group]);assert(audioNotifications.load()==0&&notifications.load()<=16);}assert(reached==((1u<<count[group])-1));}
+ for(int group=0;group<4;++group){int count[]={24,4,5,6},target[]={kHatRhythmFull,kOpenHatRule,kRideRule,kCrashRule};unsigned reached=0;for(int n=0;n<=1000;++n){notifications.store(0);audioNotifications.store(0);e->setParameter(e,kQ13+group,n*.001f);block();e->getParameter(e,kQ13+group);reached|=1u<<p->getInt(target[group]);assert(audioNotifications.load()==0&&notifications.load()<=16);}assert(reached==((1u<<count[group])-1));}
  std::cout<<"PASS MAIN D4relays: all15/4/5/6choices with4004fine VST increments during playback; bounded notifications and no layer fanout"<<std::endl;
  std::cout<<"PASS real VST4x16relays/full selectors/legacy aliases and4004small physical-style increments during playback; bounded notifications; reentrant host reads/rule-value echoes terminate"<<std::endl;
  quit.store(true);audio.join();e->dispatcher(e,effClose,0,0,nullptr,0);plugin=nullptr;

@@ -1,0 +1,5 @@
+# Groove Dice1.5.1 rhythm/Q-Link audit
+
+User requested checking the drum plugin for the same Sync-turn symptom. The synth defect did not reproduce here. Existing MAIN RULE/HatRhythm/OpenHat/Ride/Crash relays retain small relative input. All8selectors visit every choice in both directions under0.001getter-relative movements, through both direct engine and actual existing native VST setter/getter/display/render paths. UBSan and render allocation guards pass. No Dice command is triggered by the audit.
+
+Existing dotted hat grids use720/360ticks; free-Hz FX ModRate retains incremental input. Drums do not have the synth's LFO Sync toggle and no new triplet hat option was added. Existing15hat styles include straight/dotted and Fill/Roll variants; Dotted is not a Triplet. No engine, metadata, bank, UI, install, release or website change was required. New regression source is tests/rate_knob_audit_test.cpp; the standard test runner includes it. Hardware encoder listening/UI testing is not claimed.

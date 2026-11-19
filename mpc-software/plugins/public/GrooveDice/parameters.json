@@ -8150,5 +8150,58 @@
     ],
     "default": 0,
     "auto": false
+  },
+  {
+    "key": "HatRhythmFull",
+    "name": "Full Hat Rhythm",
+    "choices": [
+      "1/4",
+      "1/4 + FILL",
+      "1/4 + ROLL",
+      "1/8",
+      "1/8 + FILL",
+      "1/8 + ROLL",
+      "1/16",
+      "1/16 + FILL",
+      "1/16 + ROLL",
+      "1/8 DOT",
+      "1/8 DOT + FILL",
+      "1/8 DOT + ROLL",
+      "1/16 DOT",
+      "1/16 DOT + FILL",
+      "1/16 DOT + ROLL",
+      "1/4 T",
+      "1/4 T + FILL",
+      "1/4 T + ROLL",
+      "1/8 T",
+      "1/8 T + FILL",
+      "1/8 T + ROLL",
+      "1/16 T",
+      "1/16 T + FILL",
+      "1/16 T + ROLL"
+    ],
+    "default": 3,
+    "auto": true
+  },
+  {
+    "key": "HatPhraseFullState",
+    "name": "Full Hat Phrase State",
+    "min": 0,
+    "max": 32767,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "HatRhythmFullPage",
+    "name": "Full Hat Rhythm Page",
+    "choices": [
+      "1 / 3",
+      "2 / 3",
+      "3 / 3"
+    ],
+    "default": 0,
+    "auto": false
   }
 ]

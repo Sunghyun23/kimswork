@@ -4,7 +4,7 @@
 static auto fillSnapshot(G&p){std::array<uint32_t,4*(1+128*2)>a{};int at=0;for(int b=0;b<4;++b){a[at++]=p.lengths[b].load();for(auto&n:p.notes[b]){a[at++]=n.data.load();a[at++]=n.gate.load();}}return a;}
 static auto fxSnapshot(G&p){std::array<float,7>a{};int at=0;for(int k:{kDrive,kDust,kRoom,kDuck,kLowCut,kModRate,kModDepth})a[at++]=p.getNormalised(k);return a;}
 int main(){
- static_assert(kParamCount==779,"append-only dedicated commands");
+ static_assert(kParamCount==782,"append-only dedicated commands");
  for(int scope=0;scope<6;++scope)for(int mode=0;mode<2;++mode){Host h;auto&p=*h.p;p.set(kScope,scope);p.set(kKitDiceMode,mode);p.set(kRandomAmt,100);for(int b=0;b<4;++b){p.notes[b][0].write({123+b,1,93,77,155});p.notes[b][1].write({501+b,5,74,91,233});}for(int k:{kDrive,kDust,kRoom,kDuck,kLowCut,kModRate,kModDepth})p.setNormalised(k,.437f);auto fills=fillSnapshot(p);auto fx=fxSnapshot(p);auto seed=p.partSeed[0].load();for(int r=0;r<6;++r){h.pulse(kRoll);assert(fillSnapshot(p)==fills);assert(fxSnapshot(p)==fx);}assert(p.partSeed[0].load()!=seed);}
  std::cout<<"PASS all6legacy scopes and both kit modes: MAIN pattern regenerates; all4fills and all7FX values remain exact through72rolls\n";
  {Host h;auto&p=*h.p;p.set(kRandomAmt,100);p.set(kKitLock,1);p.set(kPatternLock,1);auto seed=p.partSeed[0].load();auto fill=fillSnapshot(p);auto fx=fxSnapshot(p);int sample=p.getInt(kXSample0);h.pulse(kRoll);assert(p.partSeed[0].load()==seed&&p.getInt(kXSample0)==sample);assert(fillSnapshot(p)==fill&&fxSnapshot(p)==fx);p.set(kRoleLock0,1);p.set(kKitLock,0);p.set(kKitDiceMode,1);p.set(kChoke0,3);h.pulse(kRoll);assert(p.getInt(kChoke0)==3);}
@@ -13,5 +13,7 @@ int main(){
  std::cout<<"PASS explicit ROLL FILL affects selected fill only; ROLL FX affects FX only; independent Undo and load-safe transient commands\n";
  {Host h;auto&p=*h.p;p.set(kRandomAmt,0);auto fills=fillSnapshot(p);auto fx=fxSnapshot(p);h.pulse(kRollFill);h.pulse(kRollFx);assert(fillSnapshot(p)==fills&&fxSnapshot(p)==fx);p.set(kRandomAmt,100);p.recordState.store(2);h.pulse(kRollFill);assert(fillSnapshot(p)==fills);}
  {Host h;auto&p=*h.p;for(int i=0;i<16;++i)p.set(kDiceLock0+i,1);for(int k:kExtraDiceValueLocks)p.set(k,1);p.set(kKitLock,1);p.set(kPatternLock,1);p.set(kRoleLock0,1);auto fills=fillSnapshot(p);auto fx=fxSnapshot(p);float swing=p.get(kSwing);h.pulse(kUnlockDice);for(int i=0;i<16;++i)assert(!p.getBool(kDiceLock0+i));for(int k:kExtraDiceValueLocks)assert(!p.getBool(k));assert(!p.getBool(kKitLock)&&!p.getBool(kPatternLock)&&!p.getBool(kRoleLock0));assert(fillSnapshot(p)==fills&&fxSnapshot(p)==fx&&p.get(kSwing)==swing);}
+ {Host h;auto&p=*h.p;p.set(kRandomAmt,100);for(int key:{kRollFill,kRollFx}){h.pulse(key);assert(p.getNormalised(key)==0);auto fill=fillSnapshot(p);auto fx=fxSnapshot(p);for(int n=0;n<10;++n)h.render();assert(fillSnapshot(p)==fill&&fxSnapshot(p)==fx);h.pulse(key);assert(p.getNormalised(key)==0);auto state=p.internalSaveState();assert(p.internalLoadState(state.data(),state.size())&&p.getNormalised(key)==0);}}
+ std::cout<<"PASS momentary Fill/FX roll commands clear after one action, repeat on next press, stay idle across blocks and save/load\n";
  std::cout<<"PASS Amount0, active-record protection and UNLOCK ALL without sound/note changes; no process allocations\n";
 }

@@ -97,14 +97,14 @@ print('PASS',commands,'independent press/release visuals; exactly one engine com
 
 # MAIN D4 and Program match; DUCK stays in FX. All15 choices are touch-accessible.
 assert q['Program Mode Q-Links']['Q-Link 4']==keys['CrashRule']
-assert len([k for k in defs if k.startswith('GDChoiceHatRhythmRow')])==15
-assert defs['GDChoiceHatRhythm']['hideQLinkBounds']
+assert len([k for k in defs if k.startswith('GDChoiceHatRhythmFullRow')])==24
+assert defs['GDChoiceHatRhythmFull']['hideQLinkBounds']
 assert any(k.startswith('KnobDuck-')for k in defs)
-assert any(k.startswith('KnobHatRhythm-')for k in defs)
-for j in range(15):
- row=next(e for e in defs['GDChoiceHatRhythm']['componentsData']if e['componentData']['type']=='GDChoiceHatRhythmRow'+str(j))
- assert row['bounds']['additionalInvalidatingHandles']==['IndexedEnabling/'+str(j//8)+'/2/Parameter '+str(keys['HatRhythmPage'])]
-print('PASS MAIN D1 HatRhythm,15paged choices, guide suppression, DUCK retained in FX')
+assert any(k.startswith('KnobHatRhythmFull-')for k in defs)
+for j in range(24):
+ row=next(e for e in defs['GDChoiceHatRhythmFull']['componentsData']if e['componentData']['type']=='GDChoiceHatRhythmFullRow'+str(j))
+ assert row['bounds']['additionalInvalidatingHandles']==['IndexedEnabling/'+str(j//8)+'/3/Parameter '+str(keys['HatRhythmFullPage'])]
+print('PASS MAIN D1 HatRhythmFull,15paged choices, guide suppression, DUCK retained in FX')
 
 # Four row guides exclude layer selectors/On/Solo/Lock, include all actual control bounds.
 sound_tab=next(tab for tab in t['tabs']if tab['tabName']=='SOUND')
@@ -158,11 +158,11 @@ print('PASS four7-choice rule drawers, Program B styles and live1-bar captions')
 
 # MAIN D is articulation; audio colour is retained only on FX.
 main_types=[e['componentData']['type']for e in defs['GDMain']['componentsData']]
-for key in ['HatRhythm','OpenHatRule','RideRule','CrashRule']:
+for key in ['HatRhythmFull','OpenHatRule','RideRule','CrashRule']:
  assert any(t.startswith('Knob'+key+'-')for t in main_types)
  assert defs['GDChoice'+key]['hideQLinkBounds']
 for key in ['Drive','Dust','Room']:assert not any(t.startswith('Knob'+key+'-')for t in main_types)
-for index,key in zip([16,12,8,4],['HatRhythm','OpenHatRule','RideRule','CrashRule']):assert q['Program Mode Q-Links']['Q-Link '+str(index)]==keys[key]
+for index,key in zip([16,12,8,4],['HatRhythmFull','OpenHatRule','RideRule','CrashRule']):assert q['Program Mode Q-Links']['Q-Link '+str(index)]==keys[key]
 print('PASS MAIN D Hat/Open/Ride/Crash, native mappings and guide-hiding drawers; Drive/Dust/Room absent from MAIN and preserved on FX')
 
 assert defs["SampleBrowser"]["hideQLinkBounds"] and defs["SelectedKitBrowser"]["hideQLinkBounds"]
@@ -258,7 +258,7 @@ for prefix in ['LibraryRowButton','RoleSoundRow','DynamicKitRow']:
 print('PASS sample/sample-list/kit-pool/library/role/kit caption center is covered by a single command surface')
 
 assert m[:672]==json.loads((P/'tests/legacy-parameters-1.3.4.json').read_text())
-assert len(m)==779
+assert len(m)==782
 print('PASS: first672full declarations retained, extended16style selectors append')
 
 assert m[:676]==json.loads((P/'tests/legacy-676-parameters.json').read_text())

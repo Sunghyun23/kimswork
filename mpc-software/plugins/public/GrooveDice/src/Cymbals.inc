@@ -50,14 +50,14 @@ void scheduleCymbals(double start,double end,double step){
  if(get(kDensity)<=0)return;
  if(fillStart>=0)cymbalFillEnd=fillEnd;
  const int ride=getInt(kRideRule),open=getInt(kOpenHatRule),crash=getInt(kCrashRule);int first=int(std::floor(start/4.))-1,last=int(std::floor(end/4.))+1;
- auto emit=[&](double beat,int role,int velocity){if(beat<0||beat<start-1.e-10||beat>=end-1.e-10)return;int offset=int(std::llround((beat-start)/step));int frames=int(std::llround((end-start)/step));if(offset>=0&&offset<frames)addEvent(offset,role,velocity,false,500);};
- auto hatBeat=[&](int bar,int tick){double beat=bar*4.+tick/960.;int swingTick=ride?480:getInt(kHatRhythm)<6?480:240;if((tick/swingTick)%2&&getInt(kHatRhythm)<9)beat+=(get(kSwing)-50)*(swingTick==480?.01:.005);beat+=get(kHatShift)*.001/60*currentTempo.load();return beat;};
+ auto emit=[&](double beat,int role,int velocity){if(beat<0||beat<start-1.e-10||beat>=end-1.e-10)return;int offset=eventOffset(beat,start,end,step);addEvent(offset,role,velocity,false,500);};
+ auto hatBeat=[&](int bar,int tick){double beat=bar*4.+tick/960.;int swingTick=ride?480:getInt(kHatRhythmFull)<6?480:240;if((tick/swingTick)%2&&getInt(kHatRhythmFull)<9)beat+=(get(kSwing)-50)*(swingTick==480?.01:.005);beat+=get(kHatShift)*.001/60*currentTempo.load();return beat;};
  for(int bar=first;bar<=last;++bar){
   if(ride){int stride=ride==1||ride==3?960:480;for(int tick=0;tick<3840;tick+=stride){double beat=hatBeat(bar,tick);if(cymbalInFill(beat))continue;bool bell=ride>=3&&tick==1920;int v=groove::velocityVariation(tick%960==0?78:52,get(kVelSpread),getInt(kRuleHat),hash(partSeed[2].load()+tick+0x519u));emit(beat,bell?10:8,v);}}
   else if(open==1||open==2){int tick=openHatTick();double beat=hatBeat(bar,tick);if(!cymbalInFill(beat))emit(beat,3,groove::velocityVariation(64,get(kVelSpread),getInt(kRuleHat),hash(partSeed[2].load()+tick+71)));}
   if(crash>=3){int interval=crash==3?4:crash==4?8:16;if(bar>=0&&bar%interval==0&&!cymbalInFill(bar*4.))emit(bar*4.,9,94);}
  }
- if(open==3&&cymbalFillEnd>=0){double beat=cymbalFillEnd-.5;bool existing=false;int offset=int(std::llround((beat-start)/step));for(int i=0;i<eventCount;++i)if(events[i].offset==offset&&(events[i].role==2||events[i].role==3)){events[i].role=3;existing=true;break;}if(!existing&&get(kFillDensity)>0)emit(beat,3,64);}
+ if(open==3&&cymbalFillEnd>=0){double beat=cymbalFillEnd-.5;bool existing=false;int offset=int(std::llround((beat-start)/step));if(beat>=start-1.e-10&&beat<end-1.e-10)offset=eventOffset(beat,start,end,step);for(int i=0;i<eventCount;++i)if(events[i].offset==offset&&(events[i].role==2||events[i].role==3)){events[i].role=3;existing=true;break;}if(!existing&&get(kFillDensity)>0)emit(beat,3,64);}
  if(crash==1&&cymbalStart>=0)emit(cymbalStart,9,94);
  if(crash==2&&cymbalFillEnd>=0)emit(cymbalFillEnd,9,94);
 }

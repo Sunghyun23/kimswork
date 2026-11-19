@@ -1,6 +1,6 @@
 # Groove Dice hats and cymbals
 
-Historical 1.3.0 design below. Current1.3.3 adds independent source editing and unlocked visible Dice changes; see [current manual](manual.md) and [sound/Dice workflow](sound-browser-and-kit-pool.md). Statements below about retaining all rule choices apply to the earlier revision.
+Current1.6.0 adds nine triplet choices (quarter/eighth/sixteenth × plain/Fill/Roll), three list pages and full-range MAIN D1. The current manual is authoritative. Historical 1.3.0 design below. Current1.3.3 adds independent source editing and unlocked visible Dice changes; see [current manual](manual.md) and [sound/Dice workflow](sound-browser-and-kit-pool.md). Statements below about retaining all rule choices apply to the earlier revision.
 
 MAIN D is **HATS / CYMBALS**: Hat Rhythm / Open Hat / Ride / Crash. Drive, Dust and Room remain available on FX (with Duck, Low Cut, Mod Rate, Mod Depth and Master); they no longer occupy MAIN. The other three MAIN groups are unchanged. Use Q-Link Screen mode for the current page; older host-saved Program/Track maps may retain earlier assignments.
 

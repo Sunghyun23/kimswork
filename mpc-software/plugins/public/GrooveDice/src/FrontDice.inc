@@ -1,5 +1,5 @@
 // Visible MAIN randomisation. Per-control locks protect Dice only; manual editing stays live.
-static int frontDiceTarget(int n){static const int keys[]={kSwing,kSnareLate,kHatShift,kRndNudge,kRulePickFullKick,kRulePickFullSnare,kRulePickFullHat,kRulePickFullPerc,kMixKick,kMixSnare,kMixHat,kMixPerc,kHatRhythm,kOpenHatRule,kRideRule,kCrashRule};return keys[mpc::clamp(n,0,15)];}
+static int frontDiceTarget(int n){static const int keys[]={kSwing,kSnareLate,kHatShift,kRndNudge,kRulePickFullKick,kRulePickFullSnare,kRulePickFullHat,kRulePickFullPerc,kMixKick,kMixSnare,kMixHat,kMixPerc,kHatRhythmFull,kOpenHatRule,kRideRule,kCrashRule};return keys[mpc::clamp(n,0,15)];}
 static bool isFrontDiceParameter(int key){for(int n=0;n<16;++n)if(frontDiceTarget(n)==key)return true;return false;}
 bool frontDiceLocked(int n)const{return getBool(kDiceLock0+n);}
 float diceContinuous(int key,float low,float high,float step,float amount){
@@ -28,8 +28,8 @@ unsigned randomiseFrontControls(float amount){
   if(getInt(kRuleHat)>0){
    if(!frontDiceLocked(12)){
     // Mostly straight eighths/sixteenths; occasional dotted/fill/roll endings.
-    static const int choices[]={3,3,3,3,6,6,6,6,4,4,7,7,0,1,5,8,9,10,12,13,11,14};
-    int old=getInt(kHatRhythm),next=choices[random()%(sizeof(choices)/sizeof(*choices))];layerSet(kHatRhythm,next);layerSet(kHatRhythmPage,next/8);if(next!=old)dirty|=4;
+    static const int choices[]={3,3,3,3,6,6,6,6,4,4,7,7,0,1,5,8,9,10,12,13,11,14,15,16,17,18,18,19,20,21,22,23};
+    int old=getInt(kHatRhythmFull),next=choices[random()%(sizeof(choices)/sizeof(*choices))];layerSet(kHatRhythmFull,next);layerSet(kHatRhythmFullPage,next/8);if(next!=old)dirty|=4;
    }
    if(!frontDiceLocked(13)){static const int choices[]={0,0,0,0,1,1,2,2,3};layerSet(kOpenHatRule,choices[random()%9]);}
    if(!frontDiceLocked(14)){static const int choices[]={0,0,0,0,0,0,1,2,3,4};layerSet(kRideRule,choices[random()%10]);}

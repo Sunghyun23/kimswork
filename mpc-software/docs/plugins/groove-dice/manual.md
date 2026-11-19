@@ -1,4 +1,4 @@
-# Groove Dice 1.5.1 — User manual
+# Groove Dice 1.6.0 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -6,7 +6,7 @@ Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standa
 
 Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. Other model compatibility and worst-case CPU are not certified by that test.
 
-Download the complete `groove-dice-1.5.1-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
+Download the complete `groove-dice-1.6.0-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
 The base package contains **Original Workshop**:128 independently synthesized WAV one-shots,96 kit configurations, two authored beats and93 timing templates. Ninety-six kits are combinations/settings, not96 separately recorded drum libraries. Optional expansions are separate files; the base release contains no private/commercial third-party drum library.
 
@@ -40,7 +40,11 @@ A previously saved legacy LOCK appears as BASIC with its padlock closed and froz
 
 MAIN repeats one bar, with snare backbeats on 2/4 and kick motifs away from those exact beats. Rule and hat-division changes apply live to their part at the continuing transport position. Elapsed hits are not replayed. Velocity follows a metrical strong / weak / medium / weak shape, with restrained random variation; ghost notes stay softer than backbeats.
 
-Hat Rhythm has **15 choices**: 1/4, 1/8, 1/16, 1/8 DOT and 1/16 DOT, each plain, +FILL or +ROLL. FILL adds short pickups; ROLL adds short 32nd-note bursts. Dotted divisions continue across the bar boundary. Open Hat offers OFF / OFFBEAT / BAR END / FILL END, replacing eligible closed hits rather than doubling them. Ride offers OFF / 1/4 / 1/8 / 1/4+BELL / 1/8+BELL and replaces automatic MAIN hats while active; recorded fill hats remain available. Crash offers OFF / START / AFTER FILL / EVERY 4 / EVERY 8 / EVERY 16. It marks structural boundaries, not every repeated bar. Count-in remains silent.
+Hat Rhythm has **24 choices**: 1/4, 1/8, 1/16, 1/8 DOT, 1/16 DOT, 1/4 T, 1/8 T and 1/16 T, each plain, +FILL or +ROLL. FILL adds short pickups; ROLL adds short 32nd-note bursts. Dotted divisions continue across the bar boundary. Open Hat offers OFF / OFFBEAT / BAR END / FILL END, replacing eligible closed hits rather than doubling them. Ride offers OFF / 1/4 / 1/8 / 1/4+BELL / 1/8+BELL and replaces automatic MAIN hats while active; recorded fill hats remain available. Crash offers OFF / START / AFTER FILL / EVERY 4 / EVERY 8 / EVERY 16. It marks structural boundaries, not every repeated bar. Count-in remains silent.
+
+**T means triplet**: three notes occupy the time of two notes of that division. Plain 1/4T, 1/8T and 1/16T give 6, 12 and 24 hits per 4/4 bar before RULE filtering. Tap Hat Rhythm to open its three-page left list; page buttons select 1/3, 2/3 or 3/3. The first fifteen choices retain their old meanings. MAIN D1 and GROOVE use the same full selector. A change rebuilds only the hat part immediately, without pressing Dice. Straight Swing does not warp dotted or triplet spacing; Hat Shift and bounded Random Nudge still apply. A Hat RULE, Density, active Ride or Open Hat replacement may reduce or replace closed hits. Fill and Roll suffixes add the existing short pickups or 32nd-note ending; they are separate from recorded Fill A–D.
+
+The Hat Rhythm padlock protects its selection during global Dice; manual edits remain possible. Existing host-saved custom maps pointing to the legacy 15-choice Hat Rhythm parameter still work for those choices. Use **Screen** mode or reassign to **Full Hat Rhythm** to access all 24 choices. Old projects migrate their stored selection and per-pattern metadata without changing their note data. New Triplet data requires version1.6.0 or newer.
 
 Drive, Dust and Room are on **FX**, alongside Duck, Low Cut, modulation and Master.
 

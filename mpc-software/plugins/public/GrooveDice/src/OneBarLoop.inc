@@ -55,7 +55,7 @@ bool makePhrase(int b,float amount,unsigned mask=15){
   if(style==5)put(720,1,33,45);else if(style==6)put(3120,1,33,45);else if(style==7){put(720,1,30,45);put(2640,1,35,45);}
   else if(style<=3&&rule>=2&&amount>.5f){int ghosts=rule==3?2:1;for(int j=0;j<ghosts;++j)if(draw(1)%100<unsigned(std::min(get(kGhost),rule==3?40.f:25.f)))put(j?2640:720,1,24+int(draw(1)%13),45);}
  }
- int rhythm=getInt(kHatRhythm);static const int strides[]={960,480,240,720,360};int stride=strides[rhythm/3],ornament=rhythm%3;
+ int rhythm=getInt(kHatRhythmFull);static const int strides[]={960,480,240,720,360,640,320,160};int stride=strides[rhythm/3],ornament=rhythm%3;
  if(edit(2)){
   int style=ruleStyle(2),step=stride*(style==4?2:1),offset=style==11?480:style==5?stride/2:0;
   for(int tick=offset;tick<length;tick+=step){if(ornament==2&&tick>=3360)continue;
@@ -89,8 +89,8 @@ bool makePhrase(int b,float amount,unsigned mask=15){
  for(int i=1;i<count;++i){Note n=next[i];int j=i;while(j>0&&(next[j-1].tick>n.tick||(next[j-1].tick==n.tick&&next[j-1].role>n.role))){next[j]=next[j-1];--j;}next[j]=n;}
  bool importedHat=imported&&!edit(2);
  int index=b-4,state=getInt(kPhraseState)|(1<<index),grid=importedHat?4:edit(2)?(ornament?3:rhythm/3==0?0:rhythm/3==1?1:2):(phraseBank(b)?phraseGrid(b):4);
- state=(state&~(7<<(3+index*3)))|(grid<<(3+index*3));state&=~(3<<(12+index*2));int hatState=getInt(kHatPhraseState);
- if(importedHat)hatState&=~(15<<(index*4));
- if(edit(2))hatState=(hatState&~(15<<(index*4)))|((rhythm+1)<<(index*4));
- for(auto&c:notes[b])c.data.store(0);lengths[b].store(length);for(int i=0;i<count;++i)notes[b][i].write(next[i]);set(kPhraseState,state);set(kHatPhraseState,hatState);changed[kPhraseState].store(true);changed[kHatPhraseState].store(true);return true;
+ state=(state&~(7<<(3+index*3)))|(grid<<(3+index*3));state&=~(3<<(12+index*2));int hatState=getInt(kHatPhraseState),fullState=getInt(kHatPhraseFullState);
+ if(importedHat){hatState&=~(15<<(index*4));fullState&=~(31<<(index*5));}
+ if(edit(2)){hatState=(hatState&~(15<<(index*4)))|((rhythm<15?rhythm+1:0)<<(index*4));fullState=(fullState&~(31<<(index*5)))|((rhythm+1)<<(index*5));}
+ for(auto&c:notes[b])c.data.store(0);lengths[b].store(length);for(int i=0;i<count;++i)notes[b][i].write(next[i]);set(kPhraseState,state);set(kHatPhraseState,hatState);set(kHatPhraseFullState,fullState);changed[kHatPhraseFullState].store(true);changed[kPhraseState].store(true);changed[kHatPhraseState].store(true);return true;
 }

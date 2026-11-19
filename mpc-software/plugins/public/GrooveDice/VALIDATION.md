@@ -1,3 +1,17 @@
+## 1.6.0 — Triplet hats (2026-11-19)
+
+Native/ARM32/ARM64 builds and SDK validator pass. Final engine/UBSan/allocation-guard/state/layer/expansion/skin/bridge suite passes; host simulator19PASS/0WARN/0FAIL. All24rhythms are exercised at88/120BPM against actual scheduled events; sixteenth triplets deliver24plain hats/bar before RULE filtering.144triplet/RULE combinations remain bounded. Old779state, three independent5-bit bank fields, current byte-identical state, Undo, live edits, locks and1000Dice rolls are covered. All144full-RULE combinations also match raw versus scheduled closed-hat counts. The offbeat1/16T regression was96expected versus95actual before the fix; clamping nearest-sample offsets inside the current block delivers all96events.32/128/512frames at88/98/120BPM pass. Invalid5-bit codes fall back safely. Fine0.001VST cursor steps visit all24choices both directions; reentrant/concurrent host tests retain bounded notifications. First779full declarations/ranges match the checked-in1.5.1fixture exactly; three parameters append,782total.
+
+The newly exposed host-sweep failure in transient ROLL FILL/ROLL FX state is fixed: each command consumes once and resets its cursor. Repeat presses, idle blocks and load-safe state are verified. Existing count-inOn/Off device fixtures remain passing.
+
+Actual MPC XL OS3.10.1.12: official SDK updates on internal NVMe and SD36C7-1ACA each verify167files; all four exported owner expansions are retained. The original SSD install remains absent. Fresh-instance MAIN, three-page hat browser, Triplet selections during PLAY LOOP, D1 lock/Dice and Undo are checked via authenticated native Remote Screen input and framebuffer captures. These are device UI/playback-state checks; physical encoder rotation, hardware-audio listening and worst-case hardware CPU are not newly certified. Native VST timing/audio checks do not replace those measurements. SD is still mountednoexec, so loading specifically from SD is not certified. Public ZIP contains only Original Workshop, never owner expansion payloads.
+
+See design/device-1.6.0 for logs, direct MPC captures and publication evidence. Historical validations below remain scoped to their original versions.
+
+## 2026-11-19 — Sync-style small-turn audit (no engine change)
+
+See design/sync-knob-audit-2026-11-19. Getter-relative0.001steps traverse every MAIN RULE/Hat/Open/Ride/Crash choice both directions through direct and existing native VST paths. Dotted720/360tick grids and free-Hz ModRate are correct. UBSan/allocation guards pass. The Donut Sync snapback defect did not reproduce; Groove Dice remains1.5.1with unchanged engine/parameters/UI/banks. Existing hat list has no Triplet choice; none added in this audit. Physical hardware verification remains separate.
+
 ## Current1.4.0 —16RULES per part
 
 Existing seven styles stay in place; nine new choices per part add36distinct generated/scheduled patterns. The four full selectors append after672legacy declarations. [Specification and compatibility](../../../docs/plugins/groove-dice/rules.md). Release1.4.0 is approved. Final automatic/device evidence is recorded below and in design/device-1.4.0/verification.json.

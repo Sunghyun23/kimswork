@@ -1,0 +1,116 @@
+{
+  "version": "1.6.0",
+  "model": "MPC XL",
+  "os": "3.10.1.12",
+  "sdkCommit": "febd2ca5bd9eb16c4a412837196e145566bc981b",
+  "parameters": 782,
+  "legacyDeclarationsUnchanged": 779,
+  "newRhythms": [
+    "1/4T",
+    "1/8T",
+    "1/16T"
+  ],
+  "totalRhythms": 24,
+  "hostSimulator": {
+    "pass": 19,
+    "warnings": 0,
+    "failures": 0
+  },
+  "device": {
+    "freshInstanceMain": true,
+    "threeBrowserPages": true,
+    "allNineTripletChoicesDuringPlayLoop": true,
+    "d1LockPreservesSelectionDuringDice": true,
+    "otherDiceValuesChange": true,
+    "undo": true,
+    "grooveToMainSharedSelection": true,
+    "knobDragWhileLocked": true,
+    "playLoopStoppedAfterQA": true,
+    "installs": {
+      "nvme": {
+        "filesVerifiedBySDK": 167
+      },
+      "36C7-1ACA": {
+        "filesVerifiedBySDK": 167,
+        "noexec": true,
+        "directExecutionNotCertified": true
+      }
+    },
+    "ownerExpansionsRetained": 4,
+    "finalBoundaryFixRetestedAfterRestart": true,
+    "finalRetestRhythms": [
+      "1/4T",
+      "1/8T",
+      "1/16T"
+    ],
+    "finalRetestLockedDiceAndUndo": true
+  },
+  "captures": {
+    "source": "Authenticated MPC Remote Screen framebuffer; original1280x800 PNGs; site WebP conversion lossless",
+    "sha256": {
+      "triplet-final-quarter-play.png": "b60de9ee20cfef651941422283ab5834048cce21557e8f463ed05a77abd667eb",
+      "triplet-final-eighth-play.png": "20d536e2fb24df5bbdecf1445b21ed9ff43cd2129938acb28991b2b02a6cfcae",
+      "triplet-undo.png": "a9eb7d39fdb37be3ebdf15fc57de0d35a6744c23fbd4f55b3b5ab32b4b8e9e66",
+      "triplet-original-kit.png": "c7fa65b92bfc365e9c04e894ab858762a4d1654519dfd7c597081267dd5ca142",
+      "triplet-sixteenth-playing.png": "30ae6e3a109d602d15345103236d57e920d1cdd516fbd00e1cbd25239c20b9cc",
+      "triplet-final-undo.png": "c3b9349141fa0a225830ebbd4ad49c28c084ff6ba27daaf7a46c6771863ed2d5",
+      "triplet-eighth-playing.png": "2664b4bf4d91d74d14e25c81b92ae97be9e17891c3a13acc51e4bda8e1ab7e23",
+      "triplet-browser-final.png": "7cda9317cda1b3ea5691de8d53a915f3b305214e916110490e283a25dbbe7871",
+      "triplet-eighth-fill.png": "99b6662d51d264028b88ae8302b4949af6fdd5e49b172c623bda71964eb99e91",
+      "triplet-sixteenth-fill.png": "b6d691ac277388581491cfceb88582dc843fede4b3b2f9bf44dfa976545a5165",
+      "triplet-main-final.png": "23a3d1ea4fc803658cb877c3ba69e8496d73479248ef76e8229456e701105006",
+      "triplet-list-page-3.png": "99b3201d6e29fa0d00eb0239ff6f59d5fb08cbbb865b8ceefef6e0bc17fc2c20",
+      "triplet-list-page-1.png": "e453ee53357ca44ae5f704c96c326084e006aad737cc1d45da6ade627a7c3269",
+      "triplet-sixteenth-roll.png": "48674d5d2a51cdf1d8c3d757a48c1a15099d00cc250aa3eaf3f15e16c1d0b29f",
+      "triplet-quarter-playing.png": "f9e75fc57b1e94543f1d1391b182f23662bdbfcc7aa03698ce5623a47f36f9f8",
+      "triplet-eighth-roll.png": "b172c856874e876837586b412ae875503a0fd057e79255f97e1d2754fe93f2f1",
+      "triplet-groove-to-main.png": "a9eb7d39fdb37be3ebdf15fc57de0d35a6744c23fbd4f55b3b5ab32b4b8e9e66",
+      "triplet-groove-shared.png": "dea1b6800fe86949ec71b42022a72a5a5043f3002323220dbb8c793dc90e3bad",
+      "triplet-knob-drag.png": "1fe4eaebcdaf1e56f46c102bed80bf2f32223f795cedb2db309061edad8d06cf",
+      "triplet-eighth-selected.png": "c4816863d421116fccf4ce3a1be56361d88dcac7ce6be2628ab4975d2deb9c96",
+      "triplet-final-locked-dice.png": "9e13348030fc5245801a6731ba172016f329b196e6e3eb9591d89890fbd08615",
+      "triplet-final-sixteenth-play.png": "f67f111ef4fadfaa10982b8c5b04a1d56c078b2c58f2b9aa1cdd993de6ba7688",
+      "triplet-quarter-roll.png": "e567c08303de64673ea980221f6bfbd93267231508c3eae709f6b273fb0dbccb",
+      "triplet-core-filter.png": "abc611201992128066276c54985bd817d0f3a4668a4ff26620dfb79197fb0f73",
+      "triplet-main-loaded.png": "5f36a87b30b7e6618a7072c900d593b53a4fb3a89871477630e212c8733135bc",
+      "triplet-knob-wheel.png": "c7fa65b92bfc365e9c04e894ab858762a4d1654519dfd7c597081267dd5ca142",
+      "triplet-quarter-fill.png": "11d5624b3a7d7c2723a8c1faab2b9dbb1c7114498164922dff8ec0cb4a41a09e"
+    }
+  },
+  "notNewlyCertified": [
+    "physical encoder rotation",
+    "hardware audio listening/recording",
+    "worst-case hardware CPU",
+    "SD-specific plugin loading"
+  ],
+  "checks": {
+    "fullTripletRuleScheduledProfiles": 144,
+    "variableFrameTempoCases": 9,
+    "frameSizes": [
+      32,
+      128,
+      512
+    ],
+    "bpm": [
+      88,
+      98,
+      120
+    ],
+    "offbeatBoundaryRegression": {
+      "beforeExpected": 96,
+      "beforeActual": 95,
+      "afterActual": 96
+    },
+    "allFinalRegressionsPass": true
+  },
+  "runtimeHashes": {
+    "plugin.json": "030d000dedf5459476d36e2e460dc3636f33a784ab9fea7af6e8e60f0ff10a18",
+    "VST/groove-dice-arm32.so": "affc83e7f230b062b5952a3409a07b6d3ddee7fc371fcbe5e39eb6ad59f18b26",
+    "VST/groove-dice-arm64.so": "3a312b3b85e2b883eaa14ba2e69cfe06fe428be5a1c1a06348bc73b0615979aa",
+    "Plugin Skins/TUI.json": "58884f745fd2a1f9150a1d705551a5e32ade774ac510c3c37fca8cf9d4732fd7",
+    "Plugin Skins/Q-Links.json": "76d59ab232b936d358efbc2410b77c29bb7f6ca256593b5c4a90bce67ecdd362"
+  },
+  "nativeHash": "33878ae3ccc09564be4dd9f183bd6130c275ce0666f6931956ed08ee0f354d24",
+  "siteResponsiveChecks": 77,
+  "siteLocalReferences": 282
+}

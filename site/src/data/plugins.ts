@@ -200,20 +200,21 @@ export const plugins: Plugin[] = [{
  tagline:'A new groove, one roll away.',
  summary:'Roll a musical groove. Lock what you love. Shape every drum.',
  description:'A one-bar neo-soul and hip-hop drum instrument for MPC. Roll new timing, rules, mix and cymbal accents, protect individual controls with a padlock, and build your sound from layered original drums.',
- developmentVersion:'1.5.1', release:{version:'1.5.1',tag:'groove-dice/v1.5.1',asset:'groove-dice-1.5.1-mpc.zip'}, image:'groove-dice-main-device-1.5.1.webp',
- imageAlt:'Actual MPC XL Groove Dice1.5.1 with MAIN Dice locks and independent sound pool controls',
+ developmentVersion:'1.6.0', release:{version:'1.6.0',tag:'groove-dice/v1.6.0',asset:'groove-dice-1.6.0-mpc.zip'}, image:'groove-dice-main-device-1.6.0.webp',
+ imageAlt:'Actual MPC XL Groove Dice1.6.0 with Triplet hats, MAIN locks and sound pool controls',
  intro:'Includes 128 original synthesized one-shots, 96 kit combinations, two authored beats and 93 timing templates. Optional .gdexp packs stay separate. No commercial or personal sample library is bundled.',
- verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; 1.5.1 MAIN/fill/FX policy, dedicated roll actions, Undo and native presets; earlier SOUND/REV/polarity checks',
+ verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; 1.6.0 three-page Triplet browser and live remote UI checks; automated timing, VST/Q-Link bridge, state/Undo and count-in regressions; earlier SOUND/REV/polarity checks',
  mapping:[['A · Timing','Swing','Snare Late','Hat Shift','Rnd Nudge'],['B · Rules','Kick','Snare','Hat','Perc'],['C · Drum Mix','Kick Level','Snare Level','Hat Level','Perc Level'],['D · Hats / Cymbals','Hat Rhythm','Open Hat','Ride','Crash']],
  features:[
   {title:'Roll the values you can see.',text:'Sixteen MAIN padlocks decide which controls Dice may change. Open a lock to explore; close it to preserve that value. Timing and mix stay within musical bounds, with strong/weak/medium/weak velocity accents. Undo restores the preceding roll.'},
   {title:'Sixteen rules for every part.',text:'Kick, Snare, Hat and Perc each offer 16 playable rules. Choose through Q-Link or an eight-at-a-time left browser. Explore pickups, ghost notes, dynamic hats and percussion replies while keeping snare backbeats on 2 and 4 and kicks around them.'},
-  {title:'Give the hats a phrase.',text:'Choose 15 straight, dotted, fill and roll rhythms. Add restrained open hats, replace automatic hats with Ride/Bell, or mark starts and fill endings with Crash. Character processing remains on FX.'},
+  {title:'Give the hats a phrase.',text:'Choose 24 straight, dotted and triplet rhythms, each with basic, Fill and Roll variants. Quarter-, eighth- and sixteenth-note triplets share the same live Hat Rhythm control. Add restrained open hats, replace automatic hats with Ride/Bell, or mark starts and fill endings with Crash. Character processing remains on FX.'},
   {title:'Find a sample. Hear it. Shape it.',text:'Tap a sound name for its browser, step with arrows or turn a Q-Link. Two in-place pages offer Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Every source has independent REV, with polarity on page2 and a single-layer preview. Four kick/snare layers and independent Ride/Crash/Bell sources keep sound design close.'},
   {title:'Choose where the next kit comes from.',text:'Use one pack, every installed pack or up to 64 selected kits. Roll a whole kit or mix parts, keeping linked hats and a four-role percussion ensemble. Kit Fixed and layer locks protect your selections.'},
   {title:'Record a fill. Keep it yours.',text:'Play physical pads into four independent fill slots, up to four bars each. Two grid views expose all eight drum roles. Main-pattern rolls preserve all recorded fills. Use ROLL FILL separately.'}
  ],
  changes:[
+  {title:'1.6.0: hats in threes.',text:'Nine new Triplet choices: 1/4T, 1/8T and 1/16T, each basic, +FILL or +ROLL. The three-page browser, MAIN D1, GROOVE, Dice and Undo use the same 24-choice range. Old projects keep their notes and legacy parameter ranges. Momentary Fill/FX rolls clear after execution.'},
   {title:'1.5.1: three rolls, clear boundaries.',text:'ROLL DICE reshapes MAIN and its pattern while preserving every fill and FX value. Dedicated ROLL FILL and ROLL FX actions have Undo. Individual locks stay on MAIN; kit, role and layer protection remain. UNLOCK ALL changes protection only.'},
   {title:'1.4.0: 36 new ways to move.',text:'Nine new rules per part extend the original seven to sixteen. New choices include END DOUBLE kicks, DRAG IN snares, CRESCENDO hats and LATIN THREE percussion. Live edits and Roll Dice use the same full range, honor locks and preserve recorded fills.'},
   {title:'1.3.4: two sound pages. Every source in reach.',text:'Large previous/next arrows and a visible SOUND1/2 counter switch all rows and their SCREEN Q-Links together. Tune is on page1, Decay on page2. REV and polarity are independent for all17sources; no separate Detail screen is needed.'},
@@ -223,7 +224,8 @@ export const plugins: Plugin[] = [{
  ],
  limitations:['Signed Shift reports a fixed 30ms baseline latency, including direct pads. Hardware compensation and playing feel are not certified.','Remote UI checks cover page/REV/polarity operation; full physical Q-Link coverage, worst-case CPU and every output destination remain unverified.','A stopped recording intentionally started inside a bar may wait for a host bar anchor/seek; use aligned starts or punch in during running playback.','External sidechain input and generated MIDI output to the MPC sequencer are not implemented.','Install optional packs using Pack Builder or the Python CLI, then reopen the plugin. This is not native MPC XPN registration.'],
  screenshots:[
-  {image:'groove-dice-main-device-1.5.1.webp',alt:'Groove Dice1.5.1 MAIN running on MPC XL',caption:'MAIN · Direct MPC XL1.5.1 capture. This device includes optional owner packs; the public ZIP contains only the 128 original sounds.'},
+  {image:'groove-dice-main-device-1.6.0.webp',alt:'Groove Dice1.6.0 MAIN running on MPC XL with Triplet Hat Rhythm',caption:'MAIN · Direct MPC XL1.6.0 capture. This device includes optional owner packs; the public ZIP contains only the 128 original sounds.'},
+  {image:'groove-dice-triplets-device-1.6.0.webp',alt:'Actual MPC XL Hat Rhythm page3/3 showing Triplet Fill and Roll choices',caption:'TRIPLET HATS · Three pages, 24 choices. Quarter, eighth and sixteenth triplets include Fill and Roll endings. Actual MPC XL1.6.0.'},
   {image:'groove-dice-fill-device-1.5.1.webp',alt:'Actual MPC fill editor with separate ROLL FILL',caption:'ROLL FILL · Vary only the selected fill; Undo restores it. Actual MPC XL1.5.1.'},
   {image:'groove-dice-fx-device-1.5.1.webp',alt:'Actual MPC FX page with separate ROLL FX',caption:'ROLL FX · Independent texture exploration and Undo. Main Dice preserves these values. Actual MPC XL1.5.1.'},
   {image:'groove-dice-rules-device-1.4.0.webp',alt:'Actual MPC Groove Dice Kick Rules second page with eight additional choices',caption:'RULES · Eight choices per page, with PAGE 1/2 and PAGE 2/2 controls. All sixteen choices are also available through Q-Link.'},
@@ -235,7 +237,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-19-dice-presets';
+export const navigationVersion = 'software-2026-11-19-triplet';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

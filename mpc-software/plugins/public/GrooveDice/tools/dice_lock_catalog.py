@@ -23,4 +23,4 @@ def append(params):
  (P/'dice-locks.json').write_text(json.dumps(dict(targets={str(k):v for k,v in targets.items()},new=new,unlock=unlock),indent=2)+'\n')
 def definitions():
  c=json.loads((P/'dice-locks.json').read_text())
- return ['static constexpr int kExtraDiceValueLocks[]={'+','.join(map(str,c['new']))+'};','static int diceValueLock(int key){switch(key){'+''.join(f'case {k}:return {v};'for k,v in c['targets'].items())+'default:return -1;}}']
+ return ['static constexpr int kExtraDiceValueLocks[]={'+','.join(map(str,c['new']))+'};','static int diceValueLock(int key){switch(key){case kHatRhythmFull:return kDiceLock12;'+''.join(f'case {k}:return {v};'for k,v in c['targets'].items())+'default:return -1;}}']

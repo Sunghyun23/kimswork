@@ -1,0 +1,3 @@
+PASS:Groove Dice relative0.001Q-Link turns visit every Rule/Hat/Open/Ride/Crash choice both ways without rolling Dice; RT allocation guard enabled
+PASS:existing hat dotted grids have720/360tick spacing; free-Hz FX ModRate retains incremental input
+PASS:real VST setters/getters/display/rendering for all8rhythm selectors sweep every choice both directions without triggering Dice or allocating in render

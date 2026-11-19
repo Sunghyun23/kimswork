@@ -1,0 +1,3 @@
+PASS MAIN D4relays: all15/4/5/6choices with4004fine VST increments during playback; bounded notifications and no layer fanout
+PASS real VST4x16relays/full selectors/legacy aliases and4004small physical-style increments during playback; bounded notifications; reentrant host reads/rule-value echoes terminate
+Same-style20ticks: 20 notifications / 0 layer writes; changed-style: 5 notifications / 0 layer writes
