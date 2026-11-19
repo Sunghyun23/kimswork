@@ -1,0 +1,24 @@
+{
+  "success": true,
+  "checks": [
+    "/plugins/groove-dice/",
+    "/",
+    "/software/",
+    "/software/instruments/",
+    "/plugins/groove-dice/manual/",
+    "/apps/groove-dice-pack-builder/",
+    "/apps/groove-dice-pack-builder/manual/",
+    "/plugins/donut-theory/",
+    "/plugins/crate-press/",
+    "website-sdk-download-hash",
+    "builder-download:groove-dice-pack-builder-1.0.0-darwin-arm64.zip",
+    "builder-download:groove-dice-pack-builder-1.0.0-windows-amd64.zip"
+  ],
+  "sdkDownloadHashVerified": true,
+  "builderDownloadsVerified": true,
+  "otherVersionsUnchanged": {
+    "DonutTheory": "1.14.2",
+    "CratePress": "0.2.4",
+    "PackBuilder": "1.0.0"
+  }
+}

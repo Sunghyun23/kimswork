@@ -1,0 +1,56 @@
+{
+  "id": 451333948,
+  "version": "1.6.1",
+  "tag": "groove-dice/v1.6.1",
+  "commit": "4a89f6e99e0be0c4f04441bfee04bfb67bf17fa5",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.6.1",
+  "assets": [
+    {
+      "name": "groove-dice-1.6.1-mpc-aarch64.zip",
+      "size": 18333810,
+      "digest": "sha256:e92a6338e46ab949d60ee25b626d1dcaa5483734046459ef45a94e3999483aae",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.6.1/groove-dice-1.6.1-mpc-aarch64.zip"
+    },
+    {
+      "name": "groove-dice-1.6.1-mpc-aarch64.zip.sha256",
+      "size": 100,
+      "digest": "sha256:ff95cc8379af495a182ca6e7682d6c5d4b4475e2210a0de3e60428a8d2b1141a",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.6.1/groove-dice-1.6.1-mpc-aarch64.zip.sha256"
+    },
+    {
+      "name": "groove-dice-1.6.1-mpc-armv7.zip",
+      "size": 18293520,
+      "digest": "sha256:079ee9f3f3ad528b7864d39e66a65d45a91660d5cc5ffe11fafb13b89de8b01a",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.6.1/groove-dice-1.6.1-mpc-armv7.zip"
+    },
+    {
+      "name": "groove-dice-1.6.1-mpc-armv7.zip.sha256",
+      "size": 98,
+      "digest": "sha256:497557008a3936371121d19972a690be153c625ea09581e5116ea3102c9123eb",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.6.1/groove-dice-1.6.1-mpc-armv7.zip.sha256"
+    },
+    {
+      "name": "groove-dice-1.6.1-mpc.zip",
+      "size": 18750649,
+      "digest": "sha256:c8f59d256e08f9f54f684d1094d2091a5233399243cb161f3b6033c278881429",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.6.1/groove-dice-1.6.1-mpc.zip"
+    },
+    {
+      "name": "groove-dice-1.6.1-mpc.zip.sha256",
+      "size": 92,
+      "digest": "sha256:691363a9824aadbcbbdfb07aef17ea0ca89271a1217742f391d211f0650c706a",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.6.1/groove-dice-1.6.1-mpc.zip.sha256"
+    }
+  ],
+  "publicRelease": true,
+  "stable": true,
+  "privatePayloads": 0,
+  "date": "2026-11-19",
+  "pagesRun": 44527014146,
+  "pagesConclusion": "success",
+  "responsiveChecks": 91,
+  "publicChecks": 12,
+  "builderLinksConfirmed": true,
+  "deviceInstallChanged": false,
+  "deviceScope": "Existing1.6.0device captures and owner installations retained; no1.6.1hardware certification."
+}

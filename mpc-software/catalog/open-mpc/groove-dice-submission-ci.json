@@ -1,0 +1,14 @@
+{
+  "workflowRuns": [
+    {
+      "id": 44527338657,
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44527338657",
+      "head_sha": "c92b72c8f43382cfca033b49f591c5c27a1ef7fa"
+    }
+  ],
+  "changedFiles": [
+    "catalog/plugins/groove-dice.json"
+  ]
+}
