@@ -1,0 +1,988 @@
+Building Donut Theory by kim  (/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory)
+  toolchain: gcc   target: native   release
+
+[1/2] Native build (for host_sim and testing on this computer)
+  [native] compiling 1 source file -> build/native/donut-theory.dylib
+  [native] ok (450 KB, 3.2s)
+
+[2/2] Parameter dump (host_sim) -> build/params.json
+  host_sim dump -> build/params.json
+
+Native build only: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory/build/native/donut-theory.dylib
+Try it:  /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk/.sdk-tools/host_sim /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory/build/native/donut-theory.dylib test --notes 60,64,67 --wav out.wav
+Custom skins generated: MAIN, 5 detail tabs and one bank-selectable CHORD editor
+Building Donut Theory by kim  (/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory)
+  toolchain: zig   target: all   release
+Using zig 0.17.1 (from /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk/.sdk-tools/zigenv)
+
+[1/7] Native build (for host_sim and testing on this computer)
+  [native] compiling 1 source file -> build/native/donut-theory.dylib
+  [native] ok (791 KB, 5.2s)
+
+[2/7] Parameter dump (host_sim) -> build/params.json
+  host_sim dump -> build/params.json
+
+[3/7] arm32 build (MPC Live/X/One (32-bit))
+  [arm32] compiling 1 source file -> build/kim - VST - Donut Theory/VST/donut-theory-arm32.so
+  [arm32] ok (738 KB, 3.7s)
+
+[4/7] arm64 build (MPC Live II/One+/Key 61/X SE/3 (64-bit))
+  [arm64] compiling 1 source file -> build/kim - VST - Donut Theory/VST/donut-theory-arm64.so
+  [arm64] ok (692 KB, 4.0s)
+
+[5/7] Assemble output folder: build/kim - VST - Donut Theory/
+  copied plugin.json
+  copying hand-written skins/ -> Plugin Skins/ (gen_ui.py not run)
+  copied 22 asset files from assets/ into Plugin Skins/
+  copied 2 files from Content/ into Content/
+
+[6/7] version.xml
+  version 1.14.0.0, uiversion 0.1.0.0
+
+[7/7] Validate
+Validating /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory/build/kim - VST - Donut Theory
+OK     plugin.json: Donut Theory by kim (instrument, uid Krql)
+OK     folder name "kim - VST - Donut Theory"
+OK     file32: donut-theory-arm32.so is a 32-bit ARM shared object
+OK     file32: needed libraries: libm.so.6, libc.so.6, ld-linux-armhf.so.3, libdl.so.2
+OK     file32: max GLIBC requirement 2.27
+OK     file32: exports VSTPluginMain
+OK     file64: donut-theory-arm64.so is a 64-bit AArch64 shared object
+OK     file64: needed libraries: libm.so.6, libc.so.6, libpthread.so.0, libdl.so.2
+OK     file64: max GLIBC requirement 2.27
+OK     file64: exports VSTPluginMain
+OK     uid matches the binary (Krql)
+OK     name matches the binary (Donut Theory)
+OK     manufacturer matches the binary (kim)
+OK     kind matches the binary (instrument)
+OK     numInputs matches the binary (0)
+OK     numOutputs matches the binary (2)
+OK     TUI.json: all parameter handles are within 0..387
+OK     TUI.json: image active-usability-180-44.png present
+OK     TUI.json: image active-usability-375-44.png present
+OK     TUI.json: image active-usability-460-64.png present
+OK     TUI.json: image arrow.png present
+OK     TUI.json: image bank-300-64-off.png present
+OK     TUI.json: image bank-300-64-on.png present
+OK     TUI.json: image button-hit.png present
+OK     TUI.json: image chord-150-off.png present
+OK     TUI.json: image chord-180-off.png present
+OK     TUI.json: image chord-180-on.png present
+OK     TUI.json: image chord-300-off.png present
+OK     TUI.json: image dt-unlock-off.png present
+OK     TUI.json: image dt-unlock-on.png present
+OK     TUI.json: image dt-value-lock-off.png present
+OK     TUI.json: image dt-value-lock-on.png present
+OK     TUI.json: image edit-button-panel.png present
+OK     TUI.json: image env-fader-value.png present
+OK     TUI.json: image env-fader.png present
+OK     TUI.json: image env-select-compact.png present
+OK     TUI.json: image env-select.png present
+OK     TUI.json: image envelope-value-panel.png present
+OK     TUI.json: image envelope-vertical.png present
+OK     TUI.json: image fader_h_uni.png present
+OK     TUI.json: image footer-ChordNext-offImage-slot-44-44-off.png present
+OK     TUI.json: image footer-ChordNext-onImage-slot-44-44-on.png present
+OK     TUI.json: image footer-ChordPrev-offImage-slot-44-44-off.png present
+OK     TUI.json: image footer-ChordPrev-onImage-slot-44-44-on.png present
+OK     TUI.json: image footer-DriveType-offImage-menu-small.png present
+OK     TUI.json: image footer-DriveType-onImage-menu-small.png present
+OK     TUI.json: image footer-Expression-image-touch-value-panel.png present
+OK     TUI.json: image footer-Filter-offImage-menu-small.png present
+OK     TUI.json: image footer-Filter-onImage-menu-small.png present
+OK     TUI.json: image footer-InputMode-offImage-header-InputMode.png present
+OK     TUI.json: image footer-InputMode-onImage-header-InputMode.png present
+OK     TUI.json: image footer-Lfo2Shape-offImage-menu-small.png present
+OK     TUI.json: image footer-Lfo2Shape-onImage-menu-small.png present
+OK     TUI.json: image footer-Lfo2Target-offImage-menu-small.png present
+OK     TUI.json: image footer-Lfo2Target-onImage-menu-small.png present
+OK     TUI.json: image footer-ModMode-offImage-menu-small.png present
+OK     TUI.json: image footer-ModMode-onImage-menu-small.png present
+OK     TUI.json: image footer-ModShape-offImage-menu-small.png present
+OK     TUI.json: image footer-ModShape-onImage-menu-small.png present
+OK     TUI.json: image footer-Progression-offImage-menu-chord.png present
+OK     TUI.json: image footer-Progression-onImage-menu-chord.png present
+OK     TUI.json: image footer-Shape-offImage-menu-small.png present
+OK     TUI.json: image footer-Shape-onImage-menu-small.png present
+OK     TUI.json: image footer-SoundNext-offImage-arrow.png present
+OK     TUI.json: image footer-SoundNext-onImage-arrow.png present
+OK     TUI.json: image footer-SoundPreset-offImage-header-SoundPreset.png present
+OK     TUI.json: image footer-SoundPreset-onImage-header-SoundPreset.png present
+OK     TUI.json: image footer-SoundPrev-offImage-arrow.png present
+OK     TUI.json: image footer-SoundPrev-onImage-arrow.png present
+OK     TUI.json: image footer-Target-offImage-menu-small.png present
+OK     TUI.json: image footer-Target-onImage-menu-small.png present
+OK     TUI.json: image footer-Vibrato-image-touch-value-panel.png present
+OK     TUI.json: image footer-VoiceMode-offImage-header-VoiceMode.png present
+OK     TUI.json: image footer-VoiceMode-onImage-header-VoiceMode.png present
+OK     TUI.json: image footer-group-panel.png present
+OK     TUI.json: image footer-knob-ticks.png present
+OK     TUI.json: image footer-slot-44-32-off.png present
+OK     TUI.json: image footer-slot-44-32-on.png present
+OK     TUI.json: image footer-tempo-sync-off.png present
+OK     TUI.json: image footer-tempo-sync-on.png present
+OK     TUI.json: image footer-value-panel.png present
+OK     TUI.json: image footer-wide-pad-off.png present
+OK     TUI.json: image footer-wide-pad-on.png present
+OK     TUI.json: image group-panel.png present
+OK     TUI.json: image header-InputMode.png present
+OK     TUI.json: image header-SoundPreset.png present
+OK     TUI.json: image header-VoiceMode.png present
+OK     TUI.json: image header-donut-runtime.png present
+OK     TUI.json: image key-110-44-off.png present
+OK     TUI.json: image key-110-44-on.png present
+OK     TUI.json: image key-116-44-off.png present
+OK     TUI.json: image key-116-44-on.png present
+OK     TUI.json: image key-120-44-off.png present
+OK     TUI.json: image key-120-44-on.png present
+OK     TUI.json: image key-128-48-off.png present
+OK     TUI.json: image key-128-48-on.png present
+OK     TUI.json: image key-156-44-off.png present
+OK     TUI.json: image key-156-44-on.png present
+OK     TUI.json: image key-160-44-off.png present
+OK     TUI.json: image key-180-44-off.png present
+OK     TUI.json: image key-190-44-off.png present
+OK     TUI.json: image key-190-44-on.png present
+OK     TUI.json: image key-192-44-off.png present
+OK     TUI.json: image key-192-44-on.png present
+OK     TUI.json: image key-198-44-off.png present
+OK     TUI.json: image key-198-44-on.png present
+OK     TUI.json: image key-198-60-off.png present
+OK     TUI.json: image key-198-60-on.png present
+OK     TUI.json: image key-200-44-off.png present
+OK     TUI.json: image key-200-44-on.png present
+OK     TUI.json: image key-210-44-off.png present
+OK     TUI.json: image key-210-44-on.png present
+OK     TUI.json: image key-216-44-off.png present
+OK     TUI.json: image key-216-44-on.png present
+OK     TUI.json: image key-402-44-off.png present
+OK     TUI.json: image key-402-44-on.png present
+OK     TUI.json: image key-44-44-off.png present
+OK     TUI.json: image key-44-44-on.png present
+OK     TUI.json: image key-48-44-off.png present
+OK     TUI.json: image key-48-44-on.png present
+OK     TUI.json: image key-70-44-off.png present
+OK     TUI.json: image key-70-44-on.png present
+OK     TUI.json: image knob-ticks.png present
+OK     TUI.json: image knob-value-panel.png present
+OK     TUI.json: image knob_bi.png present
+OK     TUI.json: image knob_uni.png present
+OK     TUI.json: image list-off.png present
+OK     TUI.json: image list-on.png present
+OK     TUI.json: image main-background-runtime.png present
+OK     TUI.json: image menu-chord.png present
+OK     TUI.json: image menu-small.png present
+OK     TUI.json: image mini-wide-pad-off.png present
+OK     TUI.json: image mini-wide-pad-on.png present
+OK     TUI.json: image perf-102x44-dt-unlock-off.png present
+OK     TUI.json: image perf-102x44-dt-unlock-on.png present
+OK     TUI.json: image perf-108x30-tempo-sync-off.png present
+OK     TUI.json: image perf-108x30-tempo-sync-on.png present
+OK     TUI.json: image perf-118x64-mini-wide-pad-off.png present
+OK     TUI.json: image perf-118x64-mini-wide-pad-on.png present
+OK     TUI.json: image perf-120x36-key-120-44-off.png present
+OK     TUI.json: image perf-120x36-key-120-44-on.png present
+OK     TUI.json: image perf-130x24-value-lcd-v2.png present
+OK     TUI.json: image perf-138x24-value-lcd-v2.png present
+OK     TUI.json: image perf-144x26-value-lcd-v2.png present
+OK     TUI.json: image perf-144x44-value-lcd-v2.png present
+OK     TUI.json: image perf-156x44-key-216-44-off.png present
+OK     TUI.json: image perf-156x44-key-216-44-on.png present
+OK     TUI.json: image perf-160x44-dt-unlock-off.png present
+OK     TUI.json: image perf-160x44-dt-unlock-on.png present
+OK     TUI.json: image perf-170x44-dt-unlock-off.png present
+OK     TUI.json: image perf-170x44-dt-unlock-on.png present
+OK     TUI.json: image perf-172x26-value-lcd-v2.png present
+OK     TUI.json: image perf-174x44-key-200-44-off.png present
+OK     TUI.json: image perf-174x44-key-200-44-on.png present
+OK     TUI.json: image perf-174x44-value-lcd-v2.png present
+OK     TUI.json: image perf-176x30-value-lcd-v2.png present
+OK     TUI.json: image perf-176x44-value-lcd-v2.png present
+OK     TUI.json: image perf-184x44-value-lcd-v2.png present
+OK     TUI.json: image perf-186x44-key-210-44-off.png present
+OK     TUI.json: image perf-186x44-key-210-44-on.png present
+OK     TUI.json: image perf-188x26-value-lcd-v2.png present
+OK     TUI.json: image perf-188x44-value-lcd-v2.png present
+OK     TUI.json: image perf-190x44-dt-unlock-off.png present
+OK     TUI.json: image perf-190x44-dt-unlock-on.png present
+OK     TUI.json: image perf-193x44-tempo-sync-off.png present
+OK     TUI.json: image perf-193x44-tempo-sync-on.png present
+OK     TUI.json: image perf-196x44-random-off.png present
+OK     TUI.json: image perf-196x44-random-on.png present
+OK     TUI.json: image perf-200x26-value-lcd-v2.png present
+OK     TUI.json: image perf-200x30-value-lcd-v2.png present
+OK     TUI.json: image perf-204x44-footer-Progression-offImage-menu-chord.png present
+OK     TUI.json: image perf-204x44-footer-Progression-onImage-menu-chord.png present
+OK     TUI.json: image perf-212x44-key-160-44-off.png present
+OK     TUI.json: image perf-214x40-value-lcd-v2.png present
+OK     TUI.json: image perf-214x44-key-180-44-off.png present
+OK     TUI.json: image perf-216x44-random-off.png present
+OK     TUI.json: image perf-216x44-random-on.png present
+OK     TUI.json: image perf-240x26-value-lcd-v2.png present
+OK     TUI.json: image perf-252x44-key-210-44-off.png present
+OK     TUI.json: image perf-252x44-key-210-44-on.png present
+OK     TUI.json: image perf-260x44-random-off.png present
+OK     TUI.json: image perf-260x44-random-on.png present
+OK     TUI.json: image perf-264x40-value-lcd-v2.png present
+OK     TUI.json: image perf-330x44-value-lcd-v2.png present
+OK     TUI.json: image perf-338x344-circle-key-0-0.png present
+OK     TUI.json: image perf-338x344-circle-key-0-1.png present
+OK     TUI.json: image perf-338x344-circle-key-0-10.png present
+OK     TUI.json: image perf-338x344-circle-key-0-11.png present
+OK     TUI.json: image perf-338x344-circle-key-0-2.png present
+OK     TUI.json: image perf-338x344-circle-key-0-3.png present
+OK     TUI.json: image perf-338x344-circle-key-0-4.png present
+OK     TUI.json: image perf-338x344-circle-key-0-5.png present
+OK     TUI.json: image perf-338x344-circle-key-0-6.png present
+OK     TUI.json: image perf-338x344-circle-key-0-7.png present
+OK     TUI.json: image perf-338x344-circle-key-0-8.png present
+OK     TUI.json: image perf-338x344-circle-key-0-9.png present
+OK     TUI.json: image perf-338x344-circle-key-1-0.png present
+OK     TUI.json: image perf-338x344-circle-key-1-1.png present
+OK     TUI.json: image perf-338x344-circle-key-1-10.png present
+OK     TUI.json: image perf-338x344-circle-key-1-11.png present
+OK     TUI.json: image perf-338x344-circle-key-1-2.png present
+OK     TUI.json: image perf-338x344-circle-key-1-3.png present
+OK     TUI.json: image perf-338x344-circle-key-1-4.png present
+OK     TUI.json: image perf-338x344-circle-key-1-5.png present
+OK     TUI.json: image perf-338x344-circle-key-1-6.png present
+OK     TUI.json: image perf-338x344-circle-key-1-7.png present
+OK     TUI.json: image perf-338x344-circle-key-1-8.png present
+OK     TUI.json: image perf-338x344-circle-key-1-9.png present
+OK     TUI.json: image perf-342x44-dt-unlock-off.png present
+OK     TUI.json: image perf-390x54-value-lcd-v2.png present
+OK     TUI.json: image perf-44x36-key-44-44-off.png present
+OK     TUI.json: image perf-44x36-key-44-44-on.png present
+OK     TUI.json: image perf-44x44-dt-unlock-off.png present
+OK     TUI.json: image perf-44x44-dt-unlock-on.png present
+OK     TUI.json: image perf-44x44-footer-ChordNext-offImage-slot-44-44-off.png present
+OK     TUI.json: image perf-44x44-footer-ChordNext-onImage-slot-44-44-on.png present
+OK     TUI.json: image perf-44x44-footer-ChordPrev-offImage-slot-44-44-off.png present
+OK     TUI.json: image perf-44x44-footer-ChordPrev-onImage-slot-44-44-on.png present
+OK     TUI.json: image perf-70x26-tempo-sync-off.png present
+OK     TUI.json: image perf-70x26-tempo-sync-on.png present
+OK     TUI.json: image perf-79x32-key-110-44-off.png present
+OK     TUI.json: image perf-79x32-key-110-44-on.png present
+OK     TUI.json: image perf-82x24-value-lcd-v2.png present
+OK     TUI.json: image perf-82x26-tempo-sync-off.png present
+OK     TUI.json: image perf-82x26-tempo-sync-on.png present
+OK     TUI.json: image perf-83x32-key-116-44-off.png present
+OK     TUI.json: image perf-83x32-key-116-44-on.png present
+OK     TUI.json: image perf-88x26-tempo-sync-off.png present
+OK     TUI.json: image perf-88x26-tempo-sync-on.png present
+OK     TUI.json: image perf-93x44-tempo-sync-off.png present
+OK     TUI.json: image perf-93x44-tempo-sync-on.png present
+OK     TUI.json: image perf-98x44-dt-unlock-off.png present
+OK     TUI.json: image perf-98x44-dt-unlock-on.png present
+OK     TUI.json: image perf-env-fader.png present
+OK     TUI.json: image perf-panel-1244x138.png present
+OK     TUI.json: image perf-panel-1244x142.png present
+OK     TUI.json: image perf-panel-1244x206.png present
+OK     TUI.json: image perf-panel-1244x422.png present
+OK     TUI.json: image perf-panel-612x176.png present
+OK     TUI.json: image perf-panel-612x200.png present
+OK     TUI.json: image perf-panel-612x266.png present
+OK     TUI.json: image random-off.png present
+OK     TUI.json: image random-on.png present
+OK     TUI.json: image seg2_off.png present
+OK     TUI.json: image seg2_on.png present
+OK     TUI.json: image seg3_off.png present
+OK     TUI.json: image seg3_on.png present
+OK     TUI.json: image seg4_off.png present
+OK     TUI.json: image seg4_on.png present
+OK     TUI.json: image sidebar-header.png present
+OK     TUI.json: image sidebar-panel.png present
+OK     TUI.json: image sidebar-row-off.png present
+OK     TUI.json: image sidebar-row-on.png present
+OK     TUI.json: image slot-44-44-off.png present
+OK     TUI.json: image slot-44-44-on.png present
+OK     TUI.json: image stop-bevel.png present
+OK     TUI.json: image tempo-sync-off.png present
+OK     TUI.json: image tempo-sync-on.png present
+OK     TUI.json: image touch-value-panel.png present
+OK     TUI.json: image usability-180-44.png present
+OK     TUI.json: image usability-375-44.png present
+OK     TUI.json: image usability-460-64.png present
+OK     TUI.json: image wide-pad-off.png present
+OK     TUI.json: image wide-pad-on.png present
+OK     TUI.json: 7 tabs
+OK     Q-Links.json: 7 tab maps, all values in range
+OK     version.xml uiversion 0.1.0.0
+OK     Content/: 2 files, 0.0 MB (loaded by the plugin at run time, see framework/mpc_resources.h)
+0 errors, 0 warnings
+
+========================================================================
+Build finished: kim - VST - Donut Theory
+  Output folder: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory/build/kim - VST - Donut Theory
+    plugin.json                              498 B
+    version.xml                              153 B
+    Content/Licenses/Donut-Theory-MIT.txt    1 KB
+    Content/Licenses/MPC-SDK-MIT.txt         1 KB
+    Plugin Skins/Q-Links.json                6 KB
+    Plugin Skins/README.md                   14 KB
+    Plugin Skins/TUI.json                    22.3 MB
+    Plugin Skins/active-usability-180-44.png 296 B
+    Plugin Skins/active-usability-286-27.png 264 B
+    Plugin Skins/active-usability-375-44.png 344 B
+    Plugin Skins/active-usability-460-60.png 415 B
+    Plugin Skins/active-usability-460-64.png 430 B
+    Plugin Skins/arrow.png                   239 B
+    Plugin Skins/bank-120-38-off.png         274 B
+    Plugin Skins/bank-120-38-on.png          276 B
+    Plugin Skins/bank-250-64-off.png         390 B
+    Plugin Skins/bank-250-64-on.png          392 B
+    Plugin Skins/bank-300-64-off.png         411 B
+    Plugin Skins/bank-300-64-on.png          413 B
+    Plugin Skins/button-hit.png              70 B
+    Plugin Skins/chord-150-off.png           302 B
+    Plugin Skins/chord-150-on.png            303 B
+    Plugin Skins/chord-180-off.png           309 B
+    Plugin Skins/chord-180-on.png            311 B
+    Plugin Skins/chord-220-off.png           318 B
+    Plugin Skins/chord-220-on.png            320 B
+    Plugin Skins/chord-300-off.png           345 B
+    Plugin Skins/chord-300-on.png            348 B
+    Plugin Skins/chord-60-off.png            249 B
+    Plugin Skins/chord-60-on.png             251 B
+    Plugin Skins/chord-active-row.png        810 B
+    Plugin Skins/chord-edit-off.png          345 B
+    Plugin Skins/chord-edit-on.png           348 B
+    Plugin Skins/chord-mode-off.png          309 B
+    Plugin Skins/chord-mode-on.png           311 B
+    Plugin Skins/chord-nav-close.png         266 B
+    Plugin Skins/chord-octave-panel.png      312 B
+    Plugin Skins/circle-key-0-0.png          87 KB
+    Plugin Skins/circle-key-0-1.png          89 KB
+    Plugin Skins/circle-key-0-10.png         88 KB
+    Plugin Skins/circle-key-0-11.png         89 KB
+    Plugin Skins/circle-key-0-2.png          88 KB
+    Plugin Skins/circle-key-0-3.png          88 KB
+    Plugin Skins/circle-key-0-4.png          88 KB
+    Plugin Skins/circle-key-0-5.png          87 KB
+    Plugin Skins/circle-key-0-6.png          88 KB
+    Plugin Skins/circle-key-0-7.png          87 KB
+    Plugin Skins/circle-key-0-8.png          88 KB
+    Plugin Skins/circle-key-0-9.png          88 KB
+    Plugin Skins/circle-key-1-0.png          88 KB
+    Plugin Skins/circle-key-1-1.png          89 KB
+    Plugin Skins/circle-key-1-10.png         89 KB
+    Plugin Skins/circle-key-1-11.png         87 KB
+    Plugin Skins/circle-key-1-2.png          87 KB
+    Plugin Skins/circle-key-1-3.png          88 KB
+    Plugin Skins/circle-key-1-4.png          87 KB
+    Plugin Skins/circle-key-1-5.png          88 KB
+    Plugin Skins/circle-key-1-6.png          88 KB
+    Plugin Skins/circle-key-1-7.png          87 KB
+    Plugin Skins/circle-key-1-8.png          90 KB
+    Plugin Skins/circle-key-1-9.png          86 KB
+    Plugin Skins/donut-background-print.png  3.2 MB
+    Plugin Skins/donut-background-runtime.png 714 KB
+    Plugin Skins/dt-dice-locked-lower.png    246 B
+    Plugin Skins/dt-dice-locked.png          246 B
+    Plugin Skins/dt-dice-unlocked-lower.png  254 B
+    Plugin Skins/dt-dice-unlocked.png        254 B
+    Plugin Skins/dt-unlock-off.png           259 B
+    Plugin Skins/dt-unlock-on.png            263 B
+    Plugin Skins/dt-value-lock-off.png       230 B
+    Plugin Skins/dt-value-lock-on.png        245 B
+    Plugin Skins/edit-bevel-v2.png           371 B
+    Plugin Skins/edit-bevel.png              371 B
+    Plugin Skins/edit-button-panel.png       392 B
+    Plugin Skins/env-fader-value.png         1 KB
+    Plugin Skins/env-fader.png               16 KB
+    Plugin Skins/env-panel.png               2 KB
+    Plugin Skins/env-response-panel.png      2 KB
+    Plugin Skins/env-select-compact.png      2 KB
+    Plugin Skins/env-select.png              2 KB
+    Plugin Skins/envelope-value-panel.png    461 B
+    Plugin Skins/envelope-vertical.png       28 KB
+    Plugin Skins/fader_h_uni.png             98 KB
+    Plugin Skins/footer-ChordNext-offImage-slot-44-44-off.png 253 B
+    Plugin Skins/footer-ChordNext-onImage-slot-44-44-on.png 255 B
+    Plugin Skins/footer-ChordPrev-offImage-slot-44-44-off.png 253 B
+    Plugin Skins/footer-ChordPrev-onImage-slot-44-44-on.png 255 B
+    Plugin Skins/footer-DriveType-offImage-menu-small.png 924 B
+    Plugin Skins/footer-DriveType-onImage-menu-small.png 924 B
+    Plugin Skins/footer-Expression-image-touch-value-panel.png 785 B
+    Plugin Skins/footer-Filter-offImage-menu-small.png 924 B
+    Plugin Skins/footer-Filter-onImage-menu-small.png 924 B
+    Plugin Skins/footer-InputMode-offImage-header-InputMode.png 3 KB
+    Plugin Skins/footer-InputMode-onImage-header-InputMode.png 3 KB
+    Plugin Skins/footer-Lfo2Shape-offImage-menu-small.png 924 B
+    Plugin Skins/footer-Lfo2Shape-onImage-menu-small.png 924 B
+    Plugin Skins/footer-Lfo2Target-offImage-menu-small.png 924 B
+    Plugin Skins/footer-Lfo2Target-onImage-menu-small.png 924 B
+    Plugin Skins/footer-ModMode-offImage-menu-small.png 924 B
+    Plugin Skins/footer-ModMode-onImage-menu-small.png 924 B
+    Plugin Skins/footer-ModShape-offImage-menu-small.png 924 B
+    Plugin Skins/footer-ModShape-onImage-menu-small.png 924 B
+    Plugin Skins/footer-Progression-offImage-menu-chord.png 2 KB
+    Plugin Skins/footer-Progression-onImage-menu-chord.png 2 KB
+    Plugin Skins/footer-Shape-offImage-menu-small.png 924 B
+    Plugin Skins/footer-Shape-onImage-menu-small.png 924 B
+    Plugin Skins/footer-SoundNext-offImage-arrow.png 936 B
+    Plugin Skins/footer-SoundNext-onImage-arrow.png 936 B
+    Plugin Skins/footer-SoundPreset-offImage-header-SoundPreset.png 1 KB
+    Plugin Skins/footer-SoundPreset-onImage-header-SoundPreset.png 1 KB
+    Plugin Skins/footer-SoundPrev-offImage-arrow.png 936 B
+    Plugin Skins/footer-SoundPrev-onImage-arrow.png 936 B
+    Plugin Skins/footer-Target-offImage-menu-small.png 924 B
+    Plugin Skins/footer-Target-onImage-menu-small.png 924 B
+    Plugin Skins/footer-Vibrato-image-touch-value-panel.png 785 B
+    Plugin Skins/footer-VoiceMode-offImage-header-VoiceMode.png 3 KB
+    Plugin Skins/footer-VoiceMode-onImage-header-VoiceMode.png 3 KB
+    Plugin Skins/footer-group-panel.png      1 KB
+    Plugin Skins/footer-knob-ticks.png       333 B
+    Plugin Skins/footer-slot-44-32-off.png   752 B
+    Plugin Skins/footer-slot-44-32-on.png    715 B
+    Plugin Skins/footer-tempo-sync-off.png   417 B
+    Plugin Skins/footer-tempo-sync-on.png    387 B
+    Plugin Skins/footer-value-panel.png      819 B
+    Plugin Skins/footer-wide-pad-off.png     2 KB
+    Plugin Skins/footer-wide-pad-on.png      2 KB
+    Plugin Skins/group-panel.png             2 KB
+    Plugin Skins/header-InputMode.png        459 B
+    Plugin Skins/header-SoundPreset.png      490 B
+    Plugin Skins/header-VoiceMode.png        459 B
+    Plugin Skins/header-collage-transparent.png 2.4 MB
+    Plugin Skins/header-donut-collage.png    3.3 MB
+    Plugin Skins/header-donut-contour-proposal.png 2.3 MB
+    Plugin Skins/header-donut-cutout.png     1.2 MB
+    Plugin Skins/header-donut-full-bleed.png 3.7 MB
+    Plugin Skins/header-donut-natural.png    3.5 MB
+    Plugin Skins/header-donut-runtime.png    71 KB
+    Plugin Skins/header-donut-screenprint-proposal.png 2.6 MB
+    Plugin Skins/header-donut-soul-collage.png 3.1 MB
+    Plugin Skins/header-donut-soul-final-v2.png 2.3 MB
+    Plugin Skins/header-donut-soul-final.png 2.5 MB
+    Plugin Skins/header-donut-wide-soft-edge.png 3.2 MB
+    Plugin Skins/header-donut-wide.png       3.9 MB
+    Plugin Skins/header-donut.png            2.6 MB
+    Plugin Skins/key-110-44-off.png          291 B
+    Plugin Skins/key-110-44-on.png           292 B
+    Plugin Skins/key-116-44-off.png          292 B
+    Plugin Skins/key-116-44-on.png           294 B
+    Plugin Skins/key-120-44-off.png          292 B
+    Plugin Skins/key-120-44-on.png           293 B
+    Plugin Skins/key-128-48-off.png          308 B
+    Plugin Skins/key-128-48-on.png           309 B
+    Plugin Skins/key-156-44-off.png          309 B
+    Plugin Skins/key-156-44-on.png           310 B
+    Plugin Skins/key-160-44-off.png          308 B
+    Plugin Skins/key-160-44-on.png           310 B
+    Plugin Skins/key-180-44-off.png          314 B
+    Plugin Skins/key-180-44-on.png           316 B
+    Plugin Skins/key-190-44-off.png          314 B
+    Plugin Skins/key-190-44-on.png           315 B
+    Plugin Skins/key-192-44-off.png          314 B
+    Plugin Skins/key-192-44-on.png           315 B
+    Plugin Skins/key-198-44-off.png          314 B
+    Plugin Skins/key-198-44-on.png           315 B
+    Plugin Skins/key-198-60-off.png          363 B
+    Plugin Skins/key-198-60-on.png           365 B
+    Plugin Skins/key-200-44-off.png          312 B
+    Plugin Skins/key-200-44-on.png           313 B
+    Plugin Skins/key-210-44-off.png          314 B
+    Plugin Skins/key-210-44-on.png           316 B
+    Plugin Skins/key-216-44-off.png          322 B
+    Plugin Skins/key-216-44-on.png           324 B
+    Plugin Skins/key-402-44-off.png          362 B
+    Plugin Skins/key-402-44-on.png           364 B
+    Plugin Skins/key-44-44-off.png           253 B
+    Plugin Skins/key-44-44-on.png            255 B
+    Plugin Skins/key-48-44-off.png           254 B
+    Plugin Skins/key-48-44-on.png            256 B
+    Plugin Skins/key-70-44-off.png           272 B
+    Plugin Skins/key-70-44-on.png            273 B
+    Plugin Skins/knob-donut.png              1.7 MB
+    Plugin Skins/knob-ticks.png              332 B
+    Plugin Skins/knob-value-panel.png        447 B
+    Plugin Skins/knob-vintage.png            2.5 MB
+    Plugin Skins/knob_bi.png                 80 KB
+    Plugin Skins/knob_uni.png                79 KB
+    Plugin Skins/list-close.png              207 B
+    Plugin Skins/list-off.png                306 B
+    Plugin Skins/list-on.png                 309 B
+    Plugin Skins/main-background-brown-header.png 1.7 MB
+    Plugin Skins/main-background-runtime.png 1.0 MB
+    Plugin Skins/main-background-v2.png      2.6 MB
+    Plugin Skins/main-background-v3.png      1.8 MB
+    Plugin Skins/main-background-v4.png      1.7 MB
+    Plugin Skins/main-background.png         2.2 MB
+    Plugin Skins/menu-chord.png              1017 B
+    Plugin Skins/menu-small.png              471 B
+    Plugin Skins/menu-wide.png               507 B
+    Plugin Skins/mini-pad-off.png            1 KB
+    Plugin Skins/mini-pad-on.png             1 KB
+    Plugin Skins/mini-wide-pad-off.png       1 KB
+    Plugin Skins/mini-wide-pad-on.png        1 KB
+    Plugin Skins/pad-off.png                 520 B
+    Plugin Skins/pad-on.png                  519 B
+    Plugin Skins/pad-position-strip.png      9 KB
+    Plugin Skins/perf-102x40-dt-unlock-off.png 627 B
+    Plugin Skins/perf-102x40-dt-unlock-on.png 626 B
+    Plugin Skins/perf-102x44-dt-unlock-off.png 494 B
+    Plugin Skins/perf-102x44-dt-unlock-on.png 472 B
+    Plugin Skins/perf-108x30-tempo-sync-off.png 483 B
+    Plugin Skins/perf-108x30-tempo-sync-on.png 455 B
+    Plugin Skins/perf-118x64-mini-wide-pad-off.png 2 KB
+    Plugin Skins/perf-118x64-mini-wide-pad-on.png 1 KB
+    Plugin Skins/perf-120x36-key-120-44-off.png 587 B
+    Plugin Skins/perf-120x36-key-120-44-on.png 579 B
+    Plugin Skins/perf-130x24-value-lcd-v2.png 928 B
+    Plugin Skins/perf-138x24-value-lcd-v2.png 710 B
+    Plugin Skins/perf-144x26-value-lcd-v2.png 999 B
+    Plugin Skins/perf-144x44-value-lcd-v2.png 1 KB
+    Plugin Skins/perf-156x40-key-216-44-off.png 661 B
+    Plugin Skins/perf-156x40-key-216-44-on.png 637 B
+    Plugin Skins/perf-156x44-key-216-44-off.png 532 B
+    Plugin Skins/perf-156x44-key-216-44-on.png 525 B
+    Plugin Skins/perf-160x40-dt-unlock-off.png 768 B
+    Plugin Skins/perf-160x40-dt-unlock-on.png 703 B
+    Plugin Skins/perf-160x40-value-lcd-v2.png 1 KB
+    Plugin Skins/perf-160x44-dt-unlock-off.png 516 B
+    Plugin Skins/perf-160x44-dt-unlock-on.png 499 B
+    Plugin Skins/perf-162x40-dt-unlock-off.png 718 B
+    Plugin Skins/perf-170x44-dt-unlock-off.png 522 B
+    Plugin Skins/perf-170x44-dt-unlock-on.png 519 B
+    Plugin Skins/perf-172x26-value-lcd-v2.png 1 KB
+    Plugin Skins/perf-174x40-key-200-44-off.png 802 B
+    Plugin Skins/perf-174x40-key-200-44-on.png 763 B
+    Plugin Skins/perf-174x44-key-200-44-off.png 625 B
+    Plugin Skins/perf-174x44-key-200-44-on.png 593 B
+    Plugin Skins/perf-174x44-value-lcd-v2.png 2 KB
+    Plugin Skins/perf-176x30-value-lcd-v2.png 1 KB
+    Plugin Skins/perf-176x44-value-lcd-v2.png 2 KB
+    Plugin Skins/perf-184x44-value-lcd-v2.png 2 KB
+    Plugin Skins/perf-186x40-key-210-44-off.png 817 B
+    Plugin Skins/perf-186x40-key-210-44-on.png 779 B
+    Plugin Skins/perf-186x44-key-210-44-off.png 620 B
+    Plugin Skins/perf-186x44-key-210-44-on.png 591 B
+    Plugin Skins/perf-188x26-value-lcd-v2.png 1 KB
+    Plugin Skins/perf-188x44-value-lcd-v2.png 2 KB
+    Plugin Skins/perf-190x40-dt-unlock-off.png 731 B
+    Plugin Skins/perf-190x40-dt-unlock-on.png 716 B
+    Plugin Skins/perf-190x44-dt-unlock-off.png 565 B
+    Plugin Skins/perf-190x44-dt-unlock-on.png 537 B
+    Plugin Skins/perf-193x44-tempo-sync-off.png 2 KB
+    Plugin Skins/perf-193x44-tempo-sync-on.png 1 KB
+    Plugin Skins/perf-196x44-random-off.png  1 KB
+    Plugin Skins/perf-196x44-random-on.png   1 KB
+    Plugin Skins/perf-200x26-value-lcd-v2.png 1 KB
+    Plugin Skins/perf-200x30-value-lcd-v2.png 1 KB
+    Plugin Skins/perf-204x44-footer-Progression-offImage-menu-chord.png 2 KB
+    Plugin Skins/perf-204x44-footer-Progression-onImage-menu-chord.png 2 KB
+    Plugin Skins/perf-212x40-key-160-44-off.png 955 B
+    Plugin Skins/perf-212x44-key-160-44-off.png 725 B
+    Plugin Skins/perf-214x40-key-180-44-off.png 865 B
+    Plugin Skins/perf-214x40-value-lcd-v2.png 2 KB
+    Plugin Skins/perf-214x44-key-180-44-off.png 742 B
+    Plugin Skins/perf-216x40-random-off.png  2 KB
+    Plugin Skins/perf-216x40-random-on.png   2 KB
+    Plugin Skins/perf-216x44-random-off.png  1 KB
+    Plugin Skins/perf-216x44-random-on.png   1 KB
+    Plugin Skins/perf-240x26-value-lcd-v2.png 1 KB
+    Plugin Skins/perf-252x40-key-210-44-off.png 1 KB
+    Plugin Skins/perf-252x40-key-210-44-on.png 987 B
+    Plugin Skins/perf-252x44-key-210-44-off.png 769 B
+    Plugin Skins/perf-252x44-key-210-44-on.png 741 B
+    Plugin Skins/perf-260x40-random-off.png  2 KB
+    Plugin Skins/perf-260x40-random-on.png   2 KB
+    Plugin Skins/perf-260x44-random-off.png  1 KB
+    Plugin Skins/perf-260x44-random-on.png   1 KB
+    Plugin Skins/perf-264x40-value-lcd-v2.png 2 KB
+    Plugin Skins/perf-330x44-value-lcd-v2.png 3 KB
+    Plugin Skins/perf-338x344-circle-key-0-0.png 78 KB
+    Plugin Skins/perf-338x344-circle-key-0-1.png 80 KB
+    Plugin Skins/perf-338x344-circle-key-0-10.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-0-11.png 80 KB
+    Plugin Skins/perf-338x344-circle-key-0-2.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-0-3.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-0-4.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-0-5.png 78 KB
+    Plugin Skins/perf-338x344-circle-key-0-6.png 80 KB
+    Plugin Skins/perf-338x344-circle-key-0-7.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-0-8.png 80 KB
+    Plugin Skins/perf-338x344-circle-key-0-9.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-1-0.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-1-1.png 80 KB
+    Plugin Skins/perf-338x344-circle-key-1-10.png 80 KB
+    Plugin Skins/perf-338x344-circle-key-1-11.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-1-2.png 78 KB
+    Plugin Skins/perf-338x344-circle-key-1-3.png 80 KB
+    Plugin Skins/perf-338x344-circle-key-1-4.png 78 KB
+    Plugin Skins/perf-338x344-circle-key-1-5.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-1-6.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-1-7.png 79 KB
+    Plugin Skins/perf-338x344-circle-key-1-8.png 81 KB
+    Plugin Skins/perf-338x344-circle-key-1-9.png 78 KB
+    Plugin Skins/perf-342x40-dt-unlock-off.png 1 KB
+    Plugin Skins/perf-342x44-dt-unlock-off.png 912 B
+    Plugin Skins/perf-390x54-value-lcd-v2.png 4 KB
+    Plugin Skins/perf-44x36-key-44-44-off.png 542 B
+    Plugin Skins/perf-44x36-key-44-44-on.png 523 B
+    Plugin Skins/perf-44x44-dt-unlock-off.png 349 B
+    Plugin Skins/perf-44x44-dt-unlock-on.png 359 B
+    Plugin Skins/perf-44x44-footer-ChordNext-offImage-slot-44-44-off.png 253 B
+    Plugin Skins/perf-44x44-footer-ChordNext-onImage-slot-44-44-on.png 255 B
+    Plugin Skins/perf-44x44-footer-ChordPrev-offImage-slot-44-44-off.png 253 B
+    Plugin Skins/perf-44x44-footer-ChordPrev-onImage-slot-44-44-on.png 255 B
+    Plugin Skins/perf-70x22-tempo-sync-off.png 442 B
+    Plugin Skins/perf-70x22-tempo-sync-on.png 425 B
+    Plugin Skins/perf-70x26-tempo-sync-off.png 501 B
+    Plugin Skins/perf-70x26-tempo-sync-on.png 454 B
+    Plugin Skins/perf-79x32-key-110-44-off.png 547 B
+    Plugin Skins/perf-79x32-key-110-44-on.png 549 B
+    Plugin Skins/perf-82x24-value-lcd-v2.png 768 B
+    Plugin Skins/perf-82x26-tempo-sync-off.png 584 B
+    Plugin Skins/perf-82x26-tempo-sync-on.png 529 B
+    Plugin Skins/perf-83x32-key-116-44-off.png 547 B
+    Plugin Skins/perf-83x32-key-116-44-on.png 541 B
+    Plugin Skins/perf-88x26-tempo-sync-off.png 569 B
+    Plugin Skins/perf-88x26-tempo-sync-on.png 568 B
+    Plugin Skins/perf-93x44-tempo-sync-off.png 936 B
+    Plugin Skins/perf-93x44-tempo-sync-on.png 877 B
+    Plugin Skins/perf-98x44-dt-unlock-off.png 485 B
+    Plugin Skins/perf-98x44-dt-unlock-on.png 466 B
+    Plugin Skins/perf-env-fader.png          57 KB
+    Plugin Skins/perf-panel-1244x118.png     2 KB
+    Plugin Skins/perf-panel-1244x134.png     2 KB
+    Plugin Skins/perf-panel-1244x138.png     2 KB
+    Plugin Skins/perf-panel-1244x142.png     2 KB
+    Plugin Skins/perf-panel-1244x206.png     2 KB
+    Plugin Skins/perf-panel-1244x422.png     4 KB
+    Plugin Skins/perf-panel-612x176.png      1 KB
+    Plugin Skins/perf-panel-612x200.png      2 KB
+    Plugin Skins/perf-panel-612x266.png      2 KB
+    Plugin Skins/perf-panel-612x296.png      2 KB
+    Plugin Skins/play-mode-panel.png         2 KB
+    Plugin Skins/play-panel.png              2 KB
+    Plugin Skins/position-bank-off.png       235 B
+    Plugin Skins/position-bank-on.png        232 B
+    Plugin Skins/position-cell-off.png       334 B
+    Plugin Skins/position-cell-on.png        331 B
+    Plugin Skins/position-field-off.png      273 B
+    Plugin Skins/position-field-on.png       273 B
+    Plugin Skins/position-learn-off.png      286 B
+    Plugin Skins/position-learn-on.png       287 B
+    Plugin Skins/random-off.png              466 B
+    Plugin Skins/random-on.png               469 B
+    Plugin Skins/seg2_off.png                586 B
+    Plugin Skins/seg2_on.png                 600 B
+    Plugin Skins/seg3_off.png                573 B
+    Plugin Skins/seg3_on.png                 591 B
+    Plugin Skins/seg4_off.png                544 B
+    Plugin Skins/seg4_on.png                 552 B
+    Plugin Skins/sidebar-header.png          308 B
+    Plugin Skins/sidebar-panel.png           2 KB
+    Plugin Skins/sidebar-row-off.png         315 B
+    Plugin Skins/sidebar-row-on.png          437 B
+    Plugin Skins/slot-132-32-off.png         265 B
+    Plugin Skins/slot-132-32-on.png          267 B
+    Plugin Skins/slot-36-28-off.png          228 B
+    Plugin Skins/slot-36-28-on.png           230 B
+    Plugin Skins/slot-44-32-off.png          233 B
+    Plugin Skins/slot-44-32-on.png           234 B
+    Plugin Skins/slot-44-44-off.png          253 B
+    Plugin Skins/slot-44-44-on.png           255 B
+    Plugin Skins/slot-active.png             201 B
+    Plugin Skins/slot-nav-36-28.png          207 B
+    Plugin Skins/slot-nav-44-44.png          233 B
+    Plugin Skins/slot-nav.png                200 B
+    Plugin Skins/stop-bevel.png              381 B
+    Plugin Skins/tempo-sync-off.png          218 B
+    Plugin Skins/tempo-sync-on.png           219 B
+    Plugin Skins/toggle_off.png              1 KB
+    Plugin Skins/toggle_on.png               1 KB
+    Plugin Skins/touch-value-lcd-v2.png      362 B
+    Plugin Skins/touch-value-lcd.png         362 B
+    Plugin Skins/touch-value-panel.png       440 B
+    Plugin Skins/usability-180-44.png        295 B
+    Plugin Skins/usability-286-27.png        313 B
+    Plugin Skins/usability-375-44.png        395 B
+    Plugin Skins/usability-460-60.png        470 B
+    Plugin Skins/usability-460-64.png        429 B
+    Plugin Skins/value-lcd-v2.png            372 B
+    Plugin Skins/value-lcd.png               372 B
+    Plugin Skins/wide-pad-off.png            1 KB
+    Plugin Skins/wide-pad-on.png             1 KB
+    VST/donut-theory-arm32.so                738 KB
+    VST/donut-theory-arm64.so                692 KB
+  Native test build: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory/build/native/donut-theory.dylib
+
+Next:
+  * Make a zip for sharing:   python tools/package.py mpc-software/plugins/public/DonutTheory
+  * Or copy the output folder into a folder named "VST2 Plugins" on your MPC's drive (see INSTALL.txt in the zip).
+Validating /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory/build/kim - VST - Donut Theory
+OK     plugin.json: Donut Theory by kim (instrument, uid Krql)
+OK     folder name "kim - VST - Donut Theory"
+OK     file32: donut-theory-arm32.so is a 32-bit ARM shared object
+OK     file32: needed libraries: libm.so.6, libc.so.6, ld-linux-armhf.so.3, libdl.so.2
+OK     file32: max GLIBC requirement 2.27
+OK     file32: exports VSTPluginMain
+OK     file64: donut-theory-arm64.so is a 64-bit AArch64 shared object
+OK     file64: needed libraries: libm.so.6, libc.so.6, libpthread.so.0, libdl.so.2
+OK     file64: max GLIBC requirement 2.27
+OK     file64: exports VSTPluginMain
+OK     uid matches the binary (Krql)
+OK     name matches the binary (Donut Theory)
+OK     manufacturer matches the binary (kim)
+OK     kind matches the binary (instrument)
+OK     numInputs matches the binary (0)
+OK     numOutputs matches the binary (2)
+OK     TUI.json: all parameter handles are within 0..387
+OK     TUI.json: image active-usability-180-44.png present
+OK     TUI.json: image active-usability-375-44.png present
+OK     TUI.json: image active-usability-460-64.png present
+OK     TUI.json: image arrow.png present
+OK     TUI.json: image bank-300-64-off.png present
+OK     TUI.json: image bank-300-64-on.png present
+OK     TUI.json: image button-hit.png present
+OK     TUI.json: image chord-150-off.png present
+OK     TUI.json: image chord-180-off.png present
+OK     TUI.json: image chord-180-on.png present
+OK     TUI.json: image chord-300-off.png present
+OK     TUI.json: image dt-unlock-off.png present
+OK     TUI.json: image dt-unlock-on.png present
+OK     TUI.json: image dt-value-lock-off.png present
+OK     TUI.json: image dt-value-lock-on.png present
+OK     TUI.json: image edit-button-panel.png present
+OK     TUI.json: image env-fader-value.png present
+OK     TUI.json: image env-fader.png present
+OK     TUI.json: image env-select-compact.png present
+OK     TUI.json: image env-select.png present
+OK     TUI.json: image envelope-value-panel.png present
+OK     TUI.json: image envelope-vertical.png present
+OK     TUI.json: image fader_h_uni.png present
+OK     TUI.json: image footer-ChordNext-offImage-slot-44-44-off.png present
+OK     TUI.json: image footer-ChordNext-onImage-slot-44-44-on.png present
+OK     TUI.json: image footer-ChordPrev-offImage-slot-44-44-off.png present
+OK     TUI.json: image footer-ChordPrev-onImage-slot-44-44-on.png present
+OK     TUI.json: image footer-DriveType-offImage-menu-small.png present
+OK     TUI.json: image footer-DriveType-onImage-menu-small.png present
+OK     TUI.json: image footer-Expression-image-touch-value-panel.png present
+OK     TUI.json: image footer-Filter-offImage-menu-small.png present
+OK     TUI.json: image footer-Filter-onImage-menu-small.png present
+OK     TUI.json: image footer-InputMode-offImage-header-InputMode.png present
+OK     TUI.json: image footer-InputMode-onImage-header-InputMode.png present
+OK     TUI.json: image footer-Lfo2Shape-offImage-menu-small.png present
+OK     TUI.json: image footer-Lfo2Shape-onImage-menu-small.png present
+OK     TUI.json: image footer-Lfo2Target-offImage-menu-small.png present
+OK     TUI.json: image footer-Lfo2Target-onImage-menu-small.png present
+OK     TUI.json: image footer-ModMode-offImage-menu-small.png present
+OK     TUI.json: image footer-ModMode-onImage-menu-small.png present
+OK     TUI.json: image footer-ModShape-offImage-menu-small.png present
+OK     TUI.json: image footer-ModShape-onImage-menu-small.png present
+OK     TUI.json: image footer-Progression-offImage-menu-chord.png present
+OK     TUI.json: image footer-Progression-onImage-menu-chord.png present
+OK     TUI.json: image footer-Shape-offImage-menu-small.png present
+OK     TUI.json: image footer-Shape-onImage-menu-small.png present
+OK     TUI.json: image footer-SoundNext-offImage-arrow.png present
+OK     TUI.json: image footer-SoundNext-onImage-arrow.png present
+OK     TUI.json: image footer-SoundPreset-offImage-header-SoundPreset.png present
+OK     TUI.json: image footer-SoundPreset-onImage-header-SoundPreset.png present
+OK     TUI.json: image footer-SoundPrev-offImage-arrow.png present
+OK     TUI.json: image footer-SoundPrev-onImage-arrow.png present
+OK     TUI.json: image footer-Target-offImage-menu-small.png present
+OK     TUI.json: image footer-Target-onImage-menu-small.png present
+OK     TUI.json: image footer-Vibrato-image-touch-value-panel.png present
+OK     TUI.json: image footer-VoiceMode-offImage-header-VoiceMode.png present
+OK     TUI.json: image footer-VoiceMode-onImage-header-VoiceMode.png present
+OK     TUI.json: image footer-group-panel.png present
+OK     TUI.json: image footer-knob-ticks.png present
+OK     TUI.json: image footer-slot-44-32-off.png present
+OK     TUI.json: image footer-slot-44-32-on.png present
+OK     TUI.json: image footer-tempo-sync-off.png present
+OK     TUI.json: image footer-tempo-sync-on.png present
+OK     TUI.json: image footer-value-panel.png present
+OK     TUI.json: image footer-wide-pad-off.png present
+OK     TUI.json: image footer-wide-pad-on.png present
+OK     TUI.json: image group-panel.png present
+OK     TUI.json: image header-InputMode.png present
+OK     TUI.json: image header-SoundPreset.png present
+OK     TUI.json: image header-VoiceMode.png present
+OK     TUI.json: image header-donut-runtime.png present
+OK     TUI.json: image key-110-44-off.png present
+OK     TUI.json: image key-110-44-on.png present
+OK     TUI.json: image key-116-44-off.png present
+OK     TUI.json: image key-116-44-on.png present
+OK     TUI.json: image key-120-44-off.png present
+OK     TUI.json: image key-120-44-on.png present
+OK     TUI.json: image key-128-48-off.png present
+OK     TUI.json: image key-128-48-on.png present
+OK     TUI.json: image key-156-44-off.png present
+OK     TUI.json: image key-156-44-on.png present
+OK     TUI.json: image key-160-44-off.png present
+OK     TUI.json: image key-180-44-off.png present
+OK     TUI.json: image key-190-44-off.png present
+OK     TUI.json: image key-190-44-on.png present
+OK     TUI.json: image key-192-44-off.png present
+OK     TUI.json: image key-192-44-on.png present
+OK     TUI.json: image key-198-44-off.png present
+OK     TUI.json: image key-198-44-on.png present
+OK     TUI.json: image key-198-60-off.png present
+OK     TUI.json: image key-198-60-on.png present
+OK     TUI.json: image key-200-44-off.png present
+OK     TUI.json: image key-200-44-on.png present
+OK     TUI.json: image key-210-44-off.png present
+OK     TUI.json: image key-210-44-on.png present
+OK     TUI.json: image key-216-44-off.png present
+OK     TUI.json: image key-216-44-on.png present
+OK     TUI.json: image key-402-44-off.png present
+OK     TUI.json: image key-402-44-on.png present
+OK     TUI.json: image key-44-44-off.png present
+OK     TUI.json: image key-44-44-on.png present
+OK     TUI.json: image key-48-44-off.png present
+OK     TUI.json: image key-48-44-on.png present
+OK     TUI.json: image key-70-44-off.png present
+OK     TUI.json: image key-70-44-on.png present
+OK     TUI.json: image knob-ticks.png present
+OK     TUI.json: image knob-value-panel.png present
+OK     TUI.json: image knob_bi.png present
+OK     TUI.json: image knob_uni.png present
+OK     TUI.json: image list-off.png present
+OK     TUI.json: image list-on.png present
+OK     TUI.json: image main-background-runtime.png present
+OK     TUI.json: image menu-chord.png present
+OK     TUI.json: image menu-small.png present
+OK     TUI.json: image mini-wide-pad-off.png present
+OK     TUI.json: image mini-wide-pad-on.png present
+OK     TUI.json: image perf-102x44-dt-unlock-off.png present
+OK     TUI.json: image perf-102x44-dt-unlock-on.png present
+OK     TUI.json: image perf-108x30-tempo-sync-off.png present
+OK     TUI.json: image perf-108x30-tempo-sync-on.png present
+OK     TUI.json: image perf-118x64-mini-wide-pad-off.png present
+OK     TUI.json: image perf-118x64-mini-wide-pad-on.png present
+OK     TUI.json: image perf-120x36-key-120-44-off.png present
+OK     TUI.json: image perf-120x36-key-120-44-on.png present
+OK     TUI.json: image perf-130x24-value-lcd-v2.png present
+OK     TUI.json: image perf-138x24-value-lcd-v2.png present
+OK     TUI.json: image perf-144x26-value-lcd-v2.png present
+OK     TUI.json: image perf-144x44-value-lcd-v2.png present
+OK     TUI.json: image perf-156x44-key-216-44-off.png present
+OK     TUI.json: image perf-156x44-key-216-44-on.png present
+OK     TUI.json: image perf-160x44-dt-unlock-off.png present
+OK     TUI.json: image perf-160x44-dt-unlock-on.png present
+OK     TUI.json: image perf-170x44-dt-unlock-off.png present
+OK     TUI.json: image perf-170x44-dt-unlock-on.png present
+OK     TUI.json: image perf-172x26-value-lcd-v2.png present
+OK     TUI.json: image perf-174x44-key-200-44-off.png present
+OK     TUI.json: image perf-174x44-key-200-44-on.png present
+OK     TUI.json: image perf-174x44-value-lcd-v2.png present
+OK     TUI.json: image perf-176x30-value-lcd-v2.png present
+OK     TUI.json: image perf-176x44-value-lcd-v2.png present
+OK     TUI.json: image perf-184x44-value-lcd-v2.png present
+OK     TUI.json: image perf-186x44-key-210-44-off.png present
+OK     TUI.json: image perf-186x44-key-210-44-on.png present
+OK     TUI.json: image perf-188x26-value-lcd-v2.png present
+OK     TUI.json: image perf-188x44-value-lcd-v2.png present
+OK     TUI.json: image perf-190x44-dt-unlock-off.png present
+OK     TUI.json: image perf-190x44-dt-unlock-on.png present
+OK     TUI.json: image perf-193x44-tempo-sync-off.png present
+OK     TUI.json: image perf-193x44-tempo-sync-on.png present
+OK     TUI.json: image perf-196x44-random-off.png present
+OK     TUI.json: image perf-196x44-random-on.png present
+OK     TUI.json: image perf-200x26-value-lcd-v2.png present
+OK     TUI.json: image perf-200x30-value-lcd-v2.png present
+OK     TUI.json: image perf-204x44-footer-Progression-offImage-menu-chord.png present
+OK     TUI.json: image perf-204x44-footer-Progression-onImage-menu-chord.png present
+OK     TUI.json: image perf-212x44-key-160-44-off.png present
+OK     TUI.json: image perf-214x40-value-lcd-v2.png present
+OK     TUI.json: image perf-214x44-key-180-44-off.png present
+OK     TUI.json: image perf-216x44-random-off.png present
+OK     TUI.json: image perf-216x44-random-on.png present
+OK     TUI.json: image perf-240x26-value-lcd-v2.png present
+OK     TUI.json: image perf-252x44-key-210-44-off.png present
+OK     TUI.json: image perf-252x44-key-210-44-on.png present
+OK     TUI.json: image perf-260x44-random-off.png present
+OK     TUI.json: image perf-260x44-random-on.png present
+OK     TUI.json: image perf-264x40-value-lcd-v2.png present
+OK     TUI.json: image perf-330x44-value-lcd-v2.png present
+OK     TUI.json: image perf-338x344-circle-key-0-0.png present
+OK     TUI.json: image perf-338x344-circle-key-0-1.png present
+OK     TUI.json: image perf-338x344-circle-key-0-10.png present
+OK     TUI.json: image perf-338x344-circle-key-0-11.png present
+OK     TUI.json: image perf-338x344-circle-key-0-2.png present
+OK     TUI.json: image perf-338x344-circle-key-0-3.png present
+OK     TUI.json: image perf-338x344-circle-key-0-4.png present
+OK     TUI.json: image perf-338x344-circle-key-0-5.png present
+OK     TUI.json: image perf-338x344-circle-key-0-6.png present
+OK     TUI.json: image perf-338x344-circle-key-0-7.png present
+OK     TUI.json: image perf-338x344-circle-key-0-8.png present
+OK     TUI.json: image perf-338x344-circle-key-0-9.png present
+OK     TUI.json: image perf-338x344-circle-key-1-0.png present
+OK     TUI.json: image perf-338x344-circle-key-1-1.png present
+OK     TUI.json: image perf-338x344-circle-key-1-10.png present
+OK     TUI.json: image perf-338x344-circle-key-1-11.png present
+OK     TUI.json: image perf-338x344-circle-key-1-2.png present
+OK     TUI.json: image perf-338x344-circle-key-1-3.png present
+OK     TUI.json: image perf-338x344-circle-key-1-4.png present
+OK     TUI.json: image perf-338x344-circle-key-1-5.png present
+OK     TUI.json: image perf-338x344-circle-key-1-6.png present
+OK     TUI.json: image perf-338x344-circle-key-1-7.png present
+OK     TUI.json: image perf-338x344-circle-key-1-8.png present
+OK     TUI.json: image perf-338x344-circle-key-1-9.png present
+OK     TUI.json: image perf-342x44-dt-unlock-off.png present
+OK     TUI.json: image perf-390x54-value-lcd-v2.png present
+OK     TUI.json: image perf-44x36-key-44-44-off.png present
+OK     TUI.json: image perf-44x36-key-44-44-on.png present
+OK     TUI.json: image perf-44x44-dt-unlock-off.png present
+OK     TUI.json: image perf-44x44-dt-unlock-on.png present
+OK     TUI.json: image perf-44x44-footer-ChordNext-offImage-slot-44-44-off.png present
+OK     TUI.json: image perf-44x44-footer-ChordNext-onImage-slot-44-44-on.png present
+OK     TUI.json: image perf-44x44-footer-ChordPrev-offImage-slot-44-44-off.png present
+OK     TUI.json: image perf-44x44-footer-ChordPrev-onImage-slot-44-44-on.png present
+OK     TUI.json: image perf-70x26-tempo-sync-off.png present
+OK     TUI.json: image perf-70x26-tempo-sync-on.png present
+OK     TUI.json: image perf-79x32-key-110-44-off.png present
+OK     TUI.json: image perf-79x32-key-110-44-on.png present
+OK     TUI.json: image perf-82x24-value-lcd-v2.png present
+OK     TUI.json: image perf-82x26-tempo-sync-off.png present
+OK     TUI.json: image perf-82x26-tempo-sync-on.png present
+OK     TUI.json: image perf-83x32-key-116-44-off.png present
+OK     TUI.json: image perf-83x32-key-116-44-on.png present
+OK     TUI.json: image perf-88x26-tempo-sync-off.png present
+OK     TUI.json: image perf-88x26-tempo-sync-on.png present
+OK     TUI.json: image perf-93x44-tempo-sync-off.png present
+OK     TUI.json: image perf-93x44-tempo-sync-on.png present
+OK     TUI.json: image perf-98x44-dt-unlock-off.png present
+OK     TUI.json: image perf-98x44-dt-unlock-on.png present
+OK     TUI.json: image perf-env-fader.png present
+OK     TUI.json: image perf-panel-1244x138.png present
+OK     TUI.json: image perf-panel-1244x142.png present
+OK     TUI.json: image perf-panel-1244x206.png present
+OK     TUI.json: image perf-panel-1244x422.png present
+OK     TUI.json: image perf-panel-612x176.png present
+OK     TUI.json: image perf-panel-612x200.png present
+OK     TUI.json: image perf-panel-612x266.png present
+OK     TUI.json: image random-off.png present
+OK     TUI.json: image random-on.png present
+OK     TUI.json: image seg2_off.png present
+OK     TUI.json: image seg2_on.png present
+OK     TUI.json: image seg3_off.png present
+OK     TUI.json: image seg3_on.png present
+OK     TUI.json: image seg4_off.png present
+OK     TUI.json: image seg4_on.png present
+OK     TUI.json: image sidebar-header.png present
+OK     TUI.json: image sidebar-panel.png present
+OK     TUI.json: image sidebar-row-off.png present
+OK     TUI.json: image sidebar-row-on.png present
+OK     TUI.json: image slot-44-44-off.png present
+OK     TUI.json: image slot-44-44-on.png present
+OK     TUI.json: image stop-bevel.png present
+OK     TUI.json: image tempo-sync-off.png present
+OK     TUI.json: image tempo-sync-on.png present
+OK     TUI.json: image touch-value-panel.png present
+OK     TUI.json: image usability-180-44.png present
+OK     TUI.json: image usability-375-44.png present
+OK     TUI.json: image usability-460-64.png present
+OK     TUI.json: image wide-pad-off.png present
+OK     TUI.json: image wide-pad-on.png present
+OK     TUI.json: 7 tabs
+OK     Q-Links.json: 7 tab maps, all values in range
+OK     version.xml uiversion 0.1.0.0
+OK     Content/: 2 files, 0.0 MB (loaded by the plugin at run time, see framework/mpc_resources.h)
+0 errors, 0 warnings
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/DonutTheory/build/main-preview.png
+SDK ready: /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk @ febd2ca5bd9eb16c4a412837196e145566bc981b
+Runtime skin: omitted 137 unreferenced images (55.1 MiB); source assets retained.

@@ -1,3 +1,7 @@
+## 2026-11-19 — 1.14.1 device QA and release authorized
+
+The user explicitly requested MPC inspection and publication of the current1.14.1implementation. Earlier local-only/no-device/no-release statements below are historical. Current public outcomes are recorded in `plugins/public/DonutTheory/design/device-1.14.1/publication.json` after completion. Groove Dice1.6.0 is already released separately; the earlier no-Triplet drum audit predates that release.
+
 ## Current1.10.0 release — whole-sound RANDOM (2026-11-18)
 
 User cancelled the song render and requested a single RANDOM button, then explicitly chose complete oscillator-to-FX generation rather than current-preset variation. MAIN adds a48×52px dice/RND touch button at910,26 in the header gap beside INPUT. It retains all existing controls, the donut artwork and sixteen Q-Links. A UI-local press gate gives held feedback; one Mouse Down sends the command and the top continuous surface owns release.
@@ -114,3 +118,9 @@ UID와208개 파라미터의ID/순서는 유지한다. 저장한 프로젝트의
 ## 검증
 
 64개 전체를5초씩 오프라인 렌더했다. 무음/NaN/Inf/범위 초과 없이 통과했다. 기준 스테레오 피크는0.177732–0.288887FS(Init 포함), 연주 음색 목표는Bass/Lead−15dBFS, 그 외−12dBFS다. Sound Trim은−1.98..15.21dB다. UI와208개 파라미터 선언은1.1.2와 동일하다. 수치 검사는 음악적 청감 승인이 아니며 실기기 범위는 [구현 기록](implementation.md)과 릴리스 노트를 따른다. 원본 렌더는build/ladder-after/에 보존한다.
+
+## Local1.14.0 preset and Dice policy — not published
+
+The66factory names/order/recipes remain. Selecting a factory sound initializes individual oscillator values from its legacy ratio/pitch/pulse settings while preserving the explicitly chosen actual voice mode. POLY/MONO editors share one sound; no per-tab preset snapshots are created. Explicit factory selection initializes both new LFO Delays to0ms; Dice preserves the currently set Delays.
+
+Dice Target Auto uses actual mode(Mono/Legato: Bass or Lead; Poly: Keys/Synth/Lead/Pad). An explicit family target generates that family without changing mode. Correlated bounded synthesis, three independently locked Sync/rate groups and61value locks remain. Dice preserves harmony/MIDI/master/Pitch Drop/both LFO Delays/edit focus. One-step Undo restores the preceding sound; it does not restore lock preferences and is not persisted. Retired Mix/Detune/Octave remain compatibility aliases rather than independent generation targets. Full behavior and honest local-vs-hardware status are in handoff.md/spec.md. Public/installed version remains1.13.14.

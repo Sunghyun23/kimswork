@@ -1,0 +1,9 @@
+{
+  "version": "1.14.1",
+  "zip": "donut-theory-1.14.1-mpc.zip",
+  "size": 6082078,
+  "sha256": "0e6f4cf9c0263e79de6010415a907e9b82c20f47122317dec18145dd65e05ef0",
+  "entries": 259,
+  "runtimeMatchesFinalBuild": true,
+  "privatePayloads": 0
+}

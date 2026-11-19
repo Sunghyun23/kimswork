@@ -1,3 +1,36 @@
+## 2026-11-19 — 1.14.1 device QA and release authorized
+
+The user explicitly requested MPC inspection and publication of the current1.14.1implementation. Earlier local-only/no-device/no-release statements below are historical. Current public outcomes are recorded in `plugins/public/DonutTheory/design/device-1.14.1/publication.json` after completion. Groove Dice1.6.0 is already released separately; the earlier no-Triplet drum audit predates that release.
+
+## Local1.14.1 — Sync encoder fix and dotted/triplet rates (2026-11-19)
+
+Supersedes the five-step Sync behavior in the local1.14.0candidate. Public/installed version remains1.13.14; no device, Release or website update is part of this task.
+
+Confirmed native reproduction:200relative+0.01inputs to the old Sync rate relay returned to cursor0/first division every block. The render-side readback had snapped the continuous Q-Link cursor to the center of its quantized choice, discarding all sub-step movement. The fix retains fractional cursor movement while it denotes the current choice; explicit division edits or a Sync-mode change rebind it to the appropriate source. Selected-LFO front relays share that cursor. Clockwise now increases frequency in both Hz and Sync; free Hz is retained when Sync is toggled.
+
+LFO1, LFO2 and shared Tremolo/Auto Pan each provide15beat periods:1/16,1/8,1/4,1/2,1bar with straight/Dotted/Triplet variants. The single Rate knob traverses them from slow to fast; no extra Q-Link or front button is added. Compact LCD labels use D/T; the sidebar spells out Dotted/Triplet and pages8+7rows. Dotted is3/2and Triplet is2/3of the straight period.1bar retains the original four-quarter-note period.
+
+First388parameter declarations stay exact. Append Lfo1SyncDivision388,MotionSyncDivision389,Lfo2SyncDivision390(391total). Existing five-choice Division/ModDivision/Lfo2Division IDs/ranges remain forward aliases; old states seed the matching straight periods, while new dotted/triplet states restore independently. The new choices share existing Rate/Sync Dice locks. Factory recipes retain their original periods; Dice can choose all15, and exact-normalized Undo restores them. Voice mode, harmony, MIDI, Delay and artwork/layout policies remain as1.14.0.
+
+Validation includes slow relative0.001turns both directions for all3modules and selected-LFO control, all15periods at60/88/120/200BPM, PPQ phase checks, free-rate memory, state migration, locks/Undo and VST callback stability. Physical MPC encoders/rendering/audio/CPU are not certified by local tests. See design/implementation-1.14.1 for final logs/status. Groove Dice was separately audited; it does not use the same LFO Sync relay. Its existing MAIN rhythm selectors, dotted hat grids and free-Hz FX ModRate passed the targeted native/UBSan/VST audit without engine or parameter changes. Its current hat list has no Triplet option; this audit did not add one.
+
+## Local implementation 1.14.0 — shared performance editors (2026-11-19)
+
+User approved implementation of the seven tab mockups. Public stable and installed copies remain **1.13.14**; this is a **local candidate**, not a published release or hardware-certified update. Groove Dice, Crate Press, website and MPC drive files are unchanged.
+
+- Six function keys: **POLY / MONO / OSC / ENV / MOD / FX**. CHORD remains the POLY key's second native subtab. Initial view is POLY, with no startup message. A native tab switch has no DSP write actions.
+- All sound values, locks, chord/key/MIDI settings are shared. POLY/MONO tabs select an editor only. **VOICE POLY/MONO** explicitly switches the actual voice mode; Mono's LEGATO preference is separate and retained. Factory selection and Dice preserve actual voice mode. This supersedes historical factory/Dice mode changes.
+- Both fronts: A Wave / Pitch / Level / Drift (OSC1/OSC2 edit selector, Tune/Fine resolution selector); B Filter Cutoff / Resonance / Body / Drive; C Rate / Depth / Delay / Target (LFO1/LFO2 edit selector, local Shape/Sync). POLY D Attack / Release / Motion Rate / Motion Depth. MONO D Glide / Decay / Release / Pitch Drop, with local Legato/Glide Mode and compact Drop Time.
+- OSC detail shows Wave/Tune/Fine/Level per oscillator, Sub/Drift/PW1/PW2 and Noise/FM/Tone. ENV combines both native ADSR graphs/faders and Filter Response. MOD exposes both independent LFOs and shared Tremolo/Auto Pan. FX keeps eleven populated Q-Links; no unused fourth output knob.
+- LFO Delay is per-voice elapsed note-on time, **0–5000ms**, default0; a10ms gain fade follows the wait. Zero is a bypass. Strum-delayed gates start their wait when sounding; held connected legato does not restart it. LFO phases and the other module continue when edit focus changes. Both modules offer five waveforms and five targets through append-only full selectors; legacy four-choice LFO1 ranges remain intact.
+- Tune/Fine values are retained separately and summed. Oscillator levels and pulse widths are independent. Existing Mix/Detune/Octave/Pulse automation remains a forward alias; new states preserve canonical values through the guarded legacy replay window. Old353states migrate their ratio/pitch/pulse and relevant locks. Sub follows OSC1 one octave below; Drift remains shared.
+- Dice Target Auto follows actual voice mode, never the editor tab (Mono/Legato: Bass or Lead; Poly: Keys/Synth/Lead/Pad). Explicit Bass/Keys/Synth/Lead/Pad targets generate that family without changing mode. Dice preserves chords, MIDI, key, master, Pitch Drop, both LFO Delays and editing focus; three Sync values are forced ON when their rate lock allows it. New pitch/level/PW locks protect against legacy-alias writes too. One-step **UNDO** restores the preceding sound, not lock preferences or performance settings; undo history is not saved. UNLOCK ALL changes locks only. Choice locks remain in selector-sidebar headers; Rate/Sync/Division share ownership.
+- Factory programs remain66 and harmony remains32types/96progressions/16slots. The first353parameter declarations and IDs are exact; append35for **388total**. Seven new canonical value locks extend54to61; legacy section locks/retired aliases are retained for compatibility. Nonrandomized Delay/mode/chord/master controls have no misleading Dice lock.
+
+Validation: native/ARM32/ARM64 and SDK validation; full engine/voicing/analog/bridge+UBSan; SDKhost19PASS/0WARN/0FAIL; new selection routing, mode/state migration, both300ms audio delay gates, independent440/110Hz OSC octaves and452.9Hz fine tuning, lock/Undo checks.64focus/resolution changes produce stereo PCM identical to an untouched reference. Three identical-state native renders match1.13.14 PCM exactly; that is not a blanket sound-equivalence claim for every possible state. CHORD construction stays under2500widgets. All seven actual generated skins are checked for bounds/maps/modal order/assets/blank Text widgets. Offline previews are approximate code renders, **not MPC screenshots**.
+
+Reproduce: `python3 mpc-software/scripts/build_plugin.py DonutTheory --target all`, then `python3 mpc-software/scripts/test_plugin.py`. A fresh MPC instance/reset Q-Link defaults may be needed for cached maps. Actual MPC rendering, physical Q-Links, multitouch, hardware audio/CPU and full project save/reopen are **not verified for1.14.0**. Do not publish or silently replace installed/released versions on the basis of these local checks.
+
 ## Current1.10.0 release — whole-sound RANDOM (2026-11-18)
 
 ## 1.13.0 local candidate — section Dice locks
@@ -388,3 +421,25 @@ Latest user correction moves glyph-only locks to a leading column before each se
 - master/MIDI/routing 및 항상 보존하는 Donut 코드·키·패드·Pitch Drop에는 Dice 잠금을 만들지 않는다. Q-Link 할당은 바꾸지 않는다. 원래 미술과 글꼴을 보존하며 Crate Press는 변경하지 않는다.
 - Donut first293 / Groove first676 파라미터 선언은 유지한다. 새 파라미터는 append하며 총353 /777개다. 공개 ZIP에는 개인 확장팩을 넣지 않는다.
 - 자동 검사와 실제 MPC 터치/화면 검증은 분리해서 기록한다. 물리 Q-Link 회전·오디오·최악 CPU는 새 검증 없이 완료로 주장하지 않는다.
+
+## 2026-11-19 proposed performance UI — accepted editing semantics
+
+Planning only: released/installed1.13.14 has not been changed by this design discussion. No build, device update or publication is authorized by this record alone.
+
+- All sound values, locks, chords and mappings are shared, not separate POLY/MONO sound snapshots. Navigating any UI tab must not alter the sound or actual voice mode. Only the explicit POLY/MONO button changes the voice mode; other values remain. Dice preserves the explicitly selected voice mode and uses that actual mode for its generation family, not the visible editor tab. This supersedes the earlier independent per-tab tone-memory proposal.
+- Both proposed performance front pages use a selected-LFO C group: touch LFO1/LFO2 to choose the editing target, with four Q-Links in order Rate / Depth / Delay / Target. Shape and Sync remain nearby touch choices. This supersedes showing both LFO Rate/Depth pairs simultaneously on the front.
+- Selecting LFO1/LFO2 changes editing focus only: do not disable the other module, reset its phase, regenerate, or overwrite any values. The user's comment that simultaneous use is rare does not authorize deleting or mutually excluding the two LFOs. An unused module can be set to Depth0.
+- Proposed LFO1Delay and LFO2Delay are independent note-on modulation-wait times, default0ms, proposed range0–5s. They are accessible on the front via the selected-LFO Delay Q-Link. Values persist through tab/voice-mode changes and are excluded from Dice; do not add misleading Dice locks to these nonrandomized controls. These Delay parameters/controls are not yet implemented.
+- MONO mockup removes the large Volume/BendRange/DropTime/Input footer tiles. Legato/GlideMode stay near Glide; PitchDropTime is a compact touch value near PitchDrop. Other utility controls remain in detail settings. Original art and bottom action placement remain the design reference.
+
+### 2026-11-19 OSC front-panel proposal refinement
+
+Planning only; no code/device changes. Proposed front A uses an OSC1/OSC2 editing selector with Wave/Tune/Fine/Level as four Q-Links. Selection changes the editing target only and must not mute, reset or overwrite either oscillator. Actual independent oscillator pitch/level/pulse-width behavior requires engine work rather than relabeling the existing pair/mix controls. Existing project IDs and sounds require migration/compatibility handling.
+
+The user withdrew the request to put Sub and Drift on front Q-Links. Keep them accessible in OSC detail settings, with existing values and appropriate shared Dice locks; do not infer authorization to delete their synthesis functions or saved parameters. Both performance views share the same sound values.
+
+### 2026-11-19 latest OSC selection and tab-mockup brief
+
+This supersedes the preceding Sub/Drift withdrawal and separate Fine-knob proposal. User reinstated Drift on front Q-Link. Front A is OSC1/OSC2 edit selection plus Wave / Pitch / Level / Drift. Pitch has a Tune/Fine touch selector; coarse and fine are separately retained and summed, and changing editing resolution does not alter either pitch value or sound. Drift is shared between oscillators; Sub stays in OSC detail. No separate front Fine knob. This remains a design proposal, not implemented engine/UI behavior.
+
+Requested mockups cover POLY, MONO, OSC, ENV, MOD, FX and the CHORD subpage. All common sound values must match across mockups. Explicit POLY/MONO voice buttons are separate from editor-tab navigation; depicting the MONO editor must not imply an automatic voice-mode change. Main editor C uses LFO1/LFO2 selection and Rate/Depth/Delay/Target, with Shape/Sync as touch choices. Delay remains excluded from Dice. Detail-page arrangements in images are proposals pending user review. Released/installed versions and device files remain unchanged by mockup work.

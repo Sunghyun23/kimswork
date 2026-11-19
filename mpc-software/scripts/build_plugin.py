@@ -30,5 +30,9 @@ if project.name=='DonutTheory' and a.target=='all':
  for f in unused:f.unlink()
  print(f'Runtime skin: omitted {len(unused)} unreferenced images ({removed_bytes/1024/1024:.1f} MiB); source assets retained.')
  subprocess.run([sys.executable,str(sdk/'tools/validate.py'),str(project)],check=True)
+if (project/'tools/export_ui_values.cpp').is_file():
+ preview_export=project/'build/export_ui_values'
+ subprocess.run(['clang++','-std=c++17','-O2','-I'+str(sdk/'framework'),str(project/'tools/export_ui_values.cpp'),'-o',str(preview_export)],check=True)
+ with (project/'build/preview-values.tsv').open('w') as values:subprocess.run([str(preview_export)],stdout=values,check=True)
 if (project/'tools/render_skin_preview.py').is_file():
  subprocess.run([sys.executable,str(project/'tools/render_skin_preview.py')],check=True)

@@ -9,6 +9,18 @@ for name,flags in [('engine_test',[]),('engine_test_ubsan',['-fsanitize=undefine
  subprocess.run(['clang++','-std=c++17','-O2',*flags,'-I'+str(sdk/'framework'),str(p/'tests/engine_test.cpp'),'-o',str(p/'build'/name)],check=True)
  subprocess.run([str(p/'build'/name)],check=True)
 for suffix,flags in [('',[]),('_ubsan',['-fsanitize=undefined'])]:
+ binary=p/'build'/('sync_rate_test'+suffix)
+ subprocess.run(['clang++','-std=c++17','-O2',*flags,'-I'+str(sdk/'framework'),str(p/'tests/sync_rate_test.cpp'),'-o',str(binary)],check=True)
+ subprocess.run([str(binary)],check=True)
+for suffix,flags in [('',[]),('_ubsan',['-fsanitize=undefined'])]:
+ binary=p/'build'/('sync_rate_bridge_test'+suffix)
+ subprocess.run(['clang++','-std=c++17','-O2',*flags,'-I'+str(sdk/'framework'),str(p/'tests/sync_rate_bridge_test.cpp'),'-o',str(binary)],check=True)
+ subprocess.run([str(binary)],check=True)
+for suffix,flags in [('',[]),('_ubsan',['-fsanitize=undefined'])]:
+ binary=p/'build'/('performance_test'+suffix)
+ subprocess.run(['clang++','-std=c++17','-O2',*flags,'-I'+str(sdk/'framework'),str(p/'tests/performance_test.cpp'),'-o',str(binary)],check=True)
+ subprocess.run([str(binary)],check=True)
+for suffix,flags in [('',[]),('_ubsan',['-fsanitize=undefined'])]:
  binary=p/'build'/('smooth_voicing_test'+suffix)
  subprocess.run(['clang++','-std=c++17','-O2',*flags,str(p/'tests/smooth_voicing_test.cpp'),'-o',str(binary)],check=True)
  subprocess.run([str(binary)],check=True)

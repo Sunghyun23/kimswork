@@ -241,6 +241,8 @@ from env_play_ui import install as env_play_ui
 env_play_ui(g,tui,ql,params,out)
 from dice_locks_ui import install as dice_locks_ui
 dice_locks_ui(g,tui,params,out)
+from performance_ui import install as performance_ui
+performance_ui(g,tui,ql,params,out)
 # Apply display-only names after all choice/browser bindings have been generated.
 osc_widgets=get(get(next(t for t in tabs if get(t,'tabName')=='OSC'),'componentDefinition'),'componentsData')
 for w in osc_widgets:

@@ -1,3 +1,7 @@
+## 2026-11-19 — 1.14.1 device QA and release authorized
+
+The user explicitly requested MPC inspection and publication of the current1.14.1implementation. Earlier local-only/no-device/no-release statements below are historical. Current public outcomes are recorded in `plugins/public/DonutTheory/design/device-1.14.1/publication.json` after completion. Groove Dice1.6.0 is already released separately; the earlier no-Triplet drum audit predates that release.
+
 # Moog-inspired engine — 1.2.0
 
 현재 정식판1.2.2에서도 이1.2.0 엔진/레시피를 유지한다. 최신 배포·사용자 확인·검증 한계는 [인계 기준](handoff.md)을 따른다.
@@ -35,3 +39,21 @@ This decision supersedes the pending B=LFO2-only proposal. User approved A=OSC P
 Preserve first279full declarations. Append BodyTone279 and LFO2 Shape/Rate/Depth/Target/Sync/Division/RateControl280..286:287total. Legacy Body2 stays inert so old stored values do not unexpectedly activate processing. New Body defaults0; new LFO2 depth defaults0. Factory program selection initializes these new settings. A saved custom state retains them. LFO2 is independent of filter LFO1 and the shared Tremolo/Auto Pan module, with Pitch/Filter/Pulse Width/Amp/OSC Mix targets, Sine/Triangle/Saw/Square/S&H, free0.05..20Hz or the existing five beat divisions. Rate relay uses the same state/render guard; no new Q-Link bank.
 
 Body is an original broad140..650Hz density stage after voice sum and before Drive. Two fixed one-poles extract the low-mid band, apply bounded soft saturation and blend with up to roughly3dB broad emphasis; a fixed1/(1+0.18*amount) gain compensates the boost. It generates no sub-octave oscillator. Body0 is an exact output bypass. Sub remains the independent octave-below sine, so both can be adjusted together. LFO2 uses a2ms signal smoother and10ms target crossfade; parameter smoothing and bounded mix/pulse/filter ranges remain. No render allocation/lock/I/O. Build/device evidence follows after validation.
+
+## Local1.14.0 DSP extension — not installed or released
+
+The mixer/ladder/VCA remains unchanged. Per-oscillator Tune(-48..48st), Fine(-100..100ct), Level(0..100%) and pulse width are canonical append-only parameters. Coarse/fine add; levels feed a summed-level mixer whose LFO mix modulation redistributes their ratio without inventing volume when both are zero. Sub follows OSC1 one octave below; Drift remains shared. Old353states seed the new values from Mix/Detune/Octave/Pulse; corresponding lock preferences migrate. Legacy automation remains a forward alias, guarded during state replay. First353declarations are exact;388total.
+
+Each independent LFO adds0..5000ms note-on wait(default0). A per-voice age gate starts when its strum-delayed envelope sounds; after the wait, modulation fades in over10ms. Zero delay bypasses gating. Connected legato preserves age; new articulations reset it. Changing edit focus never resets phase, disables another LFO or alters sound. LFO1's full five-shape/five-target selectors append without changing legacy choice ranges. Both LFOs keep independent Sync/Division/Hz settings. Three native equal-setting renders match1.13.14PCM exactly; both300ms delays and rendered440/110Hz oscillator isolation/+50cent tuning are regression-tested. This does not certify hardware audio/CPU or every historical state. See handoff/spec and design/implementation-1.14.0 for UI/mode/Dice/state details and validation limits.
+
+## Local1.14.1 — Sync encoder fix and dotted/triplet rates (2026-11-19)
+
+Supersedes the five-step Sync behavior in the local1.14.0candidate. Public/installed version remains1.13.14; no device, Release or website update is part of this task.
+
+Confirmed native reproduction:200relative+0.01inputs to the old Sync rate relay returned to cursor0/first division every block. The render-side readback had snapped the continuous Q-Link cursor to the center of its quantized choice, discarding all sub-step movement. The fix retains fractional cursor movement while it denotes the current choice; explicit division edits or a Sync-mode change rebind it to the appropriate source. Selected-LFO front relays share that cursor. Clockwise now increases frequency in both Hz and Sync; free Hz is retained when Sync is toggled.
+
+LFO1, LFO2 and shared Tremolo/Auto Pan each provide15beat periods:1/16,1/8,1/4,1/2,1bar with straight/Dotted/Triplet variants. The single Rate knob traverses them from slow to fast; no extra Q-Link or front button is added. Compact LCD labels use D/T; the sidebar spells out Dotted/Triplet and pages8+7rows. Dotted is3/2and Triplet is2/3of the straight period.1bar retains the original four-quarter-note period.
+
+First388parameter declarations stay exact. Append Lfo1SyncDivision388,MotionSyncDivision389,Lfo2SyncDivision390(391total). Existing five-choice Division/ModDivision/Lfo2Division IDs/ranges remain forward aliases; old states seed the matching straight periods, while new dotted/triplet states restore independently. The new choices share existing Rate/Sync Dice locks. Factory recipes retain their original periods; Dice can choose all15, and exact-normalized Undo restores them. Voice mode, harmony, MIDI, Delay and artwork/layout policies remain as1.14.0.
+
+Validation includes slow relative0.001turns both directions for all3modules and selected-LFO control, all15periods at60/88/120/200BPM, PPQ phase checks, free-rate memory, state migration, locks/Undo and VST callback stability. Physical MPC encoders/rendering/audio/CPU are not certified by local tests. See design/implementation-1.14.1 for final logs/status. Groove Dice was separately audited; it does not use the same LFO Sync relay. Its existing MAIN rhythm selectors, dotted hat grids and free-Hz FX ModRate passed the targeted native/UBSan/VST audit without engine or parameter changes. Its current hat list has no Triplet option; this audit did not add one.

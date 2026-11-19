@@ -1,0 +1,124 @@
+{
+  "version": "1.14.1",
+  "vendor": "kim",
+  "uid": "Krql",
+  "parameterCount": 391,
+  "factoryPrograms": 66,
+  "legacyDeclarationsPreserved": 353,
+  "priorFullSyncFixturePreserved": 388,
+  "sdkCommit": "febd2ca5bd9eb16c4a412837196e145566bc981b",
+  "builds": [
+    "native",
+    "arm32",
+    "arm64"
+  ],
+  "sdkErrors": 0,
+  "sdkWarnings": 0,
+  "hostSimulator": {
+    "pass": 19,
+    "warnings": 0,
+    "failures": 0
+  },
+  "automated": {
+    "optimizedAndUbsanEnginePerformanceVoiceBridge": true,
+    "syncPeriods": 15,
+    "syncModules": 3,
+    "phaseTempoCases": 180,
+    "smallRelativeInputsBothDirections": true,
+    "stateMigrationLocksAndUndo": true,
+    "first353And388MetadataExact": true,
+    "noRecursiveNativeHandleAliases": true
+  },
+  "device": {
+    "model": "MPC XL",
+    "os": "3.10.1.12",
+    "nvmeFilesVerifiedBySdk": 255,
+    "sdFilesVerifiedBySdk": 255,
+    "freshInstanceStartsPoly": true,
+    "tabNavigationPreservesActualVoice": true,
+    "explicitVoiceButtonChangesMode": true,
+    "nativePresetsVisibleAndSelected": true,
+    "categoryFirstBrowserOnPolyAndChord": true,
+    "oscTuneFineFocusAndValueIsolation": true,
+    "lfoDelayFocusAndValueIsolation": true,
+    "dottedTripletSidebar": true,
+    "dicePreservesCutoffRateLocksModeDelayAndChords": true,
+    "undoRestoresSound": true,
+    "allSevenPagesNumericValuesVisible": true,
+    "chordSlots4To16AndBack": true,
+    "octaveAndFourthInversionSelection": true,
+    "padHeldAndReleasedVisualState": true,
+    "compactSelectorPairsFit146pxColumns": true,
+    "lfo2TripletSelection": true,
+    "motionDottedSelection": true,
+    "sharedFrontAndModRates": true,
+    "compactSelectorTouchVerified": true
+  },
+  "bugsFixedDuringDeviceQA": [
+    {
+      "issue": "all new knob value labels blank",
+      "cause": "Data-to-Data self-remapping prevents native inherited parameter resolution",
+      "fix": "omit inherited Data alias; regression rejects recursive handle aliases"
+    },
+    {
+      "issue": "front selector pairs wider than their knob columns",
+      "fix": "OSC/Tune-Fine/LFO/Mono-Legato pairs use one146px column; Mono-Legato caption18px"
+    }
+  ],
+  "runtimeHashes": {
+    "plugin.json": "eef1080e9f33243a3600b7384230c3a1150aea90436b547c54db29d2448d8196",
+    "version.xml": "2b966f723570f0a61788a1e5fbb029a372a5c19dffb1a477b2a9055ceba4fe8c",
+    "VST/donut-theory-arm32.so": "a65d37df2a4200484d7397afc40bb006963f41cd314d9482a9935c608ad864ee",
+    "VST/donut-theory-arm64.so": "a4f14bec6e73be657c7fe2002cafd97501fa619d6cfce921244cd8b9e19c183b",
+    "Plugin Skins/TUI.json": "3ace08b99b61ebf7989641c10cfe46dc86e3ece773666c029528dabf089b9841",
+    "Plugin Skins/Q-Links.json": "1f0b628f0fa1c2d9a160fe50668b46e9d868dc4c783ee70a8bcbf60150f4dc22"
+  },
+  "notNewlyCertified": [
+    "physical encoder rotation",
+    "simultaneous physical multitouch",
+    "hardware audio listening/recording",
+    "worst-case hardware CPU",
+    "full MPC project save/reopen",
+    "loading specifically from SD"
+  ],
+  "captures": {
+    "method": "Authenticated MPC Remote Screen framebuffer;1280x800 direct PNG; site conversions lossless WebP",
+    "files": {
+      "dt1141-osc2-fine.png": "8ed4d1fe3dd7f9e29c6f4d6e508f149bbae661921d68aee03fc95df44e03df0c",
+      "dt1141-ready-final.png": "2f2f367b46bd110d7439eea9c52c0322829fc6e52c78154c76eba5375f9d5094",
+      "dt1141-compact-mono-mode.png": "6fcff98b114aca2ea74c7704784f46f682afc92e6f70f74028df8b9e86e1a1ba",
+      "dt1141-osc1-independent.png": "d8d882910f88015a29ea109baba0496c6035d90311e07015090893ee1a62b41d",
+      "dt1141-lfo2-focus.png": "946cc58d8d9d8e94b6be8355a0892aecb8d3239848530360ec6f468ff0a541bc",
+      "dt1141-factory-preserves-mono.png": "df80124bc06364b541ee47b11ce0aea5144aca74a727fa33044eafc14f189a0f",
+      "dt1141-poly-category-browser.png": "0ef5996639609386f0149bf8b5834099a609aa5f7330661384b6137b1fea5f09",
+      "dt1141-osc-final.png": "67c744b7f0c2da9b1e69448576d5025b419e3d945fd34d9ae572c833fd382df7",
+      "dt1141-chord-final.png": "066e3069ac2caefd84307369170348e404db6358db8d7271ce59de013dc40917",
+      "dt1141-poly-initial.png": "37d8ff6e20727c00da829f6ba5164db3b101f1dee1c58f3745674ff9fb3d1b3c",
+      "dt1141-fx-final.png": "de3fca563b9c337a45c676b3b91b9bee5bc604fa810d7c0d0da1a55c949e300e",
+      "dt1141-fourth-inversion.png": "3e1be365b21da4b42ca8efc0ade099cb91e29703172b425469b6174e7538d1a5",
+      "dt1141-lfo1-return.png": "524bf9440764cb2d084ab01ca0960ec61100d46c148c6bc3d457cdf6659c732a",
+      "dt1141-sixteen-slots.png": "14338d4a1c5f1bd9c198fcf821a5eec25d845bf799f469e0d2a8280ea74cc592",
+      "dt1141-sync-final.png": "8a343591929e968a25214842f71bb71c6309dc9165e2c9b0e374e18e2c38d366",
+      "dt1141-mono-view-poly-mode.png": "d758c6f6411e3acc8d64a1fbe13ee348d94d3c0570f9c05723968fd437010df5",
+      "dt1141-poly-final.png": "35a969d12603564aa50ab98d1245708a00570e41140d5cda6ebac8e4e1fabd5d",
+      "dt1141-lfo1-delay.png": "524bf9440764cb2d084ab01ca0960ec61100d46c148c6bc3d457cdf6659c732a",
+      "dt1141-presets-final.png": "79f903d657a0cf9168a6fe34f0a9accd51b7b4c3236e490019c47f1caa0ba401",
+      "dt1141-dice-locked.png": "bd8d24a4d2ba02fb8f428758e7cb93a7aaf9159011e929c7731023b5c2a6c7e6",
+      "dt1141-pad-released.png": "0bcb60a102f65f7384cdb08e8efb8d42de6b60e16ee3fa853b63b20c43df6ecf",
+      "dt1141-motion-dotted-final.png": "ec33c210f4198be129d381897b63ab3dbbe29b2ca4bc40d3870f35f56260705c",
+      "dt1141-mod-final.png": "52de2a46894d54cd0be84a1a43c94ec6f09aa8d2f43d26a67244373021614b63",
+      "dt1141-same-preset-reload.png": "59f5fdbb9a2ab088a12cfe241400a8360829a5fe9369c8afee2081c40b6af8a2",
+      "dt1141-lfo2-triplet-final.png": "e8c6c337baf7f8c0f883da121a16a0738309f3b5ac29a327f99219f232116053",
+      "dt1141-env-final.png": "97f114a99e5c021103a0328aa77cd7e0d3d2c1e349683242d6d4ee3f217915d8",
+      "dt1141-poly-values-fixed.png": "dedf92651fef7c450c871062649285d8c69f0819c55c12eb502088dd9c8f634b",
+      "dt1141-category-browser.png": "7b50b0d07e9de1cc5e14fcd39e7d96a0bc0078f9ec34009b98acd751c1d0e2ea",
+      "dt1141-explicit-mono.png": "f06a2a256cfc72032aca9b96f0a18aac981ab5b64b0e18cae0718a16336aea33",
+      "dt1141-pad-held.png": "7da7288d78624019e98692b09f8dd06c7b73c2d73fb57410c5dbe4879cf5c101",
+      "dt1141-dice-undo.png": "18c3d726240569545e7c44e462c76d9e05c2a07505bc6e7e9858ebcd6ba91587",
+      "dt1141-mono-final.png": "9ca2d606a87c8879f389c86bed72e02f075c08032c71db8b91cd867832f3c16b",
+      "dt1141-compact-poly.png": "caea7345ab64f0c2c4806b435bc3c651d3da68be3bed5dc3895c03c82e6b2e51",
+      "dt1141-osc2-return.png": "8ed4d1fe3dd7f9e29c6f4d6e508f149bbae661921d68aee03fc95df44e03df0c",
+      "dt1141-poly-view-mono-mode.png": "94f1cbc0359e2ea96c406df97e7d50be126f35b95685a4e0111fab884e5ed5db"
+    }
+  }
+}

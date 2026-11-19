@@ -7027,5 +7027,404 @@
       "On"
     ],
     "default": 0
+  },
+  {
+    "key": "OscTune1",
+    "name": "OSC 1 Tune",
+    "min": -48,
+    "max": 48,
+    "default": 0,
+    "unit": "st",
+    "log": false
+  },
+  {
+    "key": "OscFine1",
+    "name": "OSC 1 Fine",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "ct",
+    "log": false
+  },
+  {
+    "key": "OscLevel1",
+    "name": "OSC 1 Level",
+    "min": 0,
+    "max": 100,
+    "default": 60,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "OscTune2",
+    "name": "OSC 2 Tune",
+    "min": -48,
+    "max": 48,
+    "default": 0,
+    "unit": "st",
+    "log": false
+  },
+  {
+    "key": "OscFine2",
+    "name": "OSC 2 Fine",
+    "min": -100,
+    "max": 100,
+    "default": 0,
+    "unit": "ct",
+    "log": false
+  },
+  {
+    "key": "OscLevel2",
+    "name": "OSC 2 Level",
+    "min": 0,
+    "max": 100,
+    "default": 40,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Pulse2",
+    "name": "OSC 2 Pulse Width",
+    "min": 5,
+    "max": 95,
+    "default": 50,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "LfoDelay",
+    "name": "LFO 1 Delay",
+    "min": 0,
+    "max": 5000,
+    "default": 0,
+    "unit": "ms",
+    "log": false
+  },
+  {
+    "key": "Lfo2Delay",
+    "name": "LFO 2 Delay",
+    "min": 0,
+    "max": 5000,
+    "default": 0,
+    "unit": "ms",
+    "log": false
+  },
+  {
+    "key": "OscFocus",
+    "name": "Edit Oscillator",
+    "choices": [
+      "OSC 1",
+      "OSC 2"
+    ],
+    "default": 0
+  },
+  {
+    "key": "PitchResolution",
+    "name": "Pitch Resolution",
+    "choices": [
+      "Tune",
+      "Fine"
+    ],
+    "default": 0
+  },
+  {
+    "key": "LfoFocus",
+    "name": "Edit LFO",
+    "choices": [
+      "LFO 1",
+      "LFO 2"
+    ],
+    "default": 0
+  },
+  {
+    "key": "PerfWave",
+    "name": "Selected OSC Wave",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Pulse"
+    ],
+    "default": 1
+  },
+  {
+    "key": "PerfPitch",
+    "name": "Selected OSC Pitch",
+    "min": 0,
+    "max": 1,
+    "default": 0.5,
+    "unit": "",
+    "log": false
+  },
+  {
+    "key": "PerfLevel",
+    "name": "Selected OSC Level",
+    "min": 0,
+    "max": 100,
+    "default": 60,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "PerfLfoRate",
+    "name": "Selected LFO Rate",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "log": false
+  },
+  {
+    "key": "PerfLfoDepth",
+    "name": "Selected LFO Depth",
+    "min": 0,
+    "max": 100,
+    "default": 12,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "PerfLfoDelay",
+    "name": "Selected LFO Delay",
+    "min": 0,
+    "max": 5000,
+    "default": 0,
+    "unit": "ms",
+    "log": false
+  },
+  {
+    "key": "PerfLfoTarget",
+    "name": "Selected LFO Target",
+    "choices": [
+      "Pitch",
+      "Filter",
+      "Pulse Width",
+      "Amp",
+      "OSC Mix"
+    ],
+    "default": 1
+  },
+  {
+    "key": "PerfLfoShape",
+    "name": "Selected LFO Shape",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Square",
+      "S&H"
+    ],
+    "default": 0
+  },
+  {
+    "key": "PerfLfoSync",
+    "name": "Selected LFO Sync",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "PerfVoice",
+    "name": "Performance Voice",
+    "choices": [
+      "Mono",
+      "Poly"
+    ],
+    "default": 1
+  },
+  {
+    "key": "MonoLegato",
+    "name": "Mono Legato",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1
+  },
+  {
+    "key": "DiceTarget",
+    "name": "Dice Target",
+    "choices": [
+      "Auto",
+      "Bass",
+      "Keys",
+      "Synth",
+      "Lead",
+      "Pad"
+    ],
+    "default": 0
+  },
+  {
+    "key": "UndoDice",
+    "name": "Undo Dice",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Lfo1ShapeFull",
+    "name": "LFO 1 Shape",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Square",
+      "S&H"
+    ],
+    "default": 0
+  },
+  {
+    "key": "Lfo1TargetFull",
+    "name": "LFO 1 Target",
+    "choices": [
+      "Pitch",
+      "Filter",
+      "Pulse Width",
+      "Amp",
+      "OSC Mix"
+    ],
+    "default": 1
+  },
+  {
+    "key": "DiceValueLockOscTune1",
+    "name": "Dice Lock OSC 1 Tune",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockOscFine1",
+    "name": "Dice Lock OSC 1 Fine",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockOscLevel1",
+    "name": "Dice Lock OSC 1 Level",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockOscTune2",
+    "name": "Dice Lock OSC 2 Tune",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockOscFine2",
+    "name": "Dice Lock OSC 2 Fine",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockOscLevel2",
+    "name": "Dice Lock OSC 2 Level",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "DiceValueLockPulse2",
+    "name": "Dice Lock OSC 2 Pulse Width",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
+  },
+  {
+    "key": "OscPulse1",
+    "name": "OSC 1 Pulse Width",
+    "min": 5,
+    "max": 95,
+    "default": 50,
+    "unit": "%",
+    "log": false
+  },
+  {
+    "key": "Lfo1SyncDivision",
+    "name": "LFO 1 Sync Rate",
+    "choices": [
+      "1 bar D",
+      "1 bar",
+      "1/2 D",
+      "1 bar T",
+      "1/2",
+      "1/4 D",
+      "1/2 T",
+      "1/4",
+      "1/8 D",
+      "1/4 T",
+      "1/8",
+      "1/16 D",
+      "1/8 T",
+      "1/16",
+      "1/16 T"
+    ],
+    "default": 7
+  },
+  {
+    "key": "MotionSyncDivision",
+    "name": "Motion Sync Rate",
+    "choices": [
+      "1 bar D",
+      "1 bar",
+      "1/2 D",
+      "1 bar T",
+      "1/2",
+      "1/4 D",
+      "1/2 T",
+      "1/4",
+      "1/8 D",
+      "1/4 T",
+      "1/8",
+      "1/16 D",
+      "1/8 T",
+      "1/16",
+      "1/16 T"
+    ],
+    "default": 7
+  },
+  {
+    "key": "Lfo2SyncDivision",
+    "name": "LFO 2 Sync Rate",
+    "choices": [
+      "1 bar D",
+      "1 bar",
+      "1/2 D",
+      "1 bar T",
+      "1/2",
+      "1/4 D",
+      "1/2 T",
+      "1/4",
+      "1/8 D",
+      "1/4 T",
+      "1/8",
+      "1/16 D",
+      "1/8 T",
+      "1/16",
+      "1/16 T"
+    ],
+    "default": 7
   }
 ]

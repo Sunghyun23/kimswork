@@ -1,0 +1,13 @@
+PASS:353exact legacy declarations;391stable IDs; seven views and all per-tab/Program Q-Link assignments
+PASS: POLY bounds / modal ordering / acyclic construction 2318 widgets
+PASS: MONO bounds / modal ordering / acyclic construction 1338 widgets
+PASS: OSC bounds / modal ordering / acyclic construction 816 widgets
+PASS: ENV bounds / modal ordering / acyclic construction 768 widgets
+PASS: MOD bounds / modal ordering / acyclic construction 1251 widgets
+PASS: FX bounds / modal ordering / acyclic construction 831 widgets
+PASS: CHORD bounds / modal ordering / acyclic construction 1862 widgets
+PASS: assets/handles/choices, no empty literal labels, two native ADSRs, 16hold pads, Delay/master/chord Dice exclusions
+PASS:canonical numeric touch ranges, explicit relay Q-Link focus and category-first CHORD sound browser
+PASS:first388definitions retained; three15-choice Sync grids with D/T names, shared locks and modal guide suppression
+PASS:SDK version4modal key order, including Sync choice drawers and Settings
+PASS:native value labels inherit bound Data without recursive self-aliases

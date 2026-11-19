@@ -21,113 +21,101 @@ export const plugins: Plugin[] = [{
 {
   "slug": "donut-theory",
   "name": "Donut Theory",
-  "category": "POLYPHONIC SYNTHESIZER",
+  "category": "POLYPHONIC & MONOPHONIC SYNTHESIZER",
   "tagline": "A little worn. Endlessly warm.",
   "summary": "Warm synthesis. Rich chords. Movement in every direction.",
-  "description": "A Moog-inspired synthesizer for MPC bass, keys, leads and pads. Shape its nonlinear ladder engine with Body and Sub, two independent LFOs and synchronized Tremolo or Auto Pan, then build your own chord changes. Shape both envelopes on ENV and add a downward pitch release from PLAY.",
-  "developmentVersion": "1.13.14",
+  "description": "A Moog-inspired synthesizer for MPC bass, keys, leads and pads. Edit one shared sound from POLY or MONO without changing its mode, shape each oscillator and delay either LFO, then build your own chord changes.",
+  "developmentVersion": "1.14.1",
   "release": {
-    "version": "1.13.14",
-    "tag": "donut-theory/v1.13.14",
-    "asset": "donut-theory-1.13.14-mpc.zip"
+    "version": "1.14.1",
+    "tag": "donut-theory/v1.14.1",
+    "asset": "donut-theory-1.14.1-mpc.zip"
   },
-  "image": "donut-theory-main-device-1.13.14.webp",
-  "imageAlt": "Actual MPC XL Donut Theory 1.13.14 with individual shared Dice locks",
+  "image": "donut-theory-poly-device-1.14.1.webp",
+  "imageAlt": "Actual MPC XL Donut Theory 1.14.1 POLY performance editor",
   "manual": "plugins/donut-theory/manual/",
   "intro": "66 synthesized factory sounds, 32 chord types and 96 progression recipes. Tap ROLL DICE to generate a complete oscillator-to-FX sound with synchronized motion, while keeping your chords and master level. No external samples are required.",
-  "verifiedDevice": "MPC XL / OS3.10.1.12; native presets, Dice and MAIN/CHORD verified;177installed files matched",
+  "verifiedDevice": "MPC XL / OS 3.10.1.12; remote POLY/MONO, shared values, native presets and Sync drawers checked; native VST/state/audio tests pass. Physical encoder/hardware-audio/CPU coverage remains separate.",
   "mapping": [
     [
-      "A \u00b7 OSC / Sound",
-      "OSC Pair",
-      "OSC Mix",
-      "Detune",
+      "A · Selected OSC",
+      "Wave",
+      "Pitch · Tune/Fine",
+      "Level",
       "Drift"
     ],
     [
-      "B \u00b7 Filter / Tone",
+      "B · Filter / Tone",
       "Filter Cutoff",
       "Resonance",
       "Body",
-      "Sub"
+      "Drive"
     ],
     [
-      "C \u00b7 LFO 1 /2",
-      "LFO 1 Rate",
-      "LFO 1 Depth",
-      "LFO 2 Rate",
-      "LFO 2 Depth"
+      "C · Selected LFO",
+      "Rate",
+      "Depth",
+      "Delay",
+      "Target"
     ],
     [
-      "D \u00b7 FX / Motion",
-      "Drive",
-      "Glide",
-      "Mod Rate",
-      "Mod Depth"
+      "D · POLY Amp / Motion",
+      "Amp Attack",
+      "Amp Release",
+      "Motion Rate",
+      "Motion Depth"
     ]
   ],
   "features": [
     {
-      "title": "Shape the whole release.",
-      "text": "PLAY places Amp Release, Drop Amount and Drop Time together. Release a key to slide down by up to24semitones; sustain and legato fallback follow your playing. Set Amount to0 to turn it off."
+      "title": "Two views. One shared sound.",
+      "text": "POLY and MONO are editing views. Tab changes preserve the actual voice mode and every sound value; use VOICE to switch modes. POLY brings Amp/Motion forward, while MONO offers Glide, Decay, Release and Pitch Drop."
     },
     {
-      "title": "Two envelopes. One clear view.",
-      "text": "ENV brings Amp ADSR and Filter ADSR side by side, with editable diagrams and vertical faders. Filter response stays together below. PLAY Release shares the Amp Release value, while Filter Release stays independent."
+      "title": "Shape each oscillator.",
+      "text": "Select OSC1 or OSC2 for Wave, Pitch and Level. Tune and Fine add together; Drift remains shared. OSC exposes both sources, pulse widths, Sub, noise, FM and Tone."
+    },
+    {
+      "title": "Motion that arrives in time.",
+      "text": "Both LFOs have independent Rate, Depth, Delay and Target. Per-note Delay waits up to five seconds before modulation fades in. Each LFO and Tremolo/Auto Pan offers 15 straight, dotted and triplet Sync periods; small knob turns accumulate normally."
+    },
+    {
+      "title": "Explore. Protect. Return.",
+      "text": "61 shared value locks protect actual sound parameters across views. Roll a whole sound within a chosen family, Undo the generation or Unlock All without changing a note. Actual mode, harmony, MIDI, master and both LFO Delays remain intact."
     },
     {
       "title": "66 sounds. A warm place to start.",
-      "text": "Bass, Keys, Synth, Lead and Pad, plus dry Init. Category-first browsing and per-sound low-cut keep selection practical. Dusty Sunday and Velvet Melt append to the original 64 programs."
+      "text": "Bass, Keys, Synth, Lead and Pad, plus dry Init. Category-first plugin browsing and the native MPC preset list share all 66 sounds. Dusty Sunday and Velvet Melt remain included."
     },
     {
-      "title": "Weight and texture, side by side.",
-      "text": "Sub adds a sine one octave below the main oscillator. Body adds broad low-mid density through gentle saturation. Filter Cutoff and Resonance share the same group; amp/filter ADSRs stay on detail pages."
+      "title": "Make room for rich harmony.",
+      "text": "32 chord types, 96 progression recipes and up to 16 slots. POLY pads sound while held; CHORD exposes key/circle reference, inversions, octaves, Smooth Voicing, Strum, chord glide and individual MIDI learn."
     },
     {
-      "title": "Two LFOs. One shared motion effect.",
-      "text": "Each LFO has independent Shape, Target, Rate, Depth and Sync. Choose Tremolo or Auto Pan in a separate module. Every synchronized Rate uses its existing Q-Link to select a division and remembers its free Hz value."
-    },
-    {
-      "title": "Find a home for your chords.",
-      "text": "Set a Major or Minor reference Key beside the circle of fifths. Explicit transpose moves active roots together. Smooth Voicing proposes smaller top-note movement, with preview before you apply it."
-    },
-    {
-      "title": "Play the space between notes.",
-      "text": "Overlapping chord triggers can glide between nearby voices while holding common tones. One-shot Strum spreads the chord from bass to top. Ordinary Mono/Legato melody remains separate."
-    },
-    {
-      "title": "Sixteen slots, four within reach.",
-      "text": "Expand from 4 to 16 slots. Four large MAIN pads play while held; physical pads connect through individual MIDI Note/LEARN. CHORD uses sixteen SCREEN Q-Links for Root, Type, Voicing and Octave."
+      "title": "Two envelopes. Clear release control.",
+      "text": "ENV combines editable Amp and Filter ADSRs with filter response. Amp Release is shared across POLY, MONO and ENV. MONO places downward release Pitch Drop beside it; the remaining tail determines how much bend you hear."
     }
   ],
   "changes": [
     {
-      "title": "1.13.14: lock your favorites. Keep exploring.",
-      "text": "Individual shared Dice locks and UNLOCK ALL protect selected sound values across pages. Native preset browsing is restored by eliminating repeated false refreshes; snapshots preserve live gestures. Factory sounds and Q-Link maps are unchanged."
+      "title": "1.14.1: shared performance editors.",
+      "text": "New POLY/MONO views never switch your sound or actual voice mode. Individual oscillator focus, Tune/Fine, LFO Delay and independent detail pages share one saved sound. The explicit VOICE button controls Poly/Mono."
     },
     {
-      "title": "1.12.0: shape what happens after the note.",
-      "text": "ENV replaces FILTER and PLAY replaces AMP. Both ADSRs share one screen; PLAY D adds Release / Drop Amount / Drop Time. Old projects default to Drop Off; the first291parameters remain unchanged, with only two appended for293total. MAIN and its filter controls are unchanged."
+      "title": "Small turns. Fifteen Sync choices.",
+      "text": "Fixed the per-block cursor snapback that discarded small Q-Link turns. LFO1, LFO2 and Motion offer straight, dotted and triplet periods, clockwise from slow to fast. Free Hz and original straight periods are retained."
     },
     {
-      "title": "1.10.1: browse, create, play.",
-      "text": "Sound Preset, Voice and Input move into a bottom browse row. ROLL DICE joins chord-preset and slot navigation beneath it, followed by four 70 px chord pads. Original artwork and typography stay; compact main controls and guides make room. Sound engine, 291 parameters, 66 programs, detail pages and Q-Link assignments are unchanged."
+      "title": "Real MPC value-display correction.",
+      "text": "Device QA found recursive Data-to-Data label bindings that blanked the numeric displays. Value labels now inherit their actual parent parameter. The new regression prevents the same skin defect."
     },
     {
-      "title": "1.10.0: a whole new sound, one tap away.",
-      "text": "ROLL DICE generates oscillators, filter and envelopes, modulation and FX within playable bounds. LFO 1, LFO 2 and shared motion Sync turn on automatically. Chords, Key, MIDI mapping, Strum, CHORD GLIDE preference and master Volume stay in place. Select any factory sound to return to a known starting point."
+      "title": "Bring your projects forward.",
+      "text": "Same kim/Krql identity and 66 factory programs. The first 353 parameter declarations remain unchanged; 391 total. Old oscillator and five-step Sync values migrate, while locks and one-step Dice Undo share the new controls."
     },
     {
-      "title": "A clearer performance surface.",
-      "text": "OSC Pair/Mix/Detune/Drift; Filter/Resonance/Body/Sub; both LFOs; Drive/Glide/Motion. Four groups keep sixteen controls in a consistent order. Touch selectors and independent SYNC toggles sit beside the relevant knobs."
-    },
-    {
-      "title": "More harmony, less top-note travel.",
-      "text": "32 chord types and 96 four-chord recipes, Key/circle reference, explicit transpose and Smooth Voicing extend the editor. Inversions, octave, overlapping chord glide and one-shot Strum remain directly editable."
-    },
-    {
-      "title": "Bring your sessions forward.",
-      "text": "The original 64 sound programs keep their order, with two new additions. Sound changes preserve your chord settings and master Volume. Saved tracks may retain older Q-Link maps: reset them or compare a fresh instance."
+      "title": "Native presets stay available.",
+      "text": "The earlier notification-storm fix remains in place. The MPC header lists factory programs, while the plugin browser opens categories first. Explicit factory selection preserves the actual voice mode and your harmony/MIDI/master settings."
     }
   ],
   "limitations": [
@@ -142,56 +130,61 @@ export const plugins: Plugin[] = [{
   ],
   "screenshots": [
     {
-      "image": "donut-theory-main-device-1.13.14.webp",
-      "alt": "Actual MPC XL Donut Theory 1.13.14 with individual shared Dice locks",
-      "caption": "MAIN \u00b7 Actual MPC XL1.13.14. Shared per-control Dice locks; original artwork and sixteen Q-Link assignments."
+      "image": "donut-theory-poly-device-1.14.1.webp",
+      "alt": "Donut Theory POLY editor on MPC XL",
+      "caption": "POLY · Selected OSC and LFO controls with Amp/Motion; one shared sound. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
     },
     {
-      "image": "donut-theory-presets-device-1.13.14.webp",
-      "alt": "Actual native MPC preset list showing Dusty Sunday and Velvet Melt",
-      "caption": "NATIVE PRESETS \u00b7 Actual1.13.14 list and selected factory sound. Both final factory entries work."
+      "image": "donut-theory-mono-device-1.14.1.webp",
+      "alt": "Donut Theory MONO editor on MPC XL",
+      "caption": "MONO · Glide, Decay, Release and Pitch Drop. The editor tab does not change the actual voice mode. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
     },
     {
-      "image": "donut-theory-env-device-1.13.14.webp",
-      "alt": "Actual MPC XL Donut Theory1.13.14 ENV controls with shared Dice locks",
-      "caption": "ENV \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
+      "image": "donut-theory-sync-device-1.14.1.webp",
+      "alt": "Actual MPC dotted and triplet Sync sidebar",
+      "caption": "SYNC · Fifteen straight, dotted and triplet periods; two pages with a shared rate lock. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
     },
     {
-      "image": "donut-theory-play-device-1.13.14.webp",
-      "alt": "Actual MPC XL Donut Theory1.13.14 PLAY controls with shared Dice locks",
-      "caption": "PLAY \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
+      "image": "donut-theory-presets-device-1.14.1.webp",
+      "alt": "Actual MPC native Donut Theory preset list",
+      "caption": "NATIVE PRESETS · Factory program selection remains available from the host header. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
     },
     {
-      "image": "donut-theory-chord-device-1.13.14.webp",
-      "alt": "Actual Donut Theory1.13.14 chord editor",
-      "caption": "CHORD \u00b7 Actual MPC XL1.13.14: key/circle reference,32types,96recipes, voicing, octave, Glide and Strum."
+      "image": "donut-theory-osc-device-1.14.1.webp",
+      "alt": "Donut Theory independent OSC controls on MPC XL",
+      "caption": "OSC · Individual Wave, Tune, Fine, Level and Pulse Width, plus texture controls. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
     },
     {
-      "image": "donut-theory-osc-device-1.13.14.webp",
-      "alt": "Actual MPC XL Donut Theory1.13.14 OSC controls with shared Dice locks",
-      "caption": "OSC \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
+      "image": "donut-theory-env-device-1.14.1.webp",
+      "alt": "Donut Theory combined ADSR screen on MPC XL",
+      "caption": "ENV · Both editable ADSRs and filter response; Amp Release is shared with the fronts. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
     },
     {
-      "image": "donut-theory-mod-device-1.13.14.webp",
-      "alt": "Actual MPC XL Donut Theory1.13.14 MOD controls with shared Dice locks",
-      "caption": "MOD \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
+      "image": "donut-theory-mod-device-1.14.1.webp",
+      "alt": "Donut Theory delayed LFOs and Motion on MPC XL",
+      "caption": "MOD · Both LFOs, independent Delay and shared Tremolo/Auto Pan. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
     },
     {
-      "image": "donut-theory-fx-device-1.13.14.webp",
-      "alt": "Actual MPC XL Donut Theory1.13.14 FX controls with shared Dice locks",
-      "caption": "FX \u00b7 Direct MPC XL1.13.14 capture. Shared protection for controls that Dice changes; existing Q-Link assignments retained."
+      "image": "donut-theory-fx-device-1.14.1.webp",
+      "alt": "Donut Theory FX and output on MPC XL",
+      "caption": "FX · Drive/color, space/echo and output with shared sound locks. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
+    },
+    {
+      "image": "donut-theory-chord-device-1.14.1.webp",
+      "alt": "Donut Theory CHORD editor and circle of fifths on MPC XL",
+      "caption": "CHORD · Root, type, voicing and octave for each visible slot, with key reference and harmony tools. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
     }
   ],
   "auditions": [
     {
       "name": "Keys / Dusty Sunday",
       "file": "donut-theory-dusty-sunday-1.9.0.wav",
-      "description": "Soft sine/triangle keys \u00b78 ms Strum \u00b770% Auto Pan."
+      "description": "Soft sine/triangle keys ·8 ms Strum ·70% Auto Pan."
     },
     {
       "name": "Synth / Velvet Melt",
       "file": "donut-theory-velvet-melt-1.9.0.wav",
-      "description": "Soft saw/triangle \u00b76 ms Strum \u00b765 ms chord glide \u00b780% Auto Pan."
+      "description": "Soft saw/triangle ·6 ms Strum ·65 ms chord glide ·80% Auto Pan."
     }
   ]
 },
@@ -237,7 +230,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-19-triplet';
+export const navigationVersion = 'software-2026-11-19-donut-1141';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);
