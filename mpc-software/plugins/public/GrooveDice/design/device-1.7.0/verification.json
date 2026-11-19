@@ -1,6 +1,6 @@
 {
   "version": "1.7.0",
-  "status": "final implementation; remote MPC validation complete; physical tests not certified",
+  "status": "released; remote MPC checks complete; physical hardware coverage remains partial",
   "vendor": "kim",
   "uid": "KpGy",
   "parameters": 880,
@@ -18,7 +18,7 @@
   "physicalPads": "not newly verified; user confirmation pending",
   "physicalQLinks": "not newly verified",
   "hardwareAudio": "not newly verified",
-  "publicRelease": "release prepared; publication recorded separately",
+  "publicRelease": "published stable groove-dice/v1.7.0; website deployed and publicly verified",
   "fullHostMidiImport": "not newly verified",
   "deviceMidi": {
     "notePairs": 129,
