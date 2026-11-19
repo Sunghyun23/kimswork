@@ -2,10 +2,19 @@
   "number": 1035,
   "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1035",
   "state": "open",
-  "head_sha": "c92b72c8f43382cfca033b49f591c5c27a1ef7fa",
+  "head_sha": "2148ec1742c9c0215e87d2ddb93895274dee0085",
   "head_ref": "catalog/groove-dice",
   "base_sha": "864411da8fb0d88ad150d316ac6fea5f279113ea",
   "merged": false,
-  "ciRun": 44527338657,
-  "ciConclusion": "success"
+  "ciRun": 44538239063,
+  "ciConclusion": "success",
+  "version": "1.6.2",
+  "reviewStatus": "changes addressed; pending re-review",
+  "reviewReply": "https://github.com/open-mpc/mpc-vst-plugins/pull/1035#issuecomment-7011180549",
+  "rereviewRequestedViaComment": true,
+  "formalReviewRequestApi": "unavailable404; not claimed as an assigned review request",
+  "screenshot": "public-only128WAV/95MIDI",
+  "user_data": [
+    "Content/Expansions"
+  ]
 }

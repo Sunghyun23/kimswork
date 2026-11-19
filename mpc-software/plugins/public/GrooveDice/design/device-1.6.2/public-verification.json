@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "checks": [
+    "/plugins/groove-dice/",
+    "/",
+    "/software/",
+    "/software/instruments/",
+    "/plugins/groove-dice/manual/",
+    "/apps/groove-dice-pack-builder/",
+    "/apps/groove-dice-pack-builder/manual/",
+    "/plugins/donut-theory/",
+    "/plugins/crate-press/",
+    "website-sdk-download-hash",
+    "actual-public-only-image:main",
+    "actual-public-only-image:triplets",
+    "actual-public-only-image:groove",
+    "actual-public-only-image:sound",
+    "actual-public-only-image:sound2",
+    "actual-public-only-image:browser",
+    "actual-public-only-image:cymbals",
+    "actual-public-only-image:fill",
+    "actual-public-only-image:kits",
+    "actual-public-only-image:fx",
+    "actual-public-only-image:routing",
+    "builder-download:groove-dice-pack-builder-1.0.0-darwin-arm64.zip",
+    "builder-download:groove-dice-pack-builder-1.0.0-windows-amd64.zip"
+  ],
+  "sdkDownloadHashVerified": true,
+  "builderDownloadsVerified": true,
+  "otherVersionsUnchanged": {
+    "DonutTheory": "1.14.2",
+    "CratePress": "0.2.5",
+    "PackBuilder": "1.0.0"
+  }
+}

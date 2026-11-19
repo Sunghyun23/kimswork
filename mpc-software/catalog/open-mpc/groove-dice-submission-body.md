@@ -2,10 +2,10 @@
 
 Add Groove Dice by kim, a neo-soul/hip-hop drum instrument with one-bar groove generation, layered drums, rhythm rules, fill recording and independent expansion packs. This PR changes only `catalog/plugins/groove-dice.json`; Donut Theory is already listed from#1030.
 
-- Source: https://github.com/Sunghyun23/kimswork/tree/groove-dice/v1.6.1/mpc-software/plugins/public/GrooveDice
-- Project MIT license: https://github.com/Sunghyun23/kimswork/blob/groove-dice/v1.6.1/mpc-software/plugins/public/GrooveDice/LICENSE
+- Source: https://github.com/Sunghyun23/kimswork/tree/groove-dice/v1.6.2/mpc-software/plugins/public/GrooveDice
+- Project MIT license: https://github.com/Sunghyun23/kimswork/blob/groove-dice/v1.6.2/mpc-software/plugins/public/GrooveDice/LICENSE
 - Core-content MIT/provenance: `Content/Licenses/Original-Workshop-MIT.txt` and `Original-Workshop-Provenance.txt` in that project and every package.
-- Release: https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.6.1
+- Release: https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.6.2
 - Product/manual: https://kimswork.app/plugins/groove-dice/ and https://kimswork.app/plugins/groove-dice/manual/
 
 ### Original core and optional Pack Builder
@@ -27,9 +27,9 @@ The project uses the pinned official MPC SDK. Portable archives were made by ups
 
 ```text
 catalog_check.py <armv7.zip> --catalog --require-portable --expect-id groove-dice --expect-repo Sunghyun23/kimswork
-OK: groove-dice 1.6.1 (0 warnings)
+OK: groove-dice 1.6.2 (0 warnings)
 catalog_check.py <aarch64.zip> --catalog --require-portable --expect-id groove-dice --expect-repo Sunghyun23/kimswork
-OK: groove-dice 1.6.1 (0 warnings)
+OK: groove-dice 1.6.2 (0 warnings)
 catalog_build.py --check-registry
 290 entries, 6 collections, 0 problems
 catalog_build.py --require-portable groove-dice
@@ -37,18 +37,24 @@ catalog_build.py --require-portable groove-dice
 ```
 
 SHA-256:
-- `groove-dice-1.6.1-mpc-aarch64.zip`: `e92a6338e46ab949d60ee25b626d1dcaa5483734046459ef45a94e3999483aae`
-- `groove-dice-1.6.1-mpc-armv7.zip`: `079ee9f3f3ad528b7864d39e66a65d45a91660d5cc5ffe11fafb13b89de8b01a`
+- `groove-dice-1.6.2-mpc-aarch64.zip`: `e3298327e25e500c6246b13cc68b9c82310cd300b948503a07379ffb6520c7de`
+- `groove-dice-1.6.2-mpc-armv7.zip`: `803c8c8cb11595284921a0c3a74131ec2abb50df940282f142ac8348f92fe1e4`
 
 ### Testing scope
 
-1.6.1 is a documentation/licensing/distribution patch. Native version metadata is10601; the engine implementation, all782parameter declarations, exact UI/Q-Link bytes and original core bank match1.6.0. Native/ARM32/ARM64 builds and SDK validation pass; host simulator19PASS/0WARN/0FAIL; existing skin/expansion-manager checks and4Pack Builder authoring tests pass. Existing compiler warnings are retained, not represented as warning-free compilation.
+1.6.2 fixes catalog packaging; DSP/UI/782parameter metadata and the original core bank are unchanged except native version10602. Current native/ARM/SDK, host19PASS/0WARN/0FAIL and skin checks pass. Existing1.6.1engine/bridge/authoring checks remain scoped to that version.
 
-Actual screenshot is the previous1.6.0MPC XL3.10.1.12 remote capture, pinned to its source commit; UI is unchanged. The owner device had optional packs installed (the library total in the header is not the public package's sound count). Earlier remote UI verification does not certify1.6.1on hardware. New physical encoders/audio/CPU/all routes/project recall are not claimed; portable legacy installers were not run on the device. No `tested.json` or Verified badge claim: please list at Listed tier.
+New public-only actual MPC XL / OS3.10.1.12 captures show128WAV/95MIDI. The SD public profile was temporarily installed through the official SDK; the owner NVMe was untouched. After capture, the original SD copy including owner packs was restored and all167files were verified SHA256-identical to the pre-test backup. The catalog screenshot is pinned to source commit e1811423e910f79bd28241ee79ed1e9289a25173: https://raw.githubusercontent.com/Sunghyun23/kimswork/e1811423e910f79bd28241ee79ed1e9289a25173/mpc-software/plugins/public/GrooveDice/design/device-1.6.2/public-main.png
+
+Actual generated installers were tested in isolated Linux (MPC_INSTALL_TEST=1, temporary fake settings/targets only), never run on the real MPC. For both CPU archives the test reproduces1.6.1pack loss, verifies1.6.2upgrade and repeat-install preservation of pack/registry/nested bytes, then verifies uninstall retains declared user data. Test: https://github.com/Sunghyun23/kimswork/blob/groove-dice/v1.6.2/mpc-software/plugins/public/GrooveDice/tests/open_mpc_upgrade_test.py ; results: https://github.com/Sunghyun23/kimswork/blob/groove-dice/v1.6.2/mpc-software/plugins/public/GrooveDice/design/device-1.6.2/upgrade-test.log
+
+Both top-level and portable-folder mpc-plugin.json files declare `"user_data": ["Content/Expansions"]`; the installer has matching USER_DATA. The public-only package wrapper always passes this flag and rejects missing declarations. Older1.6.1assets remain unchanged with an upgrade warning in their release notes.
+
+Physical encoders/audio/CPU/all routes/full device recall remain uncertified. No tested.json or Verified claim. The new UI captures support the summary's scoped MPC XL UI statement, not wider hardware claims.
 
 ## Checks
 - [x] Offline first: project host/skin, expansion install/remove, authoring and both catalog-package checks passed. Upstream Linux CI requested; the full upstream macOS shell suite is not claimed as passing.
-- [ ] New1.6.1device execution: not claimed; current packaging is offline-verified and previous device scope is stated above.
+- [x] Actual1.6.2public-core MPC XL UI captured; no full physical/audio/CPU certification claimed.
 - [x] Catalog-conformant: both archives pass `catalog_check.py --catalog --require-portable`.
 - [x] No manufacturer product name/logo in plugin name, skin art or screenshot.
 - [x] Starts as Listed; no tested.json/Verified claim.
