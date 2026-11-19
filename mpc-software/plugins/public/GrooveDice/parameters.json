@@ -8885,7 +8885,7 @@
     "name": "Performance Pad Note 1",
     "min": 0,
     "max": 127,
-    "default": 52,
+    "default": 48,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8895,7 +8895,7 @@
     "name": "Performance Pad Note 2",
     "min": 0,
     "max": 127,
-    "default": 53,
+    "default": 50,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8905,7 +8905,7 @@
     "name": "Performance Pad Note 3",
     "min": 0,
     "max": 127,
-    "default": 55,
+    "default": 52,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8915,7 +8915,7 @@
     "name": "Performance Pad Note 4",
     "min": 0,
     "max": 127,
-    "default": 57,
+    "default": 53,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8925,7 +8925,7 @@
     "name": "Performance Pad Note 5",
     "min": 0,
     "max": 127,
-    "default": 59,
+    "default": 55,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8935,7 +8935,7 @@
     "name": "Performance Pad Note 6",
     "min": 0,
     "max": 127,
-    "default": 60,
+    "default": 57,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8945,7 +8945,7 @@
     "name": "Performance Pad Note 7",
     "min": 0,
     "max": 127,
-    "default": 62,
+    "default": 59,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8955,7 +8955,7 @@
     "name": "Performance Pad Note 8",
     "min": 0,
     "max": 127,
-    "default": 64,
+    "default": 60,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8965,7 +8965,7 @@
     "name": "Performance Pad Note 9",
     "min": 0,
     "max": 127,
-    "default": 65,
+    "default": 62,
     "unit": "",
     "decimals": 0,
     "auto": false
@@ -8975,7 +8975,7 @@
     "name": "Performance Pad Note 10",
     "min": 0,
     "max": 127,
-    "default": 67,
+    "default": 64,
     "unit": "",
     "decimals": 0,
     "auto": false

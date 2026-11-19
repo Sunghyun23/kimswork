@@ -1,4 +1,4 @@
-# Groove Dice 1.7.0 — User manual
+# Groove Dice 1.7.1 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -6,7 +6,7 @@ Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standa
 
 Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. Other model compatibility and worst-case CPU are not certified by that test.
 
-Download the complete `groove-dice-1.7.0-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
+Download the complete `groove-dice-1.7.1-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
 The base package contains **Original Workshop**:128 independently synthesized WAV one-shots,96 kit configurations, two authored beats and93 timing templates. Ninety-six kits are combinations/settings, not96 separately recorded drum libraries. Optional expansions are separate files; the base release contains no private/commercial third-party drum library.
 
@@ -215,9 +215,9 @@ MAIN has sixteen value padlocks, and PERFORM has eight sequence padlocks. SOUND 
 
 ## PERFORM: play, capture and export (1.7.0)
 
-Open PERFORM from MAIN's bottom button, or press the first native function key again. Screen Q-Link group A controls the selected slot's Rate/Velocity/Humanize/Length; the other three groups are inactive on that native page. SELECT TO EDIT makes screen pads select without sounding; physical MIDI pads still perform.
+Press the first native function key to switch MAIN/PERFORM; press it again to return. MAIN has EDIT FILL for note editing, with no duplicate PERFORM entry. Screen Q-Link group A controls the selected slot's Rate/Velocity/Humanize/Length; the other three groups are inactive on that native page. SELECT TO EDIT makes screen pads select without sounding; physical MIDI pads still perform.
 
-B1–B4 are four momentary snare rolls. B5–B8 are fills A–D, queued at the next beat and played once. B9 toggles the loop; B10 stops this instance. A-bank direct drums remain unchanged. These labels describe the intended layout, not automatic bank detection: if the MPC root/scale/pad notes differ, select a slot and use LEARN PAD; ROUTING has LEARN LOOP and LEARN STOP. The plugin never changes MPC Pad Perform settings.
+B1–B4 are four one-shot snare rolls: one press schedules the complete selected1/2/4-beat Length at the end of a bar, then ends automatically. If its start window has already passed, the next valid bar is used; no phrase is shortened. Early release does not shorten the phrase. Known incorrect1.7.0default mappings migrate to48/50/52/53/55/57/59/60/62/64; independently learned/custom layouts remain untouched. B5–B8 are fills A–D, scheduled at the end of a bar and played once, with the same full-length/late-trigger policy. B9 toggles the loop; B10 stops this instance. A-bank direct drums remain unchanged. These labels describe the intended layout, not automatic bank detection: if the MPC root/scale/pad notes differ, select a slot and use LEARN PAD; ROUTING has LEARN LOOP and LEARN STOP. The plugin never changes MPC Pad Perform settings.
 
 ROLL DICE now regenerates unlocked fills and rolls together with the main groove. During playback the update commits at the next bar. Locked slots remain; recorded/edited fills lock automatically. Older projects also load populated fill slots locked to protect existing work. GENERATE in the selected-slot panel explicitly changes that slot. UNDO restores all previous sequences. Main knob/RULE edits remain live. This supersedes the1.5.1 fill-preservation policy.
 

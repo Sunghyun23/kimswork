@@ -137,7 +137,7 @@ main.append(conditional(label('HATS REST ON RIDE','1036 279 216 22',16,'ff6a4930
 define('SelectPoolButton',[g.entry('selected pool','Button',g.button_data(art(192,40,'orange'),art(192,40,'cream'),2,3),'0 0 192 40','No','Show','Always',remap=[('Data',H('DicePool'))]),label('SELECT KITS','0 0 192 40',22)], [g.action('Mouse Down','Toggle Switch',H('PoolOpen'),'')])
 main +=[label('SOUNDS','16 420 88 60',17,'fff7e9c7'),button('<','KitPrev','108 420 48 60',toggle=True),value('XKit','164 420 252 60'),button('>','KitNext','424 420 48 60',toggle=True),button('LOCK KIT','KitLock','484 420 130 60',toggle=True),button('<','PackPrev','626 420 48 60',toggle=True),label('','682 420 290 60',21,'fff7e9c7','PackInfo'),button('>','PackNext','980 420 48 60',toggle=True),button('SAVE KIT','SaveKit','1040 420 224 60',kind='dark',toggle=True),
 button('UNLOCK ALL','UnlockDice','16 488 128 60',toggle=True),button('ROLL DICE','Roll','152 488 220 60',kind='orange',toggle=True),label('USE SOUNDS FROM','384 484 560 22',17,'fff7e9c7'),button('THIS PACK','DicePool','384 508 176 40',0,3),button('ALL PACKS','DicePool','568 508 176 40',1,3),instance('SelectPoolButton','752 508 192 40'),button('UNDO','Undo','956 488 112 60',toggle=True),button('LOCK PATTERN','PatternLock','1080 488 184 60',toggle=True),
-label('PLAY','16 556 88 60',17,'fff7e9c7'),button('MPC SYNC','Follow','108 556 156 60',toggle=True),button('PLAY LOOP','Preview','272 556 168 60',toggle=True),value('FillSlot','448 556 72 60'),button('PLAY FILL','Trigger','528 556 156 60',kind='orange',toggle=True),button('PERFORM','PerformOpen','692 556 176 60',toggle=True),label('','880 556 384 60',20,'fff7e9c7','ActionInfo')]
+label('PLAY','16 556 88 60',17,'fff7e9c7'),button('MPC SYNC','Follow','108 556 156 60',toggle=True),button('PLAY LOOP','Preview','272 556 168 60',toggle=True),value('FillSlot','448 556 72 60'),button('PLAY FILL','Trigger','528 556 156 60',kind='orange',toggle=True),button('EDIT FILL','Editor','692 556 176 60',toggle=True),label('','880 556 384 60',20,'fff7e9c7','ActionInfo')]
 
 
 # Fill editor is an engine-backed context panel. Fixed SCREEN relay params map to its real parameters.
@@ -161,9 +161,6 @@ editor +=[button('MAIN','Editor','16 520 176 42',index=0,count=2,toggle=True),bu
 define('GDMain',main);define('GDFill',editor,modal=True)
 mainRoot=[instance('GDMain',invalid=['IndexedEnabling/0/2/'+H('Editor')]),instance('GDFill',invalid=['IndexedEnabling/1/2/'+H('Editor')])]
 from performance_skin import build_performance_skin
-performance=build_performance_skin(g,O,keys,get,put,H,label,image,define,instance,button,art,knob,conditional,base,defs)
-define('GDPerformance',performance,modal=True)
-mainRoot.append(instance('GDPerformance',invalid=['IndexedEnabling/1/2/'+H('PerformOpen')]))
 put(tabs[0],'componentDefinition',g.component_definition([],mainRoot,'ffeed9b3'));put(tabs[0],'qlinkBoundsData',[group_guide(x,y)for _,_,x,y in groups])
 # Retain native first-key FILL fallback, with direct fixed mapping; main editor relay works without invented tab actions.
 put(tabs[1],'fnKeyIndex',0);put(tabs[1],'fnKeySubIndex',1);put(tabs[1],'componentDefinition',g.component_definition([],editor,'ffeed9b3'));put(tabs[1],'qlinkBoundsData',[group_guide(16,186),group_guide(650,186),'0 0 0 0','0 0 0 0'])

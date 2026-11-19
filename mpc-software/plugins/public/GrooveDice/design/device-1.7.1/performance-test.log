@@ -1,0 +1,21 @@
+PASS actual B1=48 Major-bank defaults; old and diagnostic maps migrate after late host replay, custom LEARN retained
+PASS four bar-end one-shot rolls x3lengths x3blocks; early note-off preserves duration; automatic end
+PASS roll completes once with host stopped, without a note-off or endless repeat
+PASS latest queued roll replaces previous request; STOP cancels queued and active rolls
+PASS bar-boundary Dice regenerates open slots, preserves locked slots, Undo restores all eight
+PASS four queued fills play once, mutually replace and return to loop
+PASS roll/fill overlap ends together at the bar and clears fill ownership
+PASS late two-beat phrases cross host cycle boundaries correctly; triggered length/end remains latched
+PASS8slots x3lengths x5early/late phases: full phrase, no truncation, exact bar-end return
+PASS four Q-Link relays edit selected slot with no hidden-page aliasing
+PASS MIDI learn consumes registration input; new state round-trip and fresh MAIN
+PASS allocation-free capture records generated notes, not trigger keys; SMF export succeeds off audio thread
+PASS physical pads remain playable in edit mode; Loop/Stop learn independently
+PASS actual old782state shape auto-protects all populated legacy fills from global Dice
+PASS direct drum capture while transport stopped retains real note spacing
+PASS generated1-beat fill plays exactly its tail; legacy/recorded2-bar fill retains full duration
+PASS relearning cancels queued/active rolls; old note-off cannot restart a phrase
+PASS late host replay consumes new gesture commands during state settle; no startup roll/generate/capture
+PASS recorded-fill Velocity/Humanize preserve recorded notes; shared Length reaches2bars; Rate cannot regenerate a recording
+PASS recorded fill Note Chance0 remains silent through performance trigger
+PASS count-in cannot be bypassed by performance triggers

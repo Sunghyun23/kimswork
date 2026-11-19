@@ -1,0 +1,62 @@
+[
+  {
+    "file": "public-main.png",
+    "sha256": "73f7d5fb6e5aa03de7901c55cbb840b1c387792dfb5fabfe8ebb35a518bcc38e",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-perform.png",
+    "sha256": "56f58d05f002c7661d0707fe1628dccf5d543824f4748a7543aa47ac8a09356a",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-roll.png",
+    "sha256": "9b985b9b680a1d1dafa0066ae3ead8259ead42f7cb2739e7281eac5741a233b4",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-capture.png",
+    "sha256": "3202e7d9fc2b0ecdb0cf816a85fa9dae5ce23c13573b452514eaad66209e07c1",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-groove.png",
+    "sha256": "6c56c72c2f750ab7d5a5c806d86d23af12dc382aac0d851e3cf1a3724f4f611f",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-sound.png",
+    "sha256": "f9c6ac53ad99e799cd7e3094c64b58e274f922e65bdd6b35d3c8164cd9337358",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-sound2.png",
+    "sha256": "3e9dcf47bfcca3c9e7c87bd3063527394f4de1e242f02c245b87b9c936302f8f",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-cymbals.png",
+    "sha256": "f16dfd56294488bb948fc03f44b6a0910960b7d04e039541e689c331c2e498b2",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-fill.png",
+    "sha256": "677c6e86ae3bd6ee461877eb85aefdfaa908ad03d522ef916b6ad3c9d8020f2f",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-kits.png",
+    "sha256": "be3ceea5eb24d1e68f21eb4592dfa756e1218a4dc8f9ce449a0b71f1fad0de61",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-fx.png",
+    "sha256": "7477d2f08176261ef87d7d8b69104993e5737909ee427a24b60899d982d8f2d9",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  },
+  {
+    "file": "public-routing.png",
+    "sha256": "2921ff43b82e2a8b6cf0bc508fa80225fb6521a49f7170ff5eafc6da636632f3",
+    "source": "actual final tab-only/bar-end1.7.1MPC XL framebuffer; public128WAV/95MIDIcore only"
+  }
+]

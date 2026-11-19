@@ -1,0 +1,39 @@
+{
+  "version": "1.7.1",
+  "status": "final1.7.1validated and installed on NVMe; release prepared",
+  "rollPolicy": "earliest bar end accommodating full selected length; late press defers; latched timing; no truncation",
+  "nativeArm32Arm64": "pass",
+  "hostSimulator": "19 PASS / 0 warnings / 0 failures",
+  "performanceRegression": "pass with UBSan and process allocation guard",
+  "physicalMapping": "owner confirmed physical B1 and B3 trigger ROLL A/C and end at the bar; full8pad/encoder coverage not implied",
+  "sdAccessed": false,
+  "deviceChanged": true,
+  "publishedVersion": "1.7.0 pending new release",
+  "remoteOneShot": "native tab roundtrip, MAIN EDIT FILL, queued1beat roll ->4last-beat onsets ->automatic end;26balanced exported notes",
+  "deviceMidi": {
+    "notePairs": 26,
+    "format": 0,
+    "ppq": 960,
+    "firstRollTicks": [
+      2880,
+      3140,
+      3361,
+      3620
+    ],
+    "requiredWindow": [
+      2880,
+      3840
+    ]
+  },
+  "ownerPersistentFilesRestored": 16,
+  "readback": "all203installed files match final staging;17before-timing persistent files retained, including all16original task files",
+  "fullRegression": "all current checks passed across initial and resumed runs; old cymbal expectation updated and1/2beat transitions tested; SDK19PASS/0WARN/0FAIL",
+  "metadata": "same880IDs/ranges/order, first782exact; only10PerformNote defaults corrected",
+  "web": "final91responsive/289local links passed; release prepared",
+  "navigation": "first native MAIN/PERFORM tab only; distinct MAIN EDIT FILL retains existing editor",
+  "physicalConfirmation": {
+    "date": "2026-11-20",
+    "reported": "B1/B3 select the correct slots and end at the bar boundary"
+  },
+  "linuxInstaller": "exact final ARMv7/AArch64installers preserve expansions and MIDI across upgrade/reinstall/uninstall"
+}

@@ -1,10 +1,12 @@
-# Groove Dice 1.7.0
+# Groove Dice 1.7.1
 
 Retained from1.3.4: all seventeen SOUND sources have independent reverse switches, saved with user kits and projects. Start trims from the source end in reverse mode; Decay and Shift remain independent. SOUND has two in-place pages: Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Separate48px previous/next arrows surround a visible SOUND1/2 counter. REV stays available on both pages; approved per-row polarity Ø is on page2. Remote on-device page/REV/Ø interactions were checked; physical encoder and hardware-audio coverage remain separate.
 
+1.7.1 corrects the tested Bank B default layout, keeps PERFORM as a native MAIN/PERFORM subtab only, and plays complete fill/roll phrases ending at a bar boundary. Late triggers wait for the next valid bar instead of truncating. MAIN retains EDIT FILL. The owner confirmed physical B1 and B3 trigger ROLL A/C and end correctly on MPC XL; remaining physical-pad/encoder coverage and worst-case hardware CPU remain separate.
+
 One-bar neo-soul and hip-hop drums for MPC standalone, with visible Dice changes and individual locks.
 
-1.7.0 adds PERFORM: four fills, four snare rolls, loop/stop pad triggers, selected-slot Q-Link editing, MIDI learn and internal performance capture/export. Automated checks pass. MPC XL remote touch checks cover playback, editing, generation/locks and MIDI file export; physical pads/encoders and hardware audio remain separately unverified.
+PERFORM provides four fills, four one-shot snare rolls, loop/stop pad triggers, selected-slot Q-Link editing, MIDI learn and internal performance capture/export. Automated checks pass. MPC XL remote touch checks cover playback, editing, generation/locks and MIDI file export; physical B1/B3 have user confirmation; other pad/encoder coverage and full hardware audio remain separately unverified.
 
 - Sixteen MAIN padlocks protect individual knob values. Open controls change visibly when Roll Dice is pressed; musical bounds preserve backbeats, practical mix levels and restrained timing.
 - Sixteen playable RULE styles per part. LOCK is removed from the knob/list/Q-Link range and handled by the separate padlock. Existing saved LOCK states migrate safely.

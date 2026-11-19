@@ -846,16 +846,16 @@ inline void declareParameters(mpc::Plugin& plugin) {
 { auto p=mpc::floatParam("PerformQ1","Performance Control 2",0,1,0,"",3); p.automatable=false; plugin.addParam(p); }
 { auto p=mpc::floatParam("PerformQ2","Performance Control 3",0,1,0,"",3); p.automatable=false; plugin.addParam(p); }
 { auto p=mpc::floatParam("PerformQ3","Performance Control 4",0,1,0,"",3); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote0","Performance Pad Note 1",0,127,52,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote1","Performance Pad Note 2",0,127,53,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote2","Performance Pad Note 3",0,127,55,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote3","Performance Pad Note 4",0,127,57,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote4","Performance Pad Note 5",0,127,59,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote5","Performance Pad Note 6",0,127,60,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote6","Performance Pad Note 7",0,127,62,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote7","Performance Pad Note 8",0,127,64,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote8","Performance Pad Note 9",0,127,65,"",0); p.automatable=false; plugin.addParam(p); }
-{ auto p=mpc::floatParam("PerformNote9","Performance Pad Note 10",0,127,67,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote0","Performance Pad Note 1",0,127,48,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote1","Performance Pad Note 2",0,127,50,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote2","Performance Pad Note 3",0,127,52,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote3","Performance Pad Note 4",0,127,53,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote4","Performance Pad Note 5",0,127,55,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote5","Performance Pad Note 6",0,127,57,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote6","Performance Pad Note 7",0,127,59,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote7","Performance Pad Note 8",0,127,60,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote8","Performance Pad Note 9",0,127,62,"",0); p.automatable=false; plugin.addParam(p); }
+{ auto p=mpc::floatParam("PerformNote9","Performance Pad Note 10",0,127,64,"",0); p.automatable=false; plugin.addParam(p); }
 { auto p=mpc::choiceParam("PerformLoop","Loop On Off",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
 { auto p=mpc::choiceParam("PerformStop","Performance Stop",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }
 { auto p=mpc::choiceParam("PerformGenerateAll","Generate Unlocked",{"Off","On"},0); p.automatable=false; plugin.addParam(p); }

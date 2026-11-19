@@ -53,7 +53,7 @@ public:
  std::atomic<int> recordState{0},recorded{0},fired{0};
  std::atomic<float> position{0},currentTempo{92};std::atomic<int>lastMidiNote{-1},lastMidiRole{-1};
 
- static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Groove Dice";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','p','G','y');i.version=10700;i.latencySamples=1323;i.isInstrument=true;i.numInputs=0;i.numOutputs=16;return i;}
+ static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Groove Dice";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','p','G','y');i.version=10701;i.latencySamples=1323;i.isInstrument=true;i.numInputs=0;i.numOutputs=16;return i;}
  GrooveDice():mpc::Plugin(description()){
   declareParameters(*this);
   for(auto& n:lengths)n.store(4*PPQ);
@@ -213,7 +213,7 @@ public:
   if(!run&&wasRunning){stopCaptureAt(performanceNow);pendingRoll.store(false);displayPending.store(true);rollAt=-1;lastAutoBar=-1;budgets={};lastHat=-1e12;fillStart=fillEnd=-1;cymbalFillEnd=-1;recStart=recEnd=-1;recordState.store(0);for(auto&v:voices)deactivate(v);}
   wasRunning=run;
   performanceBlock(start,end,step,run,hostCountIn,hostRunning);
-  int guard=loadGuardFrames.load();bool loading=guard>0;if(loading){loadGuardFrames.fetch_sub(std::min(guard,c.numFrames));if(guard<=c.numFrames){for(auto&t:proxySeenTarget)t=-1;for(auto&t:soundSeenTarget)t.store(-1);}}
+  int guard=loadGuardFrames.load();bool loading=guard>0;if(loading){loadGuardFrames.fetch_sub(std::min(guard,c.numFrames));if(guard<=c.numFrames){migratePerformanceDefaultNotes();for(auto&t:proxySeenTarget)t=-1;for(auto&t:soundSeenTarget)t.store(-1);}}
   const auto command=[&](int i){float x=getNormalised(i);bool changed=x!=last[i];last[i]=x;
    // Dedicated roll actions are momentary, not saved musical settings. Consume
    // and acknowledge their cursor so the next block cannot repeat the action.
@@ -332,7 +332,7 @@ public:
     for(int ch=0;ch<2;++ch){float x=dry[ch]+wet[ch]*roomS*.65f;if(hpAlpha>0){high[out][ch]+=hpAlpha*(x-high[out][ch]);x-=high[out][ch];}if(std::abs(x)<1.e-20f)x=0;x*=master*modulation;if(out*2+ch<c.numOutputs)c.outputs[out*2+ch][frame]+=mpc::clamp(x,-.99f,.99f);}
    }
   }
-  if(!run&&(performanceActive.load()>=0||performanceQueued.load()>=0||capture.state.load()==1))previewPpq=end;
+  if(!run&&(performanceActive.load()>=0||performanceQueued.load()>=0||queuedRoll.load()>=0||capture.state.load()==1))previewPpq=end;
   if(run){previewPpq=end;lastEnd=end;if(hostRunning)lastRawEnd=rawStart+step*c.numFrames;else lastRawEnd=-1e12;}else {lastEnd=-1e12;lastRawEnd=-1e12;transportOffset=0;}
   if(recStart>=0&&end>=recEnd)finishRecord();
   syncPerformance();syncProxies();syncLayerUi();
@@ -354,7 +354,7 @@ public:
   saveLayerState(out);saveCymbalState(out);savePoolState(out);saveReverseState(out);savePerformanceState(out);
  }
  void loadExtraState(const uint8_t* data,size_t size)override{
-  bool hadPerformance=loadPerformanceState(data,size);loadReverseState(data,size);loadPoolState(data,size);
+  migratePerformanceDefaultNotes();bool hadPerformance=loadPerformanceState(data,size);loadReverseState(data,size);loadPoolState(data,size);
   const uint8_t*cymbalState=nullptr;if(size>=CymbalTrailerSize&&!std::memcmp(data+size-CymbalTrailerSize,"GDCY0001",8)){cymbalState=data+size-CymbalTrailerSize;size-=CymbalTrailerSize;}loadCymbalState(cymbalState);
   const uint8_t*layerState=nullptr;if(size>=LayerTrailerSize&&!std::memcmp(data+size-LayerTrailerSize,"GDLY0001",8)){layerState=data+size-LayerTrailerSize;size-=LayerTrailerSize;}
   loadLayerState(layerState);
@@ -466,7 +466,7 @@ private:
   int snareRule=getInt(kRuleSnare);float ghost=std::min(get(kGhost),snareRule<=1?0.f:snareRule==2?25.f:40.f);if(fill==false&&!phrase&&ghost>0){for(int cycle=base-1;cycle<=base+1;++cycle){double beat=(fill?fillStart:0)+cycle*length+2.75;uint32_t h=hash(uint32_t(0)+partSeed[1].load()+991);if(h%100>=ghost)continue;if(beat>=0&&beat>=start&&beat<end&&(!fill||(beat>=fillStart&&beat<fillEnd))&&(fill||fillStart<0||beat<fillStart||beat>=fillEnd)){if(admitRole(1,beat,false))addEvent(eventOffset(beat,start,end,step),1,35);}}}
  }
  double tempoForStep(double step)const{return step*60*sr;}
- void queueFill(double start){if(recordState.load()==1||recordState.load()==2)return;activeFill=getInt(kFillSlot);fillStart=std::ceil((start+1e-7)/4)*4;fillEnd=fillStart+double(lengths[activeFill].load())/PPQ;recordState.store(4);}
+ void queueFill(double start){if(recordState.load()==1||recordState.load()==2)return;activeFill=getInt(kFillSlot);double beats=double(lengths[activeFill].load())/PPQ;fillStart=performanceWindowStart(start+1e-7,beats);fillEnd=fillStart+beats;recordState.store(4);}
  void recordInput(double beat,int role,int vel){if(recStart<0||beat<recStart||beat>=recEnd||!recCleared)return;baseValid[recSlot].store(false);int tick=mpc::clamp(int(std::llround((beat-recStart)*PPQ)),0,recLength-1);for(auto& n:notes[recSlot])if(!n.valid()){n.write({tick,role,vel,100,80});recorded.fetch_add(1);return;}recordState.store(6);}
  void finishRecord(){markRecordedFill(recSlot);recStart=recEnd=-1;if(recordState.load()!=6)recordState.store(3);mirrorNote();}
  void deactivate(Voice& v){if(v.librarySlot>=0){library.release(v.librarySlot);v.librarySlot=-1;}v.active=false;}

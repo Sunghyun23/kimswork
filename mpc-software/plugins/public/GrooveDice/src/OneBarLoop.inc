@@ -15,7 +15,7 @@ bool refreshMain(unsigned mask){
 }
 void queueAutoFill(double start,double end){
  if(fillEnd>=0&&start>=fillEnd-1.e-9){fillStart=fillEnd=-1;if(recordState.load()==5||recordState.load()==4)recordState.store(0);}
- int choice=getInt(kFillEvery);if(!choice||fillStart>=0||recordState.load()==1||recordState.load()==2)return;
+ int choice=getInt(kFillEvery);if(!choice||fillStart>=0||performanceQueued.load()>=0||performanceFill||recordState.load()==1||recordState.load()==2)return;
  int bars=choice==1?4:choice==2?8:16,finish=(int(std::floor(start/(bars*4.)))+1)*bars*4;
  int slot=getInt(kFillSlot);double due=finish-double(lengths[slot].load())/PPQ;
  if(end>due&&start<finish&&lastAutoBar!=finish){lastAutoBar=finish;activeFill=slot;fillStart=due;fillEnd=finish;}

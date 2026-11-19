@@ -171,7 +171,7 @@ for n in range(8):
  f('PerformHumanize'+str(n),'Performance Humanize '+str(n+1),0,30,8,'%')
  c('PerformLength'+str(n),'Performance Length '+str(n+1),['1 Beat','2 Beats','1 Bar'],[2,2,2,2,0,1,2,2][n])
 for n in range(4):f('PerformQ'+str(n),'Performance Control '+str(n+1),0,1,0,dec=3,auto=False)
-for n,note in enumerate([52,53,55,57,59,60,62,64,65,67]):f('PerformNote'+str(n),'Performance Pad Note '+str(n+1),0,127,note,auto=False)
+for n,note in enumerate([48,50,52,53,55,57,59,60,62,64]):f('PerformNote'+str(n),'Performance Pad Note '+str(n+1),0,127,note,auto=False)
 for key,name in [('PerformLoop','Loop On Off'),('PerformStop','Performance Stop'),('PerformGenerateAll','Generate Unlocked'),('PerformGenerateSelected','Generate Selected'),('PerformUnlock','Unlock Performance'),('PerformLockSelected','Lock Selected'),('PerformLearn','Learn Selected Pad'),('Capture','Capture Performance'),('ExportMidi','Export MIDI'),('PerformRecord','Record Selected Fill'),('PerformEditFill','Edit Selected Fill')]:b(key,name,auto=False)
 f('PerformStatus','Performance Status',0,1,0,auto=False)
 f('CaptureInfo','Capture Status',0,1,0,auto=False)
@@ -190,7 +190,7 @@ lines+=['}']
 from dice_lock_catalog import definitions as dice_definitions
 lines+=dice_definitions()
 P.joinpath('src/Parameters.h').write_text('\n'.join(lines)+'\n')
-p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.7.0',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MIT');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
+p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.7.1',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MIT');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
 main=['Swing','Snare Late','Hat Shift','Rnd Nudge','Kick Style','Snare Style','Hat Style','Perc Style','Kick Mix','Snare Mix','Hat Mix','Perc Mix','Drive','Dust','Room','Full Hat Rhythm']
 pages=[{'name':'MAIN','controls':main},{'name':'FILL','controls':['Fill Select','Fill Length','Rec Mode','Count-in','Note Nudge','Note Velocity','Note Gate','Note Chance']},{'name':'GROOVE','controls':main[:4]+['Density','Ghost','Vel Spread','Random Amt']+['Preview BPM','Note Select','Note Nudge','Note Velocity','Fill Select','Fill Density','Fill Every','Variation']},{'name':'SOUND','controls':['Sound Control '+str(i+1) for i in range(16)]},{'name':'KITS','controls':['Kit Select','Kit Lock','Pattern','Pattern Lock','User Kit','Save Kit','Load Kit','Choke Time']+[f'Choke {i}'for i in range(1,9)]},{'name':'FX','controls':['Drive','Dust','Room','Duck','Low Cut','Mod Rate','Mod Depth','Master']},{'name':'ROUTING','controls':[f'Output {i}'for i in range(1,9)]+[f'Pad Note {i}'for i in range(1,9)]}]
 P.joinpath('ui.json').write_text(json.dumps({'kit':'amber','pages':pages},indent=2)+'\n')

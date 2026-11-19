@@ -1,0 +1,18 @@
+{
+  "source": "actual MPC XL exported MIDI",
+  "format": 0,
+  "ppq": 960,
+  "balancedNotePairs": 26,
+  "firstOneBeatRollNoteOnTicks": [
+    2880,
+    3140,
+    3361,
+    3620
+  ],
+  "requiredLastBeatWindow": [
+    2880,
+    3840
+  ],
+  "allFirstRollOnsetsInsideWindow": true,
+  "rawUserMidiPublished": false
+}

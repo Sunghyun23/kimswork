@@ -29,7 +29,7 @@ roll=[]
 for key,value in defs.items():
  children=value.get('componentsData',[])
  if any(a.get('handleName')=='Parameter '+str(keys['Roll'])for a in value.get('actions',[])):roll.append(value)
-assert len(roll)==3
+assert len(roll)==2
 print('PASS SOUND16 Q-Link layout,97paged kit choices and native caption-safe ROLL hit target')
 
 assert defs['RoleSoundBrowser']['hideQLinkBounds']
@@ -276,20 +276,21 @@ performance=next(tab for tab in t['tabs']if tab['tabName']=='PERFORM')
 assert (performance['fnKeyIndex'],performance['fnKeySubIndex'])==(0,1)
 assignment=next(e for e in q['Screen Mode Q-Links']['map']if e['Tab']==1 and e['SubTab']==2)['Q-Links']
 for n in range(1,17):assert assignment['Q-Link '+str(n)]==(keys['PerformQ'+str((13-n)//4)]if n in (13,9,5,1)else -1)
-assert defs['GDPerformance']['hideQLinkBounds']
+assert 'GDPerformance' not in defs
+assert not any(a.get('handleName')=='Parameter '+str(keys['PerformOpen']) for d in defs.values() for a in d.get('actions',[]))
+assert any(a.get('handleName')=='Parameter '+str(keys['Editor']) for e in defs['GDMain']['componentsData'] for a in defs.get(e['componentData']['type'],{}).get('actions',[]))
 for pad in range(1,9):
- d=defs['PerfPad'+str(pad)];actions=d['actions'];assert len(actions)==1 and actions[0]['handleName']=='Parameter '+str(keys['PerformHit'+str(pad-1)])
+ d=defs['PerfPad'+str(pad)+'Native'];actions=d['actions'];assert len(actions)==1 and actions[0]['handleName']=='Parameter '+str(keys['PerformHit'+str(pad-1)])
  surface=d['componentsData'][-1];assert surface['componentData']['type']=='Slider';assert surface['componentData']['data']['handleName']=='ResetOnGestureEnd/Parameter '+str(keys['PerformHit'+str(pad-1)])
  assert not any('GENERATE'in str(e)for e in d['componentsData'])
-for entry in defs['GDPerformance']['componentsData']:
+for entry in performance['componentDefinition']['componentsData']:
  x,y,w,h=rect(entry);assert x>=0 and y>=0 and x+w<=1280 and y+h<=628
 assert keys['PerformOpen']==782 and len(m)==880
-print('PASS PERFORM bank B bottom-up8hold pads, release-safe caption surfaces, separated generators,4Q-Link relays and exact legacy782 metadata')
+print('PASS PERFORM bank B bottom-up8one-shot pads, release-safe caption surfaces, separated generators,4Q-Link relays and exact legacy782 metadata')
 
-for native,entries in [(False,defs['GDPerformance']['componentsData']),(True,performance['componentDefinition']['componentsData'])]:
- controls=[e for e in entries if e['componentData']['type'].startswith('KnobPerformQ')]
- assert len(controls)==4
- for n,e in enumerate(controls):
-  actions=defs[e['componentData']['type']]['actions'];expected=keys[('PerformQ'+str(n))if native else('Q'+str(n+1))]
-  assert any(a['handler']=='Q-Link'and a['handleName']=='Parameter '+str(expected)for a in actions)
-print('PASS MAIN-context and native-PERFORM knobs bank the actual assigned Q-Link handles; hidden banks cannot alter MAIN rules')
+controls=[e for e in performance['componentDefinition']['componentsData'] if e['componentData']['type'].startswith('KnobPerformQ')]
+assert len(controls)==4
+for n,e in enumerate(controls):
+ actions=defs[e['componentData']['type']]['actions']
+ assert any(a['handler']=='Q-Link'and a['handleName']=='Parameter '+str(keys['PerformQ'+str(n)])for a in actions)
+print('PASS tab-only PERFORM entry, separate MAIN EDIT FILL, native four-Q-Link assignment and no duplicate context screen')
