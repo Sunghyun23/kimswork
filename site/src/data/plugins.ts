@@ -25,41 +25,41 @@ export const plugins: Plugin[] = [{
   "tagline": "A little worn. Endlessly warm.",
   "summary": "Warm synthesis. Rich chords. Movement in every direction.",
   "description": "A Moog-inspired synthesizer for MPC bass, keys, leads and pads. Edit one shared sound from POLY or MONO without changing its mode, shape each oscillator and delay either LFO, then build your own chord changes.",
-  "developmentVersion": "1.14.1",
+  "developmentVersion": "1.14.2",
   "release": {
-    "version": "1.14.1",
-    "tag": "donut-theory/v1.14.1",
-    "asset": "donut-theory-1.14.1-mpc.zip"
+    "version": "1.14.2",
+    "tag": "donut-theory/v1.14.2",
+    "asset": "donut-theory-1.14.2-mpc.zip"
   },
-  "image": "donut-theory-poly-device-1.14.1.webp",
-  "imageAlt": "Actual MPC XL Donut Theory 1.14.1 POLY performance editor",
+  "image": "donut-theory-poly-device-1.14.2.webp",
+  "imageAlt": "Actual MPC XL Donut Theory 1.14.2 POLY performance editor",
   "manual": "plugins/donut-theory/manual/",
   "intro": "66 synthesized factory sounds, 32 chord types and 96 progression recipes. Tap ROLL DICE to generate a complete oscillator-to-FX sound with synchronized motion, while keeping your chords and master level. No external samples are required.",
   "verifiedDevice": "MPC XL / OS 3.10.1.12; remote POLY/MONO, shared values, native presets and Sync drawers checked; native VST/state/audio tests pass. Physical encoder/hardware-audio/CPU coverage remains separate.",
   "mapping": [
     [
-      "A · Selected OSC",
+      "A \u00b7 Selected OSC",
       "Wave",
-      "Pitch · Tune/Fine",
+      "Pitch \u00b7 Tune/Fine",
       "Level",
       "Drift"
     ],
     [
-      "B · Filter / Tone",
+      "B \u00b7 Filter / Tone",
       "Filter Cutoff",
       "Resonance",
       "Body",
       "Drive"
     ],
     [
-      "C · Selected LFO",
+      "C \u00b7 Selected LFO",
       "Rate",
       "Depth",
       "Delay",
       "Target"
     ],
     [
-      "D · POLY Amp / Motion",
+      "D \u00b7 POLY Amp / Motion",
       "Amp Attack",
       "Amp Release",
       "Motion Rate",
@@ -98,7 +98,11 @@ export const plugins: Plugin[] = [{
   ],
   "changes": [
     {
-      "title": "1.14.1: shared performance editors.",
+      "title": "1.14.2: selectors that line up.",
+      "text": "Consistent one- or two-column widths, clear text and arrow spacing, and FREE/SYNC immediately above Rate. Footer selectors match in size. The sound engine, parameters and Q-Link assignments are unchanged."
+    },
+    {
+      "title": "Retained from 1.14.1: shared performance editors.",
       "text": "New POLY/MONO views never switch your sound or actual voice mode. Individual oscillator focus, Tune/Fine, LFO Delay and independent detail pages share one saved sound. The explicit VOICE button controls Poly/Mono."
     },
     {
@@ -130,61 +134,51 @@ export const plugins: Plugin[] = [{
   ],
   "screenshots": [
     {
-      "image": "donut-theory-poly-device-1.14.1.webp",
+      "image": "donut-theory-poly-device-1.14.2.webp",
       "alt": "Donut Theory POLY editor on MPC XL",
-      "caption": "POLY · Selected OSC and LFO controls with Amp/Motion; one shared sound. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
+      "caption": "POLY \u00b7 Selected OSC and LFO controls with Amp/Motion; one shared sound. Actual MPC XL / OS 3.10.1.12, version 1.14.2."
     },
     {
-      "image": "donut-theory-mono-device-1.14.1.webp",
+      "image": "donut-theory-mono-device-1.14.2.webp",
       "alt": "Donut Theory MONO editor on MPC XL",
-      "caption": "MONO · Glide, Decay, Release and Pitch Drop. The editor tab does not change the actual voice mode. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
+      "caption": "MONO \u00b7 Glide, Decay, Release and Pitch Drop. The editor tab does not change the actual voice mode. Actual MPC XL / OS 3.10.1.12, version 1.14.2."
     },
     {
-      "image": "donut-theory-sync-device-1.14.1.webp",
-      "alt": "Actual MPC dotted and triplet Sync sidebar",
-      "caption": "SYNC · Fifteen straight, dotted and triplet periods; two pages with a shared rate lock. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
-    },
-    {
-      "image": "donut-theory-presets-device-1.14.1.webp",
-      "alt": "Actual MPC native Donut Theory preset list",
-      "caption": "NATIVE PRESETS · Factory program selection remains available from the host header. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
-    },
-    {
-      "image": "donut-theory-osc-device-1.14.1.webp",
+      "image": "donut-theory-osc-device-1.14.2.webp",
       "alt": "Donut Theory independent OSC controls on MPC XL",
-      "caption": "OSC · Individual Wave, Tune, Fine, Level and Pulse Width, plus texture controls. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
+      "caption": "OSC \u00b7 Individual Wave, Tune, Fine, Level and Pulse Width, plus texture controls. Actual MPC XL / OS 3.10.1.12, version 1.14.2."
     },
     {
-      "image": "donut-theory-env-device-1.14.1.webp",
+      "image": "donut-theory-env-device-1.14.2.webp",
       "alt": "Donut Theory combined ADSR screen on MPC XL",
-      "caption": "ENV · Both editable ADSRs and filter response; Amp Release is shared with the fronts. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
+      "caption": "ENV \u00b7 Both editable ADSRs and filter response; Amp Release is shared with the fronts. Actual MPC XL / OS 3.10.1.12, version 1.14.2."
     },
     {
-      "image": "donut-theory-mod-device-1.14.1.webp",
+      "image": "donut-theory-mod-device-1.14.2.webp",
       "alt": "Donut Theory delayed LFOs and Motion on MPC XL",
-      "caption": "MOD · Both LFOs, independent Delay and shared Tremolo/Auto Pan. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
+      "caption": "MOD \u00b7 Both LFOs, independent Delay and shared Tremolo/Auto Pan. Actual MPC XL / OS 3.10.1.12, version 1.14.2."
     },
     {
-      "image": "donut-theory-fx-device-1.14.1.webp",
+      "image": "donut-theory-fx-device-1.14.2.webp",
       "alt": "Donut Theory FX and output on MPC XL",
-      "caption": "FX · Drive/color, space/echo and output with shared sound locks. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
+      "caption": "FX \u00b7 Drive/color, space/echo and output with shared sound locks. Actual MPC XL / OS 3.10.1.12, version 1.14.2."
     },
     {
-      "image": "donut-theory-chord-device-1.14.1.webp",
+      "image": "donut-theory-chord-device-1.14.2.webp",
       "alt": "Donut Theory CHORD editor and circle of fifths on MPC XL",
-      "caption": "CHORD · Root, type, voicing and octave for each visible slot, with key reference and harmony tools. Actual MPC XL / OS 3.10.1.12, version 1.14.1."
+      "caption": "CHORD \u00b7 Root, type, voicing and octave for each visible slot, with key reference and harmony tools. Actual MPC XL / OS 3.10.1.12, version 1.14.2."
     }
   ],
   "auditions": [
     {
       "name": "Keys / Dusty Sunday",
       "file": "donut-theory-dusty-sunday-1.9.0.wav",
-      "description": "Soft sine/triangle keys ·8 ms Strum ·70% Auto Pan."
+      "description": "Soft sine/triangle keys \u00b78 ms Strum \u00b770% Auto Pan."
     },
     {
       "name": "Synth / Velvet Melt",
       "file": "donut-theory-velvet-melt-1.9.0.wav",
-      "description": "Soft saw/triangle ·6 ms Strum ·65 ms chord glide ·80% Auto Pan."
+      "description": "Soft saw/triangle \u00b76 ms Strum \u00b765 ms chord glide \u00b780% Auto Pan."
     }
   ]
 },
@@ -230,7 +224,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-19-donut-1141';
+export const navigationVersion = 'software-2026-11-19-donut-1142';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

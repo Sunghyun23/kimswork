@@ -1,4 +1,4 @@
-# Donut Theory 1.14.1 — User Manual
+# Donut Theory 1.14.2 — User Manual
 
 Donut Theory is an original Moog-inspired synth for MPC bass, keys, leads, pads and rich chord playing. Its nonlinear mixer, four-stage ladder low-pass and rounded VCA are an inspired design, not an exact recreation of a particular instrument or artist recording. No external samples are needed.
 
@@ -47,7 +47,7 @@ Avoid an extra nested copy of `kim - VST - Donut Theory` inside itself. Do not c
 
 ### Update
 
-Save and back up your MPC project first. Keep the previous package if you need to return to it. Version1.14.1 migrates the old oscillator/Sync values and preserves legacy parameter declarations. Keep a backup of important projects; older engines cannot represent all newer settings. Replace the existing plugin folder with the new complete folder, then restart MPC. Avoid duplicate installations on different drives.
+Save and back up your MPC project first. Keep the previous package if you need to return to it. Version1.14.2 migrates the old oscillator/Sync values and preserves legacy parameter declarations. Keep a backup of important projects; older engines cannot represent all newer settings. Replace the existing plugin folder with the new complete folder, then restart MPC. Avoid duplicate installations on different drives.
 
 Donut Theory retains its plugin identity across updates. Existing projects may retain host-side Q-Link assignments from an older instance. If a mapping looks wrong, compare a fresh plugin instance before changing the original track. Preserving the plugin identity does not guarantee that an older MPC OS can load a project saved by a newer OS.
 
@@ -198,7 +198,7 @@ Chord type, voicing, per-slot octave, MIDI Note/LEARN, input mode, sound and ina
 **PAD SETUP** holds the MIDI Note readouts/manual assignment and LEARN for the four slots in the selected bank. Close it to choose a different bank. The sixteen CHORD SCREEN Q-Links remain Root / Type / Voicing / Octave; Program/Track retains the synth mapping. All new drawers suppress background Q-Link guides.
 
 
-![CHORD editor running on MPC XL](/images/donut-theory-chord-device-1.14.1.webp)
+![CHORD editor running on MPC XL](/images/donut-theory-chord-device-1.14.2.webp)
 
 ### Four to sixteen slots
 
@@ -274,7 +274,7 @@ The engine has **16 audio voices**, not sixteen complete chords of unlimited siz
 
 ## Saving, automation and verification
 
-Save sounds/locks/chord setup in your MPC project. The66 factory programs and original first 353parameter declarations retain their identity;391 parameters are present in1.14.1. Old oscillator aliases and five-choice Sync IDs retain their ranges and migrate to their original straight periods. New D/T choices cannot be fully represented by older engines. Temporary selectors/commands are not a replacement for saved musical state.
+Save sounds/locks/chord setup in your MPC project. The66 factory programs and original first 353parameter declarations retain their identity;391 parameters are present in1.14.2. Old oscillator aliases and five-choice Sync IDs retain their ranges and migrate to their original straight periods. New D/T choices cannot be fully represented by older engines. Temporary selectors/commands are not a replacement for saved musical state.
 
 Source tests cover state migration, finite audio, voice/chord ownership, small incremental Sync input, all15 periods at multiple tempos, lock/Undo behavior, native presets and zero idle notification storms. Real MPC captures and remote UI interaction checks are recorded separately from physical encoders/multitouch, hardware audio listening/recording, full project round-trip and worst-case CPU, which are not newly certified. Other MPC models/firmware are not certified by an MPC XL test. See the versioned release notes and verification record for the exact scope.
 

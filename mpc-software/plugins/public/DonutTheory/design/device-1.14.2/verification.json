@@ -1,0 +1,99 @@
+{
+  "version": "1.14.2",
+  "status": "User authorized official release; final public outcome recorded in publication.json",
+  "scope": "UI-only selector geometry, text padding; runtime version increment only in C++",
+  "automated": {
+    "nativeArm32Arm64Build": "pass",
+    "sdkErrors": 0,
+    "sdkWarnings": 0,
+    "hostPassed": 19,
+    "hostWarnings": 0,
+    "hostFailed": 0,
+    "skin": "pass",
+    "parameterMetadata391": "identical to HEAD",
+    "allQLinkMappings": "identical to released1.14.1 ZIP"
+  },
+  "device": {
+    "model": "MPC XL",
+    "firmware": "3.10.1.12",
+    "remote": "actual authenticated framebuffer and touch; no Mac UI automation",
+    "drives": {
+      "nvme": {
+        "verifiedFiles": 247
+      },
+      "36C7-1ACA": {
+        "verifiedFiles": 247
+      }
+    },
+    "checks": [
+      "fresh instance opens POLY without message",
+      "seven native pages visible",
+      "POLY/MONO selectors and numeric values not clipped",
+      "front LFO FREE/SYNC switches Hz to division",
+      "LFO focus changes between independent modules",
+      "Motion FREE/SYNC switches Hz to division",
+      "Filter Type sidebar opens/closes",
+      "MOD Motion Shape sidebar opens/closes",
+      "factory selection through previous/next retained",
+      "navigation retains actual Poly voice mode"
+    ],
+    "limits": [
+      "No new physical Q-Link rotation/audio/CPU/full project recall certification.",
+      "Exact drive origin of the loaded instance is not established."
+    ]
+  },
+  "screenshots": [
+    {
+      "file": "dt1142-poly-final.png",
+      "sha256": "5c6cbd9d57656eea1a95172fa8c108c51c8e1dcf693cc621f6e4afb72f64ecce"
+    },
+    {
+      "file": "dt1142-mono-final.png",
+      "sha256": "199dabb4ee2b936d8f7ad9ab640ee5fb00c8ed58586fea54c9089257c47baa60"
+    },
+    {
+      "file": "dt1142-osc-final.png",
+      "sha256": "c1a105055cbe78e06adddbc82cd0b3241b2998f7d5c060b0140f5bebdbba2a48"
+    },
+    {
+      "file": "dt1142-env-final.png",
+      "sha256": "371bc5ddc808a20793b24fc7d79f4e3ec16d1b1c454f9b14b1466c938997e651"
+    },
+    {
+      "file": "dt1142-mod-final.png",
+      "sha256": "d5b2b89d5d5cc00d6f41aa54793ad9dcaa385c56f7750e55e9445fdb2531bc41"
+    },
+    {
+      "file": "dt1142-fx-final.png",
+      "sha256": "6c13f19ca4405996cb74b7be19c0f332b3f8dab2ccbb3191073641d2a37c7a54"
+    },
+    {
+      "file": "dt1142-chord-verified.png",
+      "sha256": "b982eaec43777eb75bead81c4c0c08a8e48fd80b23be10b65097bdc3756640bf"
+    },
+    {
+      "file": "dt1142-filter-list.png",
+      "sha256": "02fc438f66636d29842c6b2e1ad088a8dbb472ecd2f926209e28633ec3711365"
+    },
+    {
+      "file": "dt1142-lfsync.png",
+      "sha256": "0bf809633ff0b8807f0a6851d2cddcdcee407de79fb11a796c96527815e29d73"
+    },
+    {
+      "file": "dt1142-lfo2.png",
+      "sha256": "9b15c8e37f981d856bdf2f7b5548bd7a731ecb278a80a28b189eb60b07dfec59"
+    },
+    {
+      "file": "dt1142-motion-sync.png",
+      "sha256": "5c6cbd9d57656eea1a95172fa8c108c51c8e1dcf693cc621f6e4afb72f64ecce"
+    },
+    {
+      "file": "dt1142-mod-lfo-sync.png",
+      "sha256": "22ab36aef17b2428725e4a8f2be60737a552acd80d2b2616782a033eb4901c22"
+    },
+    {
+      "file": "dt1142-mod-shape-list.png",
+      "sha256": "9aada1a3a747cc6ea247ddf3cd2214bb71199420e2d60a796ac39c8adcdc004f"
+    }
+  ]
+}

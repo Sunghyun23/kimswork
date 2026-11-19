@@ -80,7 +80,7 @@ def install(g,tui,ql,params,out):
   add(name,modal(g.component_definition([],ws,'90000000')))
  def menu(key,b,caption=None):
   ensure_menu(key);x,y,w,hh=map(int,b.split());name='PerfMenu'+key+str(w)+'x'+str(hh);opened=f'Local/2/dtChoice{ix[key]}'
-  ws=[plate('LCD',f'0 0 {w} {hh}'),label('',f'6 0 {w-26} {hh}',22,'Value',h(key)),label('›',f'{w-24} 0 24 {hh}',24),hit('open list',opened,f'0 0 {w} {hh}')]
+  ws=[plate('LCD',f'0 0 {w} {hh}'),label('',f'8 0 {w-36} {hh}',20 if hh<=30 else 22,'Value',h(key)),label('›',f'{w-24} 0 24 {hh}',24),hit('open list',opened,f'0 0 {w} {hh}')]
   actions=[g.action('Mouse Down','Q-Link',h(key),'')]
   if key=='SoundCurrent':
    ws[-1]=hit('reset sound category',f'Local/7/soundCategory{ix[key]}',f'0 0 {w} {hh}',0,7);actions.append(g.action('Mouse Down','Toggle Switch',opened,''))
@@ -145,7 +145,8 @@ def install(g,tui,ql,params,out):
   if locked and ix[key]in targets:ws.append(lock(key,f'{max(0,x-8)} {y} 44 44',conditions))
  def touch_value(key,b,caption):
   x,y,w,hh=map(int,b.split());name='PerfValue'+key+str(w)
-  ws=[plate('LCD',f'0 0 {w} {hh}'),label(caption,f'0 0 {w//2} {hh}',18),label('',f'{w//2} 0 {w//2} {hh}',21,'Value','Data')]
+  split=40 if hh<=30 else w//2
+  ws=[plate('LCD',f'0 0 {w} {hh}'),label(caption,f'0 0 {split} {hh}',16 if hh<=30 else 18),label('',f'{split} 0 {w-split} {hh}',18 if hh<=30 else 21,'Value','Data')]
   if ix[key]in targets:
    move(ws[1],[44,0,w//2-44,hh]);ws.append(lock(key,'0 0 44 44'))
   # Visible field owns the normal numeric overlay; double tap allows exact input.
@@ -163,9 +164,9 @@ def install(g,tui,ql,params,out):
   # Existing categorized browser launcher resets to category root on every entry.
   sound=copy.deepcopy(next(w for w in main if get(cd(w),'name')=='SoundPreset'));move(sound,[150,y,240,44]);ws.append(sound)
   ws.extend([label('PRESET',f'18 {y} 80 44',20),command('SoundPrev','‹',f'100 {y} 44 44'),command('SoundNext','›',f'396 {y} 44 44'),label('VOICE',f'454 {y} 70 44',20)])
-  ws+=segment('PerfVoice',['POLY','MONO'],f'530 {y} 190 44')
-  ws.append(label('DICE TARGET',f'734 {y} 148 44',20));ws.append(menu('DiceTarget',f'886 {y} 188 44'))
-  ws.append(menu('InputMode',f'1086 {y} 176 44'))
+  ws+=segment('PerfVoice',['POLY','MONO'],f'530 {y} 184 44')
+  ws.append(label('DICE TARGET',f'734 {y} 148 44',20));ws.append(menu('DiceTarget',f'886 {y} 184 44'))
+  ws.append(menu('InputMode',f'1078 {y} 184 44'))
   ws.extend([command('UnlockDice','UNLOCK ALL',f'250 {actions_y} 190 44'),command('Randomize','ROLL DICE',f'460 {actions_y} 260 44',True),command('UndoDice','UNDO',f'740 {actions_y} 160 44')])
   # Actual mode has one explicit selector; legacy Voice Mode remains a host parameter.
   ws.append(inst('Performance settings','PerfSettingsLauncher',f'920 {actions_y} 342 44'))
@@ -208,8 +209,8 @@ def install(g,tui,ql,params,out):
    x=18+(bank%2)*632;y=94+(bank//2)*184;panel(ws,titles[bank],x,y)
    for j,key in enumerate(keys):knob(ws,key,captions[bank][j],x+8+j*150,y+57,locked=bank not in (0,2))
   ws+=segment('OscFocus',['OSC 1','OSC 2'],'26 124 146 26');ws+=segment('PitchResolution',['TUNE','FINE'],'176 124 146 26')
-  ws.extend([menu('Filter','662 124 172 26'),menu('DriveType','1106 124 144 26')])
-  ws+=segment('LfoFocus',['LFO 1','LFO 2'],'26 308 146 26');ws.append(menu('PerfLfoShape','304 308 144 26'));ws+=segment('PerfLfoSync',['FREE','SYNC'],'476 308 146 26')
+  ws.extend([menu('Filter','658 124 146 26'),menu('DriveType','1108 124 146 26')])
+  ws+=segment('PerfLfoSync',['FREE','SYNC'],'26 308 146 26');ws+=segment('LfoFocus',['LFO 1','LFO 2'],'176 308 146 26');ws.append(menu('PerfLfoShape','326 308 296 26'))
   # Shared/conditional lock ownership follows the currently edited canonical value.
   ws.append(lock('Wave1','18 151 44 44'));ws.append(lock('Drift','468 151 44 44'))
   for osc in (0,1):
@@ -219,11 +220,9 @@ def install(g,tui,ql,params,out):
    cond=[f'IndexedEnabling/{module}/2/{h("LfoFocus")}']
    for key,x in zip(['Lfo2RateControl','Lfo2Depth','Lfo2Target']if module else['LfoRateControl','Depth','Target'],[18,168,468]):ws.append(lock(key,f'{x} 335 44 44',cond))
   if mono:
-   ws+=segment('MonoLegato',['MONO','LEGATO'],'658 308 146 26');ws.append(menu('GlideLegato','852 308 200 26'));ws.append(touch_value('ReleaseDropTime','1062 308 188 26','TIME'))
+   ws+=segment('MonoLegato',['MONO','LEGATO'],'658 308 146 26');ws.append(menu('GlideLegato','808 308 296 26'));ws.append(touch_value('ReleaseDropTime','1108 308 146 26','TIME'))
   else:
-   for w in ws:
-    if get(cd(w),'name')=='D  AMP / MOTION':move(w,[662,280,430,26])
-   ws.extend([menu('ModMode','956 308 144 26'),menu('ModShape','1106 308 144 26')]);ws+=segment('ModSync',['FREE','SYNC'],'1106 280 144 26')
+   ws.extend([menu('ModMode','658 308 296 26'),menu('ModShape','1108 308 146 26')]);ws+=segment('ModSync',['FREE','SYNC'],'958 308 146 26')
   if mono:browse_footer(ws)
   else:
    browse_footer(ws,456,502,True)
@@ -291,10 +290,10 @@ def install(g,tui,ql,params,out):
  tab=old['MOD'];ws=copy.deepcopy(header);groups=[['LfoRateControl','Depth','LfoDelay','Lfo1TargetFull'],['Lfo2RateControl','Lfo2Depth','Lfo2Delay','Lfo2Target'],['ModRateControl','TremDepth','Pan','Vibrato']]
  for bank in (0,1):
   x=18+bank*632;panel(ws,'A  LFO 1'if bank==0 else'B  LFO 2',x,94,612,200)
-  ws.append(menu('Lfo1ShapeFull'if bank==0 else'Lfo2Shape',f'{x+16} 126 176 30'));ws+=segment('Sync'if bank==0 else'Lfo2Sync',['FREE','SYNC'],f'{x+372} 126 220 30')
+  ws.append(menu('Lfo1ShapeFull'if bank==0 else'Lfo2Shape',f'{x+158} 126 296 26'));ws+=segment('Sync'if bank==0 else'Lfo2Sync',['FREE','SYNC'],f'{x+8} 126 146 26')
   for j,key in enumerate(groups[bank]):knob(ws,key,['RATE','DEPTH','DELAY','TARGET'][j],x+8+j*150,166,compact=True)
  panel(ws,'C  MOTION',18,306,1244,206)
- ws.extend([menu('ModMode','244 338 200 30'),menu('ModShape','574 338 200 30')]);ws+=segment('ModSync',['FREE','SYNC'],'904 338 220 30')
+ ws.extend([menu('ModMode','392 338 296 26'),menu('ModShape','692 338 296 26')]);ws+=segment('ModSync',['FREE','SYNC'],'92 338 146 26')
  for j,key in enumerate(groups[2]):knob(ws,key,['RATE','DEPTH','PAN','VIBRATO'][j],92+j*300,380)
  browse_footer(ws);maps.append(finish(tab,'MOD',4,0,ws,groups,['18 156 612 138','650 156 612 138','18 370 1244 142']));newtabs.append(tab)
  # FX: eleven Q-Links, no master-volume Dice lock or fake fourth output control.

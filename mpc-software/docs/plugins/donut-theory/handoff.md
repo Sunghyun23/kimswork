@@ -1,3 +1,7 @@
+## 2026-11-19 — local 1.14.2 selector alignment
+
+User approved a UI-only refinement: front selectors use 146px or 296px column widths and a common26px height; footer VOICE/Dice Target/Input use matching184px-wide44px-high fields. FREE/SYNC is directly above its Rate on fronts and MOD. LFO focus and shape remain available in the same row; Motion sync no longer occupies its section title. Compact list text has8px leading space and a reserved arrow gutter; compact Drop TIME reserves40px for caption and106px for values/units. Original artwork/fonts, knob geometry, all391parameters and every Q-Link map are unchanged. No DSP change besides the candidate version11402. User authorized official1.14.2 release and website publication; completion is recorded in design/device-1.14.2/publication.json. Native/ARM/SDK, skin and host checks and actual MPC evidence are under DonutTheory/design/device-1.14.2/.
+
 ## 2026-11-19 — 1.14.1 device QA and release authorized
 
 The user explicitly requested MPC inspection and publication of the current1.14.1implementation. Earlier local-only/no-device/no-release statements below are historical. Current public outcomes are recorded in `plugins/public/DonutTheory/design/device-1.14.1/publication.json` after completion. Groove Dice1.6.0 is already released separately; the earlier no-Triplet drum audit predates that release.
