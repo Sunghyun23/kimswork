@@ -1,0 +1,145 @@
+Validating /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/CratePress/build/kim - VST - Crate Press
+OK     plugin.json: Crate Press by kim (effect, uid K36Z)
+OK     folder name "kim - VST - Crate Press"
+OK     file32: crate-press-arm32.so is a 32-bit ARM shared object
+OK     file32: needed libraries: libm.so.6, libc.so.6, ld-linux-armhf.so.3, libdl.so.2
+OK     file32: max GLIBC requirement 2.27
+OK     file32: exports VSTPluginMain
+OK     file64: crate-press-arm64.so is a 64-bit AArch64 shared object
+OK     file64: needed libraries: libm.so.6, libc.so.6, libpthread.so.0, libdl.so.2
+OK     file64: max GLIBC requirement 2.27
+OK     file64: exports VSTPluginMain
+OK     uid matches the binary (K36Z)
+OK     name matches the binary (Crate Press)
+OK     manufacturer matches the binary (kim)
+OK     kind matches the binary (effect)
+OK     numInputs matches the binary (2)
+OK     numOutputs matches the binary (2)
+OK     TUI.json: all parameter handles are within 0..379
+OK     TUI.json: image FULL-0.png present
+OK     TUI.json: image FULL-1.png present
+OK     TUI.json: image HIGH-0.png present
+OK     TUI.json: image HIGH-1.png present
+OK     TUI.json: image LOW-0.png present
+OK     TUI.json: image LOW-1.png present
+OK     TUI.json: image MID-0.png present
+OK     TUI.json: image MID-1.png present
+OK     TUI.json: image approved-control-0.png present
+OK     TUI.json: image approved-control-1.png present
+OK     TUI.json: image approved-control-10.png present
+OK     TUI.json: image approved-control-11.png present
+OK     TUI.json: image approved-control-12.png present
+OK     TUI.json: image approved-control-13.png present
+OK     TUI.json: image approved-control-14.png present
+OK     TUI.json: image approved-control-15.png present
+OK     TUI.json: image approved-control-2.png present
+OK     TUI.json: image approved-control-3.png present
+OK     TUI.json: image approved-control-4.png present
+OK     TUI.json: image approved-control-5.png present
+OK     TUI.json: image approved-control-6.png present
+OK     TUI.json: image approved-control-7.png present
+OK     TUI.json: image approved-control-8.png present
+OK     TUI.json: image approved-control-9.png present
+OK     TUI.json: image approved-monitor-DUCK-76-24.png present
+OK     TUI.json: image approved-monitor-HIGH-76-24.png present
+OK     TUI.json: image approved-monitor-INPUT-90-26.png present
+OK     TUI.json: image approved-monitor-LOW-76-24.png present
+OK     TUI.json: image approved-monitor-MID-76-24.png present
+OK     TUI.json: image approved-monitor-OUTPUT-100-26.png present
+OK     TUI.json: image approved-monitor-WAVE-76-26.png present
+OK     TUI.json: image approved-title-0.png present
+OK     TUI.json: image approved-title-1.png present
+OK     TUI.json: image approved-title-2.png present
+OK     TUI.json: image approved-title-3.png present
+OK     TUI.json: image background.png present
+OK     TUI.json: image choice-1-0-0-offImage.png present
+OK     TUI.json: image choice-1-0-0-onImage.png present
+OK     TUI.json: image choice-1-0-1-offImage.png present
+OK     TUI.json: image choice-1-0-1-onImage.png present
+OK     TUI.json: image choice-1-3-0-offImage.png present
+OK     TUI.json: image choice-1-3-0-onImage.png present
+OK     TUI.json: image choice-1-3-1-offImage.png present
+OK     TUI.json: image choice-1-3-1-onImage.png present
+OK     TUI.json: image choice-1-3-2-offImage.png present
+OK     TUI.json: image choice-1-3-2-onImage.png present
+OK     TUI.json: image choice-1-3-3-offImage.png present
+OK     TUI.json: image choice-1-3-3-onImage.png present
+OK     TUI.json: image choice-2-4-0-offImage.png present
+OK     TUI.json: image choice-2-4-0-onImage.png present
+OK     TUI.json: image choice-2-4-1-offImage.png present
+OK     TUI.json: image choice-2-4-1-onImage.png present
+OK     TUI.json: image choice-2-4-2-offImage.png present
+OK     TUI.json: image choice-2-4-2-onImage.png present
+OK     TUI.json: image choice-3-1-0-offImage.png present
+OK     TUI.json: image choice-3-1-0-onImage.png present
+OK     TUI.json: image choice-3-1-1-offImage.png present
+OK     TUI.json: image choice-3-1-1-onImage.png present
+OK     TUI.json: image choice-3-1-2-offImage.png present
+OK     TUI.json: image choice-3-1-2-onImage.png present
+OK     TUI.json: image choice-3-1-3-offImage.png present
+OK     TUI.json: image choice-3-1-3-onImage.png present
+OK     TUI.json: image choice-3-11-0-offImage.png present
+OK     TUI.json: image choice-3-11-0-onImage.png present
+OK     TUI.json: image choice-3-11-1-offImage.png present
+OK     TUI.json: image choice-3-11-1-onImage.png present
+OK     TUI.json: image choice-3-11-2-offImage.png present
+OK     TUI.json: image choice-3-11-2-onImage.png present
+OK     TUI.json: image choice-3-11-3-offImage.png present
+OK     TUI.json: image choice-3-11-3-onImage.png present
+OK     TUI.json: image choice-3-6-0-offImage.png present
+OK     TUI.json: image choice-3-6-0-onImage.png present
+OK     TUI.json: image choice-3-6-1-offImage.png present
+OK     TUI.json: image choice-3-6-1-onImage.png present
+OK     TUI.json: image choice-3-6-2-offImage.png present
+OK     TUI.json: image choice-3-6-2-onImage.png present
+OK     TUI.json: image choice-3-6-3-offImage.png present
+OK     TUI.json: image choice-3-6-3-onImage.png present
+OK     TUI.json: image cursor.png present
+OK     TUI.json: image curve.png present
+OK     TUI.json: image fader.png present
+OK     TUI.json: image fader_h_bi.png present
+OK     TUI.json: image fader_h_uni.png present
+OK     TUI.json: image gr0.png present
+OK     TUI.json: image gr1.png present
+OK     TUI.json: image gr2.png present
+OK     TUI.json: image gr3.png present
+OK     TUI.json: image knob.png present
+OK     TUI.json: image knob_bi.png present
+OK     TUI.json: image knob_uni.png present
+OK     TUI.json: image latch-0.png present
+OK     TUI.json: image latch-1.png present
+OK     TUI.json: image lcd.png present
+OK     TUI.json: image panel-compact.png present
+OK     TUI.json: image perform-0.png present
+OK     TUI.json: image perform-1.png present
+OK     TUI.json: image perform-2.png present
+OK     TUI.json: image perform-3.png present
+OK     TUI.json: image perform-4.png present
+OK     TUI.json: image perform-5.png present
+OK     TUI.json: image perform-6.png present
+OK     TUI.json: image perform-7.png present
+OK     TUI.json: image perform-hit-0.png present
+OK     TUI.json: image perform-hit-1.png present
+OK     TUI.json: image perform-hit-2.png present
+OK     TUI.json: image perform-hit-3.png present
+OK     TUI.json: image perform-hit-4.png present
+OK     TUI.json: image perform-hit-5.png present
+OK     TUI.json: image perform-hit-6.png present
+OK     TUI.json: image perform-hit-7.png present
+OK     TUI.json: image seg2_off.png present
+OK     TUI.json: image seg2_on.png present
+OK     TUI.json: image seg3_off.png present
+OK     TUI.json: image seg3_on.png present
+OK     TUI.json: image seg4_off.png present
+OK     TUI.json: image seg4_on.png present
+OK     TUI.json: image toggle_off.png present
+OK     TUI.json: image toggle_on.png present
+OK     TUI.json: image wave-in-neg.png present
+OK     TUI.json: image wave-in-pos.png present
+OK     TUI.json: image wave-out-neg.png present
+OK     TUI.json: image wave-out-pos.png present
+OK     TUI.json: 5 tabs
+OK     Q-Links.json: 5 tab maps, all values in range
+OK     version.xml uiversion 0.1.0.0
+OK     Content/: 2 files, 0.0 MB (loaded by the plugin at run time, see framework/mpc_resources.h)
+0 errors, 0 warnings

@@ -82,7 +82,7 @@ struct Dynamics {
 class CratePress:public mpc::Plugin {
 public:
  enum Key { Output,Input,Compress,Punch,Release,LowComp,MidComp,HighComp,Duck,Drive,Tone,Lofi,Drift,LowCut,HighCut,Mix,DuckSource,Division,DuckLow,DuckMid,DuckHigh,Detector,Sensitivity,WowRate,Flutter,Noise,Width,PeakGuard,Bypass,LofiType,SplitLow,SplitHigh,AutoMakeup,InputMeter,OutputMeter,CompMeter,LowMeter,MidMeter,HighMeter,DuckMeter,BaseCount,CurveBand=BaseCount,WaveBase,CurveBase=WaveBase+256,CurveX=CurveBase+48,CurveY,LegacyCount,PerfGate=LegacyCount,PerfSettings=PerfGate+8,TapeTime=PerfSettings,ReverseLength,RepeatDiv,EchoDiv,EchoFeedback,EchoMix,FilterDip,FxAmount,CrushBits,CrushRate,WobbleRate,WobbleDepth,DropoutRate,DropoutDepth,FxRelease,FxOutput,PerfProgress,Latch=PerfProgress+8,Count };
- static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Crate Press";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','3','6','Z');i.version=204;i.isInstrument=false;i.numInputs=2;i.numOutputs=2;i.wantsMidi=false;i.tailSamples=44100*240;return i;}
+ static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Crate Press";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','3','6','Z');i.version=205;i.isInstrument=false;i.numInputs=2;i.numOutputs=2;i.wantsMidi=false;i.tailSamples=44100*240;return i;}
  CratePress():mpc::Plugin(description()){
   using namespace mpc;
   addParam(floatParam("output","Output",-24,6,0,"dB",1));

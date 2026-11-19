@@ -1,3 +1,7 @@
+## 0.2.5 preview distribution patch — 2026-11-19
+
+User authorized Open MPC packaging/registration. Metadata/license/documentation only: retain engine/UI/380parameters/32programs/maps; native205. Public preview remains. Current checks: CratePress/design/release-0.2.5/. Previous0.2.4hardware records remain scoped to0.2.4. No device install/restart or other-product changes implied.
+
 ## 0.2.3 maintenance — 2026-11-17
 
 No DSP/UI/preset/state changes. Native/ARM32/ARM64 builds and SDK validation pass. The full offline wrapper passes engine/UBSan, performance, all 28 effect-pair combinations, host bridge, three host-simulator configurations and skin/overlay/asset checks. Hardware evidence remains the earlier 0.2.2 record below, not fresh 0.2.3 device QA. The public preview label and its remaining hardware limits are retained.

@@ -1,0 +1,25 @@
+{
+  "version": "0.2.5",
+  "preview": true,
+  "privatePayloads": 0,
+  "sampleOrBankFiles": 0,
+  "sdkZip": {
+    "file": "crate-press-0.2.5-mpc.zip",
+    "bytes": 1635143,
+    "sha256": "75bede3d008691a3c36adf8beb36638a16fa619ceb2a5a356d69a311e3579353"
+  },
+  "portable": [
+    {
+      "file": "crate-press-0.2.5-mpc-aarch64.zip",
+      "bytes": 1533676,
+      "sha256": "a432eb88bc666b84c408470fbdc79dfd179dea40e267dbcfff42e6ce3f718577",
+      "retainedRuntimeFilesMatchSdk": 128
+    },
+    {
+      "file": "crate-press-0.2.5-mpc-armv7.zip",
+      "bytes": 1526808,
+      "sha256": "fc99e1614fabeeb6aca10cc26ddebccc0d800a8d60352a71aba8548b9803bc78",
+      "retainedRuntimeFilesMatchSdk": 128
+    }
+  ]
+}

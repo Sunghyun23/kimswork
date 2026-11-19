@@ -1,7 +1,7 @@
 {
   "name": "Crate Press",
   "manufacturer": "kim",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "format": "vst2",
   "kind": "effect",
   "uid": "K36Z",
@@ -13,5 +13,5 @@
   "description": "Independent character compressor with three-band compression and selective bass/tempo ducking, sampler colour and wow/flutter. Eight momentary lo-fi performance effects with an independent setup page.",
   "author": "kim",
   "url": "https://kimswork.app/",
-  "license": "Project implementation by kim; MPC Plugin Builder SDK MIT"
+  "license": "MIT"
 }

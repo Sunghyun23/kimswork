@@ -1,6 +1,6 @@
 # Open MPC catalog integration
 
-Donut Theory is registered. Groove Dice1.6.1is the second submission, with explicit MIT source/core notices, original-only packages and optional Pack Builder documentation. Submitted PR: https://github.com/open-mpc/mpc-vst-plugins/pull/1035 ; upstream Linux CI44527338657passed, awaiting upstream review/merge. The public Release and updated kimswork.app guide are live. Crate Press remains outside these submissions; resolve its project licensing before adding an entry.
+Donut Theory is registered. Groove Dice1.6.1is the second submission, with explicit MIT source/core notices, original-only packages and optional Pack Builder documentation. Submitted PR: https://github.com/open-mpc/mpc-vst-plugins/pull/1035 ; upstream Linux CI44527338657passed, awaiting upstream review/merge. The public Release and updated kimswork.app guide are live. Crate Press0.2.5is the third submission in preparation: explicit MIT project/SDK notices, unchanged effect engine/UI, per-CPU packages and retained public-preview status. Pack Builder companion-app registration remains a separate future task.
 
 The source catalog registry entry is `donut-theory.json`. A one-file topic-branch PR submits it to `open-mpc/mpc-vst-plugins`; maintainers decide acceptance. Registration is not automatic publication on their site.
 

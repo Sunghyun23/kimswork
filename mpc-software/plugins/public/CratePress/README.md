@@ -1,6 +1,6 @@
 # Crate Press
 
-Public preview 0.2.4. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
+Public preview 0.2.5. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
 
 Independent full-band character compression, Linkwitz–Riley three-band compression, selective bass-sensing or host-tempo ducking, drive, sampler coloration, wow/flutter, tone/cuts and aligned dry/wet mix. This is not a proprietary circuit model or an endorsed artist product. External sidechain input is not implemented.
 
@@ -70,3 +70,9 @@ DSP, presets, parameter identities and UI are unchanged from 0.2.2. Updated pack
 ## 0.2.4 action layout
 
 Original artwork, lettering,64px knobs/I/O faders and eight performance buttons are retained. LATCH and Curve Band selectors move to the bottom utility row. Full offline tests and MPC XL remote UI checks pass; see design/device-0.2.4 and spec/validation for limits. Public preview0.2.4 includes the footer layout; physical/audio/CPU limitations remain documented.
+
+## License and catalog distribution
+
+Crate Press project code, factory programs and original runtime artwork are offered under MIT; see LICENSE. The unmodified official SDK retains its separate MIT notice in Content/Licenses/. No third-party audio library, proprietary firmware, ROMs or original manufacturer skin files are bundled.
+
+Version0.2.5 is a documentation/licensing/distribution patch: DSP, all380parameter identities,32factory programs, skin/Q-Link bytes and performance behavior remain0.2.4. Existing actual MPC captures are labeled0.2.4; they are not new0.2.5hardware certification. The preview status remains. Dedicated Open MPC ARM32/ARM64 archives supplement the normal SDK ZIP. In Open MPC enable beta/experimental releases to see this preview.

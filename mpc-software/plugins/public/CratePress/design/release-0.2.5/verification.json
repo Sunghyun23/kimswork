@@ -1,0 +1,14 @@
+{
+  "version": "0.2.5",
+  "preview": true,
+  "scope": "License/docs/distribution only; native version205",
+  "metadata380": "exact match to0.2.4",
+  "programs32": "exact match to0.2.4",
+  "tuiQlinks": "exact bytes match to0.2.4SDK ZIP",
+  "nativeArm32Arm64": "pass",
+  "offlineEnginePerformancePairsBridgeSkin": "pass, UBSan;28pairs x3rates",
+  "hostSimulator": "3configurations each20PASS/0WARN/0FAIL",
+  "hardware025": "not newly certified; old actual0.2.4screens correctly labeled",
+  "deviceInstallChanged": false,
+  "noVerifiedClaim": true
+}

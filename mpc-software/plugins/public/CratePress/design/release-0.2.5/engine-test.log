@@ -1,0 +1,1 @@
+PASS: signed stereo waveform, aligned latency,4DSP curves,32presets x3rates,variable blocks,state,parameter sweeps,mono/in-place/null inputs,zero RT allocations

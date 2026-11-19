@@ -17,3 +17,5 @@ Read root instructions andmpc-software/docs/plugins/crate-press/{spec,presets,va
 - Local0.2.4approved footer reflow: LATCH and Curve Band controls at y488; unchanged eight performance buttons at y538. Original lettering/knobs/faders retained;380IDs/16maps/detail pages stable. Groove Dice stays untouched. See spec and validation for actual QA.
 
 - User explicitly authorized official0.2.4 publication and website updates after device verification. Earlier local-only statements are history. Preserve original artwork and the recorded physical/audio limits.
+
+2026-11-19 user approved Crate Press Open MPC registration.0.2.5is a preview docs/license/distribution patch only: metadata205, explicit MIT project/SDK notices, engine/UI/380parameters/32programs/Q-Link maps unchanged. Retain preview:true/prerelease:true; do not promote to stable or claim new hardware verification. Original0.2.4screens remain labeled. Only official SDK remote deployment is allowed; no Open MPC legacy installers/benchmarks on device. Pack Builder companion registration is a separate future task.

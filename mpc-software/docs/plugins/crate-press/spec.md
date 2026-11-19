@@ -1,3 +1,7 @@
+## 0.2.5 preview distribution patch — 2026-11-19
+
+User authorized Open MPC packaging/registration. Metadata/license/documentation only: retain engine/UI/380parameters/32programs/maps; native205. Public preview remains. Current checks: CratePress/design/release-0.2.5/. Previous0.2.4hardware records remain scoped to0.2.4. No device install/restart or other-product changes implied.
+
 # Crate Press — confirmed development specification
 
 Identity: Crate Press / kim / K36Z / stereo2in2out effect /0.2.2 public preview. A separate public-source project; existing products untouched. User approved proceeding with simple track/master character processing and real multiband compression/ducking. No external sidechain promise.

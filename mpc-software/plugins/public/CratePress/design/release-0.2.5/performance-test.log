@@ -1,0 +1,9 @@
+Effect 0 held delta 0.292118
+Effect 1 held delta 0.355437
+Effect 2 held delta 0.354232
+Effect 3 held delta 0.0809731
+Effect 4 held delta 0.0987807
+Effect 5 held delta 0.0074284
+Effect 6 held delta 0.366385
+Effect 7 held delta 0.133421
+PASS:8audible effects,neutral off,release recovery,repeat tempo,frozen capture,echo tail,independent setup,state gate clearing,latch independent toggles/release-all,zero RT allocations

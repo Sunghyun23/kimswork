@@ -1,0 +1,328 @@
+Generated32 complete factory programs
+Building Crate Press by kim  (/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/CratePress)
+  toolchain: gcc   target: native   release
+
+[1/2] Native build (for host_sim and testing on this computer)
+  [native] compiling 1 source file -> build/native/crate-press.dylib
+  [native] ok (155 KB, 0.8s)
+
+[2/2] Parameter dump (host_sim) -> build/params.json
+  host_sim dump -> build/params.json
+
+Native build only: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/CratePress/build/native/crate-press.dylib
+Try it:  /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk/.sdk-tools/host_sim /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/CratePress/build/native/crate-press.dylib test --notes 60,64,67 --wav out.wav
+Crate Press native MAIN skin: real signed extrema, shared DSP transfer curve,4x4Q-Link
+Building Crate Press by kim  (/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/CratePress)
+  toolchain: zig   target: all   release
+Using zig 0.17.1 (from /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk/.sdk-tools/zigenv)
+
+[1/7] Native build (for host_sim and testing on this computer)
+  [native] compiling 1 source file -> build/native/crate-press.dylib
+  [native] ok (410 KB, 1.2s)
+
+[2/7] Parameter dump (host_sim) -> build/params.json
+  host_sim dump -> build/params.json
+
+[3/7] arm32 build (MPC Live/X/One (32-bit))
+  [arm32] compiling 1 source file -> build/kim - VST - Crate Press/VST/crate-press-arm32.so
+  [arm32] ok (269 KB, 0.9s)
+
+[4/7] arm64 build (MPC Live II/One+/Key 61/X SE/3 (64-bit))
+  [arm64] compiling 1 source file -> build/kim - VST - Crate Press/VST/crate-press-arm64.so
+  [arm64] ok (310 KB, 1.0s)
+
+[5/7] Assemble output folder: build/kim - VST - Crate Press/
+  copied plugin.json
+  copying hand-written skins/ -> Plugin Skins/ (gen_ui.py not run)
+  copied 2 files from Content/ into Content/
+
+[6/7] version.xml
+  version 0.2.5.0, uiversion 0.1.0.0
+
+[7/7] Validate
+Validating /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/CratePress/build/kim - VST - Crate Press
+OK     plugin.json: Crate Press by kim (effect, uid K36Z)
+OK     folder name "kim - VST - Crate Press"
+OK     file32: crate-press-arm32.so is a 32-bit ARM shared object
+OK     file32: needed libraries: libm.so.6, libc.so.6, ld-linux-armhf.so.3, libdl.so.2
+OK     file32: max GLIBC requirement 2.27
+OK     file32: exports VSTPluginMain
+OK     file64: crate-press-arm64.so is a 64-bit AArch64 shared object
+OK     file64: needed libraries: libm.so.6, libc.so.6, libpthread.so.0, libdl.so.2
+OK     file64: max GLIBC requirement 2.27
+OK     file64: exports VSTPluginMain
+OK     uid matches the binary (K36Z)
+OK     name matches the binary (Crate Press)
+OK     manufacturer matches the binary (kim)
+OK     kind matches the binary (effect)
+OK     numInputs matches the binary (2)
+OK     numOutputs matches the binary (2)
+OK     TUI.json: all parameter handles are within 0..379
+OK     TUI.json: image FULL-0.png present
+OK     TUI.json: image FULL-1.png present
+OK     TUI.json: image HIGH-0.png present
+OK     TUI.json: image HIGH-1.png present
+OK     TUI.json: image LOW-0.png present
+OK     TUI.json: image LOW-1.png present
+OK     TUI.json: image MID-0.png present
+OK     TUI.json: image MID-1.png present
+OK     TUI.json: image approved-control-0.png present
+OK     TUI.json: image approved-control-1.png present
+OK     TUI.json: image approved-control-10.png present
+OK     TUI.json: image approved-control-11.png present
+OK     TUI.json: image approved-control-12.png present
+OK     TUI.json: image approved-control-13.png present
+OK     TUI.json: image approved-control-14.png present
+OK     TUI.json: image approved-control-15.png present
+OK     TUI.json: image approved-control-2.png present
+OK     TUI.json: image approved-control-3.png present
+OK     TUI.json: image approved-control-4.png present
+OK     TUI.json: image approved-control-5.png present
+OK     TUI.json: image approved-control-6.png present
+OK     TUI.json: image approved-control-7.png present
+OK     TUI.json: image approved-control-8.png present
+OK     TUI.json: image approved-control-9.png present
+OK     TUI.json: image approved-monitor-DUCK-76-24.png present
+OK     TUI.json: image approved-monitor-HIGH-76-24.png present
+OK     TUI.json: image approved-monitor-INPUT-90-26.png present
+OK     TUI.json: image approved-monitor-LOW-76-24.png present
+OK     TUI.json: image approved-monitor-MID-76-24.png present
+OK     TUI.json: image approved-monitor-OUTPUT-100-26.png present
+OK     TUI.json: image approved-monitor-WAVE-76-26.png present
+OK     TUI.json: image approved-title-0.png present
+OK     TUI.json: image approved-title-1.png present
+OK     TUI.json: image approved-title-2.png present
+OK     TUI.json: image approved-title-3.png present
+OK     TUI.json: image background.png present
+OK     TUI.json: image choice-1-0-0-offImage.png present
+OK     TUI.json: image choice-1-0-0-onImage.png present
+OK     TUI.json: image choice-1-0-1-offImage.png present
+OK     TUI.json: image choice-1-0-1-onImage.png present
+OK     TUI.json: image choice-1-3-0-offImage.png present
+OK     TUI.json: image choice-1-3-0-onImage.png present
+OK     TUI.json: image choice-1-3-1-offImage.png present
+OK     TUI.json: image choice-1-3-1-onImage.png present
+OK     TUI.json: image choice-1-3-2-offImage.png present
+OK     TUI.json: image choice-1-3-2-onImage.png present
+OK     TUI.json: image choice-1-3-3-offImage.png present
+OK     TUI.json: image choice-1-3-3-onImage.png present
+OK     TUI.json: image choice-2-4-0-offImage.png present
+OK     TUI.json: image choice-2-4-0-onImage.png present
+OK     TUI.json: image choice-2-4-1-offImage.png present
+OK     TUI.json: image choice-2-4-1-onImage.png present
+OK     TUI.json: image choice-2-4-2-offImage.png present
+OK     TUI.json: image choice-2-4-2-onImage.png present
+OK     TUI.json: image choice-3-1-0-offImage.png present
+OK     TUI.json: image choice-3-1-0-onImage.png present
+OK     TUI.json: image choice-3-1-1-offImage.png present
+OK     TUI.json: image choice-3-1-1-onImage.png present
+OK     TUI.json: image choice-3-1-2-offImage.png present
+OK     TUI.json: image choice-3-1-2-onImage.png present
+OK     TUI.json: image choice-3-1-3-offImage.png present
+OK     TUI.json: image choice-3-1-3-onImage.png present
+OK     TUI.json: image choice-3-11-0-offImage.png present
+OK     TUI.json: image choice-3-11-0-onImage.png present
+OK     TUI.json: image choice-3-11-1-offImage.png present
+OK     TUI.json: image choice-3-11-1-onImage.png present
+OK     TUI.json: image choice-3-11-2-offImage.png present
+OK     TUI.json: image choice-3-11-2-onImage.png present
+OK     TUI.json: image choice-3-11-3-offImage.png present
+OK     TUI.json: image choice-3-11-3-onImage.png present
+OK     TUI.json: image choice-3-6-0-offImage.png present
+OK     TUI.json: image choice-3-6-0-onImage.png present
+OK     TUI.json: image choice-3-6-1-offImage.png present
+OK     TUI.json: image choice-3-6-1-onImage.png present
+OK     TUI.json: image choice-3-6-2-offImage.png present
+OK     TUI.json: image choice-3-6-2-onImage.png present
+OK     TUI.json: image choice-3-6-3-offImage.png present
+OK     TUI.json: image choice-3-6-3-onImage.png present
+OK     TUI.json: image cursor.png present
+OK     TUI.json: image curve.png present
+OK     TUI.json: image fader.png present
+OK     TUI.json: image fader_h_bi.png present
+OK     TUI.json: image fader_h_uni.png present
+OK     TUI.json: image gr0.png present
+OK     TUI.json: image gr1.png present
+OK     TUI.json: image gr2.png present
+OK     TUI.json: image gr3.png present
+OK     TUI.json: image knob.png present
+OK     TUI.json: image knob_bi.png present
+OK     TUI.json: image knob_uni.png present
+OK     TUI.json: image latch-0.png present
+OK     TUI.json: image latch-1.png present
+OK     TUI.json: image lcd.png present
+OK     TUI.json: image panel-compact.png present
+OK     TUI.json: image perform-0.png present
+OK     TUI.json: image perform-1.png present
+OK     TUI.json: image perform-2.png present
+OK     TUI.json: image perform-3.png present
+OK     TUI.json: image perform-4.png present
+OK     TUI.json: image perform-5.png present
+OK     TUI.json: image perform-6.png present
+OK     TUI.json: image perform-7.png present
+OK     TUI.json: image perform-hit-0.png present
+OK     TUI.json: image perform-hit-1.png present
+OK     TUI.json: image perform-hit-2.png present
+OK     TUI.json: image perform-hit-3.png present
+OK     TUI.json: image perform-hit-4.png present
+OK     TUI.json: image perform-hit-5.png present
+OK     TUI.json: image perform-hit-6.png present
+OK     TUI.json: image perform-hit-7.png present
+OK     TUI.json: image seg2_off.png present
+OK     TUI.json: image seg2_on.png present
+OK     TUI.json: image seg3_off.png present
+OK     TUI.json: image seg3_on.png present
+OK     TUI.json: image seg4_off.png present
+OK     TUI.json: image seg4_on.png present
+OK     TUI.json: image toggle_off.png present
+OK     TUI.json: image toggle_on.png present
+OK     TUI.json: image wave-in-neg.png present
+OK     TUI.json: image wave-in-pos.png present
+OK     TUI.json: image wave-out-neg.png present
+OK     TUI.json: image wave-out-pos.png present
+OK     TUI.json: 5 tabs
+OK     Q-Links.json: 5 tab maps, all values in range
+OK     version.xml uiversion 0.1.0.0
+OK     Content/: 2 files, 0.0 MB (loaded by the plugin at run time, see framework/mpc_resources.h)
+0 errors, 0 warnings
+
+========================================================================
+Build finished: kim - VST - Crate Press
+  Output folder: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/CratePress/build/kim - VST - Crate Press
+    plugin.json                              567 B
+    version.xml                              152 B
+    Content/Licenses/Crate-Press-MIT.txt     1 KB
+    Content/Licenses/MPC-SDK-MIT.txt         1 KB
+    Plugin Skins/FULL-0.png                  834 B
+    Plugin Skins/FULL-1.png                  834 B
+    Plugin Skins/HIGH-0.png                  2 KB
+    Plugin Skins/HIGH-1.png                  2 KB
+    Plugin Skins/LOW-0.png                   1 KB
+    Plugin Skins/LOW-1.png                   1 KB
+    Plugin Skins/MID-0.png                   1 KB
+    Plugin Skins/MID-1.png                   1 KB
+    Plugin Skins/Q-Links.json                4 KB
+    Plugin Skins/TUI.json                    995 KB
+    Plugin Skins/approved-control-0.png      3 KB
+    Plugin Skins/approved-control-1.png      3 KB
+    Plugin Skins/approved-control-10.png     3 KB
+    Plugin Skins/approved-control-11.png     3 KB
+    Plugin Skins/approved-control-12.png     3 KB
+    Plugin Skins/approved-control-13.png     4 KB
+    Plugin Skins/approved-control-14.png     4 KB
+    Plugin Skins/approved-control-15.png     2 KB
+    Plugin Skins/approved-control-2.png      4 KB
+    Plugin Skins/approved-control-3.png      3 KB
+    Plugin Skins/approved-control-4.png      4 KB
+    Plugin Skins/approved-control-5.png      3 KB
+    Plugin Skins/approved-control-6.png      4 KB
+    Plugin Skins/approved-control-7.png      3 KB
+    Plugin Skins/approved-control-8.png      3 KB
+    Plugin Skins/approved-control-9.png      3 KB
+    Plugin Skins/approved-monitor-DUCK-76-24.png 2 KB
+    Plugin Skins/approved-monitor-HIGH-76-24.png 2 KB
+    Plugin Skins/approved-monitor-INPUT-90-26.png 2 KB
+    Plugin Skins/approved-monitor-LOW-76-24.png 1 KB
+    Plugin Skins/approved-monitor-MID-76-24.png 2 KB
+    Plugin Skins/approved-monitor-OUTPUT-100-26.png 3 KB
+    Plugin Skins/approved-monitor-WAVE-76-26.png 2 KB
+    Plugin Skins/approved-title-0.png        8 KB
+    Plugin Skins/approved-title-1.png        8 KB
+    Plugin Skins/approved-title-2.png        6 KB
+    Plugin Skins/approved-title-3.png        6 KB
+    Plugin Skins/background.png              125 KB
+    Plugin Skins/choice-1-0-0-offImage.png   2 KB
+    Plugin Skins/choice-1-0-0-onImage.png    2 KB
+    Plugin Skins/choice-1-0-1-offImage.png   2 KB
+    Plugin Skins/choice-1-0-1-onImage.png    2 KB
+    Plugin Skins/choice-1-3-0-offImage.png   1 KB
+    Plugin Skins/choice-1-3-0-onImage.png    1 KB
+    Plugin Skins/choice-1-3-1-offImage.png   1 KB
+    Plugin Skins/choice-1-3-1-onImage.png    1 KB
+    Plugin Skins/choice-1-3-2-offImage.png   1 KB
+    Plugin Skins/choice-1-3-2-onImage.png    1 KB
+    Plugin Skins/choice-1-3-3-offImage.png   1 KB
+    Plugin Skins/choice-1-3-3-onImage.png    1 KB
+    Plugin Skins/choice-2-4-0-offImage.png   2 KB
+    Plugin Skins/choice-2-4-0-onImage.png    2 KB
+    Plugin Skins/choice-2-4-1-offImage.png   2 KB
+    Plugin Skins/choice-2-4-1-onImage.png    2 KB
+    Plugin Skins/choice-2-4-2-offImage.png   2 KB
+    Plugin Skins/choice-2-4-2-onImage.png    2 KB
+    Plugin Skins/choice-3-1-0-offImage.png   1 KB
+    Plugin Skins/choice-3-1-0-onImage.png    1 KB
+    Plugin Skins/choice-3-1-1-offImage.png   1 KB
+    Plugin Skins/choice-3-1-1-onImage.png    1 KB
+    Plugin Skins/choice-3-1-2-offImage.png   1 KB
+    Plugin Skins/choice-3-1-2-onImage.png    1 KB
+    Plugin Skins/choice-3-1-3-offImage.png   2 KB
+    Plugin Skins/choice-3-1-3-onImage.png    2 KB
+    Plugin Skins/choice-3-11-0-offImage.png  1 KB
+    Plugin Skins/choice-3-11-0-onImage.png   1 KB
+    Plugin Skins/choice-3-11-1-offImage.png  1 KB
+    Plugin Skins/choice-3-11-1-onImage.png   1 KB
+    Plugin Skins/choice-3-11-2-offImage.png  1 KB
+    Plugin Skins/choice-3-11-2-onImage.png   1 KB
+    Plugin Skins/choice-3-11-3-offImage.png  1 KB
+    Plugin Skins/choice-3-11-3-onImage.png   1 KB
+    Plugin Skins/choice-3-6-0-offImage.png   1 KB
+    Plugin Skins/choice-3-6-0-onImage.png    1 KB
+    Plugin Skins/choice-3-6-1-offImage.png   1 KB
+    Plugin Skins/choice-3-6-1-onImage.png    1 KB
+    Plugin Skins/choice-3-6-2-offImage.png   1 KB
+    Plugin Skins/choice-3-6-2-onImage.png    1 KB
+    Plugin Skins/choice-3-6-3-offImage.png   2 KB
+    Plugin Skins/choice-3-6-3-onImage.png    2 KB
+    Plugin Skins/cursor.png                  11 KB
+    Plugin Skins/curve.png                   1 KB
+    Plugin Skins/fader.png                   12 KB
+    Plugin Skins/fader_h_bi.png              104 KB
+    Plugin Skins/fader_h_uni.png             99 KB
+    Plugin Skins/gr0.png                     3 KB
+    Plugin Skins/gr1.png                     3 KB
+    Plugin Skins/gr2.png                     3 KB
+    Plugin Skins/gr3.png                     3 KB
+    Plugin Skins/knob.png                    726 KB
+    Plugin Skins/knob_bi.png                 81 KB
+    Plugin Skins/knob_uni.png                79 KB
+    Plugin Skins/latch-0.png                 1 KB
+    Plugin Skins/latch-1.png                 1 KB
+    Plugin Skins/lcd.png                     228 B
+    Plugin Skins/panel-compact.png           19 KB
+    Plugin Skins/perform-0.png               8 KB
+    Plugin Skins/perform-1.png               11 KB
+    Plugin Skins/perform-2.png               8 KB
+    Plugin Skins/perform-3.png               8 KB
+    Plugin Skins/perform-4.png               8 KB
+    Plugin Skins/perform-5.png               8 KB
+    Plugin Skins/perform-6.png               9 KB
+    Plugin Skins/perform-7.png               9 KB
+    Plugin Skins/perform-hit-0.png           126 B
+    Plugin Skins/perform-hit-1.png           126 B
+    Plugin Skins/perform-hit-2.png           126 B
+    Plugin Skins/perform-hit-3.png           126 B
+    Plugin Skins/perform-hit-4.png           126 B
+    Plugin Skins/perform-hit-5.png           126 B
+    Plugin Skins/perform-hit-6.png           126 B
+    Plugin Skins/perform-hit-7.png           126 B
+    Plugin Skins/seg2_off.png                586 B
+    Plugin Skins/seg2_on.png                 618 B
+    Plugin Skins/seg3_off.png                573 B
+    Plugin Skins/seg3_on.png                 606 B
+    Plugin Skins/seg4_off.png                544 B
+    Plugin Skins/seg4_on.png                 570 B
+    Plugin Skins/toggle_off.png              1 KB
+    Plugin Skins/toggle_on.png               1 KB
+    Plugin Skins/wave-in-neg.png             1 KB
+    Plugin Skins/wave-in-pos.png             1 KB
+    Plugin Skins/wave-out-neg.png            956 B
+    Plugin Skins/wave-out-pos.png            1 KB
+    VST/crate-press-arm32.so                 269 KB
+    VST/crate-press-arm64.so                 310 KB
+  Native test build: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/CratePress/build/native/crate-press.dylib
+
+Next:
+  * Make a zip for sharing:   python tools/package.py mpc-software/plugins/public/CratePress
+  * Or copy the output folder into a folder named "VST2 Plugins" on your MPC's drive (see INSTALL.txt in the zip).
+Rendered runtime TUI using measured audio data (offline proof, not hardware screenshot)
+SDK ready: /Users/sunghyunkim/source/kimswork/mpc-software/third_party/mpc-plugin-builder-sdk @ febd2ca5bd9eb16c4a412837196e145566bc981b

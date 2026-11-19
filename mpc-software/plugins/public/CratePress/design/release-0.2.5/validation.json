@@ -1,0 +1,38 @@
+{
+  "status": "offline-passed",
+  "factoryPrograms": 32,
+  "parameters": 380,
+  "performanceEffects": 8,
+  "latch": "footer toggle,independent8tap gates,disable releases all,restore disarms gates",
+  "combinationTests": "28pairs x3rates,each pair differs from either solo,release-one keeps the other audible,all8/staggered release/echo tail/zero allocations passed",
+  "performanceTests": "audible effects,release recovery,repeat tempo,frozen history,echo decay,independent settings,transient gate clearing passed",
+  "sampleRates": [
+    44100,
+    48000,
+    96000
+  ],
+  "waveform": "signed stereo extrema,64x12ms,30Hz,latency aligned",
+  "curve": "same DSP reduction function,4views",
+  "simulatorRuns": [
+    {
+      "sr": 44100,
+      "block": 128,
+      "result": "20PASS/0WARN/0FAIL"
+    },
+    {
+      "sr": 44100,
+      "block": 32,
+      "result": "20PASS/0WARN/0FAIL"
+    },
+    {
+      "sr": 48000,
+      "block": 512,
+      "result": "20PASS/0WARN/0FAIL"
+    }
+  ],
+  "undefinedBehaviorSanitizer": "passed",
+  "realTimeAllocations": 0,
+  "deviceVerification": "pending; no installation/restart in this iteration",
+  "humanListening": "not performed",
+  "preview": "offline runtimeTUI with engine-measured telemetry; not an MPC screenshot"
+}

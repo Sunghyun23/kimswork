@@ -1,6 +1,6 @@
 # Crate Press user manual
 
-Version 0.2.4 · Public preview · Stereo effect for MPC standalone.
+Version 0.2.5 · Public preview · Stereo effect for MPC standalone.
 
 ## Install and open
 
@@ -98,3 +98,9 @@ This update refreshes package metadata and installation documentation. DSP, pres
 LATCH and curve-view selection now sit immediately above the eight performance buttons. Original artwork, reference-derived lettering, 64 px knobs and I/O faders remain; the live monitor and panel spacing are compacted to make room. The MPC-owned preset/save/bypass header stays at the top. There is no new random generator or duplicate local preset browser.
 
 DSP, all 380 parameter identities, 32 programs, detailed pages and Q-Link assignments are unchanged. On MPC XL / OS3.10.1.12, remote checks confirm track-insert loading, curve choices, momentary hold/release, two and all eight latched states, LATCH-off clearing, and PERFORM navigation. These checks do not certify physical encoders, finger multitouch, hardware output listening/recording or worst-case CPU. The release remains a public preview.
+
+## License and preview distribution
+
+Project source, factory programs and original runtime artwork are offered under MIT. The SDK retains its own MIT notice. The ZIP includes LICENSE and Content/Licenses/. Optional Open MPC portable archives provide one build per CPU; the standard SDK ZIP keeps both. Use one active installation across drives.
+
+0.2.5 changes documentation/licensing/distribution only. Engine, parameters, presets and UI are unchanged. Current hardware screenshots remain explicitly labeled0.2.4, and earlier device evidence is historical. This release remains a public preview; in Open MPC enable beta/experimental releases. New physical Q-Link, multitouch, hardware audio, worst-case CPU and full project recall certification are not claimed.
