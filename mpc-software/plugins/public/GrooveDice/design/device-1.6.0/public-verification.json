@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "checks": [
+    "/plugins/groove-dice/",
+    "/",
+    "/software/",
+    "/software/instruments/",
+    "/plugins/groove-dice/manual/",
+    "/plugins/donut-theory/",
+    "/plugins/crate-press/",
+    "image:groove-dice-main-device-1.6.0.webp",
+    "image:groove-dice-triplets-device-1.6.0.webp",
+    "website-download-link"
+  ],
+  "downloadHashVerifiedFromWebsiteLink": true,
+  "unchangedPublicVersions": {
+    "DonutTheory": "1.13.14",
+    "CratePress": "0.2.4"
+  }
+}

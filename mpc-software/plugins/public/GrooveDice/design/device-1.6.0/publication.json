@@ -1,0 +1,38 @@
+{
+  "id": 450837205,
+  "project": "GrooveDice",
+  "version": "1.6.0",
+  "tag": "groove-dice/v1.6.0",
+  "commit": "8b37090df8096f42b8b296b5a60f2dfb1d9c90ac",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.6.0",
+  "assets": [
+    {
+      "name": "groove-dice-1.6.0-mpc.zip",
+      "size": 18742612,
+      "digest": "sha256:781f7418b8ce25fff3a4e7f3e22de60947c03d413d5d7fddbfa50fc68d59187c",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.6.0/groove-dice-1.6.0-mpc.zip"
+    },
+    {
+      "name": "groove-dice-1.6.0-mpc.zip.sha256",
+      "size": 92,
+      "digest": "sha256:337c82bf08442fa6d3947d0f72af806b0c7777e90730b5db4d9ead8cb94cfbe7",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.6.0/groove-dice-1.6.0-mpc.zip.sha256"
+    }
+  ],
+  "publicRelease": true,
+  "stable": true,
+  "privatePayloadsInPublic": 0,
+  "publicAssetDigestsVerified": true,
+  "date": "2026-11-19",
+  "pagesRun": 44450794354,
+  "pagesConclusion": "success",
+  "responsiveRouteWidthChecks": 77,
+  "publicChecks": 10,
+  "actualDeviceScreenshots": true,
+  "internalAndSdFilesVerified": 167,
+  "physicalEncodersAndHardwareAudioNewlyCertified": false,
+  "unchangedPublicVersions": {
+    "DonutTheory": "1.13.14",
+    "CratePress": "0.2.4"
+  }
+}
