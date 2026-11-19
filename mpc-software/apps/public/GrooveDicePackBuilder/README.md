@@ -2,6 +2,8 @@
 
 A standalone desktop companion for turning folders of WAV and MIDI files into Groove Dice `.gdexp` expansions. No Python installation is required for the packaged app. macOS and Windows are built independently; exact platform validation is recorded in VALIDATION.md.
 
+For [Groove Dice for MPC standalone](https://kimswork.app/plugins/groove-dice/). The instrument and the builder are separate downloads; the builder is optional. [Download macOS Apple Silicon or Windows x64 builds](https://kimswork.app/apps/groove-dice-pack-builder/) · [Groove Dice pack installation guide](https://kimswork.app/plugins/groove-dice/manual/#create-your-own-expansion-packs).
+
 ## Workflow
 
 1. **Open Folder**: choose a source directory. Original files remain unchanged.

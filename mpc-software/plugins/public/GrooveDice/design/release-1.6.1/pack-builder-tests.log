@@ -1,0 +1,12 @@
+test_empty_project_save_and_named_kits (test_authoring.AuthoringTests.test_empty_project_save_and_named_kits) ... ok
+test_incomplete_and_changed (test_authoring.AuthoringTests.test_incomplete_and_changed) ... ok
+test_mapping_and_guards (test_authoring.AuthoringTests.test_mapping_and_guards) ... ok
+test_roundtrip (test_authoring.AuthoringTests.test_roundtrip) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.105s
+
+OK
+Packed Source: /var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/tmppv3p8o8q/kit.gdexp (PRIVATE)
+Installed Source
+Removed Source; saved projects referencing it will report missing samples

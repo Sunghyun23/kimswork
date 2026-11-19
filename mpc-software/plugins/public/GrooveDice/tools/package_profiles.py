@@ -24,7 +24,7 @@ def main():
  with zipfile.ZipFile(tmp,'w',zipfile.ZIP_DEFLATED,compresslevel=6,allowZip64=True)as z:
   for f in sorted(public.rglob('*')):
    if f.is_file():z.write(f,str(f.relative_to(public.parent)))
-  z.writestr('INSTALL.txt',sdk.install_text(meta,base.name));z.write(P/'RELEASE_README.md','README.md');z.write(P.parents[2]/'docs/plugins/groove-dice/manual.md','MANUAL.md');z.write(P/'VALIDATION.md','VERIFICATION.md');z.write(P.parents[2]/'shared/groove-dice-expansion/expansions.py','Expansion Manager/expansions.py')
+  z.write(P/'LICENSE','LICENSE');z.write(P/'PACK_BUILDER.md','PACK_BUILDER.md');z.writestr('INSTALL.txt',sdk.install_text(meta,base.name));z.write(P/'RELEASE_README.md','README.md');z.write(P.parents[2]/'docs/plugins/groove-dice/manual.md','MANUAL.md');z.write(P/'VALIDATION.md','VERIFICATION.md');z.write(P.parents[2]/'shared/groove-dice-expansion/expansions.py','Expansion Manager/expansions.py')
   z.writestr('Expansion Manager/README.txt','Groove Dice .gdexp installer (Python3; no engine rebuild required).\nInstall: python3 expansions.py install PACK.gdexp --content "/path/to/kim - VST - Groove Dice/Content"\nList: python3 expansions.py list --content CONTENT\nRemove: python3 expansions.py remove PACK-ID --content CONTENT\nReopen the plugin after changing packs. Core cannot be removed through this tool.\nOnly install packs you have rights to use. Private packs require --allow-private and are excluded from default public assembly.\n')
  tmp.replace(target)
  # Audit actual ZIP, not just staging manifests.

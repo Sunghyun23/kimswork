@@ -1,4 +1,4 @@
-# Groove Dice 1.6.0
+# Groove Dice 1.6.1
 
 Retained from1.3.4: all seventeen SOUND sources have independent reverse switches, saved with user kits and projects. Start trims from the source end in reverse mode; Decay and Shift remain independent. SOUND has two in-place pages: Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Separate48px previous/next arrows surround a visible SOUND1/2 counter. REV stays available on both pages; approved per-row polarity Ø is on page2. Remote on-device page/REV/Ø interactions were checked; physical encoder and hardware-audio coverage remain separate.
 
@@ -37,3 +37,11 @@ Public package: `python3 mpc-software/plugins/public/GrooveDice/tools/package_pr
 See AGENTS.md for append-only metadata, bank preservation and UI rules.
 
 Version1.6.0 adds 1/4T, 1/8T and 1/16T hats, each plain, +FILL or +ROLL. Tap Hat Rhythm for three pages of eight choices, or turn MAIN D1 in Screen mode. Triplets retain their spacing independently of straight swing. Live changes, MAIN Dice locks and Undo share the full selector; old779-parameter snapshots migrate without replacing their notes.
+
+## Create your own packs
+
+[Groove Dice Pack Builder](https://kimswork.app/apps/groove-dice-pack-builder/) is a separate optional app for macOS Apple Silicon and Windows x64. Organize WAV/MIDI folders, review roles, generate/audition kits and export independent `.gdexp` files. Read the bundled PACK_BUILDER.md or [complete guide](https://kimswork.app/apps/groove-dice-pack-builder/manual/). The instrument works with its included core without the builder.
+
+## License
+
+Groove Dice project code and Original Workshop core content are offered under MIT; see LICENSE and Content/Licenses/. Original synthesis and authored MIDI use no external audio/MIDI/model inputs. Optional expansions retain their own source rights; neither the plugin license nor a builder checkbox grants rights to another library. Pack Builder is distributed separately with its own dependency notices.

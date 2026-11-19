@@ -1,0 +1,29 @@
+{
+  "version": "1.6.1",
+  "coreBankSha256": "b98c4b813ff381fb5befca49bfa7385c5c7ace9d54355739569596cf8b81bb8f",
+  "coreWav": 128,
+  "coreKits": 96,
+  "authoredBeats": 2,
+  "authoredTimingTemplates": 93,
+  "privatePayloads": 0,
+  "sdkZip": {
+    "file": "groove-dice-1.6.1-mpc.zip",
+    "bytes": 18750649,
+    "sha256": "c8f59d256e08f9f54f684d1094d2091a5233399243cb161f3b6033c278881429"
+  },
+  "portable": [
+    {
+      "file": "groove-dice-1.6.1-mpc-aarch64.zip",
+      "bytes": 18333810,
+      "sha256": "e92a6338e46ab949d60ee25b626d1dcaa5483734046459ef45a94e3999483aae",
+      "retainedRuntimeFilesMatchSdk": 156
+    },
+    {
+      "file": "groove-dice-1.6.1-mpc-armv7.zip",
+      "bytes": 18293520,
+      "sha256": "079ee9f3f3ad528b7864d39e66a65d45a91660d5cc5ffe11fafb13b89de8b01a",
+      "retainedRuntimeFilesMatchSdk": 156
+    }
+  ],
+  "packBuilderOptional": true
+}

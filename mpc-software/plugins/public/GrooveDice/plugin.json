@@ -1,7 +1,7 @@
 {
   "name": "Groove Dice",
   "manufacturer": "kim",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "format": "vst2",
   "kind": "instrument",
   "uid": "KpGy",
@@ -13,5 +13,5 @@
   "description": "Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.",
   "author": "kim",
   "url": "https://kimswork.app/",
-  "license": "MPC SDK MIT; original procedural core content; optional expansions retain their own restrictions"
+  "license": "MIT"
 }

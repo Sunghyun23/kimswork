@@ -1,0 +1,8 @@
+Packed Original Workshop: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/exp-manager-3k2i0ui5/core.gdexp (original/redistributable)
+Packed Private Fixture: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/exp-manager-3k2i0ui5/private-fixture.gdexp (PRIVATE)
+Packed Test Own: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/exp-manager-3k2i0ui5/own.gdexp (original/redistributable)
+Installed Test Own
+Removed Test Own; saved projects referencing it will report missing samples
+Installed Private Fixture
+Assembled PUBLIC profile: /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/exp-manager-3k2i0ui5/public
+PASS expansion manager: separate packages, duplicate/traversal/private opt-in guards, add/remove without engine rebuild, public excludes private payload, stale-core hash guard

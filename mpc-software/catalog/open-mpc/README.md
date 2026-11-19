@@ -1,6 +1,6 @@
 # Open MPC catalog integration
 
-Donut Theory is the first submission. Groove Dice and Crate Press are outside this submission; resolve their project licensing before adding entries.
+Donut Theory is registered. Groove Dice1.6.1is the second submission, with explicit MIT source/core notices, original-only packages and optional Pack Builder documentation. Crate Press remains outside these submissions; resolve its project licensing before adding an entry.
 
 The source catalog registry entry is `donut-theory.json`. A one-file topic-branch PR submits it to `open-mpc/mpc-vst-plugins`; maintainers decide acceptance. Registration is not automatic publication on their site.
 

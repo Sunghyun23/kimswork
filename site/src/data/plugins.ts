@@ -187,7 +187,7 @@ export const plugins: Plugin[] = [{
  tagline:'A new groove, one roll away.',
  summary:'Roll a musical groove. Lock what you love. Shape every drum.',
  description:'A one-bar neo-soul and hip-hop drum instrument for MPC. Roll new timing, rules, mix and cymbal accents, protect individual controls with a padlock, and build your sound from layered original drums.',
- developmentVersion:'1.6.0', release:{version:'1.6.0',tag:'groove-dice/v1.6.0',asset:'groove-dice-1.6.0-mpc.zip'}, image:'groove-dice-main-device-1.6.0.webp',
+ developmentVersion:'1.6.1', release:{version:'1.6.1',tag:'groove-dice/v1.6.1',asset:'groove-dice-1.6.1-mpc.zip'}, image:'groove-dice-main-device-1.6.0.webp',
  imageAlt:'Actual MPC XL Groove Dice1.6.0 with Triplet hats, MAIN locks and sound pool controls',
  intro:'Includes 128 original synthesized one-shots, 96 kit combinations, two authored beats and 93 timing templates. Optional .gdexp packs stay separate. No commercial or personal sample library is bundled.',
  verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; 1.6.0 three-page Triplet browser and live remote UI checks; automated timing, VST/Q-Link bridge, state/Undo and count-in regressions; earlier SOUND/REV/polarity checks',
@@ -201,6 +201,7 @@ export const plugins: Plugin[] = [{
   {title:'Record a fill. Keep it yours.',text:'Play physical pads into four independent fill slots, up to four bars each. Two grid views expose all eight drum roles. Main-pattern rolls preserve all recorded fills. Use ROLL FILL separately.'}
  ],
  changes:[
+  {title:'1.6.1: your own packs, documented.',text:'Includes a complete Pack Builder workflow and clear MIT notices for the plugin and original core content. Pack Builder is a separate optional desktop app for macOS Apple Silicon and Windows x64. Engine, UI, 782 parameters, Q-Link maps and the core bank stay unchanged.'},
   {title:'1.6.0: hats in threes.',text:'Nine new Triplet choices: 1/4T, 1/8T and 1/16T, each basic, +FILL or +ROLL. The three-page browser, MAIN D1, GROOVE, Dice and Undo use the same 24-choice range. Old projects keep their notes and legacy parameter ranges. Momentary Fill/FX rolls clear after execution.'},
   {title:'1.5.1: three rolls, clear boundaries.',text:'ROLL DICE reshapes MAIN and its pattern while preserving every fill and FX value. Dedicated ROLL FILL and ROLL FX actions have Undo. Individual locks stay on MAIN; kit, role and layer protection remain. UNLOCK ALL changes protection only.'},
   {title:'1.4.0: 36 new ways to move.',text:'Nine new rules per part extend the original seven to sixteen. New choices include END DOUBLE kicks, DRAG IN snares, CRESCENDO hats and LATIN THREE percussion. Live edits and Roll Dice use the same full range, honor locks and preserve recorded fills.'},
@@ -224,7 +225,7 @@ export const plugins: Plugin[] = [{
  ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-19-donut-1142';
+export const navigationVersion = 'software-2026-11-19-groove-161';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

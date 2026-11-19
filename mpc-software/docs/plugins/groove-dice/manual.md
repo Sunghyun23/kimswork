@@ -1,4 +1,4 @@
-# Groove Dice 1.6.0 — User manual
+# Groove Dice 1.6.1 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -107,6 +107,18 @@ Internal fill notes are saved in the plugin/project state. They are not MIDI cli
 Drive adds saturation, Dust adds worn texture, Room adds a short stereo diffused reverb (replacing the earlier feedback echo) and Duck is an internal envelope effect on FX. Low Cut removes unwanted low energy. Mod Rate/Depth apply slow level movement. Master controls final gain. Complete per-part insert chains, a separate master FX chain and external audio sidechain input are not implemented.
 
 There are16mono channels arranged as eight stereo pairs. With Separate Out off, the instrument sums to the first pair. With it on, roles route to selected stereo pairs; pair1 defaults to Kick/Main, then Snare, Closed Hat, Open Hat, Clap, Tom, Cymbal, Perc. There is no extra ninth stereo mix output. Set destinations in MPC's mixer; the plugin does not create sequencer tracks automatically. All destination paths have not been exhaustively certified on hardware.
+
+## Create your own expansion packs
+
+[Groove Dice Pack Builder](https://kimswork.app/apps/groove-dice-pack-builder/) is an optional standalone desktop app for **macOS Apple Silicon** and **Windows x64**. [Download and platform details](https://kimswork.app/apps/groove-dice-pack-builder/) · [Complete builder manual](https://kimswork.app/apps/groove-dice-pack-builder/manual/). The packaged app needs no Python installation; it is separate from the MPC plugin. Groove Dice plays its included core without it.
+
+1. Put your own WAV files in Kick, Snare, ClosedHat, OpenHat, Clap, Tom, Cymbal and Perc folders. Optional MIDI goes in MIDI/Beats and MIDI/Grooves. Named `Kits/<Name>/<Role>/` folders are also supported.
+2. Open Folder, review roles, set name/creator/version and choose the appropriate rights classification.
+3. Generate and edit kits, audition them, then save the source mapping as `.gdproject` and export `.gdexp`.
+4. In Manage Packs, select the installed Groove Dice **Content** directory on locally accessible MPC storage and install the `.gdexp`. Choosing an arbitrary local folder does not transfer it to the MPC.
+5. Safely return removable storage to MPC, close/reopen the instrument, choose the new pack in its kit browser and select a kit. Use This Pack to constrain kit rolls, or All Packs/Select Kits to broaden the pool.
+
+Keep Pack ID stable when updating. Original source files stay external and unchanged. See bundled `PACK_BUILDER.md` for folder layout, supported WAV/MIDI, installation/removal and missing-pack recovery. Own expansion packs are independent files; no engine rebuild or core-bank merge is needed. Personal source libraries remain personal unless their terms permit redistribution.
 
 ## Save, update and expansions
 

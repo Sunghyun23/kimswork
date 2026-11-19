@@ -1,3 +1,7 @@
+## 1.6.1 documentation/licensing distribution patch
+
+No engine/UI/parameter/bank changes beyond native version metadata. Existing1.6.0hardware evidence remains historical, not a new1.6.1hardware certification. Current checks are recorded in design/release-1.6.1/.
+
 ## 1.6.0 — Triplet hats (2026-11-19)
 
 Native/ARM32/ARM64 builds and SDK validator pass. Final engine/UBSan/allocation-guard/state/layer/expansion/skin/bridge suite passes; host simulator19PASS/0WARN/0FAIL. All24rhythms are exercised at88/120BPM against actual scheduled events; sixteenth triplets deliver24plain hats/bar before RULE filtering.144triplet/RULE combinations remain bounded. Old779state, three independent5-bit bank fields, current byte-identical state, Undo, live edits, locks and1000Dice rolls are covered. All144full-RULE combinations also match raw versus scheduled closed-hat counts. The offbeat1/16T regression was96expected versus95actual before the fix; clamping nearest-sample offsets inside the current block delivers all96events.32/128/512frames at88/98/120BPM pass. Invalid5-bit codes fall back safely. Fine0.001VST cursor steps visit all24choices both directions; reentrant/concurrent host tests retain bounded notifications. First779full declarations/ranges match the checked-in1.5.1fixture exactly; three parameters append,782total.

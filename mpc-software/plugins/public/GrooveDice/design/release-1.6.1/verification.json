@@ -1,0 +1,19 @@
+{
+  "version": "1.6.1",
+  "scope": "documentation/licensing/distribution only; native version10601",
+  "nativeArm32Arm64Build": "pass; existing compiler warnings retained, SDK validation clean",
+  "hostSimulator": {
+    "passed": 19,
+    "warnings": 0,
+    "failures": 0
+  },
+  "skin": "pass",
+  "authoringTests": 4,
+  "expansionManager": "pass",
+  "metadata782": "unchanged",
+  "tuiQlinks": "exact byte match to1.6.0SDK package",
+  "coreBank": "unchanged",
+  "actualImages": "previous actual MPC1.6.0screens, correctly labeled; no new screenshot claimed",
+  "hardware161": "not newly tested/certified; no tested.json/Verified claim",
+  "packageAudit": "package-audit.json"
+}

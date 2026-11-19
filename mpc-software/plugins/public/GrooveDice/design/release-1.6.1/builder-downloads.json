@@ -1,0 +1,17 @@
+{
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice-pack-builder/v1.0.0",
+  "assets": [
+    {
+      "name": "groove-dice-pack-builder-1.0.0-darwin-arm64.zip",
+      "size": 48500506,
+      "digest": "sha256:e421fab0bf6881b71f3dc543fc5ea8448ef8331b5d20f1a56023d3400679cb3d",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice-pack-builder/v1.0.0/groove-dice-pack-builder-1.0.0-darwin-arm64.zip"
+    },
+    {
+      "name": "groove-dice-pack-builder-1.0.0-windows-amd64.zip",
+      "size": 61421349,
+      "digest": "sha256:291285c1fa75746ac02c5ae3a5a5cb54eaf2f18a66d2b48e94b2c7207d8df89b",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice-pack-builder/v1.0.0/groove-dice-pack-builder-1.0.0-windows-amd64.zip"
+    }
+  ]
+}
