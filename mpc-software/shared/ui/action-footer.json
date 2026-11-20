@@ -1,0 +1,9 @@
+{
+  "y": 578,
+  "height": 44,
+  "actions": [
+    {"label": "UNLOCK ALL", "x": 16, "width": 160},
+    {"label": "ROLL DICE", "x": 188, "width": 240},
+    {"label": "UNDO", "x": 440, "width": 128}
+  ]
+}

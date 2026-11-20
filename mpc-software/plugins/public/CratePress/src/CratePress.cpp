@@ -81,8 +81,10 @@ struct Dynamics {
 
 class CratePress:public mpc::Plugin {
 public:
- enum Key { Output,Input,Compress,Punch,Release,LowComp,MidComp,HighComp,Duck,Drive,Tone,Lofi,Drift,LowCut,HighCut,Mix,DuckSource,Division,DuckLow,DuckMid,DuckHigh,Detector,Sensitivity,WowRate,Flutter,Noise,Width,PeakGuard,Bypass,LofiType,SplitLow,SplitHigh,AutoMakeup,InputMeter,OutputMeter,CompMeter,LowMeter,MidMeter,HighMeter,DuckMeter,BaseCount,CurveBand=BaseCount,WaveBase,CurveBase=WaveBase+256,CurveX=CurveBase+48,CurveY,LegacyCount,PerfGate=LegacyCount,PerfSettings=PerfGate+8,TapeTime=PerfSettings,ReverseLength,RepeatDiv,EchoDiv,EchoFeedback,EchoMix,FilterDip,FxAmount,CrushBits,CrushRate,WobbleRate,WobbleDepth,DropoutRate,DropoutDepth,FxRelease,FxOutput,PerfProgress,Latch=PerfProgress+8,Count };
- static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Crate Press";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','3','6','Z');i.version=205;i.isInstrument=false;i.numInputs=2;i.numOutputs=2;i.wantsMidi=false;i.tailSamples=44100*240;return i;}
+ enum Key { Output,Input,Compress,Punch,Release,LowComp,MidComp,HighComp,Duck,Drive,Tone,Lofi,Drift,LowCut,HighCut,Mix,DuckSource,Division,DuckLow,DuckMid,DuckHigh,Detector,Sensitivity,WowRate,Flutter,Noise,Width,PeakGuard,Bypass,LofiType,SplitLow,SplitHigh,AutoMakeup,InputMeter,OutputMeter,CompMeter,LowMeter,MidMeter,HighMeter,DuckMeter,BaseCount,CurveBand=BaseCount,WaveBase,CurveBase=WaveBase+256,CurveX=CurveBase+48,CurveY,LegacyCount,PerfGate=LegacyCount,PerfSettings=PerfGate+8,TapeTime=PerfSettings,ReverseLength,RepeatDiv,EchoDiv,EchoFeedback,EchoMix,FilterDip,FxAmount,CrushBits,CrushRate,WobbleRate,WobbleDepth,DropoutRate,DropoutDepth,FxRelease,FxOutput,PerfProgress,Latch=PerfProgress+8,RollDice,UndoDice,UnlockDice,DiceLocks,Count=DiceLocks+13 };
+ static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Crate Press";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','3','6','Z');i.version=206;i.isInstrument=false;i.numInputs=2;i.numOutputs=2;i.wantsMidi=false;i.tailSamples=44100*240;return i;}
+ static constexpr std::array<int,13> DiceTargets={Drive,Compress,Punch,Release,LowComp,MidComp,HighComp,Duck,Tone,HighCut,Lofi,Drift,LowCut};
+ static int diceLock(int key){for(int n=0;n<13;++n)if(DiceTargets[n]==key)return DiceLocks+n;return -1;}
  CratePress():mpc::Plugin(description()){
   using namespace mpc;
   addParam(floatParam("output","Output",-24,6,0,"dB",1));
@@ -133,6 +135,8 @@ public:
   addParam(floatParam("fxRelease","FX Release",5,200,15,"ms",0));addParam(floatParam("fxOutput","FX Output",-12,6,0,"dB",1));
   for(int k=0;k<8;++k){std::string name="FX Activity "+std::to_string(k+1);auto p=floatParam(name.c_str(),name.c_str(),0,1,0,"",2);p.automatable=false;addParam(p);}
   {auto p=boolParam("performanceLatch","LATCH",false);p.automatable=false;addParam(p);}
+  for(auto entry:std::array<std::pair<const char*,const char*>,3>{{{"rollDice","ROLL DICE"},{"undoDice","UNDO"},{"unlockDice","UNLOCK ALL"}}}){auto p=boolParam(entry.first,entry.second,false);p.automatable=false;addParam(p);}
+  for(int key:DiceTargets){const auto id=std::string("diceLock_")+param(key).id;const auto name=std::string("Lock ")+param(key).name;auto p=boolParam(id.c_str(),name.c_str(),false);p.automatable=false;addParam(p);}
   makePrograms();prepare(44100,128);
  }
  // MPC caches native skin values. Queue engine-owned changes and drain only on non-render reads.
@@ -151,6 +155,7 @@ public:
   if(renderOverflow_.load(std::memory_order_relaxed))return;
   const auto token=threadToken();for(auto&seen:renderThreads_)if(seen.load(std::memory_order_relaxed)==token)return;
   if(flushing_.test_and_set(std::memory_order_acquire))return;
+  processDice(); // Effects may be suspended on an empty/stopped audio track.
   for(int i=0;i<Count;++i)if(changed_[i].exchange(false,std::memory_order_acq_rel))notifyHostParameterChanged(i);
   if(displayPending_.exchange(false,std::memory_order_acq_rel))requestDisplayUpdate();
   flushing_.clear(std::memory_order_release);
@@ -169,7 +174,7 @@ public:
   wetBlend_.setTime(10,sr_);wetBlend_.snap(getBool(Bypass)?0.f:1.f);compGainSpeed_=onePoleCoeff(3,sr_);duckAttack_=onePoleCoeff(1.5f,sr_);meterDecay_=std::exp(-1.f/(.3f*float(sr_)));configuredLo_=configuredHi_=configuredDetect_=configuredLC_=configuredHC_=-1;configuredTone_=999;scope_.prepare(sr_);reset();
  }
  void reset()override{
-  performance_.reset();clearPerformance_=true;latchWasOn_=getBool(Latch);
+  performance_.reset();clearPerformance_=true;latchWasOn_=getBool(Latch);discardDiceUndo_.store(true,std::memory_order_release);for(int key:{RollDice,UndoDice,UnlockDice})publish(key,0);
   for(auto&b:bands_)b.reset();for(auto&d:wetDelay_)d.reset();for(auto&d:dryDelay_)d.reset();for(auto&d:rawDelay_)d.reset();
   for(auto&d:dyn_){d.reset();d.desired=1;}
   for(auto&b:detHp_)b.reset();for(auto&b:detLp_)b.reset();for(auto&b:toneShelf_)b.reset();for(auto&b:outHp_)b.reset();for(auto&b:outLp_)b.reset();
@@ -181,6 +186,7 @@ public:
  void process(mpc::ProcessContext&c)override{
   markRenderThread();
   if(!c.outputs||c.numOutputs<=0||c.numFrames<=0)return;
+  processDice();
   std::array<float,BaseCount> setting{};for(int i=0;i<BaseCount;++i)setting[i]=get(i);
   for(int i=1;i<=Width;++i)smooth_[i].setTarget(get(i));smooth_[AutoMakeup].setTarget(get(AutoMakeup));
   inputGain_.setTarget(dbToGain(get(Input)));outputGain_.setTarget(dbToGain(get(Output)));wetBlend_.setTarget(getBool(Bypass)?0.f:1.f);
@@ -272,12 +278,45 @@ public:
 
  }
  bool formatValue(int i,float v,std::string&out)override{
+  if(i>=RollDice&&i<=UnlockDice){out="Transient";return true;}
   if((i==LowCut)&&v<1){out="Off";return true;}
   if(i==HighCut&&v>=19500){out="Open";return true;}
   if(i>=InputMeter&&i<BaseCount){char b[32];std::snprintf(b,sizeof(b),"%.1f dB",double(v));out=b;return true;}
   return false;
  }
+ void serviceDiceWrite(int index){if(index>=RollDice&&index<=UnlockDice){processDice();flushFromValueRead();}}
+ // A chunk is a read-only snapshot; restoring it never replays a Dice command.
+ const std::vector<uint8_t>& internalSaveState(){
+  commandState_=mpc::Plugin::internalSaveState();size_t pos=12;
+  for(int i=0;i<Count;++i){const size_t idSize=commandState_[pos++];pos+=idSize;if(i>=RollDice&&i<=UnlockDice)std::fill(commandState_.begin()+pos,commandState_.begin()+pos+8,0);pos+=8;}
+  return commandState_;
+ }
 private:
+ std::atomic_flag diceProcessing_=ATOMIC_FLAG_INIT;std::atomic<bool>discardDiceUndo_{true};
+ std::vector<uint8_t>commandState_;std::array<float,13>undoDice_{};bool undoReady_=false;uint32_t diceRandom_=0x43504443;
+ float diceUnit(){diceRandom_^=diceRandom_<<13;diceRandom_^=diceRandom_>>17;diceRandom_^=diceRandom_<<5;return float(diceRandom_>>8)*(1.f/16777216.f);}
+ void processDice(){
+  // Non-waiting ownership: UI idle or render may service commands; neither waits.
+  if(diceProcessing_.test_and_set(std::memory_order_acquire))return;
+  if(discardDiceUndo_.exchange(false,std::memory_order_acq_rel))undoReady_=false;
+  if(getBool(UnlockDice)){for(int n=0;n<13;++n)publish(DiceLocks+n,0);publish(UnlockDice,0);}
+  if(getBool(RollDice)){
+   bool eligible=false;for(int n=0;n<13;++n)eligible|=!getBool(DiceLocks+n);
+   if(eligible){
+    for(int n=0;n<13;++n)undoDice_[n]=getNormalised(DiceTargets[n]);undoReady_=true;
+    static constexpr float low[13]={0,8,20,80,0,0,0,0,-25,4000,0,0,0};
+    static constexpr float high[13]={38,58,80,420,35,45,35,35,15,18000,35,25,65};
+    for(int n=0;n<13;++n)if(!getBool(DiceLocks+n)){float u=diceUnit(),v=low[n]+(high[n]-low[n])*u;if(n==9)v=4000.f*std::pow(4.5f,u);if(n==12&&diceUnit()<.25f)v=0;publish(DiceTargets[n],v);}
+    displayPending_.store(true,std::memory_order_release);
+   }
+   publish(RollDice,0);
+  }
+  if(getBool(UndoDice)){
+   if(undoReady_){for(int n=0;n<13;++n){const int key=DiceTargets[n];if(getNormalised(key)!=undoDice_[n]){setNormalised(key,undoDice_[n]);changed_[key].store(true,std::memory_order_release);}}undoReady_=false;displayPending_.store(true,std::memory_order_release);}
+   publish(UndoDice,0);
+  }
+  diceProcessing_.clear(std::memory_order_release);
+ }
  std::array<std::atomic<bool>,Count>changed_{};std::atomic<bool>displayPending_{false},renderOverflow_{false};
  std::array<std::atomic<std::uintptr_t>,8>renderThreads_{};std::atomic_flag flushing_=ATOMIC_FLAG_INIT;
  double sr_=44100;int latency_=265;unsigned tick_=0;uint32_t random_=0x4b435250;
@@ -292,16 +331,21 @@ private:
 // Plugin-local bridge: shared SDK stays unmodified.
 static VstIntPtr crateDispatch(AEffect*e,VstInt32 op,VstInt32 index,VstIntPtr value,void*ptr,float opt){
  auto*p=static_cast<CratePress*>(e->object);
+ if(op==effGetChunk){if(!ptr)return 0;const auto&state=p->internalSaveState();*static_cast<void**>(ptr)=const_cast<uint8_t*>(state.data());return VstIntPtr(state.size());}
  const auto result=mpc::detail::dispatcher(e,op,index,value,ptr,opt);
  if(op==effOpen)p->requestHostIdle();
  if(op==effSetProgram||op==effSetChunk)p->queueAll();
  if(op==effSetProgram||op==effSetChunk||op==effIdle_Deprecated||op==effEditIdle||op==effGetParamDisplay||op==effGetProgram)p->flushFromValueRead();
  return result;
 }
+static void crateSetParameter(AEffect*e,VstInt32 index,float value){
+ mpc::detail::setParameter(e,index,value);
+ static_cast<CratePress*>(e->object)->serviceDiceWrite(index);
+}
 static float crateGetParameter(AEffect*e,VstInt32 index){static_cast<CratePress*>(e->object)->flushFromValueRead();return mpc::detail::getParameter(e,index);}
 extern "C" MPC_EXPORT AEffect* VSTPluginMain(audioMasterCallback host){
  if(host&&host(nullptr,audioMasterVersion,0,0,nullptr,0)==0)return nullptr;
  auto*e=mpc::detail::createEffect(new CratePress(),host);
- if(e){e->dispatcher=&crateDispatch;e->getParameter=&crateGetParameter;}
+ if(e){e->dispatcher=&crateDispatch;e->getParameter=&crateGetParameter;e->setParameter=&crateSetParameter;}
  return e;
 }

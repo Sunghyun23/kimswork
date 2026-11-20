@@ -1,0 +1,74 @@
+[
+  {
+    "file": "footer-crate-color.png",
+    "sha256": "a6aa5014c3abc1f4302ef528faf90b79b172ea57af485286325696fac88719ac",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-dice.png",
+    "sha256": "1ddaf426396aa50f96e7817c111cea7bd2382fd67f99100add3a629be3a3df96",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-duck.png",
+    "sha256": "fadd85918b7686809ea76b25d215bbb7dc7f29643aac86608495b7f50b4563ae",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-final.png",
+    "sha256": "2537d3955f27feb3da3f501d46a0413a0c80ec20f9b0db11541dc5f57874085c",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-latched-dice.png",
+    "sha256": "c183665be1060e14b75d9e4115d45cb41b107f561f825509d119c7b0f184b448",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-latched-undo.png",
+    "sha256": "37f71b11dd05883b90de0f117c3d0d25a4027fb6185c169e5cb37bd481870a4c",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-main.png",
+    "sha256": "2537d3955f27feb3da3f501d46a0413a0c80ec20f9b0db11541dc5f57874085c",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-more.png",
+    "sha256": "b5ab6a9878adac1d2f8b8356683a8fd2c81a0b385e736c208174e1037c6d2a17",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-perform.png",
+    "sha256": "0343650cbb7fecd1b6a9e61c251008f57208afbdf92bb339fc90aaac081cb569",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-presets.png",
+    "sha256": "3a06a3990f2c3e573db59bef2c0eda9dbb9e0d2eb8ae73987cee4106819a6b38",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-undo.png",
+    "sha256": "c3b8e58f5f2e62ef4c0eb070af98cba5cf55d1faed78699c3c8cedf9161e3051",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  },
+  {
+    "file": "footer-crate-unlocked.png",
+    "sha256": "2537d3955f27feb3da3f501d46a0413a0c80ec20f9b0db11541dc5f57874085c",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": false
+  }
+]

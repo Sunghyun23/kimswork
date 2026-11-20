@@ -20,6 +20,13 @@ int main(){
  const int before=calls;std::thread t(render);t.join();check(calls==before&&bad==0,"render must never call host, including parameter reads");
  e->getParameter(e,CratePress::InputMeter);check(calls>before,"UI poll drains telemetry notifications");check(cache[CratePress::InputMeter]>.3f,"live input meter cache refreshed");
  check(cache[CratePress::CurveBase+47]<1,"live compression curve cache refreshed");
- std::cout<<"PASS: program refresh, deferred telemetry, no render-thread host callbacks\n";
+ std::atomic<bool>go{false};
+ std::thread concurrent([&](){while(!go.load(std::memory_order_acquire))std::this_thread::yield();for(int n=0;n<30;++n)render();});
+ go.store(true,std::memory_order_release);
+ for(int n=0;n<300;++n){e->setParameter(e,CratePress::RollDice,1);e->getParameter(e,CratePress::Drive);e->setParameter(e,CratePress::UndoDice,1);e->getParameter(e,CratePress::Output);}
+ concurrent.join();e->getParameter(e,CratePress::Drive);
+ check(bad==0,"concurrent Dice/Undo must never issue render-thread callbacks");
+ for(int n=0;n<CratePress::Count;++n)check(std::isfinite(e->getParameter(e,n)),"concurrent commands preserve finite state");
+ std::cout<<"PASS: program refresh, deferred telemetry, concurrent UI/render Dice and Undo, no render-thread host callbacks\n";
  e->dispatcher(e,effClose,0,0,nullptr,0);
 }

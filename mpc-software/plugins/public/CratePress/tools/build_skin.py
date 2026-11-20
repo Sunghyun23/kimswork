@@ -219,6 +219,8 @@ for tab_index,tab in enumerate(tabs[1:],1):
   name=f'CPChoice{tab_index}_{index}';defs.append(O(('key',name),('value',custom)));put(spec,'type',name)
   remove.extend(e for e in children if get(get(e,'componentData'),'name').startswith(param_name+' seg '))
  put(get(tab,'componentDefinition'),'componentsData',[e for e in children if e not in remove])
+from dice_footer import install as dice_footer
+dice_footer(g,tui,ql,out,params)
 (out/'TUI.json').write_text(g.dump_json(tui)+'\n');(out/'Q-Links.json').write_text(g.dump_json(ql)+'\n')
 # Runtime includes only referenced assets, not unused kit images or design sources.
 import re

@@ -13,13 +13,16 @@ run(['c++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all'
 run([B/'performance-test',B],'performance-test.log')
 run(['c++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I',SDK/'framework',P/'tests/combinations.cpp','-o',B/'combinations-test'],'combinations-compile.log')
 run([B/'combinations-test',B],'combinations-test.log')
+run(['c++','-std=c++17','-O2','-fsanitize=undefined','-fno-sanitize-recover=all','-I',SDK/'framework',P/'tests/dice.cpp','-o',B/'dice-test'],'dice-compile.log')
+run([B/'dice-test'],'dice-test.log')
 run(['c++','-std=c++17','-O2','-pthread','-fsanitize=undefined','-fno-sanitize-recover=all','-I',SDK/'framework',P/'tests/bridge.cpp','-o',B/'bridge-test'],'bridge-compile.log')
 run([B/'bridge-test'],'bridge-test.log')
 for sr,block in [(44100,128),(44100,32),(48000,512)]:
  run([SDK/'.sdk-tools/host_sim',B/'native/crate-press.dylib','test','--seconds','3','--sr',sr,'--block',block,'--wav',B/f'host-{sr}-{block}.wav'],f'host-{sr}-{block}.log')
 run(['python3',SDK/'tools/validate.py',P],'sdk-validation.log')
 d=json.loads((P/'skins/TUI.json').read_text());q=json.loads((P/'skins/Q-Links.json').read_text());dump=json.loads((B/'params.json').read_text())
-assert dump['numPrograms']==32 and len(dump['params'])==380
+assert dump['numPrograms']==32 and len(dump['params'])==396
+assert dump['params'][:380]==json.loads((P/'tests/legacy-380-parameters.json').read_text())
 names={x['index']:x['name']for x in dump['params']}
 expected=['Drive','Compress','Punch','Release','Low Comp','Mid Comp','High Comp','Duck','Tone','High Cut','Lo-Fi','Drift','Input','Low Cut','Mix','Output']
 main=q['Screen Mode Q-Links']['map'][0]['Q-Links'];program=q['Program Mode Q-Links']
@@ -28,6 +31,14 @@ for group in range(4):
   n='Q-Link '+str(13+group-4*knob);assert names[main[n]]==expected[group*4+knob] and program[n]==main[n]
 assert d['pageData']['tabs'][0]['qlinkBoundsData']==['8 174 628 150','644 174 628 150','8 332 628 150','644 332 628 150']
 defs=d['pageData']['componentDefinitions']['localComponentDefinitions']
+definition_lookup={entry['key']:entry['value'] for entry in defs}
+for index in [380,381,382]:
+ action=definition_lookup['CPAction'+str(index)]
+ assert action['actions'][0]['onAction']=='Mouse Down'
+ assert action['actions'][0]['handler']=='Toggle Switch'
+ assert action['actions'][0]['handleName']=='Parameter '+str(index)
+ assert action['componentsData'][-1]['componentData']['type']=='Button'
+ assert action['componentsData'][-1]['handle remapping']['map'][0]['value'].startswith('Local/2/cpActionPress')
 for x in defs:
  if'overlay'in x['key']:assert x['value']['hideQLinkBounds']
 assert len(d['pageData']['tabs'])==5 and d['pageData']['tabs'][3]['tabName']=='PERFORM'
@@ -42,7 +53,7 @@ for i in range(8):
  latched=next(x['value']for x in defs if x['key']=='PerformLatch'+str(i));topLatch=latched['componentsData'][-1]['componentData'];assert topLatch['type']=='Button'and topLatch['data']['handleName']=='Data'and not latched['actions']
  assert latched['componentsData'][-1]['handle remapping']['map'][0]['value']=='Parameter '+str(347+i)
  mainentry=next(x for x in d['pageData']['tabs'][0]['componentDefinition']['componentsData']if x['componentData']['type']=='PerformHold'+str(i))
- assert mainentry['bounds']['bounds']==f'{8+i*158+(8 if i>=4 else 0)} 538 150 82'
+ assert mainentry['bounds']['bounds']==f'{8+i*158+(8 if i>=4 else 0)} 488 150 82'
 def no_self_remap(o):
  if isinstance(o,dict):
   if 'handle remapping'in o:
@@ -72,13 +83,13 @@ for f in(P/'skins').glob('*.png'):
  im=Image.open(f)
  if f.name.startswith(('wave-','gr'))or f.name in('curve.png','cursor.png','knob.png','fader.png'):assert max(im.size)<=8192
 mainwidgets=d['pageData']['tabs'][0]['componentDefinition']['componentsData']
-latch=next(w for w in mainwidgets if w['componentData']['name']=='LATCH');assert latch['bounds']['bounds']=='18 488 140 44'
+latch=next(w for w in mainwidgets if w['componentData']['name']=='LATCH');assert latch['bounds']['bounds']=='584 578 140 44'
 for i,name in enumerate(['FULL','LOW','MID','HIGH']):
- selector=next(w for w in mainwidgets if w['componentData']['name']=='curve '+name);assert selector['bounds']['bounds']==f'{274+i*66} 488 58 44'
+ selector=next(w for w in mainwidgets if w['componentData']['name']=='curve '+name);assert selector['bounds']['bounds']==f'{832+i*66} 578 58 44'
 readonly=next(x['value']for x in defs if x['key']=='ReadOnlyMonitor');assert readonly['ignoreMousePresses']
 assert not any(w['componentData']['type']=='Button'for w in readonly['componentsData'])
 print('skin regression: PASS (16assignments,4guides,footer LATCH/curve,8unchanged performance gates,256real-wavehandles,assetlimits)')
-summary={'status':'offline-passed','factoryPrograms':32,'parameters':380,'performanceEffects':8,'latch':'footer toggle,independent8tap gates,disable releases all,restore disarms gates','combinationTests':'28pairs x3rates,each pair differs from either solo,release-one keeps the other audible,all8/staggered release/echo tail/zero allocations passed','performanceTests':'audible effects,release recovery,repeat tempo,frozen history,echo decay,independent settings,transient gate clearing passed','sampleRates':[44100,48000,96000],'waveform':'signed stereo extrema,64x12ms,30Hz,latency aligned','curve':'same DSP reduction function,4views','simulatorRuns':[{'sr':sr,'block':b,'result':'20PASS/0WARN/0FAIL'}for sr,b in[(44100,128),(44100,32),(48000,512)]],'undefinedBehaviorSanitizer':'passed','realTimeAllocations':0,'deviceVerification':'pending; no installation/restart in this iteration','humanListening':'not performed','preview':'offline runtimeTUI with engine-measured telemetry; not an MPC screenshot'}
+summary={'status':'offline-passed','factoryPrograms':32,'parameters':396,'performanceEffects':8,'latch':'footer toggle,independent8tap gates,disable releases all,restore disarms gates','combinationTests':'28pairs x3rates,each pair differs from either solo,release-one keeps the other audible,all8/staggered release/echo tail/zero allocations passed','performanceTests':'audible effects,release recovery,repeat tempo,frozen history,echo decay,independent settings,transient gate clearing passed','sampleRates':[44100,48000,96000],'waveform':'signed stereo extrema,64x12ms,30Hz,latency aligned','curve':'same DSP reduction function,4views','simulatorRuns':[{'sr':sr,'block':b,'result':'20PASS/0WARN/0FAIL'}for sr,b in[(44100,128),(44100,32),(48000,512)]],'undefinedBehaviorSanitizer':'passed','realTimeAllocations':0,'deviceVerification':'offline runner; see versioned device evidence for installation and actual remote checks','humanListening':'not performed','preview':'offline runtimeTUI with engine-measured telemetry; not an MPC screenshot'}
 (B/'validation.json').write_text(json.dumps(summary,indent=2)+'\n')
 run(['python3',P/'tools/render_skin_preview.py','--performance'],'performance-preview.log')
 print('All offline checks passed. Actual MPC visual/CPU/touch/track+master verification remains pending.')

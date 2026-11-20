@@ -1,0 +1,177 @@
+[
+  {
+    "width": 320,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "status": "NVMe installed and actual remote UI verified",
+  "reference": "Donut Theory lock artwork: exact same alpha silhouette and padding in both states",
+  "touchArea": [
+    44,
+    44
+  ],
+  "nvmeFiles": 165,
+  "allSha256Match": true,
+  "actualChecks": [
+    "MAIN and COLOR artwork",
+    "Drive lock survives Dice",
+    "Undo and Unlock All"
+  ],
+  "sdOrSsdTouched": false,
+  "captures": [
+    {
+      "file": "cp-lock-match-main.png",
+      "sha256": "f759521e17057a1d8ddc691d96490d5421193d581993bd47345e57794b232744",
+      "source": "actual MPC XL framebuffer"
+    },
+    {
+      "file": "cp-lock-match-dice.png",
+      "sha256": "d66e2d86bd11cba82b1596b4086ac06cfbf8b5174cb80524314cfa3c3a8ea935",
+      "source": "actual MPC XL framebuffer"
+    },
+    {
+      "file": "cp-lock-match-color.png",
+      "sha256": "9568491ad43c9c957900365a64a4966edb423ee9f2403e5f6c4b4cc425814b9d",
+      "source": "actual MPC XL framebuffer"
+    },
+    {
+      "file": "cp-lock-match-final.png",
+      "sha256": "f759521e17057a1d8ddc691d96490d5421193d581993bd47345e57794b232744",
+      "source": "actual MPC XL framebuffer"
+    }
+  ]
+}

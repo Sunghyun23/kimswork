@@ -1,0 +1,1 @@
+PASS: program refresh, deferred telemetry, concurrent UI/render Dice and Undo, no render-thread host callbacks

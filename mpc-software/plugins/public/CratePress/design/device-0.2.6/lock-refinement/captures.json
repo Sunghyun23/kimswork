@@ -1,0 +1,32 @@
+[
+  {
+    "file": "cp-small-lock-main.png",
+    "sha256": "a631b2a8767ac4d582a5c3d557ce7220182e05744144cb2ed0269bb7b0ebf1d5",
+    "source": "actual MPC XL framebuffer"
+  },
+  {
+    "file": "cp-small-lock-dice.png",
+    "sha256": "75024df349696fcf37e0b5d27f60d314ef1a3e8e2ebc3e37eb04c6bd895042a7",
+    "source": "actual MPC XL framebuffer"
+  },
+  {
+    "file": "cp-small-lock-duck.png",
+    "sha256": "1072969292e25663ab8535dcbca03458083aed29168cfd9748a030f65f3a540f",
+    "source": "actual MPC XL framebuffer"
+  },
+  {
+    "file": "cp-small-lock-color.png",
+    "sha256": "9691d9e2a2cab72124275f1fe4d83e31da4a32aadc8a389af7395739fde06ae2",
+    "source": "actual MPC XL framebuffer"
+  },
+  {
+    "file": "cp-small-lock-more.png",
+    "sha256": "b5ab6a9878adac1d2f8b8356683a8fd2c81a0b385e736c208174e1037c6d2a17",
+    "source": "actual MPC XL framebuffer"
+  },
+  {
+    "file": "cp-small-lock-final.png",
+    "sha256": "a631b2a8767ac4d582a5c3d557ce7220182e05744144cb2ed0269bb7b0ebf1d5",
+    "source": "actual MPC XL framebuffer"
+  }
+]

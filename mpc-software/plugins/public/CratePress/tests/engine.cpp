@@ -21,7 +21,7 @@ void snapshot(Audio&x,const char*path){std::ofstream f(path);f<<"{\"program\":\"
 void wav(const std::string&path,const std::vector<int16_t>&v){std::ofstream f(path,std::ios::binary);auto u16=[&](uint16_t x){f.put(x&255);f.put(x>>8);};auto u32=[&](uint32_t x){u16(x&65535);u16(x>>16);};f.write("RIFF",4);u32(36+v.size()*2);f.write("WAVEfmt ",8);u32(16);u16(1);u16(2);u32(44100);u32(44100*4);u16(4);u16(16);f.write("data",4);u32(v.size()*2);for(auto s:v)u16(uint16_t(s));}
 int main(int argc,char**argv){
  std::string out=argc>1?argv[1]:"build";
- Audio x;check(x.p.numPrograms()==32&&x.p.numParams()==380,"bank and stable telemetry schema");
+ Audio x;check(x.p.numPrograms()==32&&x.p.numParams()==396,"bank and stable telemetry schema");
  for(int k=0;k<347;++k)if(k>=K::InputMeter&&k!=K::CurveBand)check(!x.p.param(k).automatable,"display telemetry excluded from automation");
  // Real signed extrema, both channels; opposite polarity must not cancel.
  x.p.set(K::Bypass,1);x.p.set(K::PeakGuard,0);x.p.reset();

@@ -1,0 +1,17 @@
+engine-compile.log: PASS
+engine-test.log: PASS
+performance-compile.log: PASS
+performance-test.log: PASS
+combinations-compile.log: PASS
+combinations-test.log: PASS
+dice-compile.log: PASS
+dice-test.log: PASS
+bridge-compile.log: PASS
+bridge-test.log: PASS
+host-44100-128.log: PASS
+host-44100-32.log: PASS
+host-48000-512.log: PASS
+sdk-validation.log: PASS
+skin regression: PASS (16assignments,4guides,footer LATCH/curve,8unchanged performance gates,256real-wavehandles,assetlimits)
+performance-preview.log: PASS
+All offline checks passed. Actual MPC visual/CPU/touch/track+master verification remains pending.

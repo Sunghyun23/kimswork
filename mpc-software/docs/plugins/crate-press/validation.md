@@ -1,3 +1,7 @@
+## 0.2.6 — Dice and common footer preview
+
+Native/ARM32/ARM64, SDK0errors/0warnings, engine/UBSan, all28effect-pair combinations, bridge,13Dice locks/exactUndo/old380state migration and three host configurations20PASS/0WARN/0FAIL pass. The initial device candidate exposed command deferral on a stopped/empty audio track. Commands now run immediately on VST command writes (even when the host sends no idle/value callbacks), non-render UI idle or render with non-waiting ownership; stopped VST tests and concurrent UI/render Dice/Undo regression pass without render callbacks or allocations. The corrected165-file NVMe installation is independently SHA256verified. Actual final remote checks and images are in CratePress/design/device-0.2.6. Existing hardware audio/CPU/physical-input limits remain; User authorized0.2.6preview release and site update after these checks.
+
 ## 0.2.5 preview distribution patch — 2026-11-19
 
 User authorized Open MPC packaging/registration. Metadata/license/documentation only: retain engine/UI/380parameters/32programs/maps; native205. Public preview remains. Current checks: CratePress/design/release-0.2.5/. Previous0.2.4hardware records remain scoped to0.2.4. No device install/restart or other-product changes implied.

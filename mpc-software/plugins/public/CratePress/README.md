@@ -1,6 +1,10 @@
-# Crate Press
+# Crate Press 0.2.6 public preview
 
-Public preview 0.2.5. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
+Dice randomizes13MAIN character values with13shared locks and exact Undo; Input/Output/Mix/safety/LATCH/performance gates and setup remain unchanged. First380declarations retained;396total. Same32factory programs and Q-Link targets.
+
+Public preview 0.2.6 is installed and remotely checked on MPC XL OS 3.10.1.12. The shared footer provides UNLOCK ALL / ROLL DICE / UNDO on all five pages. Locks use the same native silhouette and spacing as Donut Theory, with 44×44 touch targets. Actual remote QA is separate from physical/audio/CPU certification.
+
+Public preview 0.2.6. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
 
 Independent full-band character compression, Linkwitz–Riley three-band compression, selective bass-sensing or host-tempo ducking, drive, sampler coloration, wow/flutter, tone/cuts and aligned dry/wet mix. This is not a proprietary circuit model or an endorsed artist product. External sidechain input is not implemented.
 

@@ -1,6 +1,15 @@
 # Crate Press user manual
 
-Version 0.2.5 · Public preview · Stereo effect for MPC standalone.
+Version 0.2.6 · Public preview · Stereo effect for MPC standalone.
+
+## Roll Dice and protection — 0.2.6
+
+The same bottom row appears on all five pages: **UNLOCK ALL → ROLL DICE → UNDO**. ROLL DICE generates a restrained starting point for Drive, Compress, Punch, Release, Low/Mid/High Comp, Duck, Tone, High Cut, Lo-Fi, Drift and Low Cut. Tap a control’s padlock to preserve it; its lock is shared with the detail page. UNLOCK ALL clears protection without changing sound. UNDO restores the exact thirteen values from before the last successful roll, even if protection has since changed. Rolling with every control locked does nothing and preserves the previous Undo.
+
+Input, Output, Mix, bypass, Peak Guard, LATCH, active performance effects and their setup are preserved. This makes Dice useful for exploring character while keeping gain and live performance choices in place. Dice also responds while transport is stopped. The first 380 parameter identities remain compatible; three commands and thirteen locks append at 380–395. Project state stores locks, but pending commands and active performance gates do not resume on recall.
+
+The MAIN performance pads sit above the footer; LATCH and curve choices remain on its right. Lock artwork uses the same silhouette and spacing as Donut Theory with a 44×44 touch surface.
+
 
 ## Install and open
 

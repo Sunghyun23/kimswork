@@ -1,0 +1,17 @@
+[
+  {
+    "file": "crate-press-0.2.6-mpc.zip",
+    "sha256": "42dd675d43ebc6c3ead4c75ace421d78028c31eff4848428b9cc03af5cc00de8",
+    "bytes": 1658658
+  },
+  {
+    "file": "crate-press-0.2.6-mpc-aarch64.zip",
+    "sha256": "5288882a4c7d37e9740fe8f6c196fe273990f1fdbda34bb82ef5cd7fb0bd3a87",
+    "bytes": 1563811
+  },
+  {
+    "file": "crate-press-0.2.6-mpc-armv7.zip",
+    "sha256": "0717c261496f667766d7a72d364fd19ffa10e6040de0d933f0e32ccc185a6e7c",
+    "bytes": 1556785
+  }
+]

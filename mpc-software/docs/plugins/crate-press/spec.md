@@ -1,3 +1,7 @@
+## 0.2.6 — common footer preview (2026-11-20)
+
+Dice randomizes13MAIN character values with13shared locks and exact Undo; Input/Output/Mix/safety/LATCH/performance gates and setup remain unchanged. First380declarations retained;396total. Same32factory programs and Q-Link targets. Shared coordinates and scopes: mpc-software/shared/ui/README.md. Older layouts below are historical. User authorized publishing0.2.6preview with final Donut-matched lock artwork.
+
 ## 0.2.5 preview distribution patch — 2026-11-19
 
 User authorized Open MPC packaging/registration. Metadata/license/documentation only: retain engine/UI/380parameters/32programs/maps; native205. Public preview remains. Current checks: CratePress/design/release-0.2.5/. Previous0.2.4hardware records remain scoped to0.2.4. No device install/restart or other-product changes implied.

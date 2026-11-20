@@ -1,0 +1,21 @@
+{
+  "status": "installed NVMe; actual MPC capture verified",
+  "visualBadgePixels": 24,
+  "touchAreaPixels": [
+    44,
+    44
+  ],
+  "statesChecked": 26,
+  "footerRegressionPages": 20,
+  "engineChanged": false,
+  "nvmeFiles": 165,
+  "nvmeSha256Exact": true,
+  "sdOrSsdTouched": false,
+  "actualChecks": [
+    "MAIN/DUCK/COLOR/MORE lock artwork",
+    "transparent portion of original44px hit toggles Drive lock",
+    "Drive remains0 through Dice, other12values change",
+    "Undo restores values",
+    "Unlock All clears lock"
+  ]
+}
