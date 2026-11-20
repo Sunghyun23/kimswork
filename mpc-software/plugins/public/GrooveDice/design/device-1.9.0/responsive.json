@@ -1,0 +1,457 @@
+[
+  {
+    "width": 320,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/software/instruments/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/software/apps/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/software/expansions/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/plugins/groove-dice/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/plugins/groove-dice/manual/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/plugins/donut-theory/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/plugins/donut-theory/manual/",
+    "pass": true
+  },
+  {
+    "width": 320,
+    "route": "/install/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/software/instruments/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/software/apps/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/software/expansions/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/plugins/groove-dice/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/plugins/groove-dice/manual/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/plugins/donut-theory/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/plugins/donut-theory/manual/",
+    "pass": true
+  },
+  {
+    "width": 344,
+    "route": "/install/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/software/instruments/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/software/apps/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/software/expansions/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/plugins/groove-dice/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/plugins/groove-dice/manual/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/plugins/donut-theory/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/plugins/donut-theory/manual/",
+    "pass": true
+  },
+  {
+    "width": 390,
+    "route": "/install/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/software/instruments/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/software/apps/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/software/expansions/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/plugins/groove-dice/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/plugins/groove-dice/manual/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/plugins/donut-theory/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/plugins/donut-theory/manual/",
+    "pass": true
+  },
+  {
+    "width": 690,
+    "route": "/install/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/software/instruments/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/software/apps/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/software/expansions/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/plugins/groove-dice/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/plugins/groove-dice/manual/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/plugins/donut-theory/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/plugins/donut-theory/manual/",
+    "pass": true
+  },
+  {
+    "width": 768,
+    "route": "/install/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/software/instruments/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/software/apps/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/software/expansions/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/plugins/groove-dice/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/plugins/groove-dice/manual/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/plugins/donut-theory/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/plugins/donut-theory/manual/",
+    "pass": true
+  },
+  {
+    "width": 1024,
+    "route": "/install/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/software/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/software/instruments/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/software/effects/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/software/apps/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/software/expansions/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/plugins/groove-dice/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/plugins/groove-dice/manual/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/plugins/crate-press/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/plugins/crate-press/manual/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/plugins/donut-theory/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/plugins/donut-theory/manual/",
+    "pass": true
+  },
+  {
+    "width": 1440,
+    "route": "/install/",
+    "pass": true
+  }
+]

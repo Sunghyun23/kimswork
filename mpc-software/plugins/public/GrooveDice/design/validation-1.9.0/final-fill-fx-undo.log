@@ -1,0 +1,13 @@
+In file included from /Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/tests/dice_scope_test.cpp:2:
+/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/tests/engine_test.cpp:74:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   74 | }
+      | ^
+1 warning generated.
+PASS separate MAIN/PERFORM Dice and interleaved independent Undo; FX, locks, recorded fills preserved
+PASS PERFORM next-bar queue, cancellation by own Undo
+PASS independent transient history resets and twelve phrase state round-trip
+PASS all6legacy scopes and both kit modes: MAIN pattern regenerates; all4fills and all7FX values remain exact through72rolls
+PASS Kit/Pattern/Role locks override global Dice
+PASS explicit ROLL FILL affects selected fill only; ROLL FX affects FX only; independent Undo and load-safe transient commands
+PASS momentary Fill/FX roll commands clear after one action, repeat on next press, stay idle across blocks and save/load
+PASS Amount0, active-record protection and UNLOCK ALL without sound/note changes; no process allocations

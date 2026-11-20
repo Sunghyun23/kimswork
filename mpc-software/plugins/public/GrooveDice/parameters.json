@@ -9629,5 +9629,15 @@
     "unit": "",
     "decimals": 0,
     "auto": false
+  },
+  {
+    "key": "PerformUndo",
+    "name": "Performance Undo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
   }
 ]

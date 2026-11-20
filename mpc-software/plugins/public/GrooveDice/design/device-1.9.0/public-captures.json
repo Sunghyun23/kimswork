@@ -1,0 +1,62 @@
+[
+  {
+    "file": "public-main.png",
+    "sha256": "3f4145fce380b810c368c820d94072f0cb442bd4089161ba91a7498e28f0ecec",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-perform.png",
+    "sha256": "21659887bad35766a99a887725a6b7897d8861bfbfd00de2402b4fd61b2e97f8",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-dice.png",
+    "sha256": "4b380de55f269db32f98c386b81ab1fff4699699603656c217c957ff53ff0475",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-groove.png",
+    "sha256": "9772910ba67adb6cabded7a83d9cc63a9c830b888fb6216b9a8bdaf49f222a63",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-sound.png",
+    "sha256": "f7279ed4131fcdd0f6008595bbbe5895d2a046aa58c8b5ff4f91f315793e93d5",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-sound-actions.png",
+    "sha256": "f7279ed4131fcdd0f6008595bbbe5895d2a046aa58c8b5ff4f91f315793e93d5",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-sound2.png",
+    "sha256": "3ad041ea65712a0039e58c10e79c4188b726e13e86231070b7d6ba51deed169b",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-cymbals.png",
+    "sha256": "f68a1d7c8be3dfe0eecd742f98f1ae7f4af592cead811dc9630ccb0da439890d",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-kits.png",
+    "sha256": "17d6da5313314ee0f615db52c415fd365b9b53fa696c8dd3676e21653f71b4a4",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-fx.png",
+    "sha256": "b3eda3739380a13d02237f5ebbcd62c75c6f2c455b52222c7cdcbdd08c07594a",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-routing.png",
+    "sha256": "3fe360596d7ce3c266aadba03bf7c379292032a3a4d93058937b5969152d7315",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  },
+  {
+    "file": "public-fill.png",
+    "sha256": "171fc9e97634fbf74b9557e6f4dc08550bc5513c5205b05e539c2d9b8c34c908",
+    "source": "Actual MPC XL framebuffer; Original Workshop128WAV/95MIDI; owner files retained with optional-pack load isolation"
+  }
+]

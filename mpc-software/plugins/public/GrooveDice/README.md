@@ -1,15 +1,25 @@
-# Groove Dice 1.8.1
+## 1.9.0 — independent MAIN / PERFORM Dice
 
-Common footer on seven pages and fill editor. SOUND ACTIONS retains local Roll Sound/Undo Sound/Audition/Save Kit. Global Dice scope,917parameters and Q-Link targets unchanged.
+- MAIN ROLL DICE changes only eligible MAIN values, the main groove and the configured kit/part pool. Stored performance phrases and master FX remain unchanged, including when a new kit is picked.
+- PERFORM ROLL DICE regenerates the twelve unlocked snare/hat/fill slots only. Generated fills use the current main groove at generation time; later MAIN changes leave those saved fills intact. Recorded/edited fills auto-lock. GENERATE remains an explicit selected-slot operation and can replace that selected slot even if locked.
+- Each screen has its own UNDO history. PERFORM Undo/Generate do not replace MAIN history, and MAIN Undo does not restore performance banks. While playing, bulk Dice applies at the next bar; stopped, it applies immediately. PERFORM Undo cancels its queued Dice. Count-in, stop and seek cancel pending performance Dice. Random Amount0 is inert for both bulk generators.
+- Every ROLL DICE button includes the same dice icon; MAIN, PERFORM and the fill editor retain identical footer geometry.
+- PERFORM UNLOCK ALL clears only its twelve slot locks; MAIN retains its existing general unlock action. Footer geometry and all Q-Link assignments are unchanged.
+- First917parameter declarations stay exact; append non-automatable PerformUndo at917 (918total). New transient history is cleared on restore/reset; persistent phrase/state suffix formats remain unchanged.
+- The owner authorized NVMe installation and stable publication. Actual MPC XL/OS3.10.1.12 remote touch checks confirm independent MAIN/PERFORM Dice and Undo, slot protection, next-bar queue status and the shared dice icon. Evidence:design/device-1.9.0/. Automated validation results follow below; do not infer new physical testing from older release evidence.
 
-Stable release 1.8.1 is installed on internal NVMe. All sixteen MAIN locks sit on the left and use the same transparent open/closed silhouette and padding as Donut Theory and Crate Press. The 44×44 touch surface is preserved. Actual remote QA is recorded separately from physical/audio/CPU certification.
+# Groove Dice 1.9.0
+
+Common footer on seven pages and fill editor. SOUND ACTIONS retains local Roll Sound/Undo Sound/Audition/Save Kit. Independent MAIN/PERFORM Dice and Undo;918parameters with the original917declarations preserved. Q-Link targets stay unchanged.
+
+Version1.9.0 is installed on internal NVMe. All sixteen MAIN locks sit on the left and use the same transparent open/closed silhouette and padding as Donut Theory and Crate Press. The 44×44 touch surface is preserved. Actual remote QA is recorded separately from physical/audio/CPU certification.
 
 Neo-soul and hip-hop drums for MPC: generate a one-bar groove, perform musical fills and rolls, then capture your take as editable MIDI.
 
 - PERFORM uses the first native MAIN/PERFORM key. Bank B1–B4: snare rolls; B5–B8: fills; B9–B12: hat rolls; B13: LOOP; B14: STOP. B15/B16are unused. A-bank direct drums remain unchanged.
 - One press plays a complete selected1/2/4-beat phrase ending at a bar boundary. Late presses wait for the next valid ending. Early release never truncates it; recorded fills retain their full stored length.
 - Phrase-based random generation uses rhythmic cells, rests, strong/weak accents and restrained grace hits. Fills keep the main kick motif and2/4snare anchors, adding coherent snare/tom/perc replies. Hat rolls replace the automatic hat/ride/bell lane during their phrase.
-- Rate/Velocity/Humanize/Length share four selected-slot Screen Q-Links. All twelve slots have locks and explicit GENERATE. Global Dice regenerates unlocked MAIN/rolls/fills together at the next bar; recordings/edits lock automatically. UNDO includes all twelve sequences. FX remain unchanged.
+- Rate/Velocity/Humanize/Length share four selected-slot Screen Q-Links. All twelve slots have locks and explicit GENERATE. MAIN Dice changes the main groove/controls and eligible kit pool while preserving performance slots and FX. PERFORM Dice changes its unlocked twelve slots only. Independent Undo histories preserve the other screen; recordings/edits auto-lock.
 - MAIN has sixteen value padlocks, sixteen RULE styles per part and24straight/dotted/triplet/fill/roll hat rhythms. Hat Rhythm/Open Hat/Ride/Crash stay on MAIN; Drive/Dust/real stereo Room reverb stay on FX.
 - Four kick/snare layers, linked hats, a percussion ensemble and independent Ride/Crash/Bell. SOUND1/2=Sample/Level/Tune/Shift; SOUND2/2=Start/Decay/LowCut/HighCut, with48px page arrows, REV on both pages and independent polarity on page2.
 - Choose sounds from This Pack, All Packs or up to64selected kits. Kit/role/layer protection, user kits, MIDI learn, sample preview and eight stereo output pairs remain available.

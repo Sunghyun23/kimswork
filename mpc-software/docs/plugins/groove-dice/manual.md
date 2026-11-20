@@ -1,4 +1,11 @@
-# Groove Dice 1.8.1 — User manual
+# Groove Dice 1.9.0 — User manual
+
+On MAIN, ROLL DICE changes only the eligible main controls/groove and kit choices. All stored rolls/fills and master FX are preserved. On PERFORM, ROLL DICE regenerates the unlocked twelve performance slots only; fills are based on the main groove at that moment. MAIN changes afterward do not silently replace them. Recorded/edited fills lock automatically. GENERATE replaces just the selected slot explicitly, including a locked slot.
+
+UNDO belongs to its screen: MAIN Undo preserves performance data, PERFORM Undo preserves the main groove/kit/FX and its history. Both bulk Dice operations apply at the next bar while playing and immediately while stopped. PERFORM Undo cancels queued performance Dice; stop, seek and host count-in cancel that queue too. The fill editor shares the PERFORM actions/history, including its explicit ROLL FILL. PERFORM UNLOCK ALL clears only the twelve performance locks. Existing main unlock behavior is retained. Amount0 leaves bulk musical generation unchanged. Footer positions and Q-Link assignments are unchanged.
+
+This version separates the previously coupled Dice behavior. Older release sections below are historical. New non-automatable PerformUndo is appended after the original917parameters, for918total; saved note formats are unchanged.
+
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
 
@@ -14,7 +21,7 @@ Global Dice’s scope is unchanged: it regenerates eligible MAIN values and unlo
 
 Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. Other model compatibility and worst-case CPU are not certified by that test.
 
-Download the complete `groove-dice-1.8.1-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
+Download the complete `groove-dice-1.9.0-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
 The base package contains **Original Workshop**:128 independently synthesized WAV one-shots,96 kit configurations, two authored beats and93 timing templates. Ninety-six kits are combinations/settings, not96 separately recorded drum libraries. Optional expansions are separate files; the base release contains no private/commercial third-party drum library.
 
@@ -153,7 +160,7 @@ Roll Dice changes eligible visible values, so the readouts reflect what changed.
 
 **KIT FIXED** protects all sound selections and the four MAIN mix trims. **Pattern Lock** additionally protects rule/cymbal choices and pattern regeneration. A knob padlock protects its value, not the whole note sequence: use Pattern Lock when the entire pattern must stay fixed.
 
-Global ROLL DICE regenerates eligible MAIN and all twelve unlocked performance sequences. Recorded/edited fills lock automatically. Rate and Length retain their selected rhythmic roles; open slots vary their phrases and bounded Velocity/Humanize. FX values remain unchanged. ROLL FILL and ROLL FX are separate actions in their respective editors. Older saved Extra values remain compatibility data and no longer select the global Dice scope. UNDO restores the preceding rolled values, sources and all twelve sequences while keeping the current padlocks.
+MAIN ROLL DICE regenerates eligible MAIN controls, main groove and configured kit choices only. PERFORM ROLL DICE separately regenerates its unlocked twelve performance slots. Recorded/edited fills lock automatically. Rate and Length retain their selected rhythmic roles; open slots vary their phrases and bounded Velocity/Humanize. FX values remain unchanged. ROLL FILL and ROLL FX are separate actions in their respective editors. Older saved Extra values remain compatibility data and no longer select the global Dice scope. Each screen has its own UNDO: MAIN preserves performance slots; PERFORM preserves the main groove/kit/FX. Current padlocks are retained.
 
 ## Automatic MPC record count-in
 

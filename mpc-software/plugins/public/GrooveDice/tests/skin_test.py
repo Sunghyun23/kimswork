@@ -29,7 +29,7 @@ roll=[]
 for key,value in defs.items():
  children=value.get('componentsData',[])
  if any(a.get('handleName')=='Parameter '+str(keys['Roll'])for a in value.get('actions',[])):roll.append(value)
-assert len(roll)>=7
+assert len(roll)>=6
 print('PASS SOUND16 Q-Link layout,97paged kit choices and native caption-safe ROLL hit target')
 
 assert defs['RoleSoundBrowser']['hideQLinkBounds']
@@ -285,7 +285,7 @@ for pad in range(1,13):
  assert not any('GENERATE'in str(e)for e in d['componentsData'])
 for entry in performance['componentDefinition']['componentsData']:
  x,y,w,h=rect(entry);assert x>=0 and y>=0 and x+w<=1280 and y+h<=628
-assert keys['PerformOpen']==782 and len(m)==917
+assert keys['PerformOpen']==782 and len(m)==918
 print('PASS PERFORM bank B bottom-up12one-shot pads, release-safe caption surfaces, separated generators,4Q-Link relays and exact legacy782 metadata')
 
 controls=[e for e in performance['componentDefinition']['componentsData'] if e['componentData']['type'].startswith('KnobPerformQ')]
@@ -297,3 +297,29 @@ print('PASS tab-only PERFORM entry, separate MAIN EDIT FILL, native four-Q-Link 
 
 assert m[:880]==json.loads((P/'tests/legacy-880-parameters.json').read_text())
 print('PASS exact880legacy declarations,12slots and appended full selector')
+
+# PERFORM footer owns separate generation/history without moving shared artwork.
+perf=next(x for x in t['tabs'] if x['tabName']=='PERFORM')
+def footer_command_at(tab,x):
+ for w in tab['componentDefinition']['componentsData']:
+  if w['bounds']['bounds']==f'{x} 578 '+('240' if x==188 else '128')+' 44':
+   return [a['handleName'] for a in defs[w['componentData']['type']]['actions']]
+ raise AssertionError('footer action missing')
+assert 'Parameter '+str(keys['PerformGenerateAll']) in footer_command_at(perf,188)
+assert 'Parameter '+str(keys['PerformUndo']) in footer_command_at(perf,440)
+print('PASS PERFORM footer uses independent Dice and Undo handles')
+
+fill_tab={'componentDefinition':defs['GDFill']}
+assert 'Parameter '+str(keys['PerformGenerateAll']) in footer_command_at(fill_tab,188)
+assert 'Parameter '+str(keys['PerformUndo']) in footer_command_at(fill_tab,440)
+print('PASS fill editor shares PERFORM Dice/history')
+
+roll_buttons=0
+for definition in defs.values():
+ children=definition.get('componentsData',[])
+ if any(w['componentData'].get('data',{}).get('text')=='ROLL DICE' for w in children):
+  icons=[w for w in children if w['componentData'].get('data',{}).get('image')=='dice-icon.png']
+  assert len(icons)==1 and icons[0]['bounds']['bounds']=='18 6 48 32'
+  roll_buttons+=1
+assert roll_buttons>=8
+print('PASS',roll_buttons,'ROLL DICE button definitions share the same dice icon and placement')

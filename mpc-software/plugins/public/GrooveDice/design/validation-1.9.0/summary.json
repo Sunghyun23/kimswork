@@ -1,0 +1,35 @@
+{
+  "version": "1.9.0",
+  "status": "local candidate",
+  "first_917_parameters_preserved": true,
+  "parameter_count": 918,
+  "appended": "PerformUndo",
+  "builds": [
+    "native",
+    "arm32",
+    "arm64"
+  ],
+  "sdk_validation": "PASS",
+  "full_regression_exit_code": 0,
+  "final_targeted_regression_exit_code": 0,
+  "host_sim": {
+    "passed": 19,
+    "warnings": 0,
+    "failures": 0
+  },
+  "device_installed": false,
+  "new_hardware_tests": false,
+  "published": false,
+  "scope": {
+    "main": "eligible main controls, main groove and configured kit pool; preserves performance slots and master FX",
+    "perform": "unlocked twelve performance slots; separate Undo; selected Generate retained",
+    "fill_editor": "PERFORM history and bulk actions"
+  },
+  "source_sha256": {
+    "src/GrooveDice.cpp": "a0e5cd64eab7f5fba33ed0bc2fe3efacbdfaa1452546b1e71cf31a1b7ffd9af8",
+    "src/Performance.inc": "aeceeb98fb221df73f0e995db6ae9e6ead66f26cf524f3d2640754899add2794",
+    "src/Parameters.h": "da110f023021a4242aa2465c525399bf3d23c211e87f5fade90496ca81f1cfc7",
+    "tools/performance_skin.py": "ebb536cf8a7245ddbe9100d911b2c99f65620b394d7d94518fe63086f6402616",
+    "tools/build_skin.py": "41339d794d5899cc55d958b04c2297e3f2694583a14f698c23403a5b4bc5ebbf"
+  }
+}

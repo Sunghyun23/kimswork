@@ -1,4 +1,13 @@
-# Groove Dice 1.8.0
+## 1.9.0 — independent MAIN / PERFORM Dice
+
+- MAIN ROLL DICE changes only eligible MAIN values, the main groove and the configured kit/part pool. Stored performance phrases and master FX remain unchanged, including when a new kit is picked.
+- PERFORM ROLL DICE regenerates the twelve unlocked snare/hat/fill slots only. Generated fills use the current main groove at generation time; later MAIN changes leave those saved fills intact. Recorded/edited fills auto-lock. GENERATE remains an explicit selected-slot operation and can replace that selected slot even if locked.
+- Each screen has its own UNDO history. PERFORM Undo/Generate do not replace MAIN history, and MAIN Undo does not restore performance banks. While playing, bulk Dice applies at the next bar; stopped, it applies immediately. PERFORM Undo cancels its queued Dice. Count-in, stop and seek cancel pending performance Dice. Random Amount0 is inert for both bulk generators.
+- PERFORM UNLOCK ALL clears only its twelve slot locks; MAIN retains its existing general unlock action. Footer geometry and all Q-Link assignments are unchanged.
+- First917parameter declarations stay exact; append non-automatable PerformUndo at917 (918total). New transient history is cleared on restore/reset; persistent phrase/state suffix formats remain unchanged.
+- The owner authorized NVMe installation and stable publication. Actual MPC XL/OS3.10.1.12 remote touch checks confirm independent MAIN/PERFORM Dice and Undo, slot protection, next-bar queue status and the shared dice icon. Evidence:design/device-1.9.0/. Native/ARM32/ARM64 + SDK, full regression/UBSan, final independent Dice/Undo and Fill/FX tests, 782/880/917-state migration and skin bindings pass. Final host simulator:19PASS/0WARN/0FAIL. Evidence:design/validation-1.9.0/. Do not infer new physical testing from older release evidence.
+
+# Earlier 1.8.0 verification (historical)
 
 - Musical snare rolls use short rhythmic motifs, rests, beat accents, restrained grace notes and shaped endings. Generated fills retain the main kick motif and 2/4 snare anchors, adding sparse replies.
 - Four finite hat rolls join four snare rolls and four fills on PERFORM. B1–B4: snare; B5–B8: fill; B9–B12: hats; B13: loop; B14: stop. Learn assignments inside the plugin to match a different host scale.

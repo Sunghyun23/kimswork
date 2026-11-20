@@ -1,0 +1,76 @@
+{
+  "device": "MPC XL",
+  "os": "3.10.1.12",
+  "remoteTouch": true,
+  "visibleParameterComparisons": [
+    {
+      "before": "main-dice",
+      "after": "main-after-perform",
+      "crop": [
+        16,
+        248,
+        1264,
+        524
+      ],
+      "equal": true
+    },
+    {
+      "before": "perform-before",
+      "after": "perform-after-main",
+      "crop": [
+        812,
+        300,
+        1252,
+        600
+      ],
+      "equal": true
+    },
+    {
+      "before": "perform-dice",
+      "after": "perform-after-main-undo",
+      "crop": [
+        812,
+        300,
+        1252,
+        600
+      ],
+      "equal": true
+    },
+    {
+      "before": "perform-before",
+      "after": "perform-undo",
+      "crop": [
+        812,
+        300,
+        1252,
+        600
+      ],
+      "equal": true
+    }
+  ],
+  "snareA": {
+    "initial": [
+      95,
+      8
+    ],
+    "afterMainDice": [
+      95,
+      8
+    ],
+    "afterPerformDice": [
+      98,
+      10
+    ],
+    "afterMainUndo": [
+      98,
+      10
+    ],
+    "afterPerformUndo": [
+      95,
+      8
+    ]
+  },
+  "locksAndNextBarStatusChecked": true,
+  "finalDiceIconVerified": true,
+  "physicalEncoderPadOrHardwareAudioTest": false
+}

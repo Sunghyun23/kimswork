@@ -1,0 +1,23 @@
+{
+  "version": "1.9.0",
+  "device": "MPC XL",
+  "os": "3.10.1.12",
+  "drive": "/nvme",
+  "sdkVerifiedFiles": 181,
+  "ownerFilesRetained": 19,
+  "ownerStagingSha256Verified": true,
+  "temporaryQaMarkerRemoved": true,
+  "sdOrSsdTouched": false,
+  "remoteTests": "Independent MAIN/PERFORM Dice/Undo; locks; next-bar status; final shared dice icon",
+  "physicalPadEncoderAudioCpuCoverage": "Not newly certified",
+  "postInstallFullShaReadback": "Not completed: verification-only export exceeded local free disk space; SDK file verification passed and complete pre-install backup retained",
+  "automatedHost": {
+    "passed": 19,
+    "warnings": 0,
+    "failures": 0
+  },
+  "responsiveChecks": 91,
+  "localReferences": 295,
+  "portableUpgradeBothCpus": "PASS",
+  "releaseAuthorization": "User explicitly requested installation and public distribution"
+}

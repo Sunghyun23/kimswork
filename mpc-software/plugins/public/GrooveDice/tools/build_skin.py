@@ -61,7 +61,7 @@ def button(text,key,b,index=1,count=1,kind='cream',toggle=False):
   put(get(parts[1],'bounds'),'version',2)
   put(get(parts[1],'bounds'),'additionalInvalidatingHandles',['IndexedEnabling/0/2/'+H('KitLock')]);put(get(parts[1],'bounds'),'showWhenDataModelInvalid','Hide')
   parts.append(conditional(label('KIT FIXED',f'0 0 {w} {h}',18,'fff9e9c8'),'IndexedEnabling/1/2/'+H('KitLock')))
- if key=='Roll':
+ if text=='ROLL DICE':
   put(get(parts[1],'bounds'),'bounds',f'52 0 {w-68} {h}');parts.append(image('dice-icon.png',f'18 {(h-32)//2} 48 32'))
  if toggle:
   if key in ('Preview','Follow','KitLock','PatternLock','Separate','SoundDetails','SoundInvert','CymbalView','SampleBrowserOpen','FillGridPage','PoolOpen','PerformEdit')or key.startswith(('SoundOn','SoundSolo','SoundLock','SoundRev','SoundPolarity','DiceLock','DiceValueLock','SoundValueLock','FillDiceLock')):
@@ -300,11 +300,11 @@ for entry in nativePerformance[:]:
 put(perfTab,'componentDefinition',g.component_definition([],nativePerformance,'ffeed9b3'));put(perfTab,'qlinkBoundsData',['804 188 460 254','0 0 0 0','0 0 0 0','0 0 0 0']);tabs.insert(1,perfTab)
 perfQ=copy.deepcopy(entries[0]);put(perfQ,'Tab',1);put(perfQ,'SubTab',2);put(perfQ,'Q-Links',O(*[('Q-Link '+str(n),keys['PerformQ'+str((13-n)//4)] if n in (13,9,5,1) else -1)for n in range(1,17)]));entries.insert(1,perfQ)
 footer=json.loads((P.parents[2]/'shared/ui/action-footer.json').read_text())
-def common_actions():
- return [button(a['label'],key,f"{a['x']} {footer['y']} {a['width']} {footer['height']}",kind='orange'if key=='Roll'else'cream',toggle=True)for a,key in zip(footer['actions'],['UnlockDice','Roll','Undo'])]
+def common_actions(performance=False):
+ return [button(a['label'],key,f"{a['x']} {footer['y']} {a['width']} {footer['height']}",kind='orange'if key in ('Roll','PerformGenerateAll')else'cream',toggle=True)for a,key in zip(footer['actions'],['PerformUnlock','PerformGenerateAll','PerformUndo'] if performance else ['UnlockDice','Roll','Undo'])]
 for entry in defs[:]:
  if get(entry,'key')in('GDMain','GDFill'):
-  get(get(entry,'value'),'componentsData').extend(common_actions())
+  get(get(entry,'value'),'componentsData').extend(common_actions(get(entry,'key')=='GDFill'))
 for tab in tabs:
  if get(tab,'tabName')in('MAIN','SOUND'):continue
  ws=get(get(tab,'componentDefinition'),'componentsData')

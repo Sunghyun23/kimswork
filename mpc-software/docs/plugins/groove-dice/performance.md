@@ -1,3 +1,11 @@
+# Current decision: separate MAIN / PERFORM Dice (1.9.0)
+
+MAIN changes the eligible main groove/controls and configured kit pool only, preserving stored performance slots and master FX. PERFORM changes only unlocked twelve performance slots, using the current groove to generate fill endings. Later MAIN Dice does not silently update those saved fills. Recorded/edited fills auto-lock; selected GENERATE is an explicit replacement.
+
+Each screen has independent Undo. Playing bulk operations apply next bar, stopped operations immediately. PERFORM Undo cancels its queued generation and leaves MAIN history intact; MAIN Undo leaves performance notes/settings intact. The fill editor shares the PERFORM actions/history, including its explicit ROLL FILL. PERFORM UNLOCK ALL clears its slot locks only. No changes to footer placement, playback trigger notes, capture, Q-Link mappings, or finite bar-end timing. Append PerformUndo at917; all previous917declarations stay exact. Current device/release evidence is recorded in GrooveDice/design/device-1.9.0/.
+
+The sections below describe earlier released behavior where MAIN and PERFORM shared global Dice; that coupling is superseded by the current decision above.
+
 ## 1.8.1 release — 2026-11-20
 
 ## 1.8.1 — consistent controls
