@@ -201,8 +201,8 @@ export const plugins: Plugin[] = [{
  tagline:'Roll a groove. Play it your way.',
  summary:'Generate a groove, perform fills and snare rolls, then export your take as MIDI.',
  description:'A neo-soul and hip-hop drum instrument for MPC. Generate a musical one-bar groove, perform four fills, four snare rolls and four hat rolls from touch or assigned pads, and capture the result for MIDI export.',
- developmentVersion:'1.8.0', release:{version:'1.8.0',tag:'groove-dice/v1.8.0',asset:'groove-dice-1.8.0-mpc.zip'}, image:'groove-dice-main-device-1.8.0.webp',
- imageAlt:'Actual MPC XL Groove Dice 1.8.0 MAIN screen with timing, rules, drum mix and hats/cymbals; public Original Workshop only',
+ developmentVersion:'1.8.1', release:{version:'1.8.1',tag:'groove-dice/v1.8.1',asset:'groove-dice-1.8.1-mpc.zip'}, image:'groove-dice-main-device-1.8.1.webp',
+ imageAlt:'Actual MPC XL Groove Dice 1.8.1 MAIN screen with matching left-side locks and shared bottom actions; public Original Workshop only',
  intro:'Includes 128 original synthesized one-shots, 96 kit combinations, two authored beats and 93 timing templates. Optional .gdexp packs stay separate. No commercial or personal sample library is bundled.',
  verifiedDevice:'MPC XL / OS 3.10.1.12, internal NVMe; actual remote touch checks for loop/fill/roll, generation/locks, native presets, editing and MIDI export. Public-only screenshots. Physical B1/B3 were owner-confirmed with correct bar-end completion. Full new-pad/encoder coverage and worst-case hardware CPU are not newly certified.',
  mapping:[['A · Timing','Swing','Snare Late','Hat Shift','Rnd Nudge'],['B · Rules','Kick','Snare','Hat','Perc'],['C · Drum Mix','Kick Level','Snare Level','Hat Level','Perc Level'],['D · Hats / Cymbals','Hat Rhythm','Open Hat','Ride','Crash']],
@@ -232,7 +232,7 @@ export const plugins: Plugin[] = [{
     "text": "Original Workshop includes 128 original sounds and 96 kit combinations. Add independent .gdexp packs with the optional macOS/Windows Pack Builder. Dice can choose sounds from one pack, every pack or selected kits."
   }
 ],
- changes:[
+ changes:[{title:'1.8.1: consistent controls.',text:'The same UNLOCK ALL / ROLL DICE / UNDO row on every page. Sixteen MAIN locks move left and use the same transparent artwork as Donut Theory and Crate Press. SOUND ACTIONS keeps local sound tools together; the engine, Q-Link assignments and Dice scopes stay unchanged.'},
   {title:'1.8.0: musical phrases, now with hats.',text:'Four hat rolls on B9–B12 join snare rolls and fills. Motifs, rests, beat accents and shaped endings replace uniform streams; fills keep the main kick and 2/4 snare anchors. Twelve slot locks, selected-slot Q-Links, Dice and Undo. Queued phrases clear on count-in. First 880 declarations remain unchanged; 917 total.'},
   {title:'1.7.1: the right pad, the full phrase.',text:'Correct Bank B defaults start at MIDI48 in the tested C-major layout. Known incorrect 1.7.0 defaults migrate while custom learned assignments remain. Fills and rolls finish their full selected length at a bar boundary; late triggers move to the next valid bar. PERFORM uses only the MAIN/PERFORM subtab; MAIN retains EDIT FILL for note editing.'},
   {title:'1.7.0: generate, perform, capture.',text:'Four fills and four snare rolls with pad triggers, selected-slot Q-Links, generation and locks. Dice now regenerates open performance slots at the next bar. Capture and export actual MIDI notes; expansion packs and captured takes are preserved by portable upgrades. Existing 782 declarations remain exact; 880 parameters total.'},
@@ -249,69 +249,69 @@ export const plugins: Plugin[] = [{
  limitations:['CAPTURE holds up to 32768 note-ons. Export before closing the instance; the MIDI file uses the starting tempo and has no tempo-change map. Full MPC file import is not newly hardware-tested.','Signed Shift reports a fixed 30ms baseline latency, including direct pads. Hardware compensation and playing feel are not certified.','Remote UI checks cover page/REV/polarity operation; full physical Q-Link coverage, worst-case CPU and every output destination remain unverified.','A stopped recording intentionally started inside a bar may wait for a host bar anchor/seek; use aligned starts or punch in during running playback.','External sidechain input and generated MIDI output to the MPC sequencer are not implemented.','Install optional packs using Pack Builder or the Python CLI, then reopen the plugin. This is not native MPC XPN registration.'],
  screenshots:[
   {
-    "image": "groove-dice-main-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 main screen, public core only",
-    "caption": "MAIN \u00b7 The original four groups remain in place. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-main-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 main screen, public core only",
+    "caption": "MAIN \u00b7 Left-side transparent locks and the shared bottom action row. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-perform-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 perform screen, public core only",
-    "caption": "PERFORM \u00b7 Four fills, four snare rolls and four hat rolls and selected-slot controls. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-perform-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 perform screen, public core only",
+    "caption": "PERFORM \u00b7 Four fills, four snare rolls, four hat rolls and MIDI capture/export. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-roll-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 roll screen, public core only",
-    "caption": "ROLL \u00b7 Finite hat rolls use rhythmic motifs while kick and snare continue. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-dice-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 dice screen, public core only",
+    "caption": "DICE \u00b7 Swing remains locked at54% while other eligible controls change. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-capture-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 capture screen, public core only",
-    "caption": "CAPTURE \u00b7 Capture holds the performed drum notes; export saves a .mid file. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-groove-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 groove screen, public core only",
+    "caption": "GROOVE \u00b7 Live timing and variation controls with the shared footer. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-groove-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 groove screen, public core only",
-    "caption": "GROOVE \u00b7 Timing, density and variation details. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-sound-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 sound screen, public core only",
+    "caption": "SOUND1/2 \u00b7 Samples, level, tune and shift. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-sound-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 sound screen, public core only",
-    "caption": "SOUND 1/2 \u00b7 Sample, Level, Tune and Shift. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-sound-actions-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 sound-actions screen, public core only",
+    "caption": "SOUND ACTIONS \u00b7 Local sound generation, undo, audition and kit saving. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-sound2-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 sound2 screen, public core only",
-    "caption": "SOUND 2/2 \u00b7 Start, Decay and filters. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-sound2-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 sound2 screen, public core only",
+    "caption": "SOUND2/2 \u00b7 Start, Decay, Low Cut, High Cut and independent polarity. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-cymbals-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 cymbals screen, public core only",
-    "caption": "CYMBALS \u00b7 Independent Ride, Crash and Bell sources. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-cymbals-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 cymbals screen, public core only",
+    "caption": "CYMBALS \u00b7 Ride, Crash and Bell detail controls. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-fill-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 fill screen, public core only",
-    "caption": "FILL EDIT \u00b7 Recorded notes remain editable. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-kits-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 kits screen, public core only",
+    "caption": "KITS \u00b7 Kit management, protection and choke settings. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-kits-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 kits screen, public core only",
-    "caption": "KITS \u00b7 Original presets and separate expansion packs. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-fx-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 fx screen, public core only",
+    "caption": "FX \u00b7 Local ROLL FX stays separate from global Dice. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-fx-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 fx screen, public core only",
-    "caption": "FX \u00b7 Drive, Dust and stereo Room. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-routing-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 routing screen, public core only",
+    "caption": "ROUTING \u00b7 Eight outputs and MIDI learn. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   },
   {
-    "image": "groove-dice-routing-device-1.8.0.webp",
-    "alt": "Actual MPC XL Groove Dice1.8.0 routing screen, public core only",
-    "caption": "ROUTING \u00b7 Drum outputs and performance pad learning. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI, optional owner packs not loaded."
+    "image": "groove-dice-fill-device-1.8.1.webp",
+    "alt": "Actual MPC XL Groove Dice1.8.1 fill screen, public core only",
+    "caption": "FILL EDIT \u00b7 Note editing and local recording actions above the common footer. Actual MPC XL / OS3.10.1.12; Original Workshop128WAV/95MIDI."
   }
 ]
 }];
 export const repo = 'https://github.com/Sunghyun23/kimswork';
-export const navigationVersion = 'software-2026-11-20-phase-hats';
+export const navigationVersion = 'software-2026-11-20-groove-181';
 export const url = (path = '') => {
  const target = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`, 'https://site.invalid');
  if (target.pathname.endsWith('/') || target.pathname.endsWith('.html')) target.searchParams.set('v', navigationVersion);

@@ -1,0 +1,13 @@
+{
+  "version": "1.8.1",
+  "runtimeMatchesInstalledStaging": true,
+  "privatePayloads": 0,
+  "qaMarker": false,
+  "ownerFilesRetained": 19,
+  "sdOrSsdTouched": false,
+  "sdkSha256": "aa86d0a87d70b6b67ac326bfda6674d12cdc49bf4b160cbfbec7e567c84cb882",
+  "user_data": [
+    "Content/Expansions",
+    "Content/Captures"
+  ]
+}

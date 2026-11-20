@@ -1,4 +1,8 @@
-# Groove Dice 1.8.0
+# Groove Dice 1.8.1
+
+Common footer on seven pages and fill editor. SOUND ACTIONS retains local Roll Sound/Undo Sound/Audition/Save Kit. Global Dice scope,917parameters and Q-Link targets unchanged.
+
+Stable release 1.8.1 is installed on internal NVMe. All sixteen MAIN locks sit on the left and use the same transparent open/closed silhouette and padding as Donut Theory and Crate Press. The 44×44 touch surface is preserved. Actual remote QA is recorded separately from physical/audio/CPU certification.
 
 Neo-soul and hip-hop drums for MPC: generate a one-bar groove, perform musical fills and rolls, then capture your take as editable MIDI.
 

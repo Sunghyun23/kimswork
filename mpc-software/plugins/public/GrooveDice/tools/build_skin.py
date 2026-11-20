@@ -33,14 +33,22 @@ def define(name,children,actions=None,bg='00000000',modal=False):
  defs.append(O(('key',name),('value',comp)))
 def instance(name,b='0 0 1280 628',invalid=None):return g.entry(name,name,O(('version',1),('handleName','Data')),b,'Children','Hide'if invalid else'Show','Always',remap=[('Data','Parameter 0')],invalidating=invalid)
 material=Material(P,out);material.knobs()
-# Small, native-sized padlock art; the whole 44px square is the touch target.
+# Same transparent44px lock silhouette/padding as Donut Theory and Crate Press.
 for locked in (False,True):
- im=Image.open(out/material.plate(44,44,'orange' if locked else 'cream')).convert('RGBA');draw=ImageDraw.Draw(im)
- colour='#39271d';draw.rounded_rectangle((12,20,32,35),radius=3,fill=colour)
- if locked:draw.arc((15,9,29,29),180,360,fill=colour,width=3);draw.line((15,18,15,23),fill=colour,width=3);draw.line((29,18,29,23),fill=colour,width=3)
- else:draw.arc((19,6,33,25),180,360,fill=colour,width=3);draw.line((19,15,19,23),fill=colour,width=3)
- draw.ellipse((21,25,23,27),fill='#f4dfb8');draw.line((22,27,22,30),fill='#f4dfb8',width=2)
- im.save(out/('dice-locked.png' if locked else 'dice-unlocked.png'))
+ im=Image.new('RGBA',(44,44));draw=ImageDraw.Draw(im);ink='#b65a20'if locked else'#87643c'
+ if locked:
+  draw.arc((15,5,29,23),180,360,fill=ink,width=2)
+  draw.line((15,13,15,20),fill=ink,width=2)
+  draw.line((29,13,29,20),fill=ink,width=2)
+  draw.rounded_rectangle((12,16,31,29),3,fill=ink)
+  draw.ellipse((21,20,23,22),fill='#fff0c5')
+  draw.line((22,22,22,25),fill='#fff0c5',width=2)
+ else:
+  draw.arc((20,3,34,21),180,360,fill=ink,width=2)
+  draw.line((20,11,20,19),fill=ink,width=2)
+  draw.rounded_rectangle((12,16,31,29),3,outline=ink,width=2)
+ im.save(out/('dice-locked.png'if locked else'dice-unlocked.png'))
+
 def art(w,h,kind):return material.plate(w,h,kind)
 counter=0
 def button(text,key,b,index=1,count=1,kind='cream',toggle=False):
@@ -88,8 +96,8 @@ def knob(key,name,x,y,w=138,physical=None,dice_lock=None):
  bind=H(key);children=[label({'HatRhythmFull':'Hat Rhythm','RulePickFullKick':'Kick','RulePickFullSnare':'Snare','RulePickFullHat':'Hat','RulePickFullPerc':'Perc','MixKick':'Kick','MixSnare':'Snare','MixHat':'Hat','MixPerc':'Perc','XQKit':'Drum Kit','XQKick':'Kick','XQSnare':'Snare','XQHat':'Hat','XQPerc':'Perc Set'}.get(key,name.removesuffix(' Picker') if key.startswith('RulePick') else name.removesuffix(' Rule')if key.startswith('Rule')else name),f'0 0 {w} 23',22),g.entry('knob','Knob',g.knob_filmstrip_data('knob-v2.png',127,'Vertical'),f'{(w-64)//2} 20 64 64','Yes','Show','Always',remap=[('Data',bind)]),image(art(lcdw,24,'olive'),f'{lcdx} 81 {lcdw} 24'),label('',f'{lcdx} 81 {lcdw} 24',18 if key.startswith('RulePick')or key in ('HatRhythmFull','OpenHatRule','RideRule','CrashRule')else 20 if key in ('XQKit','XQKick','XQSnare','XQHat','XQPerc')or key.startswith('Sound')else 24,'fff7e9c7',key=key)]
  lock_key='DiceLock'+str(dice_lock)if dice_lock is not None else None
  if lock_key:
-  put(get(children[1],'bounds'),'bounds',f'{(w-64)//2-16} 20 64 64')
-  lock_widget=button('',lock_key,f'{w-44} 26 44 44',toggle=True)
+  put(get(children[1],'bounds'),'bounds',f'{(w-64)//2+16} 20 64 64')
+  lock_widget=button('',lock_key,'0 26 44 44',toggle=True)
   if key.startswith('SoundQ'):lock_widget=conditional(lock_widget,'IndexedEnabling/1/2/'+H('SoundValueLockEnabled'+key[6:]))
   children.append(lock_widget)
  if key.startswith('Sample')and key[6:].isdigit():
@@ -136,8 +144,9 @@ main.append(conditional(label('HATS REST ON RIDE','1036 279 216 22',16,'ff6a4930
 # Three spacious action lanes; physical pads own direct drum performance.
 define('SelectPoolButton',[g.entry('selected pool','Button',g.button_data(art(192,40,'orange'),art(192,40,'cream'),2,3),'0 0 192 40','No','Show','Always',remap=[('Data',H('DicePool'))]),label('SELECT KITS','0 0 192 40',22)], [g.action('Mouse Down','Toggle Switch',H('PoolOpen'),'')])
 main +=[label('SOUNDS','16 420 88 60',17,'fff7e9c7'),button('<','KitPrev','108 420 48 60',toggle=True),value('XKit','164 420 252 60'),button('>','KitNext','424 420 48 60',toggle=True),button('LOCK KIT','KitLock','484 420 130 60',toggle=True),button('<','PackPrev','626 420 48 60',toggle=True),label('','682 420 290 60',21,'fff7e9c7','PackInfo'),button('>','PackNext','980 420 48 60',toggle=True),button('SAVE KIT','SaveKit','1040 420 224 60',kind='dark',toggle=True),
-button('UNLOCK ALL','UnlockDice','16 488 128 60',toggle=True),button('ROLL DICE','Roll','152 488 220 60',kind='orange',toggle=True),label('USE SOUNDS FROM','384 484 560 22',17,'fff7e9c7'),button('THIS PACK','DicePool','384 508 176 40',0,3),button('ALL PACKS','DicePool','568 508 176 40',1,3),instance('SelectPoolButton','752 508 192 40'),button('UNDO','Undo','956 488 112 60',toggle=True),button('LOCK PATTERN','PatternLock','1080 488 184 60',toggle=True),
-label('PLAY','16 556 88 60',17,'fff7e9c7'),button('MPC SYNC','Follow','108 556 156 60',toggle=True),button('PLAY LOOP','Preview','272 556 168 60',toggle=True),value('FillSlot','448 556 72 60'),button('PLAY FILL','Trigger','528 556 156 60',kind='orange',toggle=True),button('EDIT FILL','Editor','692 556 176 60',toggle=True),label('','880 556 384 60',20,'fff7e9c7','ActionInfo')]
+label('DICE POOL','16 484 164 44',20,'fff7e9c7'),button('THIS PACK','DicePool','188 484 176 44',0,3),button('ALL PACKS','DicePool','376 484 176 44',1,3),instance('SelectPoolButton','568 486 192 40'),button('LOCK PATTERN','PatternLock','776 484 184 44',toggle=True),
+label('PLAY','16 532 88 44',17,'fff7e9c7'),button('MPC SYNC','Follow','108 532 156 44',toggle=True),button('PLAY LOOP','Preview','272 532 168 44',toggle=True),value('FillSlot','448 532 72 44'),button('PLAY FILL','Trigger','528 532 156 44',kind='orange',toggle=True),button('EDIT FILL','Editor','692 532 176 44',toggle=True),label('','880 532 384 44',20,'fff7e9c7','ActionInfo')]
+
 
 
 # Fill editor is an engine-backed context panel. Fixed SCREEN relay params map to its real parameters.
@@ -157,7 +166,8 @@ for row in range(4):
  for page,captions in enumerate([['SNARE','TOM','PERC','CLAP'],['KICK','CLOSED HAT','OPEN HAT','CYMBAL']]):editor.append(conditional(label(captions[row],f'16 {y} 180 40',20,'fff5e5c3'),'IndexedEnabling/'+str(page)+'/2/'+H('FillGridPage')))
  for step in range(16):
   x=200+step*66;cell=row*16+step;children=[g.entry('cell state','Button',g.button_data(art(60,38,'orange'),art(60,38,'dark'),1,1),'0 0 60 38','No','Show','Always',remap=[('Data',H('Grid'+str(cell)))]),g.entry('select note','Button',g.button_data('hit.png','hit.png',cell+1,65),'0 0 60 38','No','Show','Always',remap=[('Data',H('GridSelect'))])];define('Cell'+str(cell),children,[g.action('Mouse Down','Toggle Switch',H('GridTap'),'')]);editor.append(instance('Cell'+str(cell),f'{x} {y} 60 38'))
-editor +=[button('MAIN','Editor','16 520 176 42',index=0,count=2,toggle=True),button('REC FILL','Record','202 520 216 42',kind='red',toggle=True),button('AUDITION','Trigger','428 520 180 42',kind='orange',toggle=True),button('CANCEL','Cancel','618 520 130 42',toggle=True),button('DELETE','NoteDelete','758 520 130 42',toggle=True),button('UNDO','Undo','898 520 110 42',toggle=True),label('','1018 520 246 42',25,'fff5e5c3',key='Status')]+[button('ROLL FILL','RollFill','16 570 212 48',kind='orange',toggle=True),image(art(1024,48,'dark'),'240 570 1024 48'),label('','252 570 1000 48',23,'fff7e9c7','ActionInfo')]
+editor +=[button('MAIN','Editor','16 520 104 44',index=0,count=2,toggle=True),button('REC FILL','Record','128 520 148 44',kind='red',toggle=True),button('AUDITION','Trigger','284 520 128 44',kind='orange',toggle=True),button('CANCEL','Cancel','420 520 104 44',toggle=True),button('DELETE','NoteDelete','532 520 104 44',toggle=True),button('ROLL FILL','RollFill','644 520 148 44',kind='orange',toggle=True),label('','800 520 464 44',23,'fff5e5c3',key='Status'),label('','584 578 680 44',20,'fff7e9c7','ActionInfo')]
+
 define('GDMain',main);define('GDFill',editor,modal=True)
 mainRoot=[instance('GDMain',invalid=['IndexedEnabling/0/2/'+H('Editor')]),instance('GDFill',invalid=['IndexedEnabling/1/2/'+H('Editor')])]
 from performance_skin import build_performance_skin
@@ -176,11 +186,11 @@ for ti,tab in enumerate(tabs[2:],2):
   x=16 if group%2==0 else 650;y=146 if group<2 else 302;section=['KIT / DICE','KICK','SNARE','CLOSED HAT'][group]if page.name=='DRUMS'else'FILL / VARIATION'if page.name=='GROOVE'and group==3 else page.name;children.append(panel(chr(65+group)+' · '+section,f'{x} {y} 614 25'));bounds.append(group_guide(x,y))
   for j,ctl in enumerate(controls):
    key=meta[ctl.param.index]['key'];children.append(knob(key,meta[ctl.param.index]['name'],x+44+j*140,y+28,138))
- if page.name=='FX':children +=[button('ROLL FX','RollFx','16 566 212 50',kind='orange',toggle=True),button('UNDO','Undo','240 566 160 50',toggle=True)]
+ if page.name=='FX':children +=[button('ROLL FX','RollFx','16 526 212 44',kind='orange',toggle=True)]
  if page.name=='GROOVE':
-  children +=[label('HAT RHYTHM · LIVE','16 526 664 28',21,'fff5e5c3'),value('HatRhythmFull','16 566 664 50')]
- if page.name=='KITS':children +=[value('KitDiceMode','16 446 600 50'),button('<','PackPrev','650 526 54 54',toggle=True),label('','710 526 494 54',21,'fff7e8c7','PackInfo'),button('>','PackNext','1210 526 54 54',toggle=True),button('SAVE KIT','SaveKit','16 526 300 54',kind='orange',toggle=True),button('LOAD KIT','LoadKit','334 526 300 54',toggle=True)]
- if page.name=='ROUTING':children +=[button('LEARN LOOP','PerformLearnLoop','16 574 220 42',toggle=True),button('LEARN STOP','PerformLearnStop','248 574 220 42',toggle=True),label('','480 574 506 42',19,'fff7e9c7','PerformPadInfo'),button('SEPARATE OUT','Separate','1000 574 264 42',toggle=True)]
+  children +=[label('HAT RHYTHM · LIVE','16 492 664 28',21,'fff5e5c3'),value('HatRhythmFull','16 526 664 44')]
+ if page.name=='KITS':children +=[value('KitDiceMode','16 446 600 50'),button('<','PackPrev','650 526 54 44',toggle=True),label('','710 526 494 44',21,'fff7e8c7','PackInfo'),button('>','PackNext','1210 526 54 44',toggle=True),button('SAVE KIT','SaveKit','16 526 300 44',kind='orange',toggle=True),button('LOAD KIT','LoadKit','334 526 300 44',toggle=True)]
+ if page.name=='ROUTING':children +=[button('LEARN LOOP','PerformLearnLoop','16 526 220 44',toggle=True),button('LEARN STOP','PerformLearnStop','248 526 220 44',toggle=True),label('','480 526 506 44',19,'fff7e9c7','PerformPadInfo'),button('SEPARATE OUT','Separate','1000 526 264 44',toggle=True)]
  put(tab,'componentDefinition',g.component_definition([],children,'ffeed9b3'));put(tab,'qlinkBoundsData',bounds)
 
 from sound_skin import build_sound_skin
@@ -238,7 +248,7 @@ define('LibraryBrowser',lib,modal=True)
 for tab in tabs:
  children=get(get(tab,'componentDefinition'),'componentsData')
  if get(tab,'tabName')in ('DRUMS','KITS','GROOVE'):
-  children.append(button('LIBRARY','LibraryOpen','1000 578 264 40',kind='orange',toggle=True));children.append(label('','650 446 614 32',21,'fff5e5c3','LibraryCurrentSound'));children.append(label('','650 484 614 32',19,'fff5e5c3','LibraryPlaybackInfo'))
+  children.append(button('LIBRARY','LibraryOpen','1000 94 264 44',kind='orange',toggle=True));children.append(label('','650 446 614 32',21,'fff5e5c3','LibraryCurrentSound'));children.append(label('','650 484 614 32',19,'fff5e5c3','LibraryPlaybackInfo'))
  children.append(instance('LibraryBrowser',invalid=['IndexedEnabling/1/2/'+H('LibraryOpen')]))
 # Classified role browser: eight rows, stable values; never creates thousands of native choice widgets.
 role=[image(art(426,628,'dark'),'0 0 426 628'),button('<','PackPrev','6 2 48 40',toggle=True),label('','60 2 246 40',20,'fff8e8c6','PackInfo'),button('>','PackNext','310 2 48 40',toggle=True),button('X','SoundOpen','366 2 54 40',toggle=True)]
@@ -289,5 +299,20 @@ for entry in nativePerformance[:]:
  if definition and any(get(a,'handleName') in (H('PerformOpen'),H('Editor'),H('PerformEditFill')) for a in get(definition,'actions')):nativePerformance.remove(entry)
 put(perfTab,'componentDefinition',g.component_definition([],nativePerformance,'ffeed9b3'));put(perfTab,'qlinkBoundsData',['804 188 460 254','0 0 0 0','0 0 0 0','0 0 0 0']);tabs.insert(1,perfTab)
 perfQ=copy.deepcopy(entries[0]);put(perfQ,'Tab',1);put(perfQ,'SubTab',2);put(perfQ,'Q-Links',O(*[('Q-Link '+str(n),keys['PerformQ'+str((13-n)//4)] if n in (13,9,5,1) else -1)for n in range(1,17)]));entries.insert(1,perfQ)
+footer=json.loads((P.parents[2]/'shared/ui/action-footer.json').read_text())
+def common_actions():
+ return [button(a['label'],key,f"{a['x']} {footer['y']} {a['width']} {footer['height']}",kind='orange'if key=='Roll'else'cream',toggle=True)for a,key in zip(footer['actions'],['UnlockDice','Roll','Undo'])]
+for entry in defs[:]:
+ if get(entry,'key')in('GDMain','GDFill'):
+  get(get(entry,'value'),'componentsData').extend(common_actions())
+for tab in tabs:
+ if get(tab,'tabName')in('MAIN','SOUND'):continue
+ ws=get(get(tab,'componentDefinition'),'componentsData')
+ # PERFORM already receives the same common actions from its own builder.
+ if get(tab,'tabName')!='PERFORM':ws.extend(common_actions())
+ # Modal roots must remain above the new ordinary footer controls.
+ lookup={get(e,'key'):get(e,'value')for e in defs}
+ def modal(w):return any(k=='hideQLinkBounds'and v for k,v in lookup.get(get(get(w,'componentData'),'type'),[]))
+ ws[:]=[w for w in ws if not modal(w)]+[w for w in ws if modal(w)]
 (out/'TUI.json').write_text(g.dump_json(tui)+'\n');(out/'Q-Links.json').write_text(g.dump_json(ql)+'\n')
 print('Groove Dice native skin compiled: MAIN + fill editor,6function keys,SCREEN relay + independent Program maps')

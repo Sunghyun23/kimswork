@@ -1,0 +1,40 @@
+{
+  "version": "1.8.1 local",
+  "publicVersionUnchanged": "1.8.0",
+  "installedNvmeFiles": 181,
+  "sdkAllFileSizesMatch": true,
+  "changedRuntimeFiles": [
+    "Plugin Skins/dice-locked.png",
+    "Plugin Skins/dice-unlocked.png"
+  ],
+  "ownerFilesRetained": 19,
+  "bothStatesPixelIdenticalToDonut": true,
+  "bothStatesAlphaIdenticalToCrate": true,
+  "actualChecks": [
+    "transparent same glyph artwork",
+    "Swing54percent protected through Dice",
+    "Undo restores Init",
+    "Unlock All clears protection"
+  ],
+  "sdOrSsdTouched": false,
+  "captures": [
+    {
+      "file": "main.png",
+      "source": "actual MPC XL framebuffer",
+      "sha256": "ab9dcfe9fa110068f49e04d2987dc74773f27c03014d48f92bd4a524dc28d8dc",
+      "localOnly": true
+    },
+    {
+      "file": "protected.png",
+      "source": "actual MPC XL framebuffer",
+      "sha256": "a21601f51c719ea3ed37fd0ecd5fddadba5814d6724dc5f86849a281cba8c7aa",
+      "localOnly": true
+    },
+    {
+      "file": "final.png",
+      "source": "actual MPC XL framebuffer",
+      "sha256": "2f5cf763d7b07963d5c2509f16759729bfe35c1709a52e2971f458c8d39f0f99",
+      "localOnly": true
+    }
+  ]
+}

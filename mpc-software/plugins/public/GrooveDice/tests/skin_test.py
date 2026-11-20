@@ -29,7 +29,7 @@ roll=[]
 for key,value in defs.items():
  children=value.get('componentsData',[])
  if any(a.get('handleName')=='Parameter '+str(keys['Roll'])for a in value.get('actions',[])):roll.append(value)
-assert len(roll)==2
+assert len(roll)>=7
 print('PASS SOUND16 Q-Link layout,97paged kit choices and native caption-safe ROLL hit target')
 
 assert defs['RoleSoundBrowser']['hideQLinkBounds']
@@ -190,7 +190,7 @@ assert len(main_controls)==16
 for control in main_controls:
  children=defs[control['componentData']['type']]['componentsData']
  locks=[e for e in children if e['componentData']['type'].startswith('Btn')]
- assert len(locks)==1 and rect(locks[0])==(94.,26.,44.,44.)
+ assert len(locks)==1 and rect(locks[0])==(0.,26.,44.,44.)
  lock=defs[locks[0]['componentData']['type']]['componentsData'][0]
  assert lock['componentData']['data']['onImage']=='dice-locked.png'
  handle=lock['handle remapping']['map'][0]['value'];assert keys['DiceLock0']<=int(handle.split()[-1])<=keys['DiceLock15']
@@ -223,9 +223,9 @@ print('PASS REV44px toggles for all sound rows; Hat detail rows exclude duplicat
 
 # The page controls remain on both views; 48px arrows and a visible page indicator.
 for name in ['SoundOverview','SoundDetailPage','CymbalOverview','CymbalDetailPage']:
- children=defs[name]['componentsData'];buttons=[e for e in children if rect(e)[1]==574 and rect(e)[2:]==(48.,48.)]
+ children=defs[name]['componentsData'];buttons=[e for e in children if rect(e)[1]==578 and rect(e)[2:]==(48.,44.)]
  assert len(buttons)==2,(name,'page arrows')
- assert sorted(rect(e)[0]for e in buttons)==[16.,220.]
+ assert sorted(rect(e)[0]for e in buttons)==[584.,796.]
  assert all(e['componentData']['type']!='SoundDetailsPanel'for e in children)
 assert next(tab for tab in t['tabs']if tab['tabName']=='SOUND')['qlinkBoundsData']==[f'212 {132+r*110} 1052 108'for r in range(4)]
 print('PASS SOUND page1/2 explicit 48px previous/next arrows, fixed page display and retained native guides')

@@ -1,12 +1,20 @@
-# Groove Dice 1.8.0 — User manual
+# Groove Dice 1.8.1 — User manual
 
 Groove Dice is a neo-soul, hip-hop and R&B drum instrument by kim for MPC standalone. It plays its own samples and generates audio internally. It does not send generated MIDI into the MPC sequencer.
+
+## 1.8.1 — consistent controls
+
+Every page and the fill editor share **UNLOCK ALL → ROLL DICE → UNDO** in the same bottom positions as Donut Theory and Crate Press. MAIN’s sixteen padlocks move to the left of their knobs. Their transparent open/closed artwork matches the other instruments; 44×44 touch targets remain, with no knob overlap.
+
+On SOUND, the footer remains available on both pages. The **SOUND ACTIONS** button opens a drawer with **ROLL SOUND / UNDO SOUND / AUDITION / SAVE KIT**; these remain separate from global Dice. Sample-row Preview buttons and physical audition stay directly accessible. The SOUND1/2 counter and arrows remain beside the common footer.
+
+Global Dice’s scope is unchanged: it regenerates eligible MAIN values and unlocked performance phrases, honoring kit/role/value/slot protection. FX uses its separate ROLL FX action. Moving buttons does not broaden randomisation. Engine, all 917 parameter definitions, presets, generated phrase logic and Q-Link targets are unchanged from 1.8.0.
 
 ## Installation
 
 Use MPC standalone OS3.10.1 or later. In Preferences → Enhancements (Beta), enable **Enable Enhancements** and **External Plugin Support**. Current retests use MPC XL / OS3.10.1.12; earlier checks used MPC Live III. Other model compatibility and worst-case CPU are not certified by that test.
 
-Download the complete `groove-dice-1.8.0-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
+Download the complete `groove-dice-1.8.1-mpc.zip`, extract it and copy the whole `kim - VST - Groove Dice` folder into `VST2 Plugins` at the root of your MPC drive. Keep Content, VST and Plugin Skins together. Restart/rescan the MPC application and select Groove Dice under External Plugins on a plugin track. Save work before any MPC restart.
 
 The base package contains **Original Workshop**:128 independently synthesized WAV one-shots,96 kit configurations, two authored beats and93 timing templates. Ninety-six kits are combinations/settings, not96 separately recorded drum libraries. Optional expansions are separate files; the base release contains no private/commercial third-party drum library.
 

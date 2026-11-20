@@ -1,3 +1,19 @@
+## 1.8.1 release — 2026-11-20
+
+## 1.8.1 — consistent controls
+
+Every page and the fill editor share **UNLOCK ALL → ROLL DICE → UNDO** in the same bottom positions as Donut Theory and Crate Press. MAIN’s sixteen padlocks move to the left of their knobs. Their transparent open/closed artwork matches the other instruments; 44×44 touch targets remain, with no knob overlap.
+
+On SOUND, the footer remains available on both pages. The **SOUND ACTIONS** button opens a drawer with **ROLL SOUND / UNDO SOUND / AUDITION / SAVE KIT**; these remain separate from global Dice. Sample-row Preview buttons and physical audition stay directly accessible. The SOUND1/2 counter and arrows remain beside the common footer.
+
+Global Dice’s scope is unchanged: it regenerates eligible MAIN values and unlocked performance phrases, honoring kit/role/value/slot protection. FX uses its separate ROLL FX action. Moving buttons does not broaden randomisation. Engine, all 917 parameter definitions, presets, generated phrase logic and Q-Link targets are unchanged from 1.8.0.
+
+Older page layouts below are historical. User authorized stable publication after final actual-device lock QA.
+
+## 1.8.1 — common footer candidate (2026-11-20)
+
+Common footer on seven pages and fill editor. SOUND ACTIONS retains local Roll Sound/Undo Sound/Audition/Save Kit. Global Dice scope,917parameters and Q-Link targets unchanged. Shared coordinates and scopes: mpc-software/shared/ui/README.md. Older layouts below are historical. Public1.8.0unchanged.
+
 # Performance, capture and MIDI — 1.7.1
 
 Status: current1.8.0implementation, native/ARM/SDK and automated tests passed. Actual MPC XL remote checks and MIDI timestamps verify bar-end timing. The owner confirmed physical B1/B3 select ROLL A/C and end correctly; full eight-pad/physical-encoder/audio/CPU certification is not implied. Vendor kim/UID KpGy; first880declarations unchanged,917parameters. This supersedes1.7.0's held-roll/next-beat/duplicate-entry behavior and1.5.1's unconditional fill preservation.

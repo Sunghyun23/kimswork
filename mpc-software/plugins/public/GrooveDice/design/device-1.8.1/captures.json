@@ -1,0 +1,80 @@
+[
+  {
+    "file": "footer-groove-dice.png",
+    "sha256": "b6031f4b3432a2aae564796e733740793c673e93394236fda82e0a6f88efc02c",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-fill-editor.png",
+    "sha256": "80840b5330d9bd0392fd734747c20ab3a2ffe0aa63201358afd6a10ca96b8149",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-fx.png",
+    "sha256": "91e723c97f0af9886f3a2e1b8803163469ef6afe4e2c44dd64ebbbe3d102b9a7",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-groove.png",
+    "sha256": "de69156cd830c0f7627650f12460cffafa8abc40fc99fcf900abe1244e99f75e",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-kits.png",
+    "sha256": "93f997cec160d69610110f357a8040a2628c625b4f8b5a8b81eb956e8c5d3dba",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-local-sound-roll.png",
+    "sha256": "1bfdd15d277f8a12cc85738caa282056baac3b7f3900611e93749a0362435b48",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-main.png",
+    "sha256": "d9510cfe21598895f1156bda14c8267df774582baa3aba6279f981a4cf2f93ce",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-perform.png",
+    "sha256": "b2f79e37ac56c1c18cd984c0c733cd7184bfb353b196350d7de926249a39d7d7",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-routing.png",
+    "sha256": "af39a336f29932389f9ab12236aebbfc5f5d0ff052594160624d8a846dc2afd6",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-sound-actions.png",
+    "sha256": "1bfdd15d277f8a12cc85738caa282056baac3b7f3900611e93749a0362435b48",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-sound.png",
+    "sha256": "a22d4aada1c019265876bbe4e25497934688b37a0a83b4671b0f11e1c17929bd",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-sound2.png",
+    "sha256": "0169ca9fdb104c389c2df63dd1030e646b0a13f1a622d276dd95ca6fa176dbf5",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  },
+  {
+    "file": "footer-groove-undo.png",
+    "sha256": "6c119453915b018742d3ccd8ea2be8461576cd3d3ffde93b8f92509235a36b0b",
+    "source": "actual MPC XL framebuffer",
+    "localOnly": true
+  }
+]

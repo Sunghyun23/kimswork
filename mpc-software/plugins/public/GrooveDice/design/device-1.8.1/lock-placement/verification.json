@@ -1,0 +1,41 @@
+{
+  "nvmeFiles": 181,
+  "allSha256Match": true,
+  "ownerFilesRetained": 19,
+  "engineUnchanged": true,
+  "sdOrSsdTouched": false,
+  "lockBounds": [
+    0,
+    26,
+    44,
+    44
+  ],
+  "version": "1.8.1 local candidate",
+  "publicReleaseUnchanged": "1.8.0",
+  "actualChecks": [
+    "16left-side locks with nonoverlapping knobs",
+    "Swing54percent stays through Dice while other values change",
+    "Undo restores Init values",
+    "Unlock All clears protection"
+  ],
+  "captures": [
+    {
+      "file": "main.png",
+      "sha256": "83274263f78c45863e694ccc15f7f80c0c1eb4de146d4750b31e015ee417c987",
+      "source": "actual MPC XL framebuffer",
+      "localOnly": true
+    },
+    {
+      "file": "protected-dice.png",
+      "sha256": "88b1c7d41ee4a05e882a448c7d8d349ecbb4ea4f298d90360b776d35039c9245",
+      "source": "actual MPC XL framebuffer",
+      "localOnly": true
+    },
+    {
+      "file": "final.png",
+      "sha256": "771ec76257e5c3b2c6667d311b550999eb3b285f742aec83ac076f3ad2025383",
+      "source": "actual MPC XL framebuffer",
+      "localOnly": true
+    }
+  ]
+}
