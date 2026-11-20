@@ -4,11 +4,11 @@ from pathlib import Path
 P=Path(__file__).resolve().parents[1];S=P/'skins';pd=json.loads((S/'TUI.json').read_text())['pageData'];q=json.loads((S/'Q-Links.json').read_text());params=json.loads((P/'parameters.json').read_text());ix={p['key']:i for i,p in enumerate(params)}
 defs={e['key']:e['value']for e in pd['componentDefinitions']['localComponentDefinitions']}
 old=json.loads((P/'tests/legacy-353-parameters.json').read_text());assert params[:353]==old
-assert len(params)==391 and len({p['key']for p in params})==391
+assert len(params)==399 and len({p['key']for p in params})==399
 assert [t['tabName']for t in pd['tabs']]==['POLY','MONO','OSC','ENV','MOD','FX','CHORD']
 assert [(t['fnKeyIndex'],t['fnKeySubIndex'])for t in pd['tabs']]==[(0,0),(1,0),(2,0),(3,0),(4,0),(5,0),(0,1)]
-front=[['PerfWave','PerfPitch','PerfLevel','Drift'],['Cutoff','Resonance','BodyTone','Drive'],['PerfLfoRate','PerfLfoDepth','PerfLfoDelay','PerfLfoTarget']]
-expected=[front+[['AmpAttack','AmpRelease','ModRateControl','TremDepth']],front+[['Glide','AmpDecay','AmpRelease','ReleaseDropAmount']],[['Wave1','OscTune1','OscFine1','OscLevel1'],['Wave2','OscTune2','OscFine2','OscLevel2'],['Sub','Drift','OscPulse1','Pulse2'],['Noise','FM','Tone']],[['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],['FiltAttack','FiltDecay','FiltSustain','FiltRelease'],['Cutoff','Resonance','Env','KeyTrack']],[['LfoRateControl','Depth','LfoDelay','Lfo1TargetFull'],['Lfo2RateControl','Lfo2Depth','Lfo2Delay','Lfo2Target'],['ModRateControl','TremDepth','Pan','Vibrato']],[['Drive','DriveMix','Tone','LowCut'],['Chorus','Space','Delay','Feedback'],['OutputTrim','Volume','Pan']],[['EditRoot'+str(i),'HarmonyEdit'+str(i),'EditVoicing'+str(i),'EditOctave'+str(i)]for i in range(1,5)]]
+front=[['PerfWaveFull','PerfPitch','PerfLevel','PerfCharacter'],['Cutoff','Resonance','BodyTone','Drive'],['PerfLfoRate','PerfLfoDepth','PerfLfoDelay','PerfLfoTarget']]
+expected=[front+[['AmpAttack','AmpRelease','ModRateControl','TremDepth']],front+[['Glide','AmpDecay','AmpRelease','ReleaseDropAmount']],[['Wave1Full','OscTune1','OscFine1','OscLevel1'],['Wave2Full','OscTune2','OscFine2','OscLevel2'],['Sub','Drift','OscPulse1','Pulse2'],['Noise','FM','Tone']],[['AmpAttack','AmpDecay','AmpSustain','AmpRelease'],['FiltAttack','FiltDecay','FiltSustain','FiltRelease'],['Cutoff','Resonance','Env','KeyTrack']],[['LfoRateControl','Depth','LfoDelay','Lfo1TargetFull'],['Lfo2RateControl','Lfo2Depth','Lfo2Delay','Lfo2Target'],['ModRateControl','TremDepth','Pan','Vibrato']],[['Drive','DriveMix','Tone','LowCut'],['Chorus','Space','Delay','Feedback'],['OutputTrim','Volume','Pan']],[['EditRoot'+str(i),'HarmonyEdit'+str(i),'EditVoicing'+str(i),'EditOctave'+str(i)]for i in range(1,5)]]
 for tab,mapping,groups in zip(pd['tabs'],q['Screen Mode Q-Links']['map'],expected):
  assert (mapping['Tab'],mapping['SubTab'])==(tab['fnKeyIndex']+1,tab['fnKeySubIndex']+1)
  assert mapping['Bank Direction']=='Column'
@@ -20,7 +20,7 @@ for tab,mapping,groups in zip(pd['tabs'],q['Screen Mode Q-Links']['map'],expecte
  for b in tab['qlinkBoundsData']:
   x,y,w,h=map(int,b.split());assert x>=0 and y>=0 and x+w<=1280 and y+h<=628
 assert q['Program Mode Q-Links']==q['Screen Mode Q-Links']['map'][0]['Q-Links']
-print('PASS:353exact legacy declarations;391stable IDs; seven views and all per-tab/Program Q-Link assignments')
+print('PASS:353exact legacy declarations;399stable IDs; seven views and all per-tab/Program Q-Link assignments')
 
 def walk(o):
  if isinstance(o,dict):
@@ -71,7 +71,7 @@ assert sum(w['componentData']['type']=='Envelope'for w in pd['tabs'][3]['compone
 cfg=json.loads((P/'dice-locks.json').read_text());assert str(ix['LfoDelay'])not in cfg['targets']and str(ix['Lfo2Delay'])not in cfg['targets']
 for name in('PerfLfoDelay','PerfVoice','DiceTarget'):
  assert 'DiceValueLock'+name not in ix
-assert all('DTChoicePanel'+str(ix[k])in defs for k in ['PerfWave','PerfLfoTarget','PerfLfoShape','DiceTarget','SoundCurrent'])
+assert all('DTChoicePanel'+str(ix[k])in defs for k in ['PerfWaveFull','PerfLfoTarget','PerfLfoShape','DiceTarget','SoundCurrent'])
 print('PASS: assets/handles/choices, no empty literal labels, two native ADSRs, 16hold pads, Delay/master/chord Dice exclusions')
 
 # Pitch and rate touch overlays must use canonical unit ranges instead of0..1relays.
@@ -111,3 +111,6 @@ def no_self_aliases(node):
   for value in node:no_self_aliases(value)
 no_self_aliases(tui if 'tui'in globals()else json.loads((P/'skins/TUI.json').read_text()))
 print('PASS:native value labels inherit bound Data without recursive self-aliases')
+
+assert params[:391]==json.loads((P/'tests/legacy-391-parameters.json').read_text())
+print('PASS exact391legacy metadata; eight-wave fronts/detail; shared Drift/Phase relay')

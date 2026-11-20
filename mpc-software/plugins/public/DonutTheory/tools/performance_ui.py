@@ -112,6 +112,10 @@ def install(g,tui,ql,params,out):
   # Bind visible controls/overlays to canonical units, while the parent focus
   # action selects the matching shared Q-Link relay.
   conditions=conditions or []
+  if key=='PerfCharacter':
+   for focus,actual in enumerate(('Drift','OscPhase')):
+    knob(ws,actual,caption,x,y,False,small,compact,conditions+[f'IndexedEnabling/{focus}/2/{h("OscCharacterFocus")}'],key)
+   return
   if key=='PerfPitch':
    for osc in range(2):
     for fine in range(2):
@@ -133,6 +137,14 @@ def install(g,tui,ql,params,out):
   ww=[g.entry('knob','Knob',O(('version',4),('knobType','RotatingImage'),('foregroundImage','knob-donut.png'),('backgroundImage',''),('imageScale',1.0),('dragOrientation','Vertical'),('handleName','Data')),f'{(width-size)//2} 0 {size} {size}','Yes','Show','Always')]
   if not small:ww.append(label(caption,f'0 {64 if compact else 72} {width} 20',20))
   ww.extend([plate('value LCD',f'4 {value_y} {width-8} 24'),label('',f'8 {value_y} {width-16} 24',22,'Value','Data')])
+  if key=='OscPhase':
+   # PHASE above identifies the control; use the caption/value band for a
+   # readable degree value and a separate44px-high FREE/RESET touch target.
+   ww=ww[:1]+[plate('phase LCD','4 72 82 44'),label('','6 72 78 44',20,'Value','Data')]
+   for active,caption_mode in enumerate(('FREE','RESET')):
+    mode_name='PerfPhaseMode'+str(active)
+    mw=[g.entry('restart state','Button',g.button_data(scaled('tempo-sync-on.png',(56,44)),scaled('tempo-sync-off.png',(56,44)),1,2),'0 0 56 44','No','Show','Always',remap=[('Data',h('OscRetrig'))]),label(caption_mode,'0 0 56 44',14),hit('change restart',h('OscRetrig'),'0 0 56 44',1-active,2)]
+    add(mode_name,g.component_definition([],mw,'00000000'));ww.append(inst(caption_mode,mode_name,'90 72 56 44',invalid=[f'IndexedEnabling/{active}/2/{h("OscRetrig")}']))
   if 'choices'in meta[ix[key]]:
    ensure_menu(key);ww.append(hit('open value list',f'Local/2/dtChoice{ix[key]}',f'0 {value_y} {width} 24'))
   actions=g.control_actions('knob overlay')
@@ -197,7 +209,7 @@ def install(g,tui,ql,params,out):
   ws.append(inst('Performance settings modal','PerfSettings','0 0 1280 628',invalid=[f'IndexedEnabling/1/2/{settings}']))
   put(get(tab,'componentDefinition'),'componentsData',ws);return qmap(tab,groups)
  # Front editors share A/B/C controls and have different D controls only.
- frontgroups=[['PerfWave','PerfPitch','PerfLevel','Drift'],['Cutoff','Resonance','BodyTone','Drive'],['PerfLfoRate','PerfLfoDepth','PerfLfoDelay','PerfLfoTarget']]
+ frontgroups=[['PerfWaveFull','PerfPitch','PerfLevel','PerfCharacter'],['Cutoff','Resonance','BodyTone','Drive'],['PerfLfoRate','PerfLfoDepth','PerfLfoDelay','PerfLfoTarget']]
  maps=[];newtabs=[]
  for mono in (False,True):
   tab=old['PLAY']if mono else old['MAIN'];ws=copy.deepcopy(header)
@@ -208,11 +220,13 @@ def install(g,tui,ql,params,out):
   for bank,keys in enumerate(groups):
    x=18+(bank%2)*632;y=94+(bank//2)*184;panel(ws,titles[bank],x,y)
    for j,key in enumerate(keys):knob(ws,key,captions[bank][j],x+8+j*150,y+57,locked=bank not in (0,2))
+  ws+=segment('OscCharacterFocus',['DRIFT','PHASE'],'476 124 146 26')
   ws+=segment('OscFocus',['OSC 1','OSC 2'],'26 124 146 26');ws+=segment('PitchResolution',['TUNE','FINE'],'176 124 146 26')
   ws.extend([menu('Filter','658 124 146 26'),menu('DriveType','1108 124 146 26')])
   ws+=segment('PerfLfoSync',['FREE','SYNC'],'26 308 146 26');ws+=segment('LfoFocus',['LFO 1','LFO 2'],'176 308 146 26');ws.append(menu('PerfLfoShape','326 308 296 26'))
   # Shared/conditional lock ownership follows the currently edited canonical value.
-  ws.append(lock('Wave1','18 151 44 44'));ws.append(lock('Drift','468 151 44 44'))
+  ws.append(lock('Wave1','18 151 44 44'));
+  for focus,actual in enumerate(('Drift','OscPhase')):ws.append(lock(actual,'468 151 44 44',[f'IndexedEnabling/{focus}/2/{h("OscCharacterFocus")}']))
   for osc in (0,1):
    cond=[f'IndexedEnabling/{osc}/2/{h("OscFocus")}'];ws.append(lock('OscLevel'+str(osc+1),'318 151 44 44',cond))
    for fine in (0,1):ws.append(lock(('OscFine'if fine else'OscTune')+str(osc+1),'168 151 44 44',cond+[f'IndexedEnabling/{fine}/2/{h("PitchResolution")}']))
@@ -255,10 +269,10 @@ def install(g,tui,ql,params,out):
     if(n.startswith('Chord ')and n[6:].isdigit())or n in('‹','‹ touch','›','› touch')or(' / 'in n and '–'in n):ws.append(copy.deepcopy(w))
   maps.append(finish(tab,'MONO'if mono else'POLY',1 if mono else 0,0,ws,groups,['18 94 612 176','650 94 612 176','18 278 612 176','650 278 612 176']));newtabs.append(tab)
  # OSC detail, all oscillator fields stay individually visible.
- tab=old['OSC'];ws=copy.deepcopy(header);groups=[['Wave1','OscTune1','OscFine1','OscLevel1'],['Wave2','OscTune2','OscFine2','OscLevel2'],['Sub','Drift','OscPulse1','Pulse2'],['Noise','FM','Tone']]
+ tab=old['OSC'];ws=copy.deepcopy(header);groups=[['Wave1Full','OscTune1','OscFine1','OscLevel1'],['Wave2Full','OscTune2','OscFine2','OscLevel2'],['Sub','Drift','OscPulse1','Pulse2'],['Noise','FM','Tone']]
  for bank,keys in enumerate(groups):
   x=18+(bank%2)*632;y=94+(bank//2)*208;panel(ws,['A  OSC 1','B  OSC 2','C  TEXTURE / PULSE','D  NOISE / FM / TONE'][bank],x,y,612,200)
-  for j,key in enumerate(keys):knob(ws,key,{'Wave1':'WAVE','Wave2':'WAVE','OscPulse1':'PW 1','Pulse2':'PW 2'}.get(key,meta[ix[key]]['name'].replace('OSC 1 ','').replace('OSC 2 ','').upper()),x+8+j*150,y+62)
+  for j,key in enumerate(keys):knob(ws,key,{'Wave1Full':'WAVE','Wave2Full':'WAVE','OscPulse1':'PW 1','Pulse2':'PW 2'}.get(key,meta[ix[key]]['name'].replace('OSC 1 ','').replace('OSC 2 ','').upper()),x+8+j*150,y+62)
  browse_footer(ws);maps.append(finish(tab,'OSC',2,0,ws,groups,['18 94 612 200','650 94 612 200','18 302 612 200','650 302 612 200']));newtabs.append(tab)
  src_strip=Image.open(out/'env-fader.png').convert('RGBA');short_strip=Image.new('RGBA',(64,80*81))
  for frame in range(81):short_strip.paste(src_strip.crop((0,frame*96,64,(frame+1)*96)).resize((64,80),Image.Resampling.LANCZOS),(0,frame*80))
@@ -377,7 +391,7 @@ def install(g,tui,ql,params,out):
   if panel_name not in defs:continue
   choices=[]
   if pindex in targets:choices=[(pindex,[])]
-  elif key=='PerfWave':choices=[(ix['Wave1'],[])]
+  elif key in('PerfWave','PerfWaveFull'):choices=[(ix['Wave1Full'],[])]
   elif key in('PerfLfoShape','PerfLfoTarget'):
    owners=['Shape','Lfo2Shape']if key=='PerfLfoShape'else['Target','Lfo2Target']
    choices=[(ix[k],[f'IndexedEnabling/{module}/2/{h("LfoFocus")}'])for module,k in enumerate(owners)]

@@ -7426,5 +7426,95 @@
       "1/16 T"
     ],
     "default": 7
+  },
+  {
+    "key": "OscPhase",
+    "name": "OSC Phase",
+    "min": 0,
+    "max": 360,
+    "default": 82.8,
+    "unit": "\u00b0",
+    "log": false
+  },
+  {
+    "key": "OscRetrig",
+    "name": "OSC Restart",
+    "choices": [
+      "FREE",
+      "RESET"
+    ],
+    "default": 0
+  },
+  {
+    "key": "OscCharacterFocus",
+    "name": "Edit Character",
+    "choices": [
+      "Drift",
+      "Phase"
+    ],
+    "default": 0
+  },
+  {
+    "key": "PerfCharacter",
+    "name": "Selected Drift / Phase",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "log": false
+  },
+  {
+    "key": "Wave1Full",
+    "name": "OSC 1 Wave",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Pulse",
+      "Soft Saw",
+      "Soft Pulse",
+      "Organ",
+      "Hollow"
+    ],
+    "default": 1
+  },
+  {
+    "key": "Wave2Full",
+    "name": "OSC 2 Wave",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Pulse",
+      "Soft Saw",
+      "Soft Pulse",
+      "Organ",
+      "Hollow"
+    ],
+    "default": 0
+  },
+  {
+    "key": "PerfWaveFull",
+    "name": "Selected OSC Wave",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Saw",
+      "Pulse",
+      "Soft Saw",
+      "Soft Pulse",
+      "Organ",
+      "Hollow"
+    ],
+    "default": 1
+  },
+  {
+    "key": "DiceValueLockOscPhase",
+    "name": "Dice Lock OSC Phase",
+    "choices": [
+      "Unlocked",
+      "Locked"
+    ],
+    "default": 0
   }
 ]

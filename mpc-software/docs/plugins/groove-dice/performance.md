@@ -1,6 +1,6 @@
 # Performance, capture and MIDI — 1.7.1
 
-Status: final1.7.1implementation, native/ARM/SDK and automated tests passed. Actual MPC XL remote checks and MIDI timestamps verify bar-end timing. The owner confirmed physical B1/B3 select ROLL A/C and end correctly; full eight-pad/physical-encoder/audio/CPU certification is not implied. Vendor kim/UID KpGy,880IDs/ranges/order and first782full declarations are retained; only the ten new performance-note defaults are corrected. This supersedes1.7.0's held-roll/next-beat/duplicate-entry behavior and1.5.1's unconditional fill preservation.
+Status: current1.8.0implementation, native/ARM/SDK and automated tests passed. Actual MPC XL remote checks and MIDI timestamps verify bar-end timing. The owner confirmed physical B1/B3 select ROLL A/C and end correctly; full eight-pad/physical-encoder/audio/CPU certification is not implied. Vendor kim/UID KpGy; first880declarations unchanged,917parameters. This supersedes1.7.0's held-roll/next-beat/duplicate-entry behavior and1.5.1's unconditional fill preservation.
 
 ## Workflow
 
@@ -10,8 +10,8 @@ PERFORM mirrors a4×4MPC pad bank, numbered bottom-up:
 
 | Top to bottom | Left to right |
 |---|---|
-| Fourth row | B13–B16 reserved |
-| Third row | B9 Loop on/off, B10 Stop, B11–B12 reserved |
+| Fourth row | B13 LOOP, B14 STOP, B15–B16 unused |
+| Third row | B9–B12 Hat Roll A–D |
 | Second row | B5–B8 Fill A–D |
 | First row | B1–B4 Snare Roll A–D |
 
@@ -33,7 +33,7 @@ Both fills and rolls use the earliest bar ending that still accommodates their e
 
 ## Dice and persistence
 
-ROLL DICE regenerates the eligible MAIN groove and unlocked fills/rolls together at the next bar while playing, immediately while stopped. Existing MAIN/kit/pattern/role protections remain. Fills inherit the current main phrase before their ending variation. Roll roles retain their rate/length settings and regenerate rests/accents; open slots vary Velocity and Humanize within Random Amount bounds, so the change is visible without losing the chosen rhythmic role. FX are preserved. Random Amount0 leaves all musical data unchanged. UNDO restores the complete prior groove and eight performance sequences. Directly recorded/edited fills are protected automatically.
+ROLL DICE regenerates the eligible MAIN groove and unlocked fills/rolls together at the next bar while playing, immediately while stopped. Existing MAIN/kit/pattern/role protections remain. Fills inherit the current main phrase before their ending variation. Roll roles retain their rate/length settings and regenerate rests/accents; open slots vary Velocity and Humanize within Random Amount bounds, so the change is visible without losing the chosen rhythmic role. FX are preserved. Random Amount0 leaves all musical data unchanged. UNDO restores the complete prior groove and twelve performance sequences. Directly recorded/edited fills are protected automatically.
 
 Old four fill banks are reused, never deleted. Loading a pre1.7project automatically locks every populated legacy fill, preventing a new Dice policy from destroying older recorded performances. New roll sequences are appended in a separately versioned extra-state trailer. Existing state layouts/UID and all782published parameter IDs/ranges remain unchanged. Triggers, recording commands and screen press gates are transient and save as idle. Fresh/resumed instances return to MAIN without startup messages.
 
@@ -48,3 +48,27 @@ EXPORT MIDI freezes the take and writes a Standard MIDI File type0at960PPQ, with
 ## Verification boundary
 
 Build/simulator/allocation/UBSan tests do not prove physical pad input, physical Q-Link movement, hardware audio or MPC CPU load. Record each separately against the exact installed binary and direct captures before declaring device validation complete.
+
+
+## 1.8.0 — musical phrases and hat rolls
+
+The current implementation extends the earlier eight-slot layout. The new Bank B layout is bottom-up:
+
+| Physical row (left to right) | Assignments | Default MIDI notes |
+|---|---|---|
+| Bottom B1–B4 | Snare Roll A–D |48,50,52,53|
+| B5–B8 | Fill A–D |55,57,59,60|
+| B9–B12 | Hat Roll A–D |62,64,65,67|
+| Top B13–B16 | LOOP, STOP, unused, unused |69,71,—,—|
+
+These labels describe the tested C-major bank layout, not automatic MPC bank detection. Existing custom learned assignments remain custom. On an older project only the known default LOOP/STOP pair62/64 moves to69/71. When a retained custom note conflicts with a new hat slot, that new slot shows LEARN PAD and remains unassigned; use LEARN PAD to select an unused physical note. Do not alter MPC pad/scale settings.
+
+Each new hat slot has the same Rate, Velocity, Humanize and Length Screen Q-Link controls as the snare slots. Select To Edit selects without playing; physical MIDI still plays. All rolls are one-shot phrases ending at the earliest bar end that accommodates their full selected length. A late trigger defers to the next valid ending. A new snare/hat roll request replaces the previously queued roll; one roll slot is active at a time. A roll can overlay a fill, replacing only its matching snare or hat role. Hat rolls replace the automatic closed/open-hat, ride and bell lane while active; kick/snare remain. Existing hat choke groups apply. LOOP/STOP retain their behavior at their new default notes.
+
+Random generation chooses complete rhythmic cells with rests, call/answer structure, consistent strong/weak subdivisions and an ending accent. The selected division and triplets remain explicit; ACCEL tightens the last half. Some straight snare phrases include one quiet grace hit before the final accent. Velocity variation is small and correlated with phrase accents; Humanize adds bounded timing displacement. Hat rolls use closed hats, preventing random open-hat clutter.
+
+Generated fills retain the current main phrase before the transition and retain its kick motif and2/4snare anchors inside the transition. Ornaments avoid doubling protected snare anchors. Four fill profiles provide snare pickups, a snare-to-tom turn, percussion replies, and a mixed ending. These are rhythmic arrangements of the current kit, not random sample selection. Recorded/edited fills retain their actual notes and automatic locks.
+
+Global Dice regenerates unlocked MAIN and all12performance slots; Amount0 remains inert. Locks, explicit selected GENERATE, Undo, recorded-fill protection, unchanged FX and MIDI export keep their existing meanings. Undo now includes all12sequences/settings. Existing880parameter declarations and GDPF0001trailer bytes are unchanged;37newparameters bring the total to917, with a separate GDHH0001suffix for four hat sequences. Old projects seed only the new hat slots.
+
+Automated/device validation for this candidate is recorded separately in the plugin VALIDATION.md; this section does not assert fresh physical encoder/pad/audio certification.

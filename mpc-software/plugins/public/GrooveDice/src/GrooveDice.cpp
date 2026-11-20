@@ -14,7 +14,9 @@
 #include <algorithm>
 #include <limits>
 #include <pthread.h>
+#include <fstream>
 #include "MidiCapture.h"
+#include "MusicalPerformance.h"
 
 class GrooveDice final : public mpc::Plugin {
 public:
@@ -53,14 +55,18 @@ public:
  std::atomic<int> recordState{0},recorded{0},fired{0};
  std::atomic<float> position{0},currentTempo{92};std::atomic<int>lastMidiNote{-1},lastMidiRole{-1};
 
- static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Groove Dice";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','p','G','y');i.version=10701;i.latencySamples=1323;i.isInstrument=true;i.numInputs=0;i.numOutputs=16;return i;}
+ static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Groove Dice";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','p','G','y');i.version=10800;i.latencySamples=1323;i.isInstrument=true;i.numInputs=0;i.numOutputs=16;return i;}
  GrooveDice():mpc::Plugin(description()){
   declareParameters(*this);
   for(auto& n:lengths)n.store(4*PPQ);
   for(int b=0;b<7;++b)seedPattern(b);
 
   if(!bank.load(mpc::contentPath("Banks/default.gdbank")))for(int s=0;s<Samples;++s)generateSound(s);
-  library.load(mpc::contentPath("Banks/default.gdbank"));if(library.loaded)library.loadExpansions(mpc::contentFolder());
+  library.load(mpc::contentPath("Banks/default.gdbank"));
+  // Device QA can isolate the public core without deleting or modifying any
+  // installed owner packs/registry. This marker never ships in public packages.
+  const bool publicCoreQA=std::ifstream(mpc::contentPath("QA/public-core-only")).is_open();
+  if(library.loaded&&!publicCoreQA)library.loadExpansions(mpc::contentFolder());
   allKits.clear();for(size_t j=0;j<library.factoryKits.size();++j)allKits.push_back(int(j));for(int g=0;g<4;++g)for(size_t j=0;j<library.soundPools[g].size();++j)allSounds[g].push_back(int(j));
   if(bank.loaded&&bank.patternCount){clearBank(5);lengths[5].store(bank.patternLength);for(int i=0;i<bank.patternCount;++i){auto n=bank.pattern[i];notes[5][i].write({n.tick,n.role,n.velocity,100,n.gate});}}
   for(int b=4;b<7;++b){factoryLengths[b-4]=lengths[b].load();baseLengths[b].store(lengths[b].load());for(int i=0;i<MaxNotes;++i){factoryBases[b-4][i*2]=notes[b][i].data.load();factoryBases[b-4][i*2+1]=notes[b][i].gate.load();bases[b][i].data.store(notes[b][i].data.load());bases[b][i].gate.store(notes[b][i].gate.load());}baseValid[b].store(true);}
@@ -143,7 +149,7 @@ public:
   if(i==kPattern){internal=true;set(kXBeat,0);internal=false;}
   if(i==kEditor||(i>=kXSample0&&!(i>=kRuleKickStyle&&i<=kRulePercStyle)))displayPending.store(true);
   for(int r=0;r<8;++r)if(i==kSample0+r*9){missingSample[r].store(false);internal=true;set(kXKit,0);set(kXSample0+r,0);internal=false;displayPending.store(true);}
-  if(i>=kQ1&&i<=kQ16){int target=proxyTarget(i-kQ1);if(target>=0){float before=getNormalised(target);internal=true;setNormalised(target,plain);internal=false;if(target>=kXQKit&&target<=kXQPerc)parameterChanged(target,plain);if(target>=kRuleKickStyle&&target<=kRulePercStyle)syncRuleStyle(target-kRuleKickStyle);if(isRuleSelector(target))ruleSelectorParameter(target);if(target>=kPerformHit0&&target<=kPerformLength7&&(getInt(kPerformSelect)<4||generatedFills[getInt(kPerformSelect)-4].load()))rollRegenerate.fetch_or(1u<<getInt(kPerformSelect));if(target>=kPerformHit0&&target<=kPerformLength7&&getInt(kPerformSelect)>=4&&!generatedFills[getInt(kPerformSelect)-4].load())fillTimingDirty.store(true);if(target==kHatRhythmFull)liveDirty.fetch_or(4);if(getNormalised(target)!=before&&!(target>=kRuleKickStyle&&target<=kRulePercStyle)&&!isRuleSelector(target)){changed[target].store(true);if(param(target).kind==mpc::Param::Kind::Choice)displayPending.store(true);}if(target==kHatRhythmFull){internal=true;set(kHatRhythmFullPage,getInt(kHatRhythmFull)/8);internal=false;changed[kHatRhythmFullPage].store(true);}if(target>=kXSoundKick&&target<=kXSoundPerc){soundRequests[target-kXSoundKick].store(get(target));soundDirty.fetch_or(1u<<(target-kXSoundKick));}if(target>=kSwing&&target<=kRndNudge)grooveBaseValid.store(false);if(target>=kNoteNudge&&target<=kNoteChance)noteDirty.fetch_or(1u<<(target-kNoteNudge));}else{internal=true;setNormalised(i,0);internal=false;}}
+  if(i>=kQ1&&i<=kQ16){int target=proxyTarget(i-kQ1);if(target>=0){float before=getNormalised(target);internal=true;setNormalised(target,plain);internal=false;if(target>=kXQKit&&target<=kXQPerc)parameterChanged(target,plain);if(target>=kRuleKickStyle&&target<=kRulePercStyle)syncRuleStyle(target-kRuleKickStyle);if(isRuleSelector(target))ruleSelectorParameter(target);if(performanceField(target)>=3)performanceParameter(target,get(target));if(target==kHatRhythmFull)liveDirty.fetch_or(4);if(getNormalised(target)!=before&&!(target>=kRuleKickStyle&&target<=kRulePercStyle)&&!isRuleSelector(target)){changed[target].store(true);if(param(target).kind==mpc::Param::Kind::Choice)displayPending.store(true);}if(target==kHatRhythmFull){internal=true;set(kHatRhythmFullPage,getInt(kHatRhythmFull)/8);internal=false;changed[kHatRhythmFullPage].store(true);}if(target>=kXSoundKick&&target<=kXSoundPerc){soundRequests[target-kXSoundKick].store(get(target));soundDirty.fetch_or(1u<<(target-kXSoundKick));}if(target>=kSwing&&target<=kRndNudge)grooveBaseValid.store(false);if(target>=kNoteNudge&&target<=kNoteChance)noteDirty.fetch_or(1u<<(target-kNoteNudge));}else{internal=true;setNormalised(i,0);internal=false;}}
   else if(i>=kNoteNudge&&i<=kNoteChance)noteDirty.fetch_or(1u<<(i-kNoteNudge));
  }
  bool formatValue(int i,float plain,std::string& out)override{
@@ -220,7 +226,7 @@ public:
    if(i==kRollFill||i==kRollFx){changed=changed&&x>.5f;if(x!=0){layerSet(i,0);last[i]=0;}}
    if(changed&&!loading){lastAction.store(i);actionCount.fetch_add(1);this->changed[kActionInfo].store(true);}return changed&&!loading;};
   if(command(kUnlockDice)&&getBool(kUnlockDice)){
-   for(int n=0;n<8;++n)layerSet(performanceLock(n),0);
+   for(int n=0;n<12;++n)layerSet(performanceLock(n),0);
    for(int key:kExtraDiceValueLocks)layerSet(key,0);
    for(int key=kDiceLock0;key<=kDiceLock15;++key)layerSet(key,0);
    layerSet(kKitLock,0);layerSet(kPatternLock,0);
@@ -351,10 +357,10 @@ public:
   put(0x47444234);for(int b=0;b<7;++b){put(baseValid[b].load()?1:0);put(baseLengths[b].load());for(auto&n:bases[b]){put(n.data.load());put(n.gate.load());}}put(grooveBaseValid.load()?1:0);for(auto&x:grooveBase){float v=x.load();uint32_t bits;std::memcpy(&bits,&v,4);put(bits);}
   put(0x47525035);for(int g=0;g<4;++g){put(partSeed[g].load());for(auto&x:partOffset[g]){float v=x.load();uint32_t bits;std::memcpy(&bits,&v,4);put(bits);}}
   const char magic[]="GDXP0001";out.insert(out.end(),magic,magic+8);auto text=[&](const std::string&s,int n){for(int j=0;j<n;++j)out.push_back(j<int(s.size())?uint8_t(s[j]):0);};int kit=getInt(kXKit);text(kit>0&&kit<=int(library.factoryKits.size())?library.factoryKits[kit-1].id:orphanKit.load()?unresolvedKit:std::string(),128);auto*pack=filteredPack();text(pack?pack->id:orphanPack.load()?unresolvedPack:std::string(),64);
-  saveLayerState(out);saveCymbalState(out);savePoolState(out);saveReverseState(out);savePerformanceState(out);
+  saveLayerState(out);saveCymbalState(out);savePoolState(out);saveReverseState(out);savePerformanceState(out);saveHatPerformanceState(out);
  }
  void loadExtraState(const uint8_t* data,size_t size)override{
-  migratePerformanceDefaultNotes();bool hadPerformance=loadPerformanceState(data,size);loadReverseState(data,size);loadPoolState(data,size);
+  bool hadHats=loadHatPerformanceState(data,size);legacyPerformanceMap=!hadHats;migratePerformanceDefaultNotes();if(!hadHats)layerSet(kPerformSelectFull,getInt(kPerformSelect));bool hadPerformance=loadPerformanceState(data,size);loadReverseState(data,size);loadPoolState(data,size);
   const uint8_t*cymbalState=nullptr;if(size>=CymbalTrailerSize&&!std::memcmp(data+size-CymbalTrailerSize,"GDCY0001",8)){cymbalState=data+size-CymbalTrailerSize;size-=CymbalTrailerSize;}loadCymbalState(cymbalState);
   const uint8_t*layerState=nullptr;if(size>=LayerTrailerSize&&!std::memcmp(data+size-LayerTrailerSize,"GDLY0001",8)){layerState=data+size-LayerTrailerSize;size-=LayerTrailerSize;}
   loadLayerState(layerState);
@@ -383,7 +389,7 @@ public:
  std::vector<uint8_t> commandState;
  const std::vector<uint8_t>& internalSaveState(){
   commandState=mpc::Plugin::internalSaveState();size_t pos=12;
-  for(int i=0;i<kParamCount;++i){size_t n=commandState[pos++];pos+=n;if(i==kUnlockDice||i==kRollFill||i==kRollFx||performanceTransient(i)||i==kPerformLoopState||(i>=kPerformState0&&i<=kPerformState7))std::fill(commandState.begin()+pos,commandState.begin()+pos+8,0);pos+=8;}
+  for(int i=0;i<kParamCount;++i){size_t n=commandState[pos++];pos+=n;if(i==kUnlockDice||i==kRollFill||i==kRollFx||performanceTransient(i)||i==kPerformLoopState||performanceStateParameter(i))std::fill(commandState.begin()+pos,commandState.begin()+pos+8,0);pos+=8;}
   return commandState;
  }
  bool internalLoadState(const uint8_t* data,size_t size){if(!data||size<12||std::memcmp(data,"MPCP",4))return false;restoringHasX=false;{size_t pos=12;uint32_t count=0,version=0;for(int k=0;k<4;++k){count|=uint32_t(data[8+k])<<(8*k);version|=uint32_t(data[4+k])<<(8*k);}for(uint32_t j=0;j<count&&pos<size;++j){size_t n=data[pos++];if(n>size-pos||size-pos-n<(version>=2?8u:4u))break;if(n==4&&!std::memcmp(data+pos,"XKit",4))restoringHasX=true;pos+=n+(version>=2?8:4);}}restoring.store(true);loadGuardFrames.store(int(sr*.5));for(int i=kFactoryKit;i<kParamCount;++i)mpc::Plugin::set(i,param(i).def);factoryDirty.store(false);bool ok=mpc::Plugin::internalLoadState(data,size);set(kUnlockDice,0);set(kRollFill,0);set(kRollFx,0);if(ok){bool hasFullRhythm=false,hasRhythm=false,hasStyles=false,hasCymbals=false,hasRulePick=false;size_t pos=12;uint32_t n=0,version=0;for(int k=0;k<4;++k){n|=uint32_t(data[8+k])<<(8*k);version|=uint32_t(data[4+k])<<(8*k);}for(uint32_t j=0;j<n&&pos<size;++j){size_t len=data[pos++];if(len>size-pos||size-pos-len<(version>=2?8u:4u))break;if(len==12&&!std::memcmp(data+pos,"RulePickKick",12))hasRulePick=true;if(len==11&&!std::memcmp(data+pos,"OpenHatRule",11))hasCymbals=true;if(len==13&&!std::memcmp(data+pos,"HatRhythmFull",13))hasFullRhythm=true;if(len==9&&!std::memcmp(data+pos,"HatRhythm",9))hasRhythm=true;if(len==13&&!std::memcmp(data+pos,"RuleKickStyle",13))hasStyles=true;pos+=len+(version>=2?8:4);}if(!hasStyles){bool old=internal;internal=true;for(int g=0;g<4;++g)set(kRuleKickStyle+g,getInt(kRuleKick+g));internal=old;}if(!hasCymbals&&getInt(kRuleHatStyle)==7)set(kOpenHatRule,2);if(!hasRhythm){static const int legacy[]={0,3,6,8};set(kHatRhythm,legacy[getInt(kHatGrid)]);set(kHatRhythmPage,getInt(kHatRhythm)/8);}if(!hasFullRhythm){set(kHatRhythmFull,getInt(kHatRhythm));int old=getInt(kHatPhraseState),full=0;for(int b=0;b<3;++b)full|=((old>>(4*b))&15)<<(5*b);set(kHatPhraseFullState,full);}syncHatSelection();for(int g=0;g<4;++g)if(n<=uint32_t(kRulePickFullKick+g))layerSet(kRulePickFullKick+g,std::max(0,getInt(kRuleKickStyle+g)-1));for(int g=0;g<4;++g){if(!hasRulePick&&getInt(kRuleKickStyle+g)==0)layerSet(kDiceLock4+g,1);if(!hasRulePick){syncRuleSelector(g,true);if(!getBool(kEditor)&&!getBool(kPoolOpen)&&!getBool(kSampleBrowserOpen))layerSet(kQ5+g,getNormalised(kRulePickKick+g));}ruleSelectorSeen[g].store(getInt(kRuleKickStyle+g));}}factoryDirty.store(false);soundDirty.store(0);liveDirty.store(0);

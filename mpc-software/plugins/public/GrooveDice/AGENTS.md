@@ -178,3 +178,18 @@ Latest user steering supersedes earlier1.7.1candidate: PERFORM entry must be tab
 
 
 2026-11-20 Groove Dice1.7.1publication complete: sourcebc69dca, stable tag groove-dice/v1.7.1, all six public assets anonymously SHA256verified. Pages44639127077success;91responsive and24public checks;12final actual public-only frames/manual live. Corrected default BankBmap and targeted physicalB1/B3confirmed; complete bar-end phrases defer late triggers, tab-only MAIN/PERFORM and distinct MAIN EDIT FILL. NVMe203files/all17before-timing persistent files verified; SD/SSD/other plugins untouched. Earlier candidate/pending gates are historical. Full8pad/encoder/audio/CPUlimits remain explicit. Donut phase/wave work is a separate new task. Evidence: GrooveDice/design/device-1.7.1/publication.json.
+
+
+## 2026-11-20 — approved 1.8.0 development (not released)
+
+- User approved musical phrase-based generation for snare rolls/fills and four new hat rolls. B1–B4 snare, B5–B8 fill, B9–B12 hats, LOOP/STOP move to B13/B14; B15/B16 empty. Keep existing tab-only PERFORM, artwork, selected-slot Rate/Velocity/Humanize/Length Q-Links, one-shot full bar-end scheduling and late deferral.
+- First880parameter declarations remain exact; append full12slot selector,4×7hat controls,4hat note maps and4status values=917. Preserve old8slot selector as an alias; never expand its persisted normalized range. Known old LOOP/STOP defaults62/64 migrate to69/71; retain custom learned notes and disable colliding newly added hats until LEARN. Do not change MPC pad/scale settings.
+- Existing GDPF0001 bytes stay unchanged; append GDHH0001hat-note suffix. Loading older projects retains old roll/fill data, seeds hats and protects populated pre1.7fills. Global Dice respects all12locks, original recording protection, Amount0 and complete Undo. FX unchanged.
+- Use coherent rhythmic cells/rests/accent contours, chosen division/triplet preservation, base kick/2-and-4 anchors and sparse tom/perc replies; hat rolls replace automatic hats/ride/bell while active, with existing choke rules. No random sample/kit change outside existing Dice policy.
+- Implementation/build/device verification pending. No new release/site publication authorized by this change. NVMe only; SD reads/writes remain prohibited. Preserve owner expansions/captures and unrelated Donut phase/wave work.
+
+
+2026-11-20 latest user explicitly approved completing and publishing Groove Dice1.8.0and Donut Theory1.15.0with website updates. Earlier no-release/candidate gates are superseded after verification. A destructive public-profile replacement was rejected by automatic approval review. Instead, constructor-only Content/QA/public-core-only loading isolation preserves every owner file/registry byte; the marker is staging-only, must never ship and must be removed before final owner restore. Public captures show the active128WAV/95MIDIcore library, while private pack files remain safely installed but unloaded for QA. Do not claim private files were removed. Final owner read-back must verify all19persistent files including the55-note QA take. No SD/SSD access or Crate changes.
+
+
+Current1.8.0 musical performance, twelve slots, finite hat rolls and queued-performance count-in cancellation supersede historical1.7descriptions. User authorized stable publication/site update. NVMe only, preserve all19persistent files, never ship Content/QA/. Physical new pads and encoders remain separately unverified.

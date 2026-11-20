@@ -12,7 +12,7 @@ struct Rig{
 };
 static std::vector<uint8_t> old353(DonutTheory& p){auto state=p.internalSaveState();size_t end=12;for(int i=0;i<353;++i)end+=1+state[end]+8;state.resize(end+4);for(int b=0;b<4;++b)state[end+b]=0;state[8]=353&255;state[9]=353>>8;state[10]=state[11]=0;return state;}
 int main(){
- static_assert(kOscTune1==353&&kNumParams==391,"append-only performance surface");
+ static_assert(kOscTune1==353&&kNumParams==399,"append-only performance surface");
  {Rig m;m.p->set(kMix,32);m.p->set(kDetune,-7);m.p->set(kOctave,-1);m.p->set(kPulse,34);auto old=old353(*m.p);Rig r;assert(r.p->internalLoadState(old.data(),old.size()));r.block();assert(std::abs(r.p->get(kOscLevel1)-68)<.001&&std::abs(r.p->get(kOscLevel2)-32)<.001);assert(std::abs(r.p->get(kOscFine2)+7)<.001&&r.p->getInt(kOscTune2)==-12);assert(std::abs(r.p->get(kPulse2)-34)<.001);assert(r.p->get(kLfoDelay)==0&&r.p->get(kLfo2Delay)==0);}
  std::cout<<"PASS: legacy353 migration preserves oscillator ratio, tune, fine and pulse; Delay defaults zero\n";
  {Rig m;m.p->set(kOscFine1,5);m.p->set(kOscFine2,-3);m.p->set(kOscTune1,12);m.p->set(kOscTune2,-12);m.p->set(kOscLevel1,70);m.p->set(kOscLevel2,30);m.p->set(kLfoDelay,150);m.p->set(kLfo2Delay,420);m.p->set(kVoiceMode,2);m.block({mpc::MidiEvent::noteOn(0,60,100)});

@@ -32,6 +32,7 @@ def main():
  tmp.replace(target)
  # Audit actual ZIP, not just staging manifests.
  with zipfile.ZipFile(target)as z:
+  assert not any('/Content/QA/'in n for n in z.namelist()),'QA isolation marker must not ship'
   bank_paths=[n for n in z.namelist()if n.endswith('.gdbank')];assert bank_paths==[base.name+'/Content/Banks/default.gdbank'];assert not any('splat' in n.lower()for n in z.namelist());assert z.read(base.name+'/Content/Banks/default.gdbank')==(P/'Content/Banks/default.gdbank').read_bytes()
  report=dict(version=version,public_zip=str(target.resolve()),public_zip_bytes=target.stat().st_size,public_banks=bank_paths,private_payloads_in_public=0,personal_folder=str(personal.resolve()) if args.personal else None,bank_payloads_are_separate=True,personal_expansions=sorted(actual))
  (dist/f'groove-dice-{version}-profiles.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

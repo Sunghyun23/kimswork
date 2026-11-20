@@ -1,0 +1,8 @@
+PASS original4oscillator paths sample-identical at3rates x3frequencies including FM/PW
+PASS8distinct audible bounded waveforms; added harmonic partials fade out above Nyquist
+PASS live relative-phase changes crossfade without a hard jump
+PASS actual equal-sine engine audio:180degree cancellation below0.0001percent of aligned energy
+PASS0/90/180/360reset offsets, connected mono legato keeps phase, strummed voice waits then starts aligned
+PASS focus selection is sample-identical; shared A4 routing and fine8wave cursors preserve separate OSC values
+PASS expanded state/late legacy replay, eight-wave Dice coverage, phase lock, restart/focus retention and exact-normalized Undo
+PASS16voices, variable32/512blocks,44.1/96kHz, rapid phase changes, finite output/note termination and allocation guard

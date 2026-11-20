@@ -279,14 +279,14 @@ for n in range(1,17):assert assignment['Q-Link '+str(n)]==(keys['PerformQ'+str((
 assert 'GDPerformance' not in defs
 assert not any(a.get('handleName')=='Parameter '+str(keys['PerformOpen']) for d in defs.values() for a in d.get('actions',[]))
 assert any(a.get('handleName')=='Parameter '+str(keys['Editor']) for e in defs['GDMain']['componentsData'] for a in defs.get(e['componentData']['type'],{}).get('actions',[]))
-for pad in range(1,9):
+for pad in range(1,13):
  d=defs['PerfPad'+str(pad)+'Native'];actions=d['actions'];assert len(actions)==1 and actions[0]['handleName']=='Parameter '+str(keys['PerformHit'+str(pad-1)])
  surface=d['componentsData'][-1];assert surface['componentData']['type']=='Slider';assert surface['componentData']['data']['handleName']=='ResetOnGestureEnd/Parameter '+str(keys['PerformHit'+str(pad-1)])
  assert not any('GENERATE'in str(e)for e in d['componentsData'])
 for entry in performance['componentDefinition']['componentsData']:
  x,y,w,h=rect(entry);assert x>=0 and y>=0 and x+w<=1280 and y+h<=628
-assert keys['PerformOpen']==782 and len(m)==880
-print('PASS PERFORM bank B bottom-up8one-shot pads, release-safe caption surfaces, separated generators,4Q-Link relays and exact legacy782 metadata')
+assert keys['PerformOpen']==782 and len(m)==917
+print('PASS PERFORM bank B bottom-up12one-shot pads, release-safe caption surfaces, separated generators,4Q-Link relays and exact legacy782 metadata')
 
 controls=[e for e in performance['componentDefinition']['componentsData'] if e['componentData']['type'].startswith('KnobPerformQ')]
 assert len(controls)==4
@@ -294,3 +294,6 @@ for n,e in enumerate(controls):
  actions=defs[e['componentData']['type']]['actions']
  assert any(a['handler']=='Q-Link'and a['handleName']=='Parameter '+str(keys['PerformQ'+str(n)])for a in actions)
 print('PASS tab-only PERFORM entry, separate MAIN EDIT FILL, native four-Q-Link assignment and no duplicate context screen')
+
+assert m[:880]==json.loads((P/'tests/legacy-880-parameters.json').read_text())
+print('PASS exact880legacy declarations,12slots and appended full selector')

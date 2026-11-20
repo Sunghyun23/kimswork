@@ -24,7 +24,7 @@ static std::vector<uint8_t>legacy(const std::vector<uint8_t>&src){
  auto u32=[&](size_t at){return uint32_t(src[at])|uint32_t(src[at+1])<<8|uint32_t(src[at+2])<<16|uint32_t(src[at+3])<<24;};
  std::vector<uint8_t>out(src.begin(),src.begin()+12);out[8]=342&255;out[9]=342>>8;out[10]=out[11]=0;size_t pos=12;
  for(int i=0;i<kParamCount;++i){size_t n=1+src[pos]+8;if(i<342)out.insert(out.end(),src.begin()+pos,src.begin()+pos+n);pos+=n;}
- uint32_t n=u32(pos)-G::LayerTrailerSize-G::CymbalTrailerSize-G::PoolTrailerSize-G::ReverseTrailerSize-G::PerformanceTrailerSize;for(int k=0;k<4;++k)out.push_back(uint8_t(n>>(k*8)));out.insert(out.end(),src.begin()+pos+4,src.begin()+pos+4+n);return out;
+ uint32_t n=u32(pos)-G::LayerTrailerSize-G::CymbalTrailerSize-G::PoolTrailerSize-G::ReverseTrailerSize-G::PerformanceTrailerSize-G::HatPerformanceTrailerSize;for(int k=0;k<4;++k)out.push_back(uint8_t(n>>(k*8)));out.insert(out.end(),src.begin()+pos+4,src.begin()+pos+4+n);return out;
 }
 int main(){
  for(double rate:{44100.,48000.,96000.})for(int size:{31,128,511})for(float shift:{-30.f,-15.f,0.f,30.f}){

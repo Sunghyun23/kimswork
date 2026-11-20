@@ -1,5 +1,10 @@
 ## 2026-11-19 — local 1.14.2 selector alignment
 
+## 1.15.0 — Phase and eight waves (current)
+
+User approved implementation, device verification and official publication alongside Groove Dice1.8.0. Both fronts A=selected full Wave / Tune-Fine / Level / selected Drift-Phase. A4focus is edit-only; actual phase belongs to OSC2relative toOSC1,0–360degrees. FREE(default) retains old per-voice history; RESET aligns new articulations and Strum gates, preserving connected legato/chord glide. New live wave/phase changes crossfade. Added Soft Saw/Soft Pulse/Organ/Hollow expand each OSC to8choices; classic4paths and default66recipes remain sample-identical to1.14.2in native A/B testing. First391declarations exact;399total. Old4choicewave/pair aliases retain their ranges. Full canonical waves share the original pair lock; Phase owns a new lock. Dice includes new waves/phase, keeps restart/focus/mode/chords/master, and Undo restores exact normalized values. UI/editor commands restore idle and expose transient host text; snapshots remain read-only. Other mappings/artwork remain unchanged. SDK/native/ARM and local/device release qualification are recorded per version; no blanket physical/CPU certification is implied.
+
+
 User approved a UI-only refinement: front selectors use 146px or 296px column widths and a common26px height; footer VOICE/Dice Target/Input use matching184px-wide44px-high fields. FREE/SYNC is directly above its Rate on fronts and MOD. LFO focus and shape remain available in the same row; Motion sync no longer occupies its section title. Compact list text has8px leading space and a reserved arrow gutter; compact Drop TIME reserves40px for caption and106px for values/units. Original artwork/fonts, knob geometry, all391parameters and every Q-Link map are unchanged. No DSP change besides the candidate version11402. User authorized official1.14.2 release and website publication; completion is recorded in design/device-1.14.2/publication.json. Native/ARM/SDK, skin and host checks and actual MPC evidence are under DonutTheory/design/device-1.14.2/.
 
 ## 2026-11-19 — 1.14.1 device QA and release authorized

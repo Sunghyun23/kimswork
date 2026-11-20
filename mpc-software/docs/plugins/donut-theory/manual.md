@@ -1,4 +1,4 @@
-# Donut Theory 1.14.2 — User Manual
+# Donut Theory 1.15.0 — User Manual
 
 Donut Theory is an original Moog-inspired synth for MPC bass, keys, leads, pads and rich chord playing. Its nonlinear mixer, four-stage ladder low-pass and rounded VCA are an inspired design, not an exact recreation of a particular instrument or artist recording. No external samples are needed.
 
@@ -47,7 +47,7 @@ Avoid an extra nested copy of `kim - VST - Donut Theory` inside itself. Do not c
 
 ### Update
 
-Save and back up your MPC project first. Keep the previous package if you need to return to it. Version1.14.2 migrates the old oscillator/Sync values and preserves legacy parameter declarations. Keep a backup of important projects; older engines cannot represent all newer settings. Replace the existing plugin folder with the new complete folder, then restart MPC. Avoid duplicate installations on different drives.
+Save and back up your MPC project first. Keep the previous package if you need to return to it. Version1.15.0 migrates the old oscillator/Sync values and preserves legacy parameter declarations. Keep a backup of important projects; older engines cannot represent all newer settings. Replace the existing plugin folder with the new complete folder, then restart MPC. Avoid duplicate installations on different drives.
 
 Donut Theory retains its plugin identity across updates. Existing projects may retain host-side Q-Link assignments from an older instance. If a mapping looks wrong, compare a fresh plugin instance before changing the original track. Preserving the plugin identity does not guarantee that an older MPC OS can load a project saved by a newer OS.
 
@@ -72,7 +72,7 @@ Use **Screen** Q-Link mode for the current view. Program/Track remains a fixed s
 
 | Group | 1 | 2 | 3 | 4 |
 |---|---|---|---|---|
-| A OSC / Sound | Selected OSC Wave | Pitch: Tune/Fine | Selected OSC Level | Drift |
+| A OSC / Sound | Selected OSC Wave | Pitch: Tune/Fine | Selected OSC Level | Drift / Phase |
 | B Filter / Tone | Filter Cutoff | Resonance | Body | Drive |
 | C Selected LFO | Rate | Depth | Delay | Target |
 | D Amp / Motion | Amp Attack | Amp Release | Motion Rate | Motion Depth |
@@ -81,9 +81,19 @@ Use **Screen** Q-Link mode for the current view. Program/Track remains a fixed s
 
 A, B and C are identical shared controls. D is **Glide / Amp Decay / Amp Release / Pitch Drop**. MONO and LEGATO choices sit above Glide; Glide Mode selects always versus overlap-only sliding. Pitch Drop Time remains a compact touch field. Release is the same saved Amp Release as POLY and ENV.
 
-A's **OSC1/OSC2** selector chooses which oscillator to edit. **TUNE/FINE** changes the pitch edit resolution, not either saved value: semitones and cents add together. Changing focus does not rewrite oscillator settings. Drift is shared; Sub remains on OSC.
+A's **OSC1/OSC2** selector chooses which oscillator to edit. **TUNE/FINE** changes the pitch edit resolution, not either saved value: semitones and cents add together. Changing focus does not rewrite oscillator settings. Drift and Phase are shared. The DRIFT/PHASE selector above A4 changes the editing target without changing either value; Sub remains on OSC.
 
 C's **LFO1/LFO2** selector chooses an editor. Both independent LFOs remain active when their Depth is nonzero. Shape and FREE/SYNC are touch choices, keeping four Q-Links for Rate/Depth/Delay/Target. Changing focus neither clears a value nor resets modulation phase.
+
+## Phase and the eight-wave palette
+
+Raise both oscillator levels, or start from a two-oscillator factory sound, to hear their phase interaction. Both POLY and MONO place **DRIFT / PHASE** above A4. Select PHASE, then turn the fourth A Q-Link or drag the donut knob. **OSC Phase** is OSC2's phase offset relative to OSC1, from0to360degrees. Equal-frequency oscillators reveal the clearest timbre change; independent tuning naturally makes their relative phase move.
+
+The small **FREE / RESET** button sits to the right of the Phase value. FREE keeps the existing per-voice phase history. RESET aligns each new articulation with OSC1at0degrees and OSC2at the chosen offset. Connected legato and chord glide retain their ongoing phase; delayed Strum notes align when they actually begin sounding. Wave and phase changes use short crossfades. FREE is the factory default;82.8degrees preserves the previous initial offset. Existing66factory sounds are unchanged at these defaults.
+
+WAVE now offers **Sine, Triangle, Saw, Pulse, Soft Saw, Soft Pulse, Organ and Hollow** independently for OSC1andOSC2. The first four retain their original signal paths. The soft waves mix band-limited fundamentals; Organ uses fundamental/second/third partials, and Hollow uses fundamental/third/fifth. Added high partials fade near Nyquist. Select an oscillator on the front, then turn A1or tap its value to open the eight-item sidebar. OSC detail provides the same full choices.
+
+The original shared waveform padlock protects both oscillator waves. Drift and Phase have separate locks; A4shows the currently selected one. ROLL DICE includes the eight-wave palette and Phase, while retaining FREE/RESET, editing focus, voice mode, chords, MIDI and master level. UNDO restores exact preceding sound values. Manual edits and explicit factory selection still work when a lock is closed; choosing a factory sound restores its original waves/FREE/82.8degree defaults.
 
 ## Oscillators, filter and envelopes
 
@@ -198,7 +208,7 @@ Chord type, voicing, per-slot octave, MIDI Note/LEARN, input mode, sound and ina
 **PAD SETUP** holds the MIDI Note readouts/manual assignment and LEARN for the four slots in the selected bank. Close it to choose a different bank. The sixteen CHORD SCREEN Q-Links remain Root / Type / Voicing / Octave; Program/Track retains the synth mapping. All new drawers suppress background Q-Link guides.
 
 
-![CHORD editor running on MPC XL](/images/donut-theory-chord-device-1.14.2.webp)
+![CHORD editor running on MPC XL](/images/donut-theory-chord-device-1.15.0.webp)
 
 ### Four to sixteen slots
 
@@ -274,7 +284,7 @@ The engine has **16 audio voices**, not sixteen complete chords of unlimited siz
 
 ## Saving, automation and verification
 
-Save sounds/locks/chord setup in your MPC project. The66 factory programs and original first 353parameter declarations retain their identity;391 parameters are present in1.14.2. Old oscillator aliases and five-choice Sync IDs retain their ranges and migrate to their original straight periods. New D/T choices cannot be fully represented by older engines. Temporary selectors/commands are not a replacement for saved musical state.
+Save sounds/locks/chord setup in your MPC project. The66 factory programs and original first 353parameter declarations retain their identity;399 parameters are present in1.15.0, with the first391declarations unchanged. Old oscillator aliases and five-choice Sync IDs retain their ranges and migrate to their original straight periods. New D/T choices cannot be fully represented by older engines. Temporary selectors/commands are not a replacement for saved musical state.
 
 Source tests cover state migration, finite audio, voice/chord ownership, small incremental Sync input, all15 periods at multiple tempos, lock/Undo behavior, native presets and zero idle notification storms. Real MPC captures and remote UI interaction checks are recorded separately from physical encoders/multitouch, hardware audio listening/recording, full project round-trip and worst-case CPU, which are not newly certified. Other MPC models/firmware are not certified by an MPC XL test. See the versioned release notes and verification record for the exact scope.
 
@@ -497,3 +507,8 @@ New recipes are original harmonic designs for neo-soul, hip-hop, R&B, vamps, mod
 | 94 | Turnarounds | Turn / Late Checkout | Em7b5 → A7alt → Dm11 → G7alt |
 | 95 | Turnarounds | Turn / Round Trip | C6/9 → F#7alt → Fmaj13 → G13sus4 |
 | 96 | Turnarounds | Turn / Last Cup | Fmaj9#11 → Em11 → A7alt → D9sus4 |
+
+
+### Older stored Q-Link assignments
+
+Use Screen mode for the current page's controls. Old project/Track assignments can retain the previous four-wave or Drift-only parameter indices. Reset those host assignments to defaults or create a new track for the new Wave/Drift-Phase relays; plugin parameter identities are preserved rather than reinterpreted. Editor-open commands and live gates intentionally reload idle, so projects open on POLY without a startup overlay.

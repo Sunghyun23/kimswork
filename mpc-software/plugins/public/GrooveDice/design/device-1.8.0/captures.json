@@ -1,0 +1,62 @@
+[
+  {
+    "file": "public-main.png",
+    "sha256": "6ebae3df06e2a8fdd38efafec27ab5f8c5f08855ea0554fcc0df27f4c5097308",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-perform.png",
+    "sha256": "21b0f6034cde74c490c79cbb15504ba2882119104d43bd8854a22b489de1d59f",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-roll.png",
+    "sha256": "a6ade960a166f4fa079b42c1f710dd5e7a3d3157ac971fc6cb657bddfa8b83b2",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-capture.png",
+    "sha256": "e6b279ee7766338a11f88e3b58c3bf6f69896b4240af00b22173c73aa42d23cf",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-groove.png",
+    "sha256": "e63b40d6b1913d72b814b39d854d0fe611b6df5e3ea6371ea5b4f8a734d79113",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-sound.png",
+    "sha256": "d70d6f1aafdb1f400c1c0b70e1dc784ded7eaa834f9ac3e993ea984e74167e66",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-sound2.png",
+    "sha256": "b0a6dbdb65588cba3ca143041af34b670cb805e160aded9383afbb1b942bd3f4",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-cymbals.png",
+    "sha256": "b0a6dbdb65588cba3ca143041af34b670cb805e160aded9383afbb1b942bd3f4",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-fill.png",
+    "sha256": "42f4a7cc21571a560d7c8dc98f913e9416090f452af61bae5f1179cbe1314603",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-kits.png",
+    "sha256": "ea19272fa3b28516fba9d29033456c7f73ff6fa9fc8a3771ddf4a85d351a6deb",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-fx.png",
+    "sha256": "65abcb7a81afa95327fb7516efecb43e9bb476265e5420b315e8034a21845231",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  },
+  {
+    "file": "public-routing.png",
+    "sha256": "b0a6dbdb65588cba3ca143041af34b670cb805e160aded9383afbb1b942bd3f4",
+    "source": "Actual MPC XL framebuffer; original public core loaded, optional owner packs not loaded; persistent files retained"
+  }
+]

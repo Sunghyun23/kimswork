@@ -180,6 +180,18 @@ f('PerformLoopState','Performance Loop State',0,1,0,auto=False)
 for n in range(8):f('PerformState'+str(n),'Performance State '+str(n+1),0,2,0,auto=False)
 b('PerformLearnLoop','Learn Loop Pad',auto=False)
 b('PerformLearnStop','Learn Stop Pad',auto=False)
+# 1.8: retain the original eight-slot selector/notes; append a twelve-slot editor.
+c('PerformSelectFull','Performance Slot Full',['SNARE A','SNARE B','SNARE C','SNARE D','FILL A','FILL B','FILL C','FILL D','HAT A','HAT B','HAT C','HAT D'],auto=False)
+for n in range(8,12):
+ b('PerformHit'+str(n),'Performance Trigger '+str(n+1),auto=False)
+ b('PerformLock'+str(n),'Performance Lock '+str(n+1),auto=False)
+ b('PerformGenerate'+str(n),'Generate Performance '+str(n+1),auto=False)
+ c('PerformRate'+str(n),'Performance Rate '+str(n+1),['1/8','1/8 T','1/16','1/16 T','1/32','ACCEL'],[2,4,3,5][n-8])
+ f('PerformVelocity'+str(n),'Performance Velocity '+str(n+1),30,127,82)
+ f('PerformHumanize'+str(n),'Performance Humanize '+str(n+1),0,30,8,'%')
+ c('PerformLength'+str(n),'Performance Length '+str(n+1),['1 Beat','2 Beats','1 Bar'],[0,1,1,2][n-8])
+for n,note in enumerate([62,64,65,67],8):f('HatPerformNote'+str(n-8),'Hat Performance Pad '+str(n-7),-1,127,note,auto=False)
+for n in range(8,12):f('PerformState'+str(n),'Performance State '+str(n+1),0,2,0,auto=False)
 P.joinpath('parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 lines=['// Generated parameter declarations. Stable index order from parameters.json.','enum Key { '+', '.join('k'+p['key'] for p in params)+', kParamCount };','inline void declareParameters(mpc::Plugin& plugin) {']
 for p in params:
@@ -190,7 +202,7 @@ lines+=['}']
 from dice_lock_catalog import definitions as dice_definitions
 lines+=dice_definitions()
 P.joinpath('src/Parameters.h').write_text('\n'.join(lines)+'\n')
-p=P/'plugin.json';m=json.loads(p.read_text());m.update(version='1.7.1',numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MIT');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
+p=P/'plugin.json';m=json.loads(p.read_text());m.setdefault('version','1.8.0');m.update(numOutputs=16,category='Drum',description='Neo-soul drum instrument with original procedural sounds, modular expansions, groove generation and fill recording.',url='https://kimswork.app/',license='MIT');m.pop('uiVersion',None);p.write_text(json.dumps(m,indent=2)+'\n')
 main=['Swing','Snare Late','Hat Shift','Rnd Nudge','Kick Style','Snare Style','Hat Style','Perc Style','Kick Mix','Snare Mix','Hat Mix','Perc Mix','Drive','Dust','Room','Full Hat Rhythm']
 pages=[{'name':'MAIN','controls':main},{'name':'FILL','controls':['Fill Select','Fill Length','Rec Mode','Count-in','Note Nudge','Note Velocity','Note Gate','Note Chance']},{'name':'GROOVE','controls':main[:4]+['Density','Ghost','Vel Spread','Random Amt']+['Preview BPM','Note Select','Note Nudge','Note Velocity','Fill Select','Fill Density','Fill Every','Variation']},{'name':'SOUND','controls':['Sound Control '+str(i+1) for i in range(16)]},{'name':'KITS','controls':['Kit Select','Kit Lock','Pattern','Pattern Lock','User Kit','Save Kit','Load Kit','Choke Time']+[f'Choke {i}'for i in range(1,9)]},{'name':'FX','controls':['Drive','Dust','Room','Duck','Low Cut','Mod Rate','Mod Depth','Master']},{'name':'ROUTING','controls':[f'Output {i}'for i in range(1,9)]+[f'Pad Note {i}'for i in range(1,9)]}]
 P.joinpath('ui.json').write_text(json.dumps({'kit':'amber','pages':pages},indent=2)+'\n')

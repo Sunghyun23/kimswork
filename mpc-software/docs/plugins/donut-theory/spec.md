@@ -1,5 +1,10 @@
 ## 2026-11-19 — 1.14.1 device QA and release authorized
 
+## 1.15.0 — Phase and eight waves (current)
+
+User approved implementation, device verification and official publication alongside Groove Dice1.8.0. Both fronts A=selected full Wave / Tune-Fine / Level / selected Drift-Phase. A4focus is edit-only; actual phase belongs to OSC2relative toOSC1,0–360degrees. FREE(default) retains old per-voice history; RESET aligns new articulations and Strum gates, preserving connected legato/chord glide. New live wave/phase changes crossfade. Added Soft Saw/Soft Pulse/Organ/Hollow expand each OSC to8choices; classic4paths and default66recipes remain sample-identical to1.14.2in native A/B testing. First391declarations exact;399total. Old4choicewave/pair aliases retain their ranges. Full canonical waves share the original pair lock; Phase owns a new lock. Dice includes new waves/phase, keeps restart/focus/mode/chords/master, and Undo restores exact normalized values. UI/editor commands restore idle and expose transient host text; snapshots remain read-only. Other mappings/artwork remain unchanged. SDK/native/ARM and local/device release qualification are recorded per version; no blanket physical/CPU certification is implied.
+
+
 The user explicitly requested MPC inspection and publication of the current1.14.1implementation. Earlier local-only/no-device/no-release statements below are historical. Current public outcomes are recorded in `plugins/public/DonutTheory/design/device-1.14.1/publication.json` after completion. Groove Dice1.6.0 is already released separately; the earlier no-Triplet drum audit predates that release.
 
 ## Local1.14.1 — Sync encoder fix and dotted/triplet rates (2026-11-19)

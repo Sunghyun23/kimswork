@@ -1,55 +1,38 @@
-# Groove Dice 1.7.1
+# Groove Dice 1.8.0
 
-Retained from1.3.4: all seventeen SOUND sources have independent reverse switches, saved with user kits and projects. Start trims from the source end in reverse mode; Decay and Shift remain independent. SOUND has two in-place pages: Sample/Level/Tune/Shift, then Start/Decay/Low Cut/High Cut. Separate48px previous/next arrows surround a visible SOUND1/2 counter. REV stays available on both pages; approved per-row polarity Ø is on page2. Remote on-device page/REV/Ø interactions were checked; physical encoder and hardware-audio coverage remain separate.
+Neo-soul and hip-hop drums for MPC: generate a one-bar groove, perform musical fills and rolls, then capture your take as editable MIDI.
 
-1.7.1 corrects the tested Bank B default layout, keeps PERFORM as a native MAIN/PERFORM subtab only, and plays complete fill/roll phrases ending at a bar boundary. Late triggers wait for the next valid bar instead of truncating. MAIN retains EDIT FILL. The owner confirmed physical B1 and B3 trigger ROLL A/C and end correctly on MPC XL; remaining physical-pad/encoder coverage and worst-case hardware CPU remain separate.
+- PERFORM uses the first native MAIN/PERFORM key. Bank B1–B4: snare rolls; B5–B8: fills; B9–B12: hat rolls; B13: LOOP; B14: STOP. B15/B16are unused. A-bank direct drums remain unchanged.
+- One press plays a complete selected1/2/4-beat phrase ending at a bar boundary. Late presses wait for the next valid ending. Early release never truncates it; recorded fills retain their full stored length.
+- Phrase-based random generation uses rhythmic cells, rests, strong/weak accents and restrained grace hits. Fills keep the main kick motif and2/4snare anchors, adding coherent snare/tom/perc replies. Hat rolls replace the automatic hat/ride/bell lane during their phrase.
+- Rate/Velocity/Humanize/Length share four selected-slot Screen Q-Links. All twelve slots have locks and explicit GENERATE. Global Dice regenerates unlocked MAIN/rolls/fills together at the next bar; recordings/edits lock automatically. UNDO includes all twelve sequences. FX remain unchanged.
+- MAIN has sixteen value padlocks, sixteen RULE styles per part and24straight/dotted/triplet/fill/roll hat rhythms. Hat Rhythm/Open Hat/Ride/Crash stay on MAIN; Drive/Dust/real stereo Room reverb stay on FX.
+- Four kick/snare layers, linked hats, a percussion ensemble and independent Ride/Crash/Bell. SOUND1/2=Sample/Level/Tune/Shift; SOUND2/2=Start/Decay/LowCut/HighCut, with48px page arrows, REV on both pages and independent polarity on page2.
+- Choose sounds from This Pack, All Packs or up to64selected kits. Kit/role/layer protection, user kits, MIDI learn, sample preview and eight stereo output pairs remain available.
+- CAPTURE stores actual generated/direct drum notes; EXPORT MIDI writes a960PPQ SMF for import into MPC. Performance trigger keys are consumed. Live plugin MIDI output to the sequencer is unavailable.
 
-One-bar neo-soul and hip-hop drums for MPC standalone, with visible Dice changes and individual locks.
+## Install and update
 
-PERFORM provides four fills, four one-shot snare rolls, loop/stop pad triggers, selected-slot Q-Link editing, MIDI learn and internal performance capture/export. Automated checks pass. MPC XL remote touch checks cover playback, editing, generation/locks and MIDI file export; physical B1/B3 have user confirmation; other pad/encoder coverage and full hardware audio remain separately unverified.
+MPC standalone OS3.10.1+ with Enable Enhancements and External Plugin Support. Extract the complete `kim - VST - Groove Dice` folder to `VST2 Plugins`, preferably internal storage. Save work and restart/rescan MPC. Keep one active copy across attached drives.
 
-- Sixteen MAIN padlocks protect individual knob values. Open controls change visibly when Roll Dice is pressed; musical bounds preserve backbeats, practical mix levels and restrained timing.
-- Sixteen playable RULE styles per part. LOCK is removed from the knob/list/Q-Link range and handled by the separate padlock. Existing saved LOCK states migrate safely.
-- MAIN D: Hat Rhythm, Open Hat, Ride and Crash. Twenty-four straight/dotted/triplet/fill/roll hat rhythms, ride/bell patterns and structural crash accents. Drive, Dust and real stereo Room reverb remain on FX.
-- SOUND1/2: Sample, Level, Tune and Shift. SOUND2/2: Start, Decay, Low Cut and High Cut. Every source keeps one fixed SCREEN Q-Link group. Separate48px arrows and a visible counter switch all rows together; no separate Detail modal. REV is available on both pages; polarity Ø is on page2.
-- Independent Ride/Crash/Bell source editing. Four kick/snare layers, linked hats and a four-role percussion set.
-- Dice sound range: This Pack, All Packs or up to 64 selected kits. Whole-kit or mixed-part selection respects kit/layer locks.
-- Eight-role fill grid in two views; independent recorded Fill A–D. Metrical velocity accents and live one-bar rule editing.
-- Fixed blank skins caused by empty text widgets and the overlapping kit-lock caption.
+Preserve **Content/Expansions** and **Content/Captures** during manual updates. Both are protected user_data in Open MPC portable installers. Older1.6.1catalog installers did not protect packs and should not be used for upgrades. Public packages contain only Original Workshop:128original synthesized sounds,96kit combinations,2authored beats and93timing templates. Optional `.gdexp` packs stay separate; no private/commercial library is bundled.
 
-## Installation and contents
+## Compatibility and verification
 
-MPC standalone OS3.10.1+ with Enable Enhancements and External Plugin Support. Extract the ZIP and copy the complete `kim - VST - Groove Dice` folder to `VST2 Plugins` at the drive root, preferably internal storage. Keep one installed copy across attached drives, save work and restart/rescan MPC. Read MANUAL.md for performance, fills, routing and packs.
+Vendor kim/UID KpGy. First880parameter declarations remain exact;37append for917total. Original fill/snare state layouts are retained; a separate suffix stores new hat sequences. Known default LOOP/STOP62/64move to69/71; custom learned mappings remain. A new hat slot conflicting with a retained mapping shows LEARN PAD until assigned. The plugin never changes MPC pad/scale settings. Older engines cannot retain the new settings.
 
-Public package: Original Workshop only — 128 independently synthesized one-shots, 96 kit combinations, two authored beats and 93 timing templates. No private/commercial sample library is included. Optional .gdexp files remain separate and require reopening the instrument after installation/removal.
+Native/ARM32/ARM64, SDK validation, complete engine/UBSan/allocation/state/skin/expansion/VST suites pass; host simulator19PASS/0WARN/0FAIL. Actual MPC XL/OS3.10.1.12 remote tests verify the twelve-slot UI, hat playback/end, editing, locks/Dice and a55-note balanced MIDI export. The previous B1/B3physical confirmation remains targeted; fresh complete physical-pad/Q-Link, hardware-audio, latency/route and worst-case CPU certification are not implied. Signed Shift retains a30msbaseline latency. See VALIDATION.md and the [performance specification](../../../docs/plugins/groove-dice/performance.md).
 
-## Compatibility and validation
+## Create packs
 
-UID KpGy; 880 parameters, with the first782declarations preserved exactly; existing parameter IDs and ranges retained. Existing projects/expansion identities are supported; old RULE LOCK values migrate to BASIC plus a closed padlock. Signed Shift reports fixed 30ms latency including direct pads. Newer state cannot be fully represented by old engines. External sidechain and live plugin MIDI output remain unsupported. Internal CAPTURE and Standard MIDI File export/import record the generated performance as editable notes.
-
-Native/ARM32/ARM64 builds and SDK validation pass. Engine, UBSan, allocation guards, sample/state/expansion/skin and real VST bridge tests pass. Host simulator:19 pass,0 warnings,0 failures. The owner confirmed 1.3.3 locks/Dice/RULE behavior on MPC XL OS3.10.1.12. Actual screenshots come directly from the authenticated MPC Remote Screen framebuffer stream, with capture provenance recorded. Complete physical-control coverage, all routes and worst-case hardware CPU are not certified. No ASan pass is claimed. See VERIFICATION.md.
-
-Version1.4.0 adds16RULES per part, with a paged left list and full-range Q-Link control. See MANUAL.md and VERIFICATION.md.
-
-Global Dice regenerates the main groove and all unlocked performance slots together at the next bar while playing. Four fills and four momentary snare rolls have separate protection. Recorded or manually edited fills lock automatically. FX remain unchanged. See [performance specification](../../../docs/plugins/groove-dice/performance.md) and MANUAL.md.
+[Groove Dice Pack Builder](https://kimswork.app/apps/groove-dice-pack-builder/) is a separate optional app for macOS Apple Silicon and Windows x64. Organize WAV/MIDI folders, review roles, generate/audition kits and export independent `.gdexp` files. See PACK_BUILDER.md and the [complete guide](https://kimswork.app/apps/groove-dice-pack-builder/manual/). The included core works without the builder.
 
 ## Development
 
 Build: `python3 mpc-software/plugins/public/GrooveDice/tools/build.py all`
+
 Tests: `python3 mpc-software/plugins/public/GrooveDice/tools/test.py`
-Public package: `python3 mpc-software/plugins/public/GrooveDice/tools/package_profiles.py` (no personal flag).
-See AGENTS.md for append-only metadata, bank preservation and UI rules.
-
-Version1.6.0 adds 1/4T, 1/8T and 1/16T hats, each plain, +FILL or +ROLL. Tap Hat Rhythm for three pages of eight choices, or turn MAIN D1 in Screen mode. Triplets retain their spacing independently of straight swing. Live changes, MAIN Dice locks and Undo share the full selector; old779-parameter snapshots migrate without replacing their notes.
-
-## Create your own packs
-
-[Groove Dice Pack Builder](https://kimswork.app/apps/groove-dice-pack-builder/) is a separate optional app for macOS Apple Silicon and Windows x64. Organize WAV/MIDI folders, review roles, generate/audition kits and export independent `.gdexp` files. Read the bundled PACK_BUILDER.md or [complete guide](https://kimswork.app/apps/groove-dice-pack-builder/manual/). The instrument works with its included core without the builder.
 
 ## License
 
-Groove Dice project code and Original Workshop core content are offered under MIT; see LICENSE and Content/Licenses/. Original synthesis and authored MIDI use no external audio/MIDI/model inputs. Optional expansions retain their own source rights; neither the plugin license nor a builder checkbox grants rights to another library. Pack Builder is distributed separately with its own dependency notices.
-
-## 1.6.2 expansion-safe catalog upgrades
-
-Open MPC packages declare `Content/Expansions` as user data so upgrades retain installed packs and their registry. Back up important projects and packs before upgrading; older1.6.1catalog packages did not declare this folder and should not be used for catalog upgrades. The normal SDK copy workflow still requires preserving your Content/Expansions directory. The engine, parameters, UI and original bank are unchanged.
+Plugin code and Original Workshop core are MIT; see LICENSE and Content/Licenses/. Original synthesis/authored MIDI use no external audio/MIDI/model inputs. Optional expansions retain their source rights. Pack Builder is separate and retains its dependency notices.

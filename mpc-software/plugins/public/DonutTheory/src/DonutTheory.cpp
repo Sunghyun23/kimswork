@@ -10,6 +10,7 @@
 #include "dsp/delay_line.h"
 #include "dsp/noise.h"
 #include "Catalog.h"
+#include "ExpandedOscillator.h"
 #include "SyncGrid.h"
 #include "ChordVoicing.h"
 #include "SmoothVoicing.h"
@@ -42,7 +43,7 @@ public:
     static constexpr int N=16;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11402;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11500;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -51,7 +52,7 @@ public:
         // Prefix programs intentionally exclude input/chord settings.
         for(int i=0;i<=kSoundPreset;++i)set(i,kPatches[0][i]);
         set(kOscPair,getInt(kWave1)*4+getInt(kWave2));
-        seedPerformanceSound();
+        seedPerformanceSound();seedExpandedWaves();
     }
 #ifdef DONUT_TOUCH_DIAGNOSTICS
     // QA-only raw host writes. No allocation, I/O or locks on the audio thread.
@@ -74,6 +75,11 @@ public:
         applyFactorySound(index);
         stateLoadPending_.store(true,std::memory_order_release);
     }
+    static bool transientParameter(int index){
+        bool transient=index==kTouchStop||index==kPadLearn||index==kTransposeOpen||index==kTransposeApply||index==kSmoothOpen||index==kSmoothApply||index==kSmoothPreview||index==kRandomize||index==kFactoryReload||index==kUnlockDice||index==kUndoDice;
+        for(int slot=0;slot<16;++slot)transient|=index==kChordTouches[slot];
+        return transient||(index>=kChordPlayingPage1&&index<kChordPlayingPage1+4)||(index>=kSoundPrev&&index<kSoundPrev+4)||(index>=kSlotsMinus&&index<kSlotsMinus+4);
+    }
     std::vector<uint8_t> commandState_;
     const std::vector<uint8_t>& internalSaveState(){
         // Hosts snapshot state while building their preset menu. A snapshot is
@@ -82,10 +88,7 @@ public:
         size_t pos=12;
         for(int index=0;index<kNumParams;++index){
             const size_t idSize=commandState_[pos++];pos+=idSize;
-            bool transient=index==kTouchStop||index==kPadLearn||index==kTransposeOpen||index==kTransposeApply||index==kSmoothOpen||index==kSmoothApply||index==kSmoothPreview||index==kRandomize||index==kFactoryReload||index==kUnlockDice||index==kUndoDice;
-            for(int slot=0;slot<16;++slot)transient|=index==kChordTouches[slot];
-            transient|=(index>=kChordPlayingPage1&&index<kChordPlayingPage1+4)||(index>=kSoundPrev&&index<kSoundPrev+4)||(index>=kSlotsMinus&&index<kSlotsMinus+4);
-            if(transient)std::fill(commandState_.begin()+pos,commandState_.begin()+pos+8,0);
+            if(transientParameter(index))std::fill(commandState_.begin()+pos,commandState_.begin()+pos+8,0);
             pos+=8;
         }
         return commandState_;
@@ -107,6 +110,7 @@ public:
             set(kDiceValueLockOscLevel1,get(kDiceValueLockMix));set(kDiceValueLockOscLevel2,get(kDiceValueLockMix));set(kDiceValueLockOscFine2,get(kDiceValueLockDetune));set(kDiceValueLockOscTune2,get(kDiceValueLockOctave));set(kDiceValueLockPulse2,get(kDiceValueLockPulse));}
         if(count<=kOscPulse1)set(kOscPulse1,get(kPulse));
         for(int module=0;module<3;++module)if(count<=uint32_t(divisionParameters_[module]))set(divisionParameters_[module],float(donut::kLegacySyncIndex[getInt(legacyDivisionParameters_[module])]));
+        if(count<=kWave1Full)seedExpandedWaves();
         if(count<=kSoundCurrent)set(kSoundCurrent,get(kSoundPreset));
         legacyReplaySamples_.store(count>242?int(sr_*.5f):0,std::memory_order_release);
         if(count<=77)set(kPadMap,0); // Existing projects retain Trigger Base routing.
@@ -121,13 +125,17 @@ public:
             if(!reflecting){
                 const int target=performanceTarget(index);
                 if(target>=0&&!protect){float plain=value;
-                    if(index==kPerfPitch)plain=param(target).toPlain(value);
+                    if(index==kPerfPitch||index==kPerfCharacter)plain=param(target).toPlain(value);
                     if(index==kPerfLfoShape&&getInt(kLfoFocus)==0)plain=value;
                     setFromEngine(target,plain);
                 }
                 for(int module=0;module<3;++module){
                     if(index==legacyDivisionParameters_[module]&&!protect)setFromEngine(divisionParameters_[module],float(donut::kLegacySyncIndex[int(std::lround(value))]));
                     if(index==divisionParameters_[module]&&!protect){for(int old=0;old<5;++old)if(donut::kLegacySyncIndex[old]==int(std::lround(value)))setFromEngine(legacyDivisionParameters_[module],float(old));}
+                }
+                if(!protect&&!waveAliasReflection()){
+                    if(index==kWave1||index==kWave2)setFromEngine(index==kWave1?kWave1Full:kWave2Full,value);
+                    if(index==kWave1Full||index==kWave2Full)syncWaveAliases();
                 }
                 // Legacy automation remains a valid entry point. New per-OSC
                 // controls are canonical and saved independently thereafter.
@@ -195,7 +203,7 @@ public:
     }
     void prepare(double sr,int) override {
         sr_=float(sr);dcCoeff_=std::exp(-2.f*3.14159265359f*5.f/sr_);for(auto& f:lowCut_)f.setSampleRate(sr);wowFlutter_.prepare(sr/16.0);
-        for(auto& v:voices_){v.a.setSampleRate(sr);v.b.setSampleRate(sr);v.sineA.setSampleRate(sr);v.sineB.setSampleRate(sr);v.sub.setSampleRate(sr);v.fm.setSampleRate(sr);v.filter.setSampleRate(sr);v.amp.setSampleRate(sr);v.env.setSampleRate(sr);v.pitch.setTime(10,sr);}
+        for(auto& v:voices_){v.a.setSampleRate(sr);v.b.setSampleRate(sr);v.sub.setSampleRate(sr);v.fm.setSampleRate(sr);v.filter.setSampleRate(sr);v.amp.setSampleRate(sr);v.env.setSampleRate(sr);v.pitch.setTime(10,sr);}
         bodyTone_.prepare(float(sr));lfo2_.setSampleRate(sr);lfo2Signal_.setTime(2,sr);
         for(int i=0;i<5;++i){lfo2Weights_[i].setTime(10,sr/16);lfo2Weights_[i].snap(i==getInt(kLfo2Target)?1.f:0.f);}
         tremolo_.setSampleRate(sr);lfo_.setSampleRate(sr);vibrato_.setSampleRate(sr);vibrato_.setFrequency(5.2f);
@@ -212,7 +220,7 @@ public:
         lastRateSync_.fill(-1);
         setFromEngine(kRandomize,0);setFromEngine(kFactoryReload,0);setFromEngine(kUnlockDice,0);setFromEngine(kUndoDice,0);undoReady_=false;soundReload_.store(false);
         setFromEngine(kTransposeOpen,0);setFromEngine(kTransposeApply,0);
-        clearNotes();for(int i=0;i<N;++i){auto& v=voices_[i];const float phase=std::fmod(i*.61803398875f,1.f);v.a.resetPhase(phase);v.sineA.resetPhase(phase);v.b.resetPhase(std::fmod(phase+.23f,1.f));v.sineB.resetPhase(std::fmod(phase+.23f,1.f));v.sub.resetPhase(phase);v.fm.resetPhase(phase);}
+        clearNotes();for(int i=0;i<N;++i){auto& v=voices_[i];const float phase=std::fmod(i*.61803398875f,1.f);v.a.setWave(getInt(kWave1Full),false);v.b.setWave(getInt(kWave2Full),false);v.a.resetPhase(phase);v.b.resetPhase(std::fmod(phase+phaseCycles(get(kOscPhase)),1.f));v.b.snapPhaseSetting(get(kOscPhase));v.sub.resetPhase(phase);v.fm.resetPhase(phase);}
         for(int i=0;i<16;++i)for(int j=0;j<4;++j)lastTouchChord_[i][j]=getInt(chordField(i,j));lastSlotCount_=activeSlots();lastMainPage_=getInt(kMainChordPage);lastLowCut_=-1;cachePadMapping();for(auto& d:delay_)d.reset();chorus_.reset();
         panLeft_.snap(1);panRight_.snap(1);motionGain_.snap(1);bodyTone_.reset();lfo2_.reset();lfo2Signal_.snap(0);for(int i=0;i<5;++i){lfo2TargetWeights_[i]=i==getInt(kLfo2Target)?1.f:0.f;lfo2Weights_[i].snap(lfo2TargetWeights_[i]);}
         wowFlutter_.reset();tapePitch_=0;tremolo_.reset();lfo_.reset();vibrato_.reset();drift_.reset();chorusLfo_.reset();
@@ -238,7 +246,9 @@ public:
         if(getBool(kUnlockDice)){for(int key:kDiceValueLocks)setFromEngine(key,0);for(int i=kDiceLockOsc;i<=kDiceLockFx;++i)setFromEngine(i,0);setFromEngine(kUnlockDice,0);}
         if(getBool(kUndoDice)){if(undoReady_&&replay==0){proxySyncThread_.store(donutThreadToken(),std::memory_order_release);for(int i=1;i<kNumParams;++i)if(diceValueLock(i)>=0&&i!=kVoiceMode){proxySyncIndex_.store(i,std::memory_order_release);if(getNormalised(i)!=undoNormalised_[i]){setNormalised(i,undoNormalised_[i]);changed_[i].store(true,std::memory_order_release);displayPending_.store(true,std::memory_order_release);}}proxySyncIndex_.store(-1,std::memory_order_release);proxySyncThread_.store(0,std::memory_order_release);setFromEngine(kRandomized,undoRandomized_);undoReady_=false;lastPair_=getInt(kOscPair);lastFX_=getInt(kFXPreset);clearNotes();}setFromEngine(kUndoDice,0);}
         if(getBool(kRandomize)){if(replay==0){if(randomizeSound()){lastPair_=getInt(kOscPair);clearNotes();}}setFromEngine(kRandomize,0);}
-        if(getInt(kOscPair)!=lastPair_){lastPair_=getInt(kOscPair);setFromEngine(kWave1,float(lastPair_/4));setFromEngine(kWave2,float(lastPair_%4));}
+        syncWaveAliases();
+        if(replay>0){lastPair_=getInt(kWave1)*4+getInt(kWave2);setFromEngine(kOscPair,float(lastPair_));}
+        else if(getInt(kOscPair)!=lastPair_){lastPair_=getInt(kOscPair);setFromEngine(kWave1,float(lastPair_/4));setFromEngine(kWave2,float(lastPair_%4));}
         else {const int pair=getInt(kWave1)*4+getInt(kWave2);if(pair!=lastPair_){lastPair_=pair;setFromEngine(kOscPair,float(pair));}}
         for(int bank=0;bank<4;++bank)if(getInt(kBankProgressions[bank])!=lastProgressions_[bank]){
             const int preset=getInt(kBankProgressions[bank]);lastProgressions_[bank]=preset;
@@ -324,11 +334,12 @@ public:
             proxySyncIndex_.store(relay,std::memory_order_release);setFromEngine(relay,value);}
         for(int i=kPerfWave;i<=kPerfLfoSync;++i){const int target=performanceTarget(i);if(target<0)continue;
             proxySyncIndex_.store(i,std::memory_order_release);setFromEngine(i,i==kPerfPitch?getNormalised(target):get(target));}
+        for(int i:{kPerfWaveFull,kPerfCharacter}){int target=performanceTarget(i);proxySyncIndex_.store(i,std::memory_order_release);setFromEngine(i,i==kPerfCharacter?getNormalised(target):get(target));}
         proxySyncIndex_.store(kPerfVoice,std::memory_order_release);setFromEngine(kPerfVoice,getInt(kVoiceMode)==2?1.f:0.f);
         if(getInt(kVoiceMode)<2){proxySyncIndex_.store(kMonoLegato,std::memory_order_release);setFromEngine(kMonoLegato,get(kVoiceMode));}
         proxySyncIndex_.store(-1,std::memory_order_release);proxySyncThread_.store(0,std::memory_order_release);
         for(int i=0;i<kNumParams;++i){raw_[i]=get(i);smooth_[i].setTarget(raw_[i]);}
-        for(auto& v:voices_){v.amp.set(raw_[kAmpAttack],raw_[kAmpDecay],raw_[kAmpSustain]*.01f,raw_[kAmpRelease]);v.env.set(raw_[kFiltAttack],raw_[kFiltDecay],raw_[kFiltSustain]*.01f,raw_[kFiltRelease]);v.pitch.setTime(raw_[kGlide],sr_);}
+        for(auto& v:voices_){v.amp.set(raw_[kAmpAttack],raw_[kAmpDecay],raw_[kAmpSustain]*.01f,raw_[kAmpRelease]);v.env.set(raw_[kFiltAttack],raw_[kFiltDecay],raw_[kFiltSustain]*.01f,raw_[kFiltRelease]);v.pitch.setTime(raw_[kGlide],sr_);v.b.setPhaseSetting(raw_[kOscPhase],v.amp.isActive()||v.wait>0);}
         gain_.setTarget(dbToGain(raw_[kVolume]));
         lfo_.setShape(getInt(kLfo1ShapeFull));
 
@@ -372,8 +383,8 @@ public:
                     const float modulation=(p_[kVibrato]*.003f+wheel_[v.channel]*.5f)*vib+p_[kMotion]*.0006f*drift;
                     const float lfoPitch=(int(std::lround(raw_[kLfo1TargetFull]))==0?mod*p_[kDepth]*.02f:0)+mod2*lfo2TargetWeights_[0]*.02f;
                     const float hz=mpc::noteToHz(pitch+bend_[v.channel]*p_[kBend]+modulation+lfoPitch+tapePitch_);
-                    v.a.setWave(int(std::lround(raw_[kWave1])));v.b.setWave(int(std::lround(raw_[kWave2])));
-                    const float hz1=hz*std::pow(2.f,(std::round(raw_[kOscTune1])+p_[kOscFine1]*.01f)/12);const float hz2=hz*std::pow(2.f,(std::round(raw_[kOscTune2])+p_[kOscFine2]*.01f)/12);v.a.setFrequency(hz1);v.sineA.setFrequency(std::min(hz1,sr_*.49f));v.b.setFrequency(hz2);v.sineB.setFrequency(std::min(hz2,sr_*.49f));v.sub.setFrequency(hz1*.5f);v.fm.setFrequency(hz1*2);
+                    v.a.setWave(int(std::lround(raw_[kWave1Full])));v.b.setWave(int(std::lround(raw_[kWave2Full])));
+                    const float hz1=hz*std::pow(2.f,(std::round(raw_[kOscTune1])+p_[kOscFine1]*.01f)/12);const float hz2=hz*std::pow(2.f,(std::round(raw_[kOscTune2])+p_[kOscFine2]*.01f)/12);v.a.setFrequency(hz1);v.b.setFrequency(hz2);v.sub.setFrequency(hz1*.5f);v.fm.setFrequency(hz1*2);
                     float pulse=p_[kOscPulse1]*.01f;if(int(std::lround(raw_[kLfo1TargetFull]))==2)pulse+=mod*p_[kDepth]*.003f;
                     pulse+=mod2*lfo2TargetWeights_[2]*.003f;v.a.setPulseWidth(pulse);v.b.setPulseWidth(pulse+(p_[kPulse2]-p_[kOscPulse1])*.01f);
                     float oct=p_[kEnv]*.04f*env+p_[kKeyTrack]*.01f*(pitch-60)/12;
@@ -383,8 +394,8 @@ public:
                     v.filter.set(p_[kCutoff]*std::pow(2.f,std::clamp(oct,-8.f,8.f)),p_[kResonance]*.01f);
                 }
                 const float fm=v.fm.process()*p_[kFM]*.004f*(.3f+env*.7f);
-                const float a=int(std::lround(raw_[kWave1]))==0?v.sineA.process(fm):v.a.process();
-                const float b=int(std::lround(raw_[kWave2]))==0?v.sineB.process():v.b.process();const float levelSum=(p_[kOscLevel1]+p_[kOscLevel2])*.01f;const float mix=std::clamp((levelSum>0?p_[kOscLevel2]*.01f/levelSum:0)+(int(std::lround(raw_[kLfo1TargetFull]))==4?mod*p_[kDepth]*.005f:0)+mod2*lfo2TargetWeights_[4]*.005f,0.f,1.f);
+                const float a=v.a.process(fm);
+                const float b=v.b.process();const float levelSum=(p_[kOscLevel1]+p_[kOscLevel2])*.01f;const float mix=std::clamp((levelSum>0?p_[kOscLevel2]*.01f/levelSum:0)+(int(std::lround(raw_[kLfo1TargetFull]))==4?mod*p_[kDepth]*.005f:0)+mod2*lfo2TargetWeights_[4]*.005f,0.f,1.f);
                 // Independent sine sub, exactly one octave below OSC1, follows its pitch/glide.
                 const float sub=v.sub.process()*p_[kSub]*.006f;
                 float x=(a*(1-mix)+b*mix)*levelSum+sub+noise_.nextBipolar()*p_[kNoise]*.003f;
@@ -429,6 +440,10 @@ public:
         for(int page=0;page<4;++page)setFromEngine(kChordPlayingPage1+page,playing[page]?1.f:0.f);
     }
     bool formatValue(int index,float value,std::string& out) override {
+        // Commands, live gates and open editor panels intentionally restore idle.
+        // Their host text states that contract instead of suggesting a saved toggle.
+        if(transientParameter(index)){out=index==kSmoothOpen||index==kTransposeOpen?"Editor":"Transient";return true;}
+
         if(index==kSoundCurrent&&getBool(kRandomized)){out="Random Sound";return true;}
         if(index==kSmoothMovement||(index>=kSmoothRow1&&index<=kSmoothRow16)){
             donut::SmoothPlan plan;if(!smoothPlan_.read(plan)||!plan.valid){out="—";return true;}
@@ -454,6 +469,7 @@ public:
         if(index==kRate&&getBool(kSync)){out=std::string("Sync ")+donut::kSyncNames[getInt(kLfo1SyncDivision)];return true;}
         if(index==kCutoff){char b[32];if(value>=1000)std::snprintf(b,sizeof b,"%.2f kHz",value/1000);else std::snprintf(b,sizeof b,"%.0f Hz",value);out=b;return true;}
         if(slotForParameter(index,kChordRoots)>=0){static const char* names[]={"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};int n=int(std::round(value));out=std::string(names[n%12])+donut::kTypeSuffixes[getInt(kChordQualities[slotForParameter(index,kChordRoots)])];return true;}
+        if(index==kPerfCharacter)return formatValue(performanceTarget(index),get(performanceTarget(index)),out);
         if(index==kPerfPitch){const int target=performanceTarget(index);char b[48];std::snprintf(b,sizeof b,getInt(kPitchResolution)?"%+.1f ct":"%+.0f st",get(target));out=b;return true;}
         if(index==kOscTune1||index==kOscTune2){char b[48];std::snprintf(b,sizeof b,"%+.0f st",std::round(value));out=b;return true;}
         if(index==kPerfLfoRate)return formatValue(getInt(kLfoFocus)?kLfo2RateControl:kLfoRateControl,value,out);
@@ -469,14 +485,18 @@ public:
     }
 #ifdef DONUT_VOICE_TEST
     std::array<float,3> modulationPhases()const{return {lfo_.phase(),tremolo_.phase(),lfo2_.phase()};}
+    std::array<float,2> oscillatorPhases(int voice=0)const{return {voices_[voice].a.phase(),voices_[voice].b.phase()};}
     struct VoiceSnapshot {int owner,note;float pitch,amplitude;bool held;};
     std::array<VoiceSnapshot,N> voiceSnapshots()const{std::array<VoiceSnapshot,N> result{};for(int i=0;i<N;++i){const auto& v=voices_[i];result[i]={v.owner,v.note,v.pitch.value()+v.releaseDrop.value(),v.amp.level(),v.amp.isHeld()||v.wait>0};}return result;}
 #endif
     int activeVoices() const {int n=0;for(const auto& v:voices_)if(v.amp.isActive()||v.wait)n++;return n;}
 private:
+    #include "PhaseWave.inc"
     int performanceTarget(int index)const{
         const bool osc2=getInt(kOscFocus)==1,lfo2=getInt(kLfoFocus)==1;
         switch(index){
+        case kPerfWaveFull:return osc2?kWave2Full:kWave1Full;
+        case kPerfCharacter:return getInt(kOscCharacterFocus)?kOscPhase:kDrift;
         case kPerfWave:return osc2?kWave2:kWave1;
         case kPerfPitch:return getInt(kPitchResolution)?(osc2?kOscFine2:kOscFine1):(osc2?kOscTune2:kOscTune1);
         case kPerfLevel:return osc2?kOscLevel2:kOscLevel1;
@@ -569,7 +589,7 @@ private:
             smoothNext_=smoothBeat_-1;smoothOff_=int(smoothBeat_*.8f);smoothGate_=true;
         }
     }
-    struct Voice {PolyBlepOsc a,b;WavetableSine sineA,sineB,sub,fm;donut::AnalogVoiceFilter filter;ADSR amp,env;Smoother pitch;LinearRamp releaseDrop;int owner=-1,channel=0,wait=0,note=60,glideWait=0,age=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
+    struct Voice {donut::ExpandedOscillator a,b;WavetableSine sub,fm;donut::AnalogVoiceFilter filter;ADSR amp,env;Smoother pitch;LinearRamp releaseDrop;int owner=-1,channel=0,wait=0,note=60,glideWait=0,age=0;uint64_t order=0;float velocity=1,velocityGain=1;bool dirty=true;};
     std::array<Voice,N> voices_{};
     std::array<Smoother,kNumParams> smooth_{};float p_[kNumParams]{},raw_[kNumParams]{};
     uint16_t held_[16][128]{};uint64_t order_[16][128]{};int velocity_[16][128]{};
@@ -608,7 +628,7 @@ private:
     int randomSoundChoice(int count){return int(randomSoundBits()%unsigned(count));}
     static int diceSection(int key){
         switch(key){
-        case kOscTune1:case kOscFine1:case kOscLevel1:case kOscTune2:case kOscFine2:case kOscLevel2:case kPulse2:case kWave1:case kWave2:case kOscPair:case kMix:case kDetune:case kOctave:case kPulse:case kSub:case kNoise:case kFM:case kTone:case kBody:case kBodyTone:case kDrift:return 0;
+        case kOscPhase:case kWave1Full:case kWave2Full:case kOscTune1:case kOscFine1:case kOscLevel1:case kOscTune2:case kOscFine2:case kOscLevel2:case kPulse2:case kWave1:case kWave2:case kOscPair:case kMix:case kDetune:case kOctave:case kPulse:case kSub:case kNoise:case kFM:case kTone:case kBody:case kBodyTone:case kDrift:return 0;
         case kFilter:case kCutoff:case kResonance:case kEnv:case kKeyTrack:case kFiltAttack:case kFiltDecay:case kFiltSustain:case kFiltRelease:return 1;
         case kAmpAttack:case kAmpDecay:case kAmpSustain:case kAmpRelease:case kExpression:case kVoiceMode:case kGlide:case kGlideLegato:return 2;
         case kLfo1SyncDivision:case kMotionSyncDivision:case kLfo2SyncDivision:case kLfo1ShapeFull:case kLfo1TargetFull:case kShape:case kTarget:case kDepth:case kRate:case kSync:case kDivision:case kLfoRateControl:case kLfo2Shape:case kLfo2Target:case kLfo2Depth:case kLfo2Rate:case kLfo2Sync:case kLfo2Division:case kLfo2RateControl:case kModMode:case kModShape:case kTremDepth:case kTremRate:case kModSync:case kModDivision:case kModRateControl:case kPan:case kMotion:case kVibrato:return 3;
@@ -625,8 +645,8 @@ private:
         const int requested=getInt(kDiceTarget);
         const int family=requested?requested-1:getInt(kVoiceMode)<2?(randomSoundChoice(2)?3:0):1+randomSoundChoice(4);const bool bass=family==0,keys=family==1,pad=family==4;
         auto f=[&](int key,float lo,float hi){write(key,randomSoundFloat(lo,hi));};
-        int a=randomSoundChoice(4),b=randomSoundChoice(4);if(bass&&a==0&&b==0)b=1;
-        write(kWave1,float(a));write(kWave2,float(b));
+        int a=randomSoundChoice(donut::kWaveCount),b=randomSoundChoice(donut::kWaveCount);if(bass&&a==0&&b==0)b=1;
+        write(kWave1Full,float(a));write(kWave2Full,float(b));f(kOscPhase,0,360);
         f(kDrift,0,8);f(kBodyTone,0,bass?35:42);f(kSub,bass?20:0,bass?65:18);
         f(kPulse,28,72);f(kNoise,0,keys?0.5f:1.2f);f(kFM,0,a==0&&!bass?20:0);
         f(kTone,12,45);write(kBody,0);write(kMotion,0);write(kSpace,0);f(kExpression,50,78);f(kVibrato,0,2);
@@ -666,7 +686,7 @@ private:
         setFromEngine(kFXPreset,0);setFromEngine(kOscPair,getInt(kWave1)*4+getInt(kWave2));
         if(index<64)setFromEngine(kSoundPreset,float(index));
         setFromEngine(kSoundCurrent,float(index));
-        seedPerformanceSound();for(int module=0;module<3;++module)setFromEngine(divisionParameters_[module],float(donut::kLegacySyncIndex[getInt(legacyDivisionParameters_[module])]));setFromEngine(kLfoDelay,0);setFromEngine(kLfo2Delay,0);undoReady_=false;
+        seedPerformanceSound();seedExpandedWaves();setFromEngine(kOscPhase,param(kOscPhase).def);setFromEngine(kOscRetrig,0);for(int module=0;module<3;++module)setFromEngine(divisionParameters_[module],float(donut::kLegacySyncIndex[getInt(legacyDivisionParameters_[module])]));setFromEngine(kLfoDelay,0);setFromEngine(kLfo2Delay,0);undoReady_=false;
     }
     void applySoundExtras(int patch){setFromEngine(kBodyTone,0);for(int i=kLfo2Shape;i<=kLfo2Division;++i)setFromEngine(i,param(i).def);setFromEngine(kLowCut,kPatchExtras[patch][0]);setFromEngine(kDrift,kPatchExtras[patch][1]);setFromEngine(kTremRate,kPatchExtras[patch][2]);setFromEngine(kTremDepth,kPatchExtras[patch][3]);setFromEngine(kOutputTrim,kPatchExtras[patch][4]);}
     donut::BodyTone bodyTone_;LFO lfo2_;Smoother lfo2Signal_;std::array<Smoother,5> lfo2Weights_;float lfo2TargetWeights_[5]{};
@@ -686,6 +706,8 @@ private:
     int allocate(){const int first=mono()?1:0;for(int i=first;i<N;++i)if(!voices_[i].amp.isActive()&&!voices_[i].wait)return i;int best=first;for(int i=first+1;i<N;++i)if((voices_[i].amp.isReleasing()&&!voices_[best].amp.isReleasing())||(voices_[i].amp.isReleasing()==voices_[best].amp.isReleasing()&&voices_[i].order<voices_[best].order))best=i;return best;}
     void start(int owner,int ch,int note,int vel,int wait=0,int forced=-1,bool legato=false,bool allowGlide=true){
         Voice& v=voices_[forced>=0?forced:allocate()];const bool sounding=v.amp.isActive(),connected=sounding&&v.amp.isHeld();
+        if(!sounding){v.a.setWave(getInt(kWave1Full),false);v.b.setWave(getInt(kWave2Full),false);}
+        if(getBool(kOscRetrig)&&(!legato||!connected)){v.a.restart(0,getInt(kWave1Full),sounding);v.b.restart(phaseCycles(get(kOscPhase)),getInt(kWave2Full),sounding);v.b.snapPhaseSetting(get(kOscPhase));}
         // Reused release tails start a new gesture; Always Glide continues from
         // their audible dropped pitch, while ordinary retriggers snap as before.
         if(sounding&&!connected&&v.releaseDrop.value()!=0)v.pitch.snap(v.pitch.value()+v.releaseDrop.value());
@@ -826,6 +848,8 @@ static VstIntPtr donutDispatch(AEffect* e,VstInt32 op,VstInt32 index,VstIntPtr v
         *static_cast<void**>(ptr)=const_cast<uint8_t*>(state.data());
         return VstIntPtr(state.size());
     }
+    if(op==effGetParamName&&index==kPerfCharacter){mpc::copyString(static_cast<char*>(ptr),64,p->getInt(kOscCharacterFocus)?"OSC Phase":"Drift");return 0;}
+    if(op==effGetParamName&&index==kPerfWaveFull){mpc::copyString(static_cast<char*>(ptr),64,p->getInt(kOscFocus)?"OSC 2 Wave":"OSC 1 Wave");return 0;}
     if(op==effGetParamDisplay||op==effGetParamName)p->flushHostUpdates();
     return mpc::detail::dispatcher(e,op,index,value,ptr,opt);
 }

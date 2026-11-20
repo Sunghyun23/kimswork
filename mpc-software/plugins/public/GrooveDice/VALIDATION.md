@@ -1,3 +1,18 @@
+# Groove Dice 1.8.0
+
+- Musical snare rolls use short rhythmic motifs, rests, beat accents, restrained grace notes and shaped endings. Generated fills retain the main kick motif and 2/4 snare anchors, adding sparse replies.
+- Four finite hat rolls join four snare rolls and four fills on PERFORM. B1–B4: snare; B5–B8: fill; B9–B12: hats; B13: loop; B14: stop. Learn assignments inside the plugin to match a different host scale.
+- Choose straight/triplet rates or acceleration, Velocity, Humanize and Length with four selected-slot Screen Q-Links. Rolls and fills play their full length at the earliest valid bar ending; late triggers wait for the next valid ending.
+- Global Dice regenerates unlocked phrases. Every slot has a lock; Undo restores the generated phrases and settings. Recorded/edited fills remain protected.
+- Count-in cancels previously queued or playing performance phrases, while direct pad monitoring remains available. Generated playback stays silent during count-in.
+- First 880 parameter declarations are unchanged; 917 total. Older states and custom learned maps migrate. Portable packages preserve Content/Expansions and Content/Captures.
+
+Native/ARM32/ARM64 builds and SDK validation pass. Full regression/UBSan and SDK host checks pass (19 PASS / 0 WARN / 0 FAIL). Actual MPC XL / OS 3.10.1.12 remote checks cover all four hat slots, generation, locks, Undo, rate editing and bar-end completion. An actual exported MIDI take contains 55 balanced drum notes, including 44 closed-hat hits and no trigger keys. New public-core screenshots show 128 WAV / 95 MIDI; optional owner packs were not loaded for those frames and all owner files were preserved. Physical B1/B3 confirmation belongs to the preceding 1.7.1 release; full new physical-pad/encoder, hardware-audio, MIDI import and worst-case CPU certification remain separate.
+
+The download contains only Original Workshop: 128 original synthesized sounds, 96 kit combinations and 95 authored/template MIDI assets. No commercial or personal packs are included. Optional Pack Builder 1.0.0 for macOS Apple Silicon and Windows x64 creates separate .gdexp files; see PACK_BUILDER.md and the website.
+
+Requires MPC standalone OS 3.10.1+ with Enhancements and External Plugin Support enabled. Keep one active plugin copy across attached drives. Export captured MIDI before closing the instance. This instrument does not send generated MIDI directly into the MPC sequencer.
+
 ## 1.7.1 — Bank B and bar-end performance (2026-11-20)
 
 Default Bank B1=48confirmed by physical LEARN. Owner confirmed B1/B3→ROLL A/C and correct end; other physical pads/encoders are not newly certified. Actual MPC exported26balanced MIDI notes; first1beat roll onset ticks2880/3140/3361/3620are in the last beat[2880,3840). Native/ARM/SDK, complete current regression coverage/UBSan/allocation, late replay/migration, variable-block/early-late scheduling/host-cycle/recorded-length and native skin checks pass. Host19PASS/0WARN/0FAIL. Coverage spans initial and resumed runs after updating the old short-fill cymbal expectation; original outputs are retained. NVMe203files match final staging and all17before-timing persistent files survive, including all16original task files. SD/SSD/other plugins untouched. Twelve final actual public-only frames and91responsive/289local-link checks. Publication and portable installer checks are recorded separately. See design/device-1.7.1/.
@@ -539,3 +554,10 @@ The owner explicitly authorized release and website updates after final candidat
 - Individual Dice padlocks are visible only beside MAIN16controls. Remove the1.5.0-added SOUND/FX/choke/fill locks and duplicated GROOVE timing locks; existing Kit/Pattern/Role/Layer protections and global UNLOCK ALL remain. Appended1.5.0 lock parameters are retained for state/ID compatibility and no longer restrict non-MAIN randomization.
 - GROOVE remains the detailed timing/density/ghost/velocity/random-amount/fill-frequency page; this change does not redesign or delete it. Donut Theory remains unchanged with its approved all-page shared locks.
 - First777declarations are unchanged; append RollFill777/RollFx778,779total, same kim/KpGy identity and existing Q-Link maps. This is a local installed candidate; public stable stays1.4.0 until a separate release request. Preserve all personal expansions and keep them out of public packages.
+
+
+## 1.8.0 candidate — musical performance expansion (2026-11-20)
+
+Local candidate; public stable remains1.7.1. First880fullparameter declarations stay identical;917total, UID KpGy unchanged. Native/ARM32/ARM64 compile and SDK validation pass (0errors/0warnings); final host simulator19PASS/0WARN/0FAIL. Added UBSan/allocation-guard coverage for12slots×3lengths×6rates×24generations, duplicate/density/role bounds, strong Swing32nd interpolation, base kick/backbeat retention and new state/old782/880migration. Hat MIDI test events cover all4slots,3lengths,32/512frames and50/75Swing, early note-off, finite bar-end completion, automatic hat/ride replacement and captured drum notes. Actual native VST small0.001relative Rate/Length cursors sweep all choices in both directions for12slots. These are automated MIDI injections, not physical pad tests. All12locks, Undo, Amount0, new learned maps, collision disabling and LEARN recovery pass. Full regression suite and actual MPC Remote Screen QA are in progress.
+
+NVMe pre-install official SDK export203files was SHA256identical to the retained complete1.7.1backup; only that redundant fresh export was removed. All18persistent files (personal packs/registry and captures) were checked in owner staging. SDK installed203files toNVMe and restarted the MPC. Post-install independent hashes/device verification are pending. SD/SSD/other-plugin content was not changed. No release/site deployment made.

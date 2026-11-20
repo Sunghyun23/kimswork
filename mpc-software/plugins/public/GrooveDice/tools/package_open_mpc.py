@@ -12,6 +12,7 @@ def main():
   base='kim - VST - Groove Dice/';banks=[n for n in z.namelist()if n.endswith('.gdbank')];assert banks==[base+'Content/Banks/default.gdbank'],'public core only'
   assert not any(n.endswith('.gdexp')or '/Content/Captures/'in n for n in z.namelist()),'personal captures/expansions excluded'
   assert z.read(base+'Content/Expansions/registry.tsv').strip()==b'','public registry must be empty'
+  assert not any('/Content/QA/'in n for n in z.namelist()),'QA isolation marker must not ship'
   core=z.read(base+'Content/Banks/default.gdbank');assert hashlib.sha256(core).hexdigest()==json.loads(z.read(base+'Content/Banks/core.manifest.json'))['sha256']
   assert core==(P/'Content/Banks/default.gdbank').read_bytes()
  tool=a.tools/'tools'

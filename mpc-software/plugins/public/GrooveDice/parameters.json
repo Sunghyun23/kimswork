@@ -9229,5 +9229,405 @@
     ],
     "default": 0,
     "auto": false
+  },
+  {
+    "key": "PerformSelectFull",
+    "name": "Performance Slot Full",
+    "choices": [
+      "SNARE A",
+      "SNARE B",
+      "SNARE C",
+      "SNARE D",
+      "FILL A",
+      "FILL B",
+      "FILL C",
+      "FILL D",
+      "HAT A",
+      "HAT B",
+      "HAT C",
+      "HAT D"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformHit8",
+    "name": "Performance Trigger 9",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock8",
+    "name": "Performance Lock 9",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate8",
+    "name": "Generate Performance 9",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate8",
+    "name": "Performance Rate 9",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity8",
+    "name": "Performance Velocity 9",
+    "min": 30,
+    "max": 127,
+    "default": 82,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize8",
+    "name": "Performance Humanize 9",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength8",
+    "name": "Performance Length 9",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHit9",
+    "name": "Performance Trigger 10",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock9",
+    "name": "Performance Lock 10",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate9",
+    "name": "Generate Performance 10",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate9",
+    "name": "Performance Rate 10",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 4,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity9",
+    "name": "Performance Velocity 10",
+    "min": 30,
+    "max": 127,
+    "default": 82,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize9",
+    "name": "Performance Humanize 10",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength9",
+    "name": "Performance Length 10",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "PerformHit10",
+    "name": "Performance Trigger 11",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock10",
+    "name": "Performance Lock 11",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate10",
+    "name": "Generate Performance 11",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate10",
+    "name": "Performance Rate 11",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 3,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity10",
+    "name": "Performance Velocity 11",
+    "min": 30,
+    "max": 127,
+    "default": 82,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize10",
+    "name": "Performance Humanize 11",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength10",
+    "name": "Performance Length 11",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "PerformHit11",
+    "name": "Performance Trigger 12",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformLock11",
+    "name": "Performance Lock 12",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformGenerate11",
+    "name": "Generate Performance 12",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformRate11",
+    "name": "Performance Rate 12",
+    "choices": [
+      "1/8",
+      "1/8 T",
+      "1/16",
+      "1/16 T",
+      "1/32",
+      "ACCEL"
+    ],
+    "default": 5,
+    "auto": true
+  },
+  {
+    "key": "PerformVelocity11",
+    "name": "Performance Velocity 12",
+    "min": 30,
+    "max": 127,
+    "default": 82,
+    "unit": "",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformHumanize11",
+    "name": "Performance Humanize 12",
+    "min": 0,
+    "max": 30,
+    "default": 8,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "PerformLength11",
+    "name": "Performance Length 12",
+    "choices": [
+      "1 Beat",
+      "2 Beats",
+      "1 Bar"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "HatPerformNote0",
+    "name": "Hat Performance Pad 1",
+    "min": -1,
+    "max": 127,
+    "default": 62,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "HatPerformNote1",
+    "name": "Hat Performance Pad 2",
+    "min": -1,
+    "max": 127,
+    "default": 64,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "HatPerformNote2",
+    "name": "Hat Performance Pad 3",
+    "min": -1,
+    "max": 127,
+    "default": 65,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "HatPerformNote3",
+    "name": "Hat Performance Pad 4",
+    "min": -1,
+    "max": 127,
+    "default": 67,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState8",
+    "name": "Performance State 9",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState9",
+    "name": "Performance State 10",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState10",
+    "name": "Performance State 11",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PerformState11",
+    "name": "Performance State 12",
+    "min": 0,
+    "max": 2,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
   }
 ]

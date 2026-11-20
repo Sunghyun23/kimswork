@@ -1,0 +1,67 @@
+[
+  {
+    "file": "actual-poly.png",
+    "sha256": "9ca3d0cd2a3be1864e24cb1ed6b79a054e7a9b9160a817794383dc223abfb909",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-mono.png",
+    "sha256": "5c3bf598b5e4b0b9d8a19b8f5b3a8de31f9709e39846468145cbad7092f8f714",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-osc.png",
+    "sha256": "24dda81429d217a7df2f7a7bfc9cf68f0a1d2d8304240c177291824e8741ad84",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-env.png",
+    "sha256": "fae93ac9ed6d52c3afedf50ccb3c0557f27f3f4a2c600c35f73668c55f9a82f5",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-mod.png",
+    "sha256": "5d48b85303256c31f827adff8f62109012d83cfb2b95d5690d117019dd665a27",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-fx.png",
+    "sha256": "207caafe1f8f4c797b7c4d1c4e9d7f86ad18c5bea6d4ecb5a52bfdef0dd534a1",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-chord.png",
+    "sha256": "151b05472cfcbee55585f2e198de29b60eca2f60ae1bd465b6041d4ac0ee6a75",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-waves.png",
+    "sha256": "6b28155b1c1c06f77b76e3272d2d51ac6730418cda89d2e1d00624c734b44a51",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-phase.png",
+    "sha256": "e57f34ed46846918f4bfb8f9ce743c2fb0431553b7b862294bcbc430527a278e",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-phase-reset.png",
+    "sha256": "632a3835bb8d6c24074640ab12532c71bd2d1301d214f3472ec64485c08bb104",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-dice-lock.png",
+    "sha256": "b757b4969242fcb5f45626c3dcfa36bef62d7ecf8fe1d2841bcb6301eb21d5be",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-undo.png",
+    "sha256": "72e97c2bc4a94b259a729eb408a28c38741277835022a59f4b9e16585bd5df20",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  },
+  {
+    "file": "actual-presets.png",
+    "sha256": "b0df21d59d32faf1fc2d4907f1a2c97b93b822ee0d6e2e6d8570267a002c1b77",
+    "source": "Actual MPC XL / OS3.10.1.12 native1280x800 framebuffer, Donut Theory1.15.0"
+  }
+]

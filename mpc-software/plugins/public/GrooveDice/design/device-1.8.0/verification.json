@@ -1,0 +1,33 @@
+{
+  "version": "1.8.0",
+  "status": "qualified for stable publication",
+  "nativeAndBothArmBuilds": true,
+  "sdkValidationErrors": 0,
+  "sdkHost": {
+    "pass": 19,
+    "warn": 0,
+    "fail": 0
+  },
+  "fullRegressionPassed": true,
+  "parameters": 917,
+  "nvmeReadbackVerified": true,
+  "sdReadOrWritten": false,
+  "ssdTouched": false,
+  "limits": [
+    "No new full physical encoder/pad coverage",
+    "No hardware audio or worst-case CPU certification",
+    "No full MPC project recall certification"
+  ],
+  "ownerDataFilesPreserved": 19,
+  "actualMidi": {
+    "balancedNoteOns": 55,
+    "closedHatHits": 44,
+    "triggerKeysAbsent": true
+  },
+  "publicScreenshots": {
+    "sounds": 128,
+    "midi": 95,
+    "optionalPacksLoaded": false
+  },
+  "finalRestartRemoteOpen": true
+}
