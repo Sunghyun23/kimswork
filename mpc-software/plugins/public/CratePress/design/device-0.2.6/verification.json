@@ -1,6 +1,6 @@
 {
   "version": "0.2.6",
-  "status": "installed NVMe candidate; actual remote UI verified; not publicly released",
+  "status": "published0.2.6preview; final lock-matched skin installed on NVMe and actually checked",
   "nativeAndBothArmBuilds": true,
   "sdkErrors": 0,
   "sdkWarnings": 0,
@@ -8,7 +8,7 @@
   "nvmeFiles": 165,
   "nvmeSha256Exact": true,
   "sdOrSsdTouched": false,
-  "publicRelease": "0.2.5 preview",
+  "publicRelease": "0.2.6 preview",
   "actualChecks": [
     "all5pages/footer",
     "stopped empty audio track Dice works without transport",
@@ -22,5 +22,6 @@
     "No new full physical encoder/pad verification",
     "No new hardware audio listening/latency/worst CPU certification",
     "No full MPC project recall certification"
-  ]
+  ],
+  "finalLockEvidence": "lock-matched/verification.json"
 }

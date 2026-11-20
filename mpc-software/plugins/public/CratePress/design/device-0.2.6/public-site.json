@@ -1,0 +1,50 @@
+[
+  {
+    "url": "https://kimswork.app/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/software/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/software/effects/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/plugins/crate-press/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/plugins/crate-press/manual/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/images/crate-press-main-0.2.6.webp",
+    "status": 200,
+    "sha256": "a05b6ea421205f91d486727c7a839321b63756a2b133e190fd955228372acfb8"
+  },
+  {
+    "url": "https://kimswork.app/images/crate-press-dice-0.2.6.webp",
+    "status": 200,
+    "sha256": "0af5016eef53ef81470ca162fd1099538fb37136c1f136f756e8e6a87f51bf1d"
+  },
+  {
+    "url": "https://kimswork.app/images/crate-press-color-0.2.6.webp",
+    "status": 200,
+    "sha256": "5370f2697e6d80b09c187e7e7e8f20affcf83ae0f3745c1ba8c87288b77531f1"
+  },
+  {
+    "url": "https://kimswork.app/images/crate-press-perform-0.2.6.webp",
+    "status": 200,
+    "sha256": "13e6c9f592d5ec9e23a32138feedca3b5ce7aa2ff55e81033b47ea04c5a0b67f"
+  },
+  {
+    "url": "https://kimswork.app/plugins/donut-theory/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/plugins/groove-dice/",
+    "status": 200
+  }
+]

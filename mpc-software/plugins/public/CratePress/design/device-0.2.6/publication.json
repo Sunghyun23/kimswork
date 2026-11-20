@@ -1,0 +1,62 @@
+{
+  "id": 452259604,
+  "version": "0.2.6",
+  "tag": "crate-press/v0.2.6",
+  "commit": "2b02d5902d56d3803ff0a8b06da0a09dcabb8b61",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/crate-press/v0.2.6",
+  "assets": [
+    {
+      "name": "crate-press-0.2.6-mpc-aarch64.zip",
+      "size": 1563811,
+      "digest": "sha256:5288882a4c7d37e9740fe8f6c196fe273990f1fdbda34bb82ef5cd7fb0bd3a87",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc-aarch64.zip"
+    },
+    {
+      "name": "crate-press-0.2.6-mpc-aarch64.zip.sha256",
+      "size": 100,
+      "digest": "sha256:e0de54ad2a9f8ff3e226f2882316d6708d40d98674dc3420bacd5b722bf4d7b5",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc-aarch64.zip.sha256"
+    },
+    {
+      "name": "crate-press-0.2.6-mpc-armv7.zip",
+      "size": 1556785,
+      "digest": "sha256:0717c261496f667766d7a72d364fd19ffa10e6040de0d933f0e32ccc185a6e7c",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc-armv7.zip"
+    },
+    {
+      "name": "crate-press-0.2.6-mpc-armv7.zip.sha256",
+      "size": 98,
+      "digest": "sha256:cc9728b13545019cf07d3f0737eeaa198dbb539983c49731540d0d561faf2714",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc-armv7.zip.sha256"
+    },
+    {
+      "name": "crate-press-0.2.6-mpc.zip",
+      "size": 1658658,
+      "digest": "sha256:42dd675d43ebc6c3ead4c75ace421d78028c31eff4848428b9cc03af5cc00de8",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc.zip"
+    },
+    {
+      "name": "crate-press-0.2.6-mpc.zip.sha256",
+      "size": 92,
+      "digest": "sha256:897695d6e55539c637c685813863c171e22faf3369562e7bad4fc5e57f633827",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc.zip.sha256"
+    }
+  ],
+  "publicRelease": true,
+  "preview": true,
+  "stable": false,
+  "privatePayloads": 0,
+  "pagesRun": 44673082720,
+  "pagesConclusion": "success",
+  "responsiveChecks": 35,
+  "localReferences": 295,
+  "publicPagesAndImages": 11,
+  "anonymousReleaseChecks": 6,
+  "nvmeFiles": 165,
+  "sdOrSsdTouched": false,
+  "otherPublicVersions": {
+    "DonutTheory": "1.15.0",
+    "GrooveDice": "1.8.0"
+  },
+  "finalLockReference": "Donut Theory exact silhouette and padding;44px touch"
+}

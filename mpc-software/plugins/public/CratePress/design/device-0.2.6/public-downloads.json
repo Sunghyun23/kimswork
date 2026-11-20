@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc-aarch64.zip",
+    "sha256": "5288882a4c7d37e9740fe8f6c196fe273990f1fdbda34bb82ef5cd7fb0bd3a87",
+    "bytes": 1563811,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc-aarch64.zip.sha256",
+    "sha256": "e0de54ad2a9f8ff3e226f2882316d6708d40d98674dc3420bacd5b722bf4d7b5",
+    "bytes": 100,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc-armv7.zip",
+    "sha256": "0717c261496f667766d7a72d364fd19ffa10e6040de0d933f0e32ccc185a6e7c",
+    "bytes": 1556785,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc-armv7.zip.sha256",
+    "sha256": "cc9728b13545019cf07d3f0737eeaa198dbb539983c49731540d0d561faf2714",
+    "bytes": 98,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc.zip",
+    "sha256": "42dd675d43ebc6c3ead4c75ace421d78028c31eff4848428b9cc03af5cc00de8",
+    "bytes": 1658658,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/crate-press/v0.2.6/crate-press-0.2.6-mpc.zip.sha256",
+    "sha256": "897695d6e55539c637c685813863c171e22faf3369562e7bad4fc5e57f633827",
+    "bytes": 92,
+    "anonymous": true
+  }
+]
