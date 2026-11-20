@@ -1,0 +1,90 @@
+[
+  {
+    "url": "https://kimswork.app/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/software/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/software/instruments/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/plugins/groove-dice/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/plugins/groove-dice/manual/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-main-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "a82f53eb2b2fd78f347560990119dc84a648e25195764216c37716c96ead3863"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-perform-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "e48c3367aff5fd60aebcbcd140b3b72a901708fea3fe04c55b5c8d2936bd2eff"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-dice-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "062e234044688c5f4c92eeae424e395e1999cd0db4e500ab4903c086ef44338c"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-groove-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "1c0b55ccdab77f45a0108af2b19185b61e45736cab322a0861b8aac85c53cd4d"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-sound-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "5084d9831c7e3203b6ad78c36a6591b4f0b1fb8e4d5a27eac870058247ba1afc"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-sound-actions-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "33b116e8deb2c8e6201a0c00884dbfb6fdef29fe9648a47a50499dc048b7675d"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-sound2-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "e96760b2e3f4ca8cb16e3e8315f6a4fd1bbdab96cb7ced3bb06cc8acfd3e1f79"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-cymbals-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "c85c5d5d471d1042740db5b3df39c515ab5d893ed7a726be14021b307e600700"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-kits-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "d00ffc1e1f77ff4a0d9eb0ccec7fd065148b6391851c2f250b667eadf54a049c"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-fx-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "6c48271a0f9085eff6f2dc6399dc68909b67eff39acadf13536ec9dca239eea2"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-routing-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "cc878fecb12c55af3dbe29a2382a5c155288f74f8dd5e7f7df306cfaf5a74a12"
+  },
+  {
+    "url": "https://kimswork.app/images/groove-dice-fill-device-1.8.1.webp",
+    "status": 200,
+    "sha256": "bbe4f8b137be5be994d0e828be2c060cc60026ae69cc83673450093b7d8061b2"
+  },
+  {
+    "url": "https://kimswork.app/plugins/crate-press/",
+    "status": 200
+  },
+  {
+    "url": "https://kimswork.app/plugins/donut-theory/",
+    "status": 200
+  }
+]

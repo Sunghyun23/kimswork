@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.1/groove-dice-1.8.1-mpc-aarch64.zip",
+    "sha256": "ed2ee0bddc724a9a14e421f03c9bae3d7385b5132265292c36327478ea4a5fd1",
+    "bytes": 18485299,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.1/groove-dice-1.8.1-mpc-aarch64.zip.sha256",
+    "sha256": "38486f5b430649d36e61b9abe3590399ee1a1436a3d4db4044901cf50bb5fe85",
+    "bytes": 100,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.1/groove-dice-1.8.1-mpc-armv7.zip",
+    "sha256": "a3526a83064b8c82daf780e5978eccdb22d014ff89cc6cdc2bba150dd0630964",
+    "bytes": 18440535,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.1/groove-dice-1.8.1-mpc-armv7.zip.sha256",
+    "sha256": "6d25c529baf82cc7e6c4dbd8ab348b0c575e5a1be55d8bef23c7811c9c4d7bf9",
+    "bytes": 98,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.1/groove-dice-1.8.1-mpc.zip",
+    "sha256": "aa86d0a87d70b6b67ac326bfda6674d12cdc49bf4b160cbfbec7e567c84cb882",
+    "bytes": 18887846,
+    "anonymous": true
+  },
+  {
+    "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.1/groove-dice-1.8.1-mpc.zip.sha256",
+    "sha256": "6c249e98d22469598f1838d24cba9e736947166c212a71cffff3b839399c6bc9",
+    "bytes": 92,
+    "anonymous": true
+  }
+]
