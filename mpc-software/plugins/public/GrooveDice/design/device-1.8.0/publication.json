@@ -1,0 +1,60 @@
+{
+  "id": 452173761,
+  "version": "1.8.0",
+  "tag": "groove-dice/v1.8.0",
+  "commit": "13fa4f0ec127496b6ec2116e28bb3d28dd2ff89d",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.8.0",
+  "assets": [
+    {
+      "name": "groove-dice-1.8.0-mpc-aarch64.zip",
+      "size": 18563479,
+      "digest": "sha256:6eda97830bb2ac83b7b81e223b60fb8390dc90fed742dc35289b63a188361642",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.0/groove-dice-1.8.0-mpc-aarch64.zip"
+    },
+    {
+      "name": "groove-dice-1.8.0-mpc-aarch64.zip.sha256",
+      "size": 100,
+      "digest": "sha256:726bf992c0f9a72f9d13e74170573a22f18df3c89572cc1a694f27d625054d29",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.0/groove-dice-1.8.0-mpc-aarch64.zip.sha256"
+    },
+    {
+      "name": "groove-dice-1.8.0-mpc-armv7.zip",
+      "size": 18518700,
+      "digest": "sha256:463f519bf2d61c175ad99ad4e20a4eed97439acbc6a44858175c3669bedb4c25",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.0/groove-dice-1.8.0-mpc-armv7.zip"
+    },
+    {
+      "name": "groove-dice-1.8.0-mpc-armv7.zip.sha256",
+      "size": 98,
+      "digest": "sha256:ccdf922bb03b4fb0b992a2e164406aff9f87d75cd11027c6359465e9b72bc984",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.0/groove-dice-1.8.0-mpc-armv7.zip.sha256"
+    },
+    {
+      "name": "groove-dice-1.8.0-mpc.zip",
+      "size": 19025068,
+      "digest": "sha256:a9181592e04a0e714773699127fe2c137e3b30a9d9bab1e05b5bdeb12a509a8f",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.0/groove-dice-1.8.0-mpc.zip"
+    },
+    {
+      "name": "groove-dice-1.8.0-mpc.zip.sha256",
+      "size": 92,
+      "digest": "sha256:7f8b8d2fb7d0adbbfb634f5c650dc2b7f42950c7cf1d53a071ccda09b0711055",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.8.0/groove-dice-1.8.0-mpc.zip.sha256"
+    }
+  ],
+  "publicRelease": true,
+  "stable": true,
+  "privatePayloads": 0,
+  "installation": "NVMe verified independently; SD/SSD untouched",
+  "pages": {
+    "id": 44657208518,
+    "head_sha": "13fa4f0ec127496b6ec2116e28bb3d28dd2ff89d",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/Sunghyun23/kimswork/actions/runs/44657208518"
+  },
+  "responsiveChecks": 91,
+  "localLinkChecks": 293,
+  "publicChecks": 46,
+  "anonymousAssetsSha256Verified": true
+}

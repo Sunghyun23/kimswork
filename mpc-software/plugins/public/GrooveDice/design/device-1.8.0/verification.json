@@ -1,6 +1,6 @@
 {
   "version": "1.8.0",
-  "status": "qualified for stable publication",
+  "status": "stable release, website and anonymous downloads verified",
   "nativeAndBothArmBuilds": true,
   "sdkValidationErrors": 0,
   "sdkHost": {

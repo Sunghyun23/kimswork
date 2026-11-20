@@ -1,0 +1,60 @@
+{
+  "id": 452173619,
+  "version": "1.15.0",
+  "tag": "donut-theory/v1.15.0",
+  "commit": "13fa4f0ec127496b6ec2116e28bb3d28dd2ff89d",
+  "url": "https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.15.0",
+  "assets": [
+    {
+      "name": "donut-theory-1.15.0-mpc-aarch64.zip",
+      "size": 5884231,
+      "digest": "sha256:19ac559976d813858d47d97beb86ac97c003fbf91853a1d4637d0895e837227b",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.0/donut-theory-1.15.0-mpc-aarch64.zip"
+    },
+    {
+      "name": "donut-theory-1.15.0-mpc-aarch64.zip.sha256",
+      "size": 102,
+      "digest": "sha256:22d29b25c46daeee228e9fb2e4f0d2083880b656b363761d51dc670e8bba842c",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.0/donut-theory-1.15.0-mpc-aarch64.zip.sha256"
+    },
+    {
+      "name": "donut-theory-1.15.0-mpc-armv7.zip",
+      "size": 5868657,
+      "digest": "sha256:0cfa346208e651c275511cf0c88118b0395680da760d2ec6d67e7c88d811fd64",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.0/donut-theory-1.15.0-mpc-armv7.zip"
+    },
+    {
+      "name": "donut-theory-1.15.0-mpc-armv7.zip.sha256",
+      "size": 100,
+      "digest": "sha256:2b787fc173ad56f527bbbdd9a55fefa3a49174eeaa94a7be6576e719e175dbaa",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.0/donut-theory-1.15.0-mpc-armv7.zip.sha256"
+    },
+    {
+      "name": "donut-theory-1.15.0-mpc.zip",
+      "size": 6076207,
+      "digest": "sha256:e4d711dcbac0517bd86d00c19232bb8b258b4618f34807987b389ff3551ab2e8",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.0/donut-theory-1.15.0-mpc.zip"
+    },
+    {
+      "name": "donut-theory-1.15.0-mpc.zip.sha256",
+      "size": 94,
+      "digest": "sha256:062707a2177395baddb1ff5f71f3fbf4a05a11142e601857778e8b1e2f00a3db",
+      "browser_download_url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.0/donut-theory-1.15.0-mpc.zip.sha256"
+    }
+  ],
+  "publicRelease": true,
+  "stable": true,
+  "privatePayloads": 0,
+  "installation": "NVMe verified independently; SD/SSD untouched",
+  "pages": {
+    "id": 44657208518,
+    "head_sha": "13fa4f0ec127496b6ec2116e28bb3d28dd2ff89d",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/Sunghyun23/kimswork/actions/runs/44657208518"
+  },
+  "responsiveChecks": 91,
+  "localLinkChecks": 293,
+  "publicChecks": 46,
+  "anonymousAssetsSha256Verified": true
+}
