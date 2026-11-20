@@ -1,6 +1,6 @@
 {
   "version": "0.2.6",
-  "status": "published0.2.6preview; final lock-matched skin installed on NVMe and actually checked",
+  "status": "published stable0.2.6; same verified NVMe runtime and hardware scope",
   "nativeAndBothArmBuilds": true,
   "sdkErrors": 0,
   "sdkWarnings": 0,
@@ -8,7 +8,7 @@
   "nvmeFiles": 165,
   "nvmeSha256Exact": true,
   "sdOrSsdTouched": false,
-  "publicRelease": "0.2.6 preview",
+  "publicRelease": "0.2.6 stable",
   "actualChecks": [
     "all5pages/footer",
     "stopped empty audio track Dice works without transport",

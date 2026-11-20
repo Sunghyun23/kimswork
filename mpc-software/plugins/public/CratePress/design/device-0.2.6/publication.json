@@ -43,8 +43,8 @@
     }
   ],
   "publicRelease": true,
-  "preview": true,
-  "stable": false,
+  "preview": false,
+  "stable": true,
   "privatePayloads": 0,
   "pagesRun": 44673082720,
   "pagesConclusion": "success",
@@ -58,5 +58,7 @@
     "DonutTheory": "1.15.0",
     "GrooveDice": "1.8.0"
   },
-  "finalLockReference": "Donut Theory exact silhouette and padding;44px touch"
+  "finalLockReference": "Donut Theory exact silhouette and padding;44px touch",
+  "promotionEvidence": "stable-promotion.json",
+  "initialPreviewPublicationHistorical": true
 }
