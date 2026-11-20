@@ -1,10 +1,10 @@
-# Crate Press 0.2.6 public preview
+# Crate Press 0.2.6
 
 Dice randomizes13MAIN character values with13shared locks and exact Undo; Input/Output/Mix/safety/LATCH/performance gates and setup remain unchanged. First380declarations retained;396total. Same32factory programs and Q-Link targets.
 
-Public preview 0.2.6 is installed and remotely checked on MPC XL OS 3.10.1.12. The shared footer provides UNLOCK ALL / ROLL DICE / UNDO on all five pages. Locks use the same native silhouette and spacing as Donut Theory, with 44×44 touch targets. Actual remote QA is separate from physical/audio/CPU certification.
+Stable release 0.2.6 is installed and remotely checked on MPC XL OS 3.10.1.12. The shared footer provides UNLOCK ALL / ROLL DICE / UNDO on all five pages. Locks use the same native silhouette and spacing as Donut Theory, with 44×44 touch targets. Actual remote QA is separate from physical/audio/CPU certification.
 
-Public preview 0.2.6. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Public preview release; hardware verification is partial.
+Stable release 0.2.6. Stereo character insert effect for MPC tracks and master buses. Vendor`kim`, UID`K36Z`. Hardware verification scope is documented below.
 
 Independent full-band character compression, Linkwitz–Riley three-band compression, selective bass-sensing or host-tempo ducking, drive, sampler coloration, wow/flutter, tone/cuts and aligned dry/wet mix. This is not a proprietary circuit model or an endorsed artist product. External sidechain input is not implemented.
 
@@ -80,3 +80,7 @@ Original artwork, lettering,64px knobs/I/O faders and eight performance buttons 
 Crate Press project code, factory programs and original runtime artwork are offered under MIT; see LICENSE. The unmodified official SDK retains its separate MIT notice in Content/Licenses/. No third-party audio library, proprietary firmware, ROMs or original manufacturer skin files are bundled.
 
 Version0.2.5 is a documentation/licensing/distribution patch: DSP, all380parameter identities,32factory programs, skin/Q-Link bytes and performance behavior remain0.2.4. Existing actual MPC captures are labeled0.2.4; they are not new0.2.5hardware certification. The preview status remains. Dedicated Open MPC ARM32/ARM64 archives supplement the normal SDK ZIP. In Open MPC enable beta/experimental releases to see this preview.
+
+## 0.2.6 stable promotion
+
+The owner approved promoting the existing0.2.6release to stable. The three ZIPs and their SHA-256 checksums are unchanged; no binary/UI/parameter/installation change is required. The bundled README records the initial preview publication; current release status and guidance are on the product page/manual. Historical preview notes above apply to their stated versions. Stable status does not expand the recorded hardware verification scope.

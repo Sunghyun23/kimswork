@@ -1,3 +1,7 @@
+## 0.2.6 stable promotion — 2026-11-20
+
+Owner explicitly approved a regular stable release. Existing verified ZIPs/checksums and installed runtime bytes are unchanged; no expanded hardware certification is claimed. Preview publication notes below are historical.
+
 ## 0.2.6 — Dice and common footer preview
 
 Native/ARM32/ARM64, SDK0errors/0warnings, engine/UBSan, all28effect-pair combinations, bridge,13Dice locks/exactUndo/old380state migration and three host configurations20PASS/0WARN/0FAIL pass. The initial device candidate exposed command deferral on a stopped/empty audio track. Commands now run immediately on VST command writes (even when the host sends no idle/value callbacks), non-render UI idle or render with non-waiting ownership; stopped VST tests and concurrent UI/render Dice/Undo regression pass without render callbacks or allocations. The corrected165-file NVMe installation is independently SHA256verified. Actual final remote checks and images are in CratePress/design/device-0.2.6. Existing hardware audio/CPU/physical-input limits remain; User authorized0.2.6preview release and site update after these checks.

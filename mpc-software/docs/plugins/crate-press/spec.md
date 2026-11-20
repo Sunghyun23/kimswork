@@ -1,3 +1,7 @@
+## 0.2.6 stable promotion — 2026-11-20
+
+Owner explicitly approved a regular stable release. Existing verified ZIPs/checksums and installed runtime bytes are unchanged; no expanded hardware certification is claimed. Preview publication notes below are historical.
+
 ## 0.2.6 — common footer preview (2026-11-20)
 
 Dice randomizes13MAIN character values with13shared locks and exact Undo; Input/Output/Mix/safety/LATCH/performance gates and setup remain unchanged. First380declarations retained;396total. Same32factory programs and Q-Link targets. Shared coordinates and scopes: mpc-software/shared/ui/README.md. Older layouts below are historical. User authorized publishing0.2.6preview with final Donut-matched lock artwork.

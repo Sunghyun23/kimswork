@@ -1,6 +1,6 @@
 # Crate Press user manual
 
-Version 0.2.6 · Public preview · Stereo effect for MPC standalone.
+Version 0.2.6 · Stable release · Stereo effect for MPC standalone.
 
 ## Roll Dice and protection — 0.2.6
 
@@ -112,4 +112,8 @@ DSP, all 380 parameter identities, 32 programs, detailed pages and Q-Link assign
 
 Project source, factory programs and original runtime artwork are offered under MIT. The SDK retains its own MIT notice. The ZIP includes LICENSE and Content/Licenses/. Optional Open MPC portable archives provide one build per CPU; the standard SDK ZIP keeps both. Use one active installation across drives.
 
-0.2.5 changes documentation/licensing/distribution only. Engine, parameters, presets and UI are unchanged. Current hardware screenshots remain explicitly labeled0.2.4, and earlier device evidence is historical. This release remains a public preview; in Open MPC enable beta/experimental releases. New physical Q-Link, multitouch, hardware audio, worst-case CPU and full project recall certification are not claimed.
+0.2.5 changes documentation/licensing/distribution only. Engine, parameters, presets and UI are unchanged. Current hardware screenshots remain explicitly labeled0.2.4, and earlier device evidence is historical. Version 0.2.5 was a preview requiring beta/experimental filtering in Open MPC. Version 0.2.6 is now a regular release. New physical Q-Link, multitouch, hardware audio, worst-case CPU and full project recall certification are not claimed.
+
+## Stable release status
+
+0.2.6 was promoted from preview to a regular release with owner approval. Plugin downloads and checksums are unchanged, so existing0.2.6installations need no update. The README bundled at first publication records its initial preview status; this manual and the Release page describe its current stable status. Hardware testing remains scoped to the evidence above.
