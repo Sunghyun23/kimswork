@@ -1,0 +1,56 @@
+{
+  "version": "0.2.37",
+  "binary_sha256": "a2a8719f9c7a1dafbdbbf4d762493e676433616dc22685cdb1affa4324b49c99",
+  "recipe": "Same original 92 BPM phrase, velocities45\u201375, FX off; fixed -24dBFS RMS gain per complete take, not per note.",
+  "renders": [
+    {
+      "model": "tine",
+      "raw_sha256": "0f3ad5e0891eb068928a0ad2145cea80fbc79b88bb89018974c9cf633015ed72",
+      "peak_matched_dbfs": -6.126525995363585,
+      "fixed_gain_db": 16.566399270055527,
+      "aac_sha256": "a3a70fed139528a6311657a8c12653946849089d6d6fe780a663723a00f34613"
+    },
+    {
+      "model": "wurli",
+      "raw_sha256": "6fd008b2bf9cd9e5efe2daca3f416d4a12b7e6423c87a8041cd2513ffc483eec",
+      "peak_matched_dbfs": -5.693185702470397,
+      "fixed_gain_db": 13.282445720047747,
+      "aac_sha256": "8798fcdcb42b6b71abee75b8f5916b8e3ae0363447416ecafd39d42d1cbf3ca6"
+    },
+    {
+      "model": "upright",
+      "raw_sha256": "8b4d00193286990528e3c623afef951002f96af8c32fbbf51fafc60c431861ec",
+      "peak_matched_dbfs": -4.731180431402592,
+      "fixed_gain_db": 17.312721208145813,
+      "aac_sha256": "81132d3bfb352f07689bf0d1ca036af0ec14f82501b5bb75c78e762a679d9da1"
+    },
+    {
+      "model": "felt",
+      "raw_sha256": "95d417185102ec41720a1be9ffaa3527c990fcac067da10e0348c267df29879e",
+      "peak_matched_dbfs": -5.096711642552271,
+      "fixed_gain_db": 17.553061044943217,
+      "aac_sha256": "bb9627395435e6458fccc4bb3cb64133265b01a65419cdea646d11d6d0e6b7dc"
+    },
+    {
+      "model": "clav",
+      "raw_sha256": "082964e0555c24191c61b9a9f6f780ed2fc4f6c8e4f800ea968664197aa58c5b",
+      "peak_matched_dbfs": -4.151632726598816,
+      "fixed_gain_db": 18.01656813290126,
+      "aac_sha256": "2b928a793a643f69d77b163c349b2def762fee985b13157afbf26ce7b415524d"
+    },
+    {
+      "model": "muted",
+      "raw_sha256": "be0cf79441db965e0588d57179f51bcc60910d7357245f119522829e9091c0ea",
+      "peak_matched_dbfs": -2.3370285912646986,
+      "fixed_gain_db": 13.410805559658037,
+      "aac_sha256": "8775aae045bfb0a2612877e183aafa01e8b6c579ba3bc26b70dd3ccdad31d0b6"
+    },
+    {
+      "model": "thumb",
+      "raw_sha256": "884f8c1233eedcb4e6e7008a8a1dceef4921e9d6f7549563cd39e7f18201c40a",
+      "peak_matched_dbfs": -3.451935422755013,
+      "fixed_gain_db": 14.818133825888216,
+      "aac_sha256": "fc1ed04f8d4b81c75aa625a09a22193b9c27d45e99dd6d5f4f6037c32cc51124"
+    }
+  ]
+}
