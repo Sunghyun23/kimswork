@@ -1,0 +1,17 @@
+{
+  "name": "Felt Club",
+  "manufacturer": "kim",
+  "version": "0.3.2",
+  "format": "vst2",
+  "kind": "instrument",
+  "uid": "KnAw",
+  "numInputs": 0,
+  "numOutputs": 2,
+  "category": "Piano",
+  "file32": "VST/felt-club-arm32.so",
+  "file64": "VST/felt-club-arm64.so",
+  "description": "Sample-free modal electric/acoustic keys and plucked instruments with held chords, strum and sound Dice.",
+  "author": "kim",
+  "url": "https://kimswork.app/",
+  "license": "MIT"
+}

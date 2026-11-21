@@ -80,7 +80,9 @@ def install(g,tui,ql,params,out):
   add(name,modal(g.component_definition([],ws,'90000000')))
  def menu(key,b,caption=None):
   ensure_menu(key);x,y,w,hh=map(int,b.split());name='PerfMenu'+key+str(w)+'x'+str(hh);opened=f'Local/2/dtChoice{ix[key]}'
-  ws=[plate('LCD',f'0 0 {w} {hh}'),label('',f'8 0 {w-36} {hh}',20 if hh<=30 else 22,'Value',h(key)),label('›',f'{w-24} 0 24 {hh}',24),hit('open list',opened,f'0 0 {w} {hh}')]
+  ws=[plate('LCD',f'0 0 {w} {hh}'),label('',f'8 0 {w-36} {hh}',20 if hh<=30 else 18 if w<=180 else 22,'Value',h(key)),label('›',f'{w-24} 0 24 {hh}',24),hit('open list',opened,f'0 0 {w} {hh}')]
+  if key=='DiceTarget'and w==166:
+   move(ws[1],[8,14,w-36,30]);put(get(get(get(cd(ws[1]),'data'),'textStyle'),'font'),'height',18.0);ws.insert(1,label('DICE TARGET',f'8 0 {w-36} 14',12))
   actions=[g.action('Mouse Down','Q-Link',h(key),'')]
   if key=='SoundCurrent':
    ws[-1]=hit('reset sound category',f'Local/7/soundCategory{ix[key]}',f'0 0 {w} {hh}',0,7);actions.append(g.action('Mouse Down','Toggle Switch',opened,''))
@@ -114,7 +116,7 @@ def install(g,tui,ql,params,out):
   conditions=conditions or []
   if key=='PerfCharacter':
    for focus,actual in enumerate(('Drift','OscPhase')):
-    knob(ws,actual,caption,x,y,False,small,compact,conditions+[f'IndexedEnabling/{focus}/2/{h("OscCharacterFocus")}'],key)
+    knob(ws,actual,'PHASE'if focus else caption,x,y,False,small,compact,conditions+[f'IndexedEnabling/{focus}/2/{h("OscCharacterFocus")}'],key)
    return
   if key=='PerfPitch':
    for osc in range(2):
@@ -138,12 +140,13 @@ def install(g,tui,ql,params,out):
   if not small:ww.append(label(caption,f'0 {64 if compact else 72} {width} 20',20))
   ww.extend([plate('value LCD',f'4 {value_y} {width-8} 24'),label('',f'8 {value_y} {width-16} 24',22,'Value','Data')])
   if key=='OscPhase':
-   # PHASE above identifies the control; use the caption/value band for a
-   # readable degree value and a separate44px-high FREE/RESET touch target.
-   ww=ww[:1]+[plate('phase LCD','4 72 82 44'),label('','6 72 78 44',20,'Value','Data')]
-   for active,caption_mode in enumerate(('FREE','RESET')):
+   # Keep the same72px artwork, caption baseline and24px value band as
+   # neighboring controls. Restart gets a44px hit area without a taller LCD.
+   ww=ww[:2]+[plate('phase LCD','4 92 82 24'),label('','6 92 78 24',20,'Value','Data')]
+   for active in range(2):
+    caption_mode='RETRIG'
     mode_name='PerfPhaseMode'+str(active)
-    mw=[g.entry('restart state','Button',g.button_data(scaled('tempo-sync-on.png',(56,44)),scaled('tempo-sync-off.png',(56,44)),1,2),'0 0 56 44','No','Show','Always',remap=[('Data',h('OscRetrig'))]),label(caption_mode,'0 0 56 44',14),hit('change restart',h('OscRetrig'),'0 0 56 44',1-active,2)]
+    mw=[g.entry('restart state','Button',g.button_data(scaled('tempo-sync-on.png',(56,24)),scaled('tempo-sync-off.png',(56,24)),1,2),'0 20 56 24','No','Show','Always',remap=[('Data',h('OscRetrig'))]),label(caption_mode,'0 20 56 24',14),hit('change restart',h('OscRetrig'),'0 0 56 44',1-active,2)]
     add(mode_name,g.component_definition([],mw,'00000000'));ww.append(inst(caption_mode,mode_name,'90 72 56 44',invalid=[f'IndexedEnabling/{active}/2/{h("OscRetrig")}']))
   if 'choices'in meta[ix[key]]:
    ensure_menu(key);ww.append(hit('open value list',f'Local/2/dtChoice{ix[key]}',f'0 {value_y} {width} 24'))
@@ -172,6 +175,10 @@ def install(g,tui,ql,params,out):
   return inst(caption,name,b,h(key))
  def drawer(ws,key):
   ensure_menu(key);ws.append(inst('Select '+key,'DTChoicePanel'+str(ix[key]),'0 0 1280 628',h(key),[f'IndexedEnabling/1/2/Local/2/dtChoice{ix[key]}']))
+ footer=json.loads((out.parent.parents[2]/'shared/ui/action-footer.json').read_text())
+ def actions_footer(ws):
+  for action,key in zip(footer['actions'],['UnlockDice','Randomize','UndoDice']):
+   ws.append(command(key,action['label'],f"{action['x']} {footer['y']} {action['width']} {footer['height']}",key=='Randomize'))
  def browse_footer(ws,y=526,actions_y=578,poly=False):
   # Existing categorized browser launcher resets to category root on every entry.
   sound=copy.deepcopy(next(w for w in main if get(cd(w),'name')=='SoundPreset'));move(sound,[150,y,240,44]);ws.append(sound)
@@ -179,19 +186,20 @@ def install(g,tui,ql,params,out):
   ws+=segment('PerfVoice',['POLY','MONO'],f'530 {y} 184 44')
   ws.append(label('DICE TARGET',f'734 {y} 148 44',20));ws.append(menu('DiceTarget',f'886 {y} 184 44'))
   ws.append(menu('InputMode',f'1078 {y} 184 44'))
-  ws.extend([command('UnlockDice','UNLOCK ALL',f'250 {actions_y} 190 44'),command('Randomize','ROLL DICE',f'460 {actions_y} 260 44',True),command('UndoDice','UNDO',f'740 {actions_y} 160 44')])
+  actions_footer(ws)
   # Actual mode has one explicit selector; legacy Voice Mode remains a host parameter.
-  ws.append(inst('Performance settings','PerfSettingsLauncher',f'920 {actions_y} 342 44'))
+  ws.append(inst('Performance settings','PerfSettingsLauncher',f'920 {footer["y"]} 342 44'))
  def qmap(tab,groups):
   assign={i:-1 for i in range(1,17)}
   for bank,keys in enumerate(groups):
    for j,key in enumerate(keys):assign[13+bank-4*j]=ix[key]
   return O(('Tab',get(tab,'fnKeyIndex')+1),('SubTab',get(tab,'fnKeySubIndex')+1),('Bank Direction','Column'),('Q-Links',O(*[('Q-Link '+str(i),assign[i])for i in range(1,17)])))
  # Utility drawer keeps rare performance settings accessible without footer tiles.
- settings='Local/2/perfSettings';sw=[image('sidebar','sidebar-panel.png','0 0 426 628'),label('PERFORMANCE','12 4 344 48',26,colour='fff2f2f2'),label('×','366 4 48 48',28,colour='fff2f2f2'),hit('close',settings,'366 4 48 48',0),hit('outside',settings,'426 0 854 628',0)]
+ settings='Local/2/perfSettings';sw=[image('sidebar','sidebar-panel.png','0 0 426 628'),label('PERFORMANCE','12 4 214 48',26,colour='fff2f2f2'),label('×','366 4 48 48',28,colour='fff2f2f2'),hit('close',settings,'366 4 48 48',0),hit('outside',settings,'426 0 854 628',0)]
  for i,(key,caption)in enumerate([('Volume','VOLUME'),('Expression','EXPRESSION'),('Bend','BEND RANGE'),('Trigger','TRIGGER BASE'),('Spread','STRUM'),('Motion','MOTION')]):sw.append(touch_value(key,f'18 {76+i*78} 390 54',caption))
  sw.append(label('PAD MAP','18 526 390 22',19,colour='fff2f2f2'));sw+=segment('PadMap',['CONSECUTIVE','INDIVIDUAL'],'18 550 390 44')
  add('PerfSettings',modal(g.component_definition([],sw,'90000000')))
+
  add('PerfSettingsLauncher',g.component_definition([], [plate('plate','0 0 342 44','dt-unlock-off.png'),label('SETTINGS','0 0 342 44',20),hit('open',settings,'0 0 342 44')],'00000000'))
  def finish(tab,name,fn,sub,ws,groups,guides):
   put(tab,'tabName',name);put(tab,'fnKeyIndex',fn);put(tab,'fnKeySubIndex',sub);put(tab,'qlinkBoundsData',guides)
@@ -239,34 +247,20 @@ def install(g,tui,ql,params,out):
    ws.extend([menu('ModMode','658 308 296 26'),menu('ModShape','1108 308 146 26')]);ws+=segment('ModSync',['FREE','SYNC'],'958 308 146 26')
   if mono:browse_footer(ws)
   else:
-   browse_footer(ws,456,502,True)
-   # Reuse tested page-conditional hold pads and chord browsing widgets unchanged.
+   # One browsing row leaves70px chord pads above the shared action bar.
+   ws.extend([label('PRESET','18 456 70 44',18),command('SoundPrev','‹','90 456 44 44'),menu('SoundCurrent','138 456 180 44'),command('SoundNext','›','322 456 44 44')])
+   ws.append(label('CHORD PRESET','374 456 108 44',16))
+   for n,b in [('ChordPrev',[486,456,44,44]),('Progression',[534,456,180,44]),('ChordNext',[718,456,44,44])]:
+    w=next(w for w in main if get(cd(w),'name')==n);ws.append(resize_instance(copy.deepcopy(w),b))
+   ws+=segment('PerfVoice',['POLY','MONO'],'770 456 146 44')
+   ws.extend([menu('DiceTarget','924 456 166 44'),menu('InputMode','1098 456 164 44')])
+   actions_footer(ws)
    for w in main:
     n=get(cd(w),'name')
-    if (n.startswith('Chord ')and n[6:].isdigit())or n in ('CHORD PRESET','ChordPrev','Progression','ChordNext','‹','‹ touch','›','› touch')or(' / 'in n and '–'in n):
-     z=copy.deepcopy(w)
-     if n=='CHORD PRESET':move(z,[18,544,160,24])
-     elif n=='ChordPrev':move(z,[180,546,44,44])
-     elif n=='Progression':move(z,[230,546,244,44])
-     elif n=='ChordNext':move(z,[480,546,44,44])
-     elif n.startswith('Chord '):
-      # Keep the 70px hold pads: browse row fits above, pads stay at y550.
-      continue
-     else:continue
-     # Chord browsing remains in its original action row instead of over pads.
-     if n=='CHORD PRESET':move(z,[18,502,150,44])
-     elif n=='ChordPrev':move(z,[170,502,44,44])
-     elif n=='Progression':move(z,[218,502,204,44])
-     elif n=='ChordNext':move(z,[426,502,44,44])
-     if n in ('Progression','ChordPrev','ChordNext'):
-      b=box(z);z=resize_instance(copy.deepcopy(w),b)
-     ws.append(z)
-   # Compact create actions in the same row as chord browsing.
-   ws[:]=[w for w in ws if get(cd(w),'name')not in('UNLOCK ALL','ROLL DICE','UNDO','Voice Detail','Performance settings')]
-   ws.extend([command('UnlockDice','UNLOCK ALL','482 502 160 44'),command('Randomize','ROLL DICE','650 502 216 44',True),command('UndoDice','UNDO','874 502 102 44')])
-   for w in main:
-    n=get(cd(w),'name')
-    if(n.startswith('Chord ')and n[6:].isdigit())or n in('‹','‹ touch','›','› touch')or(' / 'in n and '–'in n):ws.append(copy.deepcopy(w))
+    if(n.startswith('Chord ')and n[6:].isdigit()):
+     z=copy.deepcopy(w);bb=box(z);bb[1]=504;move(z,bb);ws.append(z)
+    elif n in('‹','‹ touch','›','› touch')or(' / 'in n and '–'in n):
+     z=copy.deepcopy(w);bb=box(z);bb[1]=578;move(z,bb);ws.append(z)
   maps.append(finish(tab,'MONO'if mono else'POLY',1 if mono else 0,0,ws,groups,['18 94 612 176','650 94 612 176','18 278 612 176','650 278 612 176']));newtabs.append(tab)
  # OSC detail, all oscillator fields stay individually visible.
  tab=old['OSC'];ws=copy.deepcopy(header);groups=[['Wave1Full','OscTune1','OscFine1','OscLevel1'],['Wave2Full','OscTune2','OscFine2','OscLevel2'],['Sub','Drift','OscPulse1','Pulse2'],['Noise','FM','Tone']]
@@ -320,7 +314,7 @@ def install(g,tui,ql,params,out):
  # CHORD: keep every existing bank/key/voicing/learn modal, reflow the body
  # around the same header and bottom actions used by the sound editors.
  chord=old['CHORD'];root=get(get(chord,'componentDefinition'),'componentsData');editor=defs['Editor_DTAllChords'];ew=get(editor,'componentsData');cw=copy.deepcopy(header)
- panel(cw,'CHORD EDITOR',18,94,1244,422)
+ panel(cw,'CHORD EDITOR',18,94,1244,376)
  for w in cw:
   if get(cd(w),'name')=='CHORD EDITOR':move(w,[30,96,220,26])
  # Bank buttons / slot +/- are existing native commands with their conditions.
@@ -332,10 +326,10 @@ def install(g,tui,ql,params,out):
   elif y==60 and get(cd(w),'type')!='Label':
    z=resize_instance(copy.deepcopy(w),[int(928+(x-898)*.72),134,int(width*.72),32]);cw.append(z)
   elif n=='Circle of fifths':
-   z=copy.deepcopy(w);data=get(cd(z),'data');put(data,'image',scaled(get(data,'image'),(338,344)));move(z,[918,170,338,344]);cw.append(z)
- for caption,x,width in [('SLOT',28,118),('ROOT',150,136),('TYPE',292,270),('VOICING',570,220),('OCT',800,100)]:cw.append(label(caption,f'{x} 136 {width} 24',20))
+   z=copy.deepcopy(w);data=get(cd(z),'data');put(data,'image',scaled(get(data,'image'),(294,300)));move(z,[940,170,294,300]);cw.append(z)
+ for caption,x,width in [('SLOT',28,118),('ROOT',150,136),('TYPE',292,270),('VOICING',570,220),('OCT',800,100)]:cw.append(label(caption,f'{x} 120 {width} 24',20))
  for row in range(4):
-  y=166+row*80
+  y=146+row*80
   knob(cw,'EditRoot'+str(row+1),'ROOT',158,y,False,True)
   cw.append(menu('HarmonyEdit'+str(row+1),f'292 {y+15} 264 40'))
   cw.append(menu('EditVoicing'+str(row+1),f'570 {y+15} 214 40'))
@@ -345,7 +339,7 @@ def install(g,tui,ql,params,out):
  for w in ew:
   n=get(cd(w),'name')
   if not n.startswith('Audition'):continue
-  z=copy.deepcopy(w);slot=int(n.split('_',1)[0][8:])-1;row=slot%4;move(z,[28,170+row*80,118,64]);typ=get(cd(z),'type');name='Perf'+typ;d=copy.deepcopy(defs[typ])
+  z=copy.deepcopy(w);slot=int(n.split('_',1)[0][8:])-1;row=slot%4;move(z,[28,150+row*80,118,64]);typ=get(cd(z),'type');name='Perf'+typ;d=copy.deepcopy(defs[typ])
   for child in get(d,'componentsData'):
    xx,yy,ww,hh=box(child);move(child,[int(xx*118/90),yy,int(ww*118/90),hh]);data=get(cd(child),'data')
    if get(cd(child),'type')=='Label'and dict(data).get('type')=='Text':put(data,'text',str(slot+1))
@@ -356,7 +350,7 @@ def install(g,tui,ql,params,out):
   add(name,d);put(cd(z),'type',name);cw.append(z)
  # Utility actions preserve their exact gesture/local handles and existing modals.
  util=[w for w in ew if box(w)[1]in(516,564)and get(cd(w),'type')not in('Button','Label')]
- positions=[(18,520,186,44),(214,520,174,44),(398,520,156,44),(564,520,214,44),(788,520,212,44),(1010,520,252,44)]
+ positions=[(18,474,186,44),(214,474,174,44),(398,474,156,44),(564,474,214,44),(788,474,212,44),(1010,474,252,44)]
  selected=[]
  for w in util:
   typ=get(cd(w),'type');definition=defs.get(typ,[])
@@ -374,14 +368,14 @@ def install(g,tui,ql,params,out):
   add(name,d);put(cd(z),'type',name);cw.append(z)
  # One compact common row is sufficient while editing chords. Dice remains
  # sound-only and can never alter chord/voicing/key/MIDI values.
- cw.append(menu('SoundCurrent','18 574 330 44'));cw+=segment('PerfVoice',['POLY','MONO'],'368 574 190 44');cw.append(menu('InputMode','574 574 184 44'))
- cw.extend([command('UnlockDice','UNLOCK ALL','774 574 170 44'),command('Randomize','ROLL DICE','958 574 196 44',True),command('UndoDice','UNDO','1164 574 98 44')])
+ cw.append(menu('SoundCurrent','18 526 330 44'));cw+=segment('PerfVoice',['POLY','MONO'],'368 526 190 44');cw.append(menu('InputMode','574 526 184 44'))
+ actions_footer(cw)
  put(editor,'componentsData',cw)
  # Keep all modal roots; discard only the old body instance, not its drawers.
  body=copy.deepcopy(root[0]);move(body,[0,0,1280,628]);put(get(chord,'componentDefinition'),'componentsData',[body]+[w for w in root[1:]if get(cd(w),'type')in('DTKeyPadSetup','DTKeyPicker','DTKeyTranspose','DTKeySourcePicker','DTSmoothVoicing')])
  for key in ['HarmonyEdit'+str(i)for i in range(1,5)]+['EditVoicing'+str(i)for i in range(1,5)]+['EditOctave'+str(i)for i in range(1,5)]+['SoundCurrent','InputMode']:
   drawer(get(get(chord,'componentDefinition'),'componentsData'),key)
- put(chord,'fnKeyIndex',0);put(chord,'fnKeySubIndex',1);put(chord,'qlinkBoundsData',[f'18 {166+i*80} 888 80'for i in range(4)])
+ put(chord,'fnKeyIndex',0);put(chord,'fnKeySubIndex',1);put(chord,'qlinkBoundsData',[f'18 {146+i*80} 888 80'for i in range(4)])
  maps.append(qmap(chord,[['EditRoot'+str(i),'HarmonyEdit'+str(i),'EditVoicing'+str(i),'EditOctave'+str(i)]for i in range(1,5)]));newtabs.append(chord)
  put(pd,'tabs',newtabs);put(get(ql,'Screen Mode Q-Links'),'map',maps);put(ql,'Program Mode Q-Links',copy.deepcopy(get(maps[0],'Q-Links')))
  # Choice parameters retain their Dice protection in the sidebar header,

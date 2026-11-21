@@ -1,6 +1,10 @@
-# Donut Theory 1.15.0 — User Manual
+# Donut Theory 1.15.4 — User Manual
 
 Donut Theory is an original Moog-inspired synth for MPC bass, keys, leads, pads and rich chord playing. Its nonlinear mixer, four-stage ladder low-pass and rounded VCA are an inspired design, not an exact recreation of a particular instrument or artist recording. No external samples are needed.
+
+## 1.15.4 update
+
+No physical MIDI preset/Dice commands or PAD COMMANDS menus remain. Ordinary notes, touch chords and custom chord MIDI mappings are preserved. The six retired action parameters remain inert for saved-state compatibility (405 total). A fresh instance starts on POLY; an existing host instance can retain its native subtab.
 
 ## First session
 

@@ -1,0 +1,3239 @@
+[
+  {
+    "key": "Master",
+    "name": "Master",
+    "min": -36,
+    "max": 0,
+    "default": -9,
+    "unit": "dB",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Tone",
+    "name": "Tone",
+    "min": 0,
+    "max": 100,
+    "default": 48,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Body",
+    "name": "Body",
+    "min": 0,
+    "max": 100,
+    "default": 62,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Character3",
+    "name": "Character3",
+    "min": 0,
+    "max": 100,
+    "default": 28,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Character4",
+    "name": "Character4",
+    "min": 0,
+    "max": 100,
+    "default": 18,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Attack",
+    "name": "Attack",
+    "min": 1,
+    "max": 1500,
+    "default": 1,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Decay",
+    "name": "Decay",
+    "min": 20,
+    "max": 5000,
+    "default": 650,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Sustain",
+    "name": "Sustain",
+    "min": 0,
+    "max": 100,
+    "default": 70,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Release",
+    "name": "Release",
+    "min": 15,
+    "max": 6000,
+    "default": 420,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Rate",
+    "name": "Motion Rate",
+    "min": 0,
+    "max": 1,
+    "default": 0.5,
+    "unit": "",
+    "decimals": 3,
+    "auto": true
+  },
+  {
+    "key": "Depth",
+    "name": "Motion Depth",
+    "min": 0,
+    "max": 100,
+    "default": 22,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Drift",
+    "name": "Drift",
+    "min": 0,
+    "max": 100,
+    "default": 6,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Width",
+    "name": "Width",
+    "min": 0,
+    "max": 100,
+    "default": 70,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Drive",
+    "name": "Drive",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Chorus",
+    "name": "Chorus",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Delay",
+    "name": "Delay",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Room",
+    "name": "Room",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Model",
+    "name": "Model",
+    "choices": [
+      "Tine",
+      "Wurli",
+      "Upright",
+      "Felt",
+      "Clav",
+      "Muted",
+      "Thumb"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Family",
+    "name": "Family",
+    "choices": [
+      "EP",
+      "Piano",
+      "Pluck"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Preset",
+    "name": "Sound Preset",
+    "choices": [
+      "Custom",
+      "Init",
+      "Candle Tine",
+      "Sunday Velvet",
+      "Dusty Suitcase",
+      "Afterglow",
+      "Amber Bell",
+      "Low Ceiling",
+      "Warm Current",
+      "Night Letters",
+      "Copper Wurli",
+      "Soft Static",
+      "Basement Waltz",
+      "Brick Dust",
+      "Wurli Bloom",
+      "Quiet Block",
+      "Evening Grain",
+      "Honey Circuit",
+      "Sunday Upright",
+      "Soft Floor",
+      "Loose Felt",
+      "Low Window",
+      "Paper Keys",
+      "After Hours",
+      "Dust In Light",
+      "Room Sketch",
+      "Felt Letters",
+      "Small Hours",
+      "Moss Chords",
+      "Warm Rain",
+      "Muted Ivory",
+      "Slow Bloom",
+      "Hush Piano",
+      "Quiet Tape",
+      "Dusty Clav",
+      "Copper Steps",
+      "Short Answer",
+      "Side Street",
+      "Pocket Clav",
+      "Muted Talk",
+      "Wood Circuit",
+      "Friday Bounce",
+      "Muted Thread",
+      "Short Velvet",
+      "Small Pick",
+      "Porch Light",
+      "Soft Sync",
+      "Dry Flowers",
+      "Night Pocket",
+      "Worn Strings",
+      "Thumb Notes",
+      "Little Lantern",
+      "Brass Leaf",
+      "Warm Pins",
+      "Soft Chimes",
+      "Cloud Steps",
+      "Slow Pebble",
+      "Paper Tines"
+    ],
+    "default": 1,
+    "auto": false
+  },
+  {
+    "key": "PresetPrev",
+    "name": "Previous Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PresetNext",
+    "name": "Next Sound",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "MotionMode",
+    "name": "Motion Mode",
+    "choices": [
+      "Tremolo",
+      "Auto Pan"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "Sync",
+    "name": "Motion Sync",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "Shape",
+    "name": "Motion Shape",
+    "choices": [
+      "Sine",
+      "Triangle",
+      "Square",
+      "S&H"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "DelayDivision",
+    "name": "Delay Division",
+    "choices": [
+      "1/1",
+      "1/1 D",
+      "1/1 T",
+      "1/2",
+      "1/2 D",
+      "1/2 T",
+      "1/4",
+      "1/4 D",
+      "1/4 T",
+      "1/8",
+      "1/8 D",
+      "1/8 T",
+      "1/16",
+      "1/16 D",
+      "1/16 T",
+      "1/32",
+      "1/32 D",
+      "1/32 T"
+    ],
+    "default": 10,
+    "auto": true
+  },
+  {
+    "key": "DelayFeedback",
+    "name": "Delay Feedback",
+    "min": 0,
+    "max": 72,
+    "default": 28,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoomTime",
+    "name": "Room Time",
+    "min": 0,
+    "max": 100,
+    "default": 55,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "RoomDamp",
+    "name": "Room Damping",
+    "min": 0,
+    "max": 100,
+    "default": 50,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Hammer",
+    "name": "Hammer",
+    "min": 0,
+    "max": 100,
+    "default": 35,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Velocity",
+    "name": "Velocity Sens",
+    "min": 0,
+    "max": 100,
+    "default": 65,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Resonance",
+    "name": "Resonance",
+    "min": 0,
+    "max": 100,
+    "default": 32,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Noise",
+    "name": "Mechanical",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Pick",
+    "name": "Pick Position",
+    "min": 0,
+    "max": 100,
+    "default": 22,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Detune",
+    "name": "String Detune",
+    "min": 0,
+    "max": 12,
+    "default": 1.5,
+    "unit": "ct",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Tuning",
+    "name": "Tuning",
+    "min": 430,
+    "max": 450,
+    "default": 440,
+    "unit": "Hz",
+    "decimals": 1,
+    "auto": true
+  },
+  {
+    "key": "Pedal",
+    "name": "Sustain Pedal",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "PitchRange",
+    "name": "Bend Range",
+    "min": 1,
+    "max": 12,
+    "default": 2,
+    "unit": "st",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "VelocityCurve",
+    "name": "Velocity Curve",
+    "choices": [
+      "Soft",
+      "Linear",
+      "Firm"
+    ],
+    "default": 1,
+    "auto": true
+  },
+  {
+    "key": "KeyOff",
+    "name": "Key Off",
+    "min": 0,
+    "max": 100,
+    "default": 0,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "MotionDelay",
+    "name": "Motion Delay",
+    "min": 0,
+    "max": 3000,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "MotionFade",
+    "name": "Motion Fade",
+    "min": 0,
+    "max": 3000,
+    "default": 0,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "DriftRate",
+    "name": "Drift Rate",
+    "min": 0.05,
+    "max": 3,
+    "default": 0.24,
+    "unit": "Hz",
+    "decimals": 2,
+    "auto": true
+  },
+  {
+    "key": "ChorusRate",
+    "name": "Chorus Rate",
+    "min": 0.05,
+    "max": 2,
+    "default": 0.31,
+    "unit": "Hz",
+    "decimals": 2,
+    "auto": true
+  },
+  {
+    "key": "ChorusDepth",
+    "name": "Chorus Depth",
+    "min": 0,
+    "max": 100,
+    "default": 50,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Roll",
+    "name": "Roll Dice",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Undo",
+    "name": "Undo",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "UnlockAll",
+    "name": "Unlock All",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Panic",
+    "name": "All Notes Off",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "InputMode",
+    "name": "Keyboard / Pads",
+    "choices": [
+      "Notes",
+      "Chords",
+      "Split"
+    ],
+    "default": 2,
+    "auto": true
+  },
+  {
+    "key": "Key",
+    "name": "Key",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Scale",
+    "name": "Reference Scale",
+    "choices": [
+      "Major",
+      "Minor"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Transpose",
+    "name": "Transpose",
+    "min": -12,
+    "max": 12,
+    "default": 0,
+    "unit": "st",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Strum",
+    "name": "Strum",
+    "min": 0,
+    "max": 160,
+    "default": 18,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "StrumDirection",
+    "name": "Strum Direction",
+    "choices": [
+      "Up",
+      "Down",
+      "Alternate"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "StrumVelocity",
+    "name": "Strum Velocity",
+    "min": 0,
+    "max": 30,
+    "default": 5,
+    "unit": "%",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "ChordGlide",
+    "name": "Chord Glide",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Glide",
+    "name": "Glide Time",
+    "min": 0,
+    "max": 1200,
+    "default": 90,
+    "unit": "ms",
+    "decimals": 0,
+    "auto": true
+  },
+  {
+    "key": "Slots",
+    "name": "Chord Slots",
+    "choices": [
+      "4",
+      "8",
+      "12",
+      "16"
+    ],
+    "default": 0,
+    "auto": true
+  },
+  {
+    "key": "Page",
+    "name": "Slot Page",
+    "choices": [
+      "1\u20134",
+      "5\u20138",
+      "9\u201312",
+      "13\u201316"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PagePrev",
+    "name": "Previous Slots",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "PageNext",
+    "name": "Next Slots",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SlotsAdd",
+    "name": "Add Four Slots",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "SlotsRemove",
+    "name": "Remove Four Slots",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Smooth",
+    "name": "Smooth Top Notes",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordPrev",
+    "name": "Previous Progression",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordNext",
+    "name": "Next Progression",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordPreset1",
+    "name": "Progression 1",
+    "choices": [
+      "Sunday Soul",
+      "Amber Changes",
+      "Side Street",
+      "Soft Landing",
+      "Blue Hour",
+      "Quiet Turn",
+      "Warm Window",
+      "Copper Circle",
+      "Dusty Steps",
+      "Night Bloom",
+      "Little Bridge",
+      "Soft Motion",
+      "Low Lantern",
+      "Porch Chords",
+      "Last Train",
+      "Velvet Loop"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordPreset2",
+    "name": "Progression 2",
+    "choices": [
+      "Sunday Soul",
+      "Amber Changes",
+      "Side Street",
+      "Soft Landing",
+      "Blue Hour",
+      "Quiet Turn",
+      "Warm Window",
+      "Copper Circle",
+      "Dusty Steps",
+      "Night Bloom",
+      "Little Bridge",
+      "Soft Motion",
+      "Low Lantern",
+      "Porch Chords",
+      "Last Train",
+      "Velvet Loop"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordPreset3",
+    "name": "Progression 3",
+    "choices": [
+      "Sunday Soul",
+      "Amber Changes",
+      "Side Street",
+      "Soft Landing",
+      "Blue Hour",
+      "Quiet Turn",
+      "Warm Window",
+      "Copper Circle",
+      "Dusty Steps",
+      "Night Bloom",
+      "Little Bridge",
+      "Soft Motion",
+      "Low Lantern",
+      "Porch Chords",
+      "Last Train",
+      "Velvet Loop"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordPreset4",
+    "name": "Progression 4",
+    "choices": [
+      "Sunday Soul",
+      "Amber Changes",
+      "Side Street",
+      "Soft Landing",
+      "Blue Hour",
+      "Quiet Turn",
+      "Warm Window",
+      "Copper Circle",
+      "Dusty Steps",
+      "Night Bloom",
+      "Little Bridge",
+      "Soft Motion",
+      "Low Lantern",
+      "Porch Chords",
+      "Last Train",
+      "Velvet Loop"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Root1",
+    "name": "Root 1",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Type1",
+    "name": "Chord Type 1",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Voicing1",
+    "name": "Voicing 1",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave1",
+    "name": "Octave 1",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote1",
+    "name": "Pad Note 1",
+    "min": -1,
+    "max": 127,
+    "default": 24,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root2",
+    "name": "Root 2",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 7,
+    "auto": false
+  },
+  {
+    "key": "Type2",
+    "name": "Chord Type 2",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 6,
+    "auto": false
+  },
+  {
+    "key": "Voicing2",
+    "name": "Voicing 2",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave2",
+    "name": "Octave 2",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote2",
+    "name": "Pad Note 2",
+    "min": -1,
+    "max": 127,
+    "default": 26,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root3",
+    "name": "Root 3",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Type3",
+    "name": "Chord Type 3",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 3,
+    "auto": false
+  },
+  {
+    "key": "Voicing3",
+    "name": "Voicing 3",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave3",
+    "name": "Octave 3",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote3",
+    "name": "Pad Note 3",
+    "min": -1,
+    "max": 127,
+    "default": 28,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root4",
+    "name": "Root 4",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 9,
+    "auto": false
+  },
+  {
+    "key": "Type4",
+    "name": "Chord Type 4",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Voicing4",
+    "name": "Voicing 4",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave4",
+    "name": "Octave 4",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote4",
+    "name": "Pad Note 4",
+    "min": -1,
+    "max": 127,
+    "default": 29,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root5",
+    "name": "Root 5",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Type5",
+    "name": "Chord Type 5",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Voicing5",
+    "name": "Voicing 5",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave5",
+    "name": "Octave 5",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote5",
+    "name": "Pad Note 5",
+    "min": -1,
+    "max": 127,
+    "default": 31,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root6",
+    "name": "Root 6",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 7,
+    "auto": false
+  },
+  {
+    "key": "Type6",
+    "name": "Chord Type 6",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 6,
+    "auto": false
+  },
+  {
+    "key": "Voicing6",
+    "name": "Voicing 6",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave6",
+    "name": "Octave 6",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote6",
+    "name": "Pad Note 6",
+    "min": -1,
+    "max": 127,
+    "default": 33,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root7",
+    "name": "Root 7",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Type7",
+    "name": "Chord Type 7",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 3,
+    "auto": false
+  },
+  {
+    "key": "Voicing7",
+    "name": "Voicing 7",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave7",
+    "name": "Octave 7",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote7",
+    "name": "Pad Note 7",
+    "min": -1,
+    "max": 127,
+    "default": 35,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root8",
+    "name": "Root 8",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 9,
+    "auto": false
+  },
+  {
+    "key": "Type8",
+    "name": "Chord Type 8",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Voicing8",
+    "name": "Voicing 8",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave8",
+    "name": "Octave 8",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote8",
+    "name": "Pad Note 8",
+    "min": -1,
+    "max": 127,
+    "default": 36,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root9",
+    "name": "Root 9",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Type9",
+    "name": "Chord Type 9",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Voicing9",
+    "name": "Voicing 9",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave9",
+    "name": "Octave 9",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote9",
+    "name": "Pad Note 9",
+    "min": -1,
+    "max": 127,
+    "default": 38,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root10",
+    "name": "Root 10",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 7,
+    "auto": false
+  },
+  {
+    "key": "Type10",
+    "name": "Chord Type 10",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 6,
+    "auto": false
+  },
+  {
+    "key": "Voicing10",
+    "name": "Voicing 10",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave10",
+    "name": "Octave 10",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote10",
+    "name": "Pad Note 10",
+    "min": -1,
+    "max": 127,
+    "default": 40,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root11",
+    "name": "Root 11",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Type11",
+    "name": "Chord Type 11",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 3,
+    "auto": false
+  },
+  {
+    "key": "Voicing11",
+    "name": "Voicing 11",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave11",
+    "name": "Octave 11",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote11",
+    "name": "Pad Note 11",
+    "min": -1,
+    "max": 127,
+    "default": 41,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root12",
+    "name": "Root 12",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 9,
+    "auto": false
+  },
+  {
+    "key": "Type12",
+    "name": "Chord Type 12",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Voicing12",
+    "name": "Voicing 12",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave12",
+    "name": "Octave 12",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote12",
+    "name": "Pad Note 12",
+    "min": -1,
+    "max": 127,
+    "default": 43,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root13",
+    "name": "Root 13",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Type13",
+    "name": "Chord Type 13",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Voicing13",
+    "name": "Voicing 13",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave13",
+    "name": "Octave 13",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote13",
+    "name": "Pad Note 13",
+    "min": -1,
+    "max": 127,
+    "default": 45,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root14",
+    "name": "Root 14",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 7,
+    "auto": false
+  },
+  {
+    "key": "Type14",
+    "name": "Chord Type 14",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 6,
+    "auto": false
+  },
+  {
+    "key": "Voicing14",
+    "name": "Voicing 14",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave14",
+    "name": "Octave 14",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote14",
+    "name": "Pad Note 14",
+    "min": -1,
+    "max": 127,
+    "default": 47,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root15",
+    "name": "Root 15",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Type15",
+    "name": "Chord Type 15",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 3,
+    "auto": false
+  },
+  {
+    "key": "Voicing15",
+    "name": "Voicing 15",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave15",
+    "name": "Octave 15",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote15",
+    "name": "Pad Note 15",
+    "min": -1,
+    "max": 127,
+    "default": 48,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Root16",
+    "name": "Root 16",
+    "choices": [
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B"
+    ],
+    "default": 9,
+    "auto": false
+  },
+  {
+    "key": "Type16",
+    "name": "Chord Type 16",
+    "choices": [
+      "m7",
+      "maj7",
+      "m9",
+      "maj9",
+      "7",
+      "9",
+      "13",
+      "sus2",
+      "m",
+      "Major",
+      "7b9",
+      "m6",
+      "6",
+      "m6/9",
+      "6/9",
+      "m11",
+      "m13",
+      "maj9#11",
+      "maj13",
+      "7sus4",
+      "9sus4",
+      "13sus4",
+      "7#9",
+      "7b13",
+      "7alt",
+      "m7b5",
+      "dim7",
+      "7#5",
+      "mMaj7",
+      "add9",
+      "madd9",
+      "sus4"
+    ],
+    "default": 2,
+    "auto": false
+  },
+  {
+    "key": "Voicing16",
+    "name": "Voicing 16",
+    "choices": [
+      "Root",
+      "First",
+      "Open",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Octave16",
+    "name": "Octave 16",
+    "min": -2,
+    "max": 2,
+    "default": 0,
+    "unit": "oct",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PadNote16",
+    "name": "Pad Note 16",
+    "min": -1,
+    "max": 127,
+    "default": 50,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Hold1",
+    "name": "Touch Chord 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Learn1",
+    "name": "Learn Pad 1",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordName1",
+    "name": "Chord Name 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Edit0",
+    "name": "Chord Edit 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit1",
+    "name": "Chord Edit 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit2",
+    "name": "Chord Edit 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit3",
+    "name": "Chord Edit 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Hold2",
+    "name": "Touch Chord 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Learn2",
+    "name": "Learn Pad 2",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordName2",
+    "name": "Chord Name 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Edit4",
+    "name": "Chord Edit 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit5",
+    "name": "Chord Edit 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit6",
+    "name": "Chord Edit 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit7",
+    "name": "Chord Edit 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Hold3",
+    "name": "Touch Chord 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Learn3",
+    "name": "Learn Pad 3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordName3",
+    "name": "Chord Name 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Edit8",
+    "name": "Chord Edit 9",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit9",
+    "name": "Chord Edit 10",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit10",
+    "name": "Chord Edit 11",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit11",
+    "name": "Chord Edit 12",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Hold4",
+    "name": "Touch Chord 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "Learn4",
+    "name": "Learn Pad 4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordName4",
+    "name": "Chord Name 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Edit12",
+    "name": "Chord Edit 13",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit13",
+    "name": "Chord Edit 14",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit14",
+    "name": "Chord Edit 15",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Edit15",
+    "name": "Chord Edit 16",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "Character3Label",
+    "name": "Character3Label",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "Character4Label",
+    "name": "Character4Label",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "CurrentChordPreset",
+    "name": "CurrentChordPreset",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "PageInfo",
+    "name": "PageInfo",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LearnInfo",
+    "name": "LearnInfo",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 0,
+    "auto": false
+  },
+  {
+    "key": "LockTone",
+    "name": "Lock Tone",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockBody",
+    "name": "Lock Body",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockCharacter3",
+    "name": "Lock Character3",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockCharacter4",
+    "name": "Lock Character4",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockAttack",
+    "name": "Lock Attack",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDecay",
+    "name": "Lock Decay",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockSustain",
+    "name": "Lock Sustain",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockRelease",
+    "name": "Lock Release",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockRate",
+    "name": "Lock Rate",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDepth",
+    "name": "Lock Depth",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDrift",
+    "name": "Lock Drift",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockWidth",
+    "name": "Lock Width",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDrive",
+    "name": "Lock Drive",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockChorus",
+    "name": "Lock Chorus",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDelay",
+    "name": "Lock Delay",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockRoom",
+    "name": "Lock Room",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockModel",
+    "name": "Lock Model",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockMotionMode",
+    "name": "Lock MotionMode",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockSync",
+    "name": "Lock Sync",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockShape",
+    "name": "Lock Shape",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDelayDivision",
+    "name": "Lock DelayDivision",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDelayFeedback",
+    "name": "Lock DelayFeedback",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockRoomTime",
+    "name": "Lock RoomTime",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockRoomDamp",
+    "name": "Lock RoomDamp",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockHammer",
+    "name": "Lock Hammer",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockVelocity",
+    "name": "Lock Velocity",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockResonance",
+    "name": "Lock Resonance",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockNoise",
+    "name": "Lock Noise",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockPick",
+    "name": "Lock Pick",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDetune",
+    "name": "Lock Detune",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockVelocityCurve",
+    "name": "Lock VelocityCurve",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockKeyOff",
+    "name": "Lock KeyOff",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockMotionDelay",
+    "name": "Lock MotionDelay",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockMotionFade",
+    "name": "Lock MotionFade",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockDriftRate",
+    "name": "Lock DriftRate",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockChorusRate",
+    "name": "Lock ChorusRate",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "LockChorusDepth",
+    "name": "Lock ChorusDepth",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "ChordEditing",
+    "name": "Chord Editor",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0,
+    "auto": false
+  },
+  {
+    "key": "MainQ0",
+    "name": "Main Screen 1",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ1",
+    "name": "Main Screen 2",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ2",
+    "name": "Main Screen 3",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ3",
+    "name": "Main Screen 4",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ4",
+    "name": "Main Screen 5",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ5",
+    "name": "Main Screen 6",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ6",
+    "name": "Main Screen 7",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ7",
+    "name": "Main Screen 8",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ8",
+    "name": "Main Screen 9",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ9",
+    "name": "Main Screen 10",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ10",
+    "name": "Main Screen 11",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ11",
+    "name": "Main Screen 12",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ12",
+    "name": "Main Screen 13",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ13",
+    "name": "Main Screen 14",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ14",
+    "name": "Main Screen 15",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  },
+  {
+    "key": "MainQ15",
+    "name": "Main Screen 16",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "decimals": 4,
+    "auto": false
+  }
+]

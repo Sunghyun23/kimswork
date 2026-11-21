@@ -1,9 +1,13 @@
-# Donut Theory 1.15.0
+# Donut Theory 1.15.4
+
+Common footer on seven pages; compact browsing preserves70px chord pads. CHORD rows/utilities reflow. RETRIG retained.399parameter declarations/Q-Link targets/DSP unchanged.
+
+Public release remains 1.15.0. This candidate is installed on the owner NVMe; actual remote QA is recorded separately from physical/audio/CPU certification.
 
 An original Moog-inspired MPC synthesizer for bass, keys, leads, pads and rich harmony. Shared POLY/MONO editing views never change the actual voice mode; an explicit VOICE control does. Individual OSC wave/tune/fine/level and two delayed LFOs bring detailed control to the front.
 
 - Eight waves per oscillator: Sine, Triangle, Saw, Pulse, Soft Saw, Soft Pulse, Organ and Hollow.
-- Front A4 selects shared Drift or OSC2 relative Phase (0–360 degrees); explicit FREE/RESET preserves connected legato and aligns new articulations/Strum.
+- Front A4 selects shared Drift or OSC2 relative Phase (0–360 degrees); RETRIG (beige Off / orange On) aligns new articulations/Strum when enabled, while connected legato keeps its ongoing phase.
 - Existing 66 factory sounds at FREE/82.8-degree defaults are sample-identical to the previous 1.14.2 native engine, including release/rearticulation.
 - Consistent selector sizing; FREE/SYNC sits above Rate and list arrows have reserved text space.
 - 66 factory sounds, 32 chord types, 96 progressions and up to 16 editable chord slots.
@@ -20,3 +24,7 @@ Build: `python3 mpc-software/scripts/build_plugin.py DonutTheory --target all`
 Test: `python3 mpc-software/scripts/test_plugin.py`
 
 See the manual and design/device-1.15.0 verification for automated and actual remote-device checks. Physical encoders/multitouch, hardware-output listening/recording, full MPC project recall and worst-case hardware CPU remain separate and are not newly certified. Source and bundled artwork/font notices must be retained. Groove Dice and Crate Press are separate products.
+
+## 1.15.4 current release
+
+Physical MIDI preset/Dice commands and PAD COMMANDS menus are removed; retired action IDs remain inert. Ordinary playing/chord mappings and 405 parameter identities are retained. Fresh POLY starts and the owner’s supplied checklist passed; host-retained existing subtabs are not forcibly reset.

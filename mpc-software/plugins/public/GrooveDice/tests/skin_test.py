@@ -279,14 +279,15 @@ for n in range(1,17):assert assignment['Q-Link '+str(n)]==(keys['PerformQ'+str((
 assert 'GDPerformance' not in defs
 assert not any(a.get('handleName')=='Parameter '+str(keys['PerformOpen']) for d in defs.values() for a in d.get('actions',[]))
 assert any(a.get('handleName')=='Parameter '+str(keys['Editor']) for e in defs['GDMain']['componentsData'] for a in defs.get(e['componentData']['type'],{}).get('actions',[]))
-for pad in range(1,13):
- d=defs['PerfPad'+str(pad)+'Native'];actions=d['actions'];assert len(actions)==1 and actions[0]['handleName']=='Parameter '+str(keys['PerformHit'+str(pad-1)])
- surface=d['componentsData'][-1];assert surface['componentData']['type']=='Slider';assert surface['componentData']['data']['handleName']=='ResetOnGestureEnd/Parameter '+str(keys['PerformHit'+str(pad-1)])
+for pad,slot in enumerate([4,5,0,1,8,9],1):
+ d=defs['PerfPad'+str(pad)+'Native'];actions=d['actions'];assert len(actions)==1 and actions[0]['handleName']=='Parameter '+str(keys['PerformHit'+str(slot)])
+ surface=d['componentsData'][-1];assert surface['componentData']['type']=='Slider';assert surface['componentData']['data']['handleName']=='ResetOnGestureEnd/Parameter '+str(keys['PerformHit'+str(slot)])
  assert not any('GENERATE'in str(e)for e in d['componentsData'])
+assert not any('PerfPad'+str(n)+'Native' in defs for n in range(7,17))
 for entry in performance['componentDefinition']['componentsData']:
  x,y,w,h=rect(entry);assert x>=0 and y>=0 and x+w<=1280 and y+h<=628
-assert keys['PerformOpen']==782 and len(m)==918
-print('PASS PERFORM bank B bottom-up12one-shot pads, release-safe caption surfaces, separated generators,4Q-Link relays and exact legacy782 metadata')
+assert keys['PerformOpen']==782 and len(m)==924
+print('PASS PERFORM bank A bottom-up12one-shot pads, release-safe caption surfaces, separated generators,4Q-Link relays and exact legacy782 metadata')
 
 controls=[e for e in performance['componentDefinition']['componentsData'] if e['componentData']['type'].startswith('KnobPerformQ')]
 assert len(controls)==4
@@ -319,7 +320,12 @@ for definition in defs.values():
  children=definition.get('componentsData',[])
  if any(w['componentData'].get('data',{}).get('text')=='ROLL DICE' for w in children):
   icons=[w for w in children if w['componentData'].get('data',{}).get('image')=='dice-icon.png']
-  assert len(icons)==1 and icons[0]['bounds']['bounds']=='18 6 48 32'
+  assert len(icons)==1
+  label=next(w for w in children if w['componentData'].get('data',{}).get('text')=='ROLL DICE')
+  height=int(label['bounds']['bounds'].split()[3]);assert icons[0]['bounds']['bounds']==f'18 {(height-32)//2} 48 32'
   roll_buttons+=1
 assert roll_buttons>=8
 print('PASS',roll_buttons,'ROLL DICE button definitions share the same dice icon and placement')
+
+assert m[:918]==json.loads((P/"tests/legacy-918-parameters.json").read_text())
+assert [m[keys[k]]["default"]for k in ["CmdDiceNote","CmdPrevNote","CmdNextNote"]]==[24,25,26]

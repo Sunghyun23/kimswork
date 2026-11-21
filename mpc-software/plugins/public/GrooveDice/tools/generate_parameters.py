@@ -193,6 +193,12 @@ for n in range(8,12):
 for n,note in enumerate([62,64,65,67],8):f('HatPerformNote'+str(n-8),'Hat Performance Pad '+str(n-7),-1,127,note,auto=False)
 for n in range(8,12):f('PerformState'+str(n),'Performance State '+str(n+1),0,2,0,auto=False)
 b('PerformUndo','Performance Undo',auto=False)
+
+# Shared A-bank action pads: append only, never randomize these mappings.
+b('CommandPads','Pad Commands',0,auto=False)
+for key,label,note in [('CmdPrevNote','Previous Preset Pad',25),('CmdNextNote','Next Preset Pad',26),('CmdDiceNote','Dice Pad',24)]:f(key,label,-1,127,note,auto=False)
+c('CommandLearn','Learn Action',['Off','PRESET PREV','PRESET NEXT','ROLL DICE'],auto=False)
+f('CommandInfo','Pad Actions',0,1,0,auto=False)
 P.joinpath('parameters.json').write_text(json.dumps(params,indent=2)+'\n')
 lines=['// Generated parameter declarations. Stable index order from parameters.json.','enum Key { '+', '.join('k'+p['key'] for p in params)+', kParamCount };','inline void declareParameters(mpc::Plugin& plugin) {']
 for p in params:

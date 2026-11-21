@@ -1,0 +1,131 @@
+{
+  "kit": "amber",
+  "pages": [
+    {
+      "name": "MAIN",
+      "controls": [
+        "Tone",
+        "Body",
+        "Character3",
+        "Noise",
+        "Attack",
+        "Decay",
+        "Sustain",
+        "Release",
+        "Motion Rate",
+        "Motion Depth",
+        "Drift",
+        "Width",
+        "Drive",
+        "Chorus",
+        "Delay",
+        "Room"
+      ]
+    },
+    {
+      "name": "MODEL",
+      "controls": [
+        "Tone",
+        "Body",
+        "Character3",
+        "Noise",
+        "Attack",
+        "Decay",
+        "Sustain",
+        "Release",
+        "Motion Rate",
+        "Motion Depth",
+        "Drift",
+        "Width",
+        "Drive",
+        "Chorus",
+        "Delay",
+        "Room"
+      ]
+    },
+    {
+      "name": "TOUCH",
+      "controls": [
+        "Tone",
+        "Body",
+        "Character3",
+        "Noise",
+        "Attack",
+        "Decay",
+        "Sustain",
+        "Release",
+        "Motion Rate",
+        "Motion Depth",
+        "Drift",
+        "Width",
+        "Drive",
+        "Chorus",
+        "Delay",
+        "Room"
+      ]
+    },
+    {
+      "name": "MOTION",
+      "controls": [
+        "Tone",
+        "Body",
+        "Character3",
+        "Noise",
+        "Attack",
+        "Decay",
+        "Sustain",
+        "Release",
+        "Motion Rate",
+        "Motion Depth",
+        "Drift",
+        "Width",
+        "Drive",
+        "Chorus",
+        "Delay",
+        "Room"
+      ]
+    },
+    {
+      "name": "FX",
+      "controls": [
+        "Tone",
+        "Body",
+        "Character3",
+        "Noise",
+        "Attack",
+        "Decay",
+        "Sustain",
+        "Release",
+        "Motion Rate",
+        "Motion Depth",
+        "Drift",
+        "Width",
+        "Drive",
+        "Chorus",
+        "Delay",
+        "Room"
+      ]
+    },
+    {
+      "name": "SETUP",
+      "controls": [
+        "Tone",
+        "Body",
+        "Character3",
+        "Noise",
+        "Attack",
+        "Decay",
+        "Sustain",
+        "Release",
+        "Motion Rate",
+        "Motion Depth",
+        "Drift",
+        "Width",
+        "Drive",
+        "Chorus",
+        "Delay",
+        "Room"
+      ]
+    }
+  ]
+}

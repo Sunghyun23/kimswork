@@ -2,6 +2,7 @@
 // -> drive -> stereo chorus/delay -> master. MIDI trigger ownership prevents
 // overlapping chords from releasing each other's notes. No allocation in process.
 #include "mpc_plugin.h"
+#include "../../../../shared/ui/PadCommands.h"
 #include "dsp/oscillator.h"
 #include "dsp/svf.h"
 #include "dsp/adsr.h"
@@ -41,9 +42,10 @@ using namespace mpc::dsp;
 class DonutTheory final : public mpc::Plugin {
 public:
     static constexpr int N=16;
+    kimswork::PadCommands padCommands_;
     static mpc::PluginInfo metadata() {
         mpc::PluginInfo i; i.name="Donut Theory";i.vendor="kim";
-        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11500;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
+        i.uniqueId=MPC_FOURCC('K','r','q','l');i.version=11504;i.isInstrument=true;i.numInputs=0;i.numOutputs=2;return i;
     }
     DonutTheory():mpc::Plugin(metadata()) {
         declareParameters(*this);
@@ -52,7 +54,7 @@ public:
         // Prefix programs intentionally exclude input/chord settings.
         for(int i=0;i<=kSoundPreset;++i)set(i,kPatches[0][i]);
         set(kOscPair,getInt(kWave1)*4+getInt(kWave2));
-        seedPerformanceSound();seedExpandedWaves();
+        seedPerformanceSound();seedExpandedWaves();migrateDefaultChordMap();
     }
 #ifdef DONUT_TOUCH_DIAGNOSTICS
     // QA-only raw host writes. No allocation, I/O or locks on the audio thread.
@@ -70,13 +72,17 @@ public:
 #endif
     // Host programs and the in-skin selector share the same atomic parameter.
     int currentProgram() const { return getInt(kSoundCurrent); }
+    void migrateDefaultChordMap(){
+        // Pad commands are removed. Keep saved/learned chord note maps intact.
+
+    }
     void setProgram(int index) {
         if(index<0||index>=kFactoryProgramCount)return;
         applyFactorySound(index);
         stateLoadPending_.store(true,std::memory_order_release);
     }
     static bool transientParameter(int index){
-        bool transient=index==kTouchStop||index==kPadLearn||index==kTransposeOpen||index==kTransposeApply||index==kSmoothOpen||index==kSmoothApply||index==kSmoothPreview||index==kRandomize||index==kFactoryReload||index==kUnlockDice||index==kUndoDice;
+        bool transient=index==kCommandLearn||index==kTouchStop||index==kPadLearn||index==kTransposeOpen||index==kTransposeApply||index==kSmoothOpen||index==kSmoothApply||index==kSmoothPreview||index==kRandomize||index==kFactoryReload||index==kUnlockDice||index==kUndoDice;
         for(int slot=0;slot<16;++slot)transient|=index==kChordTouches[slot];
         return transient||(index>=kChordPlayingPage1&&index<kChordPlayingPage1+4)||(index>=kSoundPrev&&index<kSoundPrev+4)||(index>=kSlotsMinus&&index<kSlotsMinus+4);
     }
@@ -155,7 +161,8 @@ public:
                     else setFromEngine(rate,param(rate).toPlain(value));}
             }
             if(index==kSoundPreset&&!protect){if(getBool(kRandomized))soundReload_.store(true);setFromEngine(kSoundCurrent,value);}
-            if(index==kSoundCurrent&&getBool(kRandomized))soundReload_.store(true);
+
+  if(index==kSoundCurrent&&getBool(kRandomized))soundReload_.store(true);
             if(index==kSoundCurrent&&value<64)setFromEngine(kSoundPreset,value);
             const int oldType=slotForParameter(index,kChordLegacyQualities),oldBank=slotForParameter4(index,kLegacyBankProgressions);
             if(oldType>=0&&!protect)setFromEngine(kHarmonyType1+oldType,value);
@@ -216,7 +223,7 @@ public:
         delayTime_.setTime(100,sr/16.0);delayTime_.snap(sr*.5f);
         reset();
     }
-    void reset() override {
+    void reset() override {padCommands_.reset();
         lastRateSync_.fill(-1);
         setFromEngine(kRandomize,0);setFromEngine(kFactoryReload,0);setFromEngine(kUnlockDice,0);setFromEngine(kUndoDice,0);undoReady_=false;soundReload_.store(false);
         setFromEngine(kTransposeOpen,0);setFromEngine(kTransposeApply,0);
@@ -240,6 +247,8 @@ public:
 #ifdef DONUT_TOUCH_DIAGNOSTICS
         diagnosticFrames.fetch_add(unsigned(ctx.numFrames),std::memory_order_relaxed);
 #endif
+        if(replay==0)migrateDefaultChordMap();
+
         for(int i=0;i<4;++i){if(getInt(kSoundPrev+i)){const int target=i<2?kSoundCurrent:kBankProgressions[getInt(kMainChordPage)];const int count=i<2?kFactoryProgramCount:kProgressionCount;setFromEngine(target,float((getInt(target)+(i%2?1:-1)+count)%count));setFromEngine(kSoundPrev+i,0);arrows_[i]=0;}}
         if(getBool(kFactoryReload)){if(replay==0)soundReload_.store(true);setFromEngine(kFactoryReload,0);}
         if(soundReload_.exchange(false)||getInt(kSoundCurrent)!=lastPatch_){lastPatch_=getInt(kSoundCurrent);applyFactorySound(lastPatch_);lastFX_=0;lastPair_=getInt(kOscPair);clearNotes();}
@@ -440,9 +449,10 @@ public:
         for(int page=0;page<4;++page)setFromEngine(kChordPlayingPage1+page,playing[page]?1.f:0.f);
     }
     bool formatValue(int index,float value,std::string& out) override {
+        if(index==kCommandInfo){int learn=getInt(kCommandLearn);if(learn)out=std::string("PRESS PAD: ")+(learn==1?"PREV":learn==2?"NEXT":"DICE");else out="PREV "+std::to_string(getInt(kCmdPrevNote))+" / NEXT "+std::to_string(getInt(kCmdNextNote))+" / DICE "+std::to_string(getInt(kCmdDiceNote));return true;}
         // Commands, live gates and open editor panels intentionally restore idle.
         // Their host text states that contract instead of suggesting a saved toggle.
-        if(transientParameter(index)){out=index==kSmoothOpen||index==kTransposeOpen?"Editor":"Transient";return true;}
+        if(transientParameter(index)&&index!=kCommandLearn){out=index==kSmoothOpen||index==kTransposeOpen?"Editor":"Transient";return true;}
 
         if(index==kSoundCurrent&&getBool(kRandomized)){out="Random Sound";return true;}
         if(index==kSmoothMovement||(index>=kSmoothRow1&&index<=kSmoothRow16)){

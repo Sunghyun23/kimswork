@@ -1,3 +1,11 @@
+## Current1.15.2footer candidate
+
+All seven pages share UNLOCK ALL / ROLL DICE / UNDO at nativey578. POLY browsing is one row;70px chord pads remain. CHORD rows/utilities reflow without dropping controls. NVMe244files SHA256verified; candidate remote QA is in design/device-1.15.2. Public1.15.0unchanged. This supersedes the1.15.1layout below.
+
+## Local Phase control alignment — 2026-11-20
+
+User reported the Drift/Phase control looks a different size from its neighbors. The generated rotary image bounds are identical72×72; the Phase-only value band was44px tall instead of24px and omitted the standard caption. Restore the common caption baseline and24px value row. The user selected a fixed RETRIG caption: beige=Off, orange=On. It replaces the visible FREE/RESET text with matching24px art and a44px hit area, conditional on PHASE. Existing OscRetrig0/1 and saved metadata meanings remain unchanged. No DSP, parameter, Q-Link or value changes. Skin generation and existing full skin checks pass; build/phase-alignment-preview.png is an approximate offline render, not a hardware screenshot. User explicitly requested device installation: candidate1.15.1is now installed on internal NVMe, with249files independently SHA256-verified. Native/ARM32/ARM64 builds, SDK validation0errors/0warnings, full existing skin checks and host19PASS/0WARN/0FAIL pass. Actual MPC XL remote checks confirm RETRIG Off/On/Off colors, aligned Phase caption/value row, MONO rendering and hidden button in DRIFT. Public release/site remain1.15.0; this turn did not publish. Do not overwrite existing release assets.
+
 # Donut Theory 1.15.0
 
 - Control OSC2 phase relative to OSC1 from the main A4 Q-Link: switch DRIFT / PHASE without changing either value.

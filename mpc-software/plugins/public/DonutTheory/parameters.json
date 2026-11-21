@@ -7516,5 +7516,61 @@
       "Locked"
     ],
     "default": 0
+  },
+  {
+    "key": "CommandPads",
+    "name": "Pad Commands",
+    "choices": [
+      "Off",
+      "On"
+    ],
+    "default": 0
+  },
+  {
+    "key": "CmdPrevNote",
+    "name": "Previous Preset Pad",
+    "min": -1,
+    "max": 127,
+    "default": 25,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "CmdNextNote",
+    "name": "Next Preset Pad",
+    "min": -1,
+    "max": 127,
+    "default": 26,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "CmdDiceNote",
+    "name": "Dice Pad",
+    "min": -1,
+    "max": 127,
+    "default": 24,
+    "unit": "MIDI",
+    "log": false
+  },
+  {
+    "key": "CommandLearn",
+    "name": "Learn Action",
+    "choices": [
+      "Off",
+      "PRESET PREV",
+      "PRESET NEXT",
+      "ROLL DICE"
+    ],
+    "default": 0
+  },
+  {
+    "key": "CommandInfo",
+    "name": "Pad Actions",
+    "min": 0,
+    "max": 1,
+    "default": 0,
+    "unit": "",
+    "log": false
   }
 ]

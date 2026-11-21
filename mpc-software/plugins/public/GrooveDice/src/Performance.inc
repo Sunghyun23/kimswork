@@ -14,6 +14,7 @@ std::atomic<bool>learnConflict{false};
 std::atomic<int> performanceActive{-1},performanceQueued{-1},queuedRoll{-1},learnSlot{-1};
 std::atomic<unsigned>performanceMidiHits{0};
 std::array<double,12>rollOrigins{};
+std::array<std::array<bool,128>,16>loopHeld{};
 std::array<uint64_t,2>rollFiredMask{};bool legacyPerformanceMap=false;
 std::atomic<bool>fillTimingDirty{false};std::array<uint64_t,2>fillFiredMask{};uint32_t fillChanceSeed=0;
 double rollDue=-1,fillDue=-1,rollNext=-1,rollEnd=-1,queuedRollEnd=-1,queuedFillEnd=-1;
@@ -30,28 +31,38 @@ static int performanceSlotForKey(int key){return key<=kPerformLength7?(key-kPerf
 static int performanceStateKey(int n){return n<8?kPerformState0+n:kPerformState8+n-8;}
 static bool performanceStateParameter(int key){return key>=kPerformState0&&key<=kPerformState7||key>=kPerformState8&&key<=kPerformState11;}
 static int performanceNoteKey(int n){return n<8?kPerformNote0+n:n<12?kHatPerformNote0+n-8:kPerformNote8+n-12;}
+static constexpr bool padPerformanceSlot(int n){return n==0||n==1||n==4||n==5||n==8||n==9;}
+static constexpr int physicalPerformancePad(int n){return n==4?1:n==5?2:n==0?3:n==1?4:n==8?5:n==9?6:0;}
 int selectedPerformance()const{return getInt(kPerformSelectFull);}
-static std::string performanceName(int n){return std::string(isPerformanceFill(n)?"FILL ":n>=8?"HAT ":"ROLL ")+char('A'+n%4);}
+static std::string performanceName(int n){return std::string(isPerformanceFill(n)?"FILL ":n>=8?"HAT ROLL ":"SNARE ROLL ")+char('A'+n%4);}
 static constexpr int performanceLock(int slot){return performanceKey(slot,1);}
 // Earliest bar ending that still leaves the entire chosen phrase in the future.
 static double performanceWindowStart(double now,double beats){return std::ceil((now+beats-1e-8)/4.)*4.-beats;}
-static bool performanceTransient(int key){return key==kPerformUndo||key==kPerformOpen||key==kPerformLearnLoop||key==kPerformLearnStop||key==kPerformEdit||key==kCapture||key==kExportMidi||key==kPerformLoop||key==kPerformStop||key==kPerformGenerateAll||key==kPerformGenerateSelected||key==kPerformUnlock||key==kPerformLockSelected||key==kPerformLearn||key==kPerformRecord||key==kPerformEditFill||(performanceField(key)==0||performanceField(key)==2);}
-void initPerformance(){layerSet(kPerformNote8,69);layerSet(kPerformNote9,71);for(int n=0;n<12;++n)generatePerformance(n);performanceInitialised=true;capture.startWorker();}
-void resetPerformance(){havePerformanceUndo=false;pendingPerformanceDice=false;performanceDiceAt=-1;learnSlot.store(-1);learnConflict.store(false);for(int n=0;n<12;++n)mpc::Plugin::set(performanceKey(n,0),0);for(int k:{kPerformUndo,kPerformOpen,kPerformEdit,kCapture,kExportMidi,kPerformLoop,kPerformStop,kPerformGenerateAll,kPerformGenerateSelected,kPerformUnlock,kPerformLockSelected,kPerformLearn,kPerformRecord,kPerformEditFill,kPerformLearnLoop,kPerformLearnStop})mpc::Plugin::set(k,0);stopPerformance();stopCaptureAt(performanceNow);performanceMuted=false;performanceLoopPending=false;loopStopAt=-1;performanceLastSelected=-1;rollRegenerate.store(0);}
+static bool performanceTransient(int key){return key==kCommandLearn|| key==kPerformUndo||key==kPerformOpen||key==kPerformLearnLoop||key==kPerformLearnStop||key==kPerformEdit||key==kCapture||key==kExportMidi||key==kPerformLoop||key==kPerformStop||key==kPerformGenerateAll||key==kPerformGenerateSelected||key==kPerformUnlock||key==kPerformLockSelected||key==kPerformLearn||key==kPerformRecord||key==kPerformEditFill||(performanceField(key)==0||performanceField(key)==2);}
+// C Major, one octave: A1..A6=C0,D0,E0,F0,G0,A0 (MIDI24..33).
+// Direct drums start on C-bank C4 (MIDI72). No MIDI action pads.
+void commandPadLayout(){
+ static constexpr int slots[]={4,5,0,1,8,9},notes[]={24,26,28,29,31,33};
+ for(int i=0;i<6;++i)layerSet(performanceNoteKey(slots[i]),notes[i]);
+ static constexpr int drums[]={72,74,76,77,79,81,83,84};
+ for(int r=0;r<8;++r)layerSet(kPadNote0+r*9,drums[r]);
+}
+void initPerformance(){commandPadLayout();for(int n:{0,1,8,9}){layerSet(performanceKey(n,3),n%4==0?2:5);layerSet(performanceKey(n,6),n%4==0?0:1);}layerSet(kPerformSelectFull,4);layerSet(kPerformSelect,4);for(int n=0;n<12;++n)generatePerformance(n);performanceInitialised=true;capture.startWorker();}
+void resetPerformance(){loopHeld={};havePerformanceUndo=false;pendingPerformanceDice=false;performanceDiceAt=-1;learnSlot.store(-1);learnConflict.store(false);for(int n=0;n<12;++n)mpc::Plugin::set(performanceKey(n,0),0);for(int k:{kPerformUndo,kPerformOpen,kPerformEdit,kCapture,kExportMidi,kPerformLoop,kPerformStop,kPerformGenerateAll,kPerformGenerateSelected,kPerformUnlock,kPerformLockSelected,kPerformLearn,kPerformRecord,kPerformEditFill,kPerformLearnLoop,kPerformLearnStop})mpc::Plugin::set(k,0);stopPerformance();stopCaptureAt(performanceNow);performanceMuted=false;performanceLoopPending=false;loopStopAt=-1;performanceLastSelected=-1;rollRegenerate.store(0);}
 int performanceTarget(int q)const{int slot=selectedPerformance();if(q<0||q>=4)return -1;if(isPerformanceFill(slot)&&!generatedFills[slot-4].load()){if(q==0)return -1;if(q==3)return kFillLength;}return performanceKey(slot,3+q);}
 // Correct only the complete known1.7.0default layout (including its B1 diagnostic learn).
 // Arbitrary learned/custom assignments must survive loading untouched.
 void migratePerformanceDefaultNotes(){
- static constexpr int oldMap[]={52,53,55,57,59,60,62,64,65,67};
- static constexpr int corrected[]={48,50,52,53,55,57,59,60,62,64};
- bool legacy=getInt(kPerformNote0)==oldMap[0]||getInt(kPerformNote0)==corrected[0];
- for(int n=1;n<10;++n)legacy=legacy&&getInt(kPerformNote0+n)==oldMap[n];
- if(legacy){for(int n=0;n<10;++n)layerSet(kPerformNote0+n,corrected[n]);changed[kPerformPadInfo].store(true);displayPending.store(true);}
- // Move only the known old LOOP/STOP defaults; keep learned mappings intact.
- if(legacyPerformanceMap){if(getInt(kPerformNote8)==62&&getInt(kPerformNote9)==64){layerSet(kPerformNote8,69);layerSet(kPerformNote9,71);}
-  for(int n=8;n<12;++n){int key=performanceNoteKey(n),note=getInt(key);bool used=false;for(int j=0;j<14;++j)if(j!=n&&note>=0&&getInt(performanceNoteKey(j))==note)used=true;for(int r=0;r<8;++r)used|=note>=0&&getInt(kPadNote0+r*9)==note;if(used)layerSet(key,-1);}
- }
+ static constexpr int v1100[]={28,29,30,31,32,33,34,35,36,37,38,39,27,127};
+ static constexpr int v1101[]={32,33,34,35,28,29,30,31,36,37,38,39,27,127};
+ static constexpr int older[]={48,50,52,53,55,57,59,60,62,64,65,67,69,71};
+ static constexpr int oldDrums[]={24,26,28,29,31,33,35,36};
+ bool a=true,b=true,c=true;
+ for(int n=0;n<14;++n){a&=getInt(performanceNoteKey(n))==v1100[n];b&=getInt(performanceNoteKey(n))==v1101[n];c&=getInt(performanceNoteKey(n))==older[n];}
+ for(int r=0;r<8;++r){a&=getInt(kPadNote0+r*9)==40+r;b&=getInt(kPadNote0+r*9)==40+r;c&=getInt(kPadNote0+r*9)==oldDrums[r];}
+ if(a||b||c){commandPadLayout();displayPending.store(true);}
 }
+
 void markRecordedFill(int slot){generatedFills[slot].store(false);layerSet(performanceKey(slot+4,4),100);layerSet(performanceKey(slot+4,5),0);layerSet(performanceLock(slot+4),1);}
 void selectPerformance(int slot){layerSet(kPerformSelectFull,slot);if(slot<8)layerSet(kPerformSelect,slot);if(isPerformanceFill(slot)){layerSet(kFillSlot,slot-4);layerSet(kFillLength,choiceForLength(lengths[slot-4].load()));}}
 bool performanceParameter(int key,float plain){
@@ -62,13 +73,14 @@ bool performanceParameter(int key,float plain){
 }
 std::atomic<unsigned>rollRegenerate{0};
 bool performanceFormat(int key,std::string&out){
- if(performanceTransient(key)){out="Momentary";return true;}
+ if(performanceTransient(key)&&key!=kCommandLearn){out="Momentary";return true;}
+ if(key==kPerformSelect||key==kPerformSelectFull){out=performanceName(getInt(key));return true;}
  if(key==kPerformLoopState||performanceStateParameter(key)){out="Status";return true;}
  if(key>=kPerformQ0&&key<=kPerformQ3){int t=performanceTarget(key-kPerformQ0);out=t>=0?displayText(t):"--";if(key==kPerformQ1&&isPerformanceFill(selectedPerformance())&&!generatedFills[selectedPerformance()-4].load())out+=" %";return true;}
  if(performanceField(key)==3){int slot=performanceSlotForKey(key);if(isPerformanceFill(slot)&&!generatedFills[slot-4].load()){out="REC";return true;}}
  if(key==kPerformStatus){int q=performanceQueued.load(),a=performanceActive.load(),r=queuedRoll.load();out=pendingPerformanceDice?"DICE: NEXT BAR":r>=0?"QUEUED: "+performanceName(r):q>=0?"QUEUED: "+performanceName(q+4):a>=0?"PLAYING: "+performanceName(a):"READY";return true;}
  if(key==kCaptureInfo){static const char* names[]={"CAPTURE READY","CAPTURING","TAKE READY","EXPORTING","MIDI SAVED","TAKE FULL","EXPORT FAILED"};out=std::string(names[mpc::clamp(capture.state.load(),0,6)])+" / "+std::to_string(capture.count.load())+" NOTES";return true;}
- if(key==kPerformPadInfo){if(learnConflict.load()){out="NOTE IN USE: CHOOSE ANOTHER PAD";return true;}int n=selectedPerformance();out=learnSlot.load()>=0?"PRESS A PHYSICAL PAD":std::string("B")+std::to_string(n+1)+(getInt(performanceNoteKey(n))<0?" / LEARN PAD":" / MIDI "+std::to_string(getInt(performanceNoteKey(n))))+(getBool(performanceLock(n))?" / LOCKED":" / OPEN");return true;}
+ if(key==kPerformPadInfo){if(learnConflict.load()){out="NOTE IN USE: CHOOSE ANOTHER PAD";return true;}int n=selectedPerformance();out=learnSlot.load()>=0?"PRESS A PHYSICAL PAD":std::string("A")+std::to_string(physicalPerformancePad(n))+(getInt(performanceNoteKey(n))<0?" / LEARN PAD":" / MIDI "+std::to_string(getInt(performanceNoteKey(n))))+(getBool(performanceLock(n))?" / LOCKED":" / OPEN");return true;}
  return false;
 }
 void generatePerformance(int n,bool varySettings=false){
@@ -93,10 +105,11 @@ void generatePerformance(int n,bool varySettings=false){
 
  if(isPerformanceRoll(n))rollDue=-1;else fillDue=-1;displayPending.store(true);
 }
-void regeneratePerformance(){if(get(kRandomAmt)<=0||recordState.load()==1||recordState.load()==2)return;for(int n=0;n<12;++n)if(!getBool(performanceLock(n)))generatePerformance(n,true);}
+void regeneratePerformance(){if(get(kRandomAmt)<=0||recordState.load()==1||recordState.load()==2)return;for(int n=0;n<12;++n)if(padPerformanceSlot(n)&&!getBool(performanceLock(n))){generatePerformance(n,true);if(n==performanceActive.load()&&isPerformanceRoll(n)){rollFiredMask={};rollDue=-1;}if(isPerformanceFill(n)&&performanceFill&&n==activeFill+4){fillFiredMask={};fillDue=-1;}}}
 void snapshotPerformanceUndo(){havePerformanceUndo=true;for(int b=0;b<4;++b){performanceLengthUndo[b]=lengths[b].load();for(int i=0;i<MaxNotes;++i){performanceFillUndo[b][i*2]=notes[b][i].data.load();performanceFillUndo[b][i*2+1]=notes[b][i].gate.load();}}for(int b=0;b<4;++b)undoGeneratedFills[b]=generatedFills[b].load();for(int b=0;b<8;++b)for(int i=0;i<MaxNotes;++i){rollUndo[b][i*2]=rollNotes[b][i].data.load();rollUndo[b][i*2+1]=rollNotes[b][i].gate.load();}for(int n=0;n<12;++n)for(int f=0;f<7;++f)performanceUndo[n*7+f]=getNormalised(performanceKey(n,f));}
 void restorePerformanceUndo(){if(!havePerformanceUndo)return;for(int b=0;b<4;++b){lengths[b].store(performanceLengthUndo[b]);baseValid[b].store(false);for(int i=0;i<MaxNotes;++i){notes[b][i].data.store(performanceFillUndo[b][i*2]);notes[b][i].gate.store(performanceFillUndo[b][i*2+1]);}}rollDue=fillDue=-1;mirrorNote();displayPending.store(true);for(int b=0;b<4;++b)generatedFills[b].store(undoGeneratedFills[b]);for(int b=0;b<8;++b)for(int i=0;i<MaxNotes;++i){rollNotes[b][i].data.store(rollUndo[b][i*2]);rollNotes[b][i].gate.store(rollUndo[b][i*2+1]);}for(int n=0;n<12;++n)for(int f=3;f<7;++f){int key=performanceKey(n,f);layerSet(key,param(key).toPlain(performanceUndo[n*7+f]));}}
 void stopPerformance(){queuedRoll.store(-1);rollNext=rollEnd=queuedRollEnd=queuedFillEnd=-1;performanceFill=false;performanceActive.store(-1);performanceQueued.store(-1);performanceNext=-1;fillStart=fillEnd=-1;for(auto&origin:rollOrigins)origin=-1;rollFiredMask={};for(auto&v:voices)if(v.active)deactivate(v);displayPending.store(true);}
+void stopAllPerformance(double now){performanceMuted=true;layerSet(kPreview,0);loopStopAt=-1;performanceLoopPending=false;pendingRoll.store(false);rollAt=-1;pendingPerformanceDice=false;performanceDiceAt=-1;stopPerformance();stopCaptureAt(now);recStart=recEnd=-1;recordState.store(0);}
 void triggerPerformance(int slot,double now,bool on,bool countIn,bool physical=false){
  if(!on)return;selectPerformance(slot);if(getBool(kPerformEdit)&&!physical)return;
  if(isPerformanceRoll(slot)){if(on&&!countIn){queuedRoll.store(slot);double beats=double(lengthForChoice(getInt(performanceKey(slot,6))))/PPQ;rollNext=performanceWindowStart(now,beats);queuedRollEnd=rollNext+beats;displayPending.store(true);}return;}
@@ -115,34 +128,36 @@ void performanceBlock(double start,double end,double step,bool&run,bool countIn,
  if(take(kPerformGenerateSelected)&&recordState.load()!=1&&recordState.load()!=2){snapshotPerformanceUndo();generatePerformance(selectedPerformance(),true);}
  // PERFORM owns its generator and history; MAIN never snapshots these banks.
  if(!run||countIn||(lastEnd>-1e10&&std::abs(start-lastEnd)>.02)){pendingPerformanceDice=false;performanceDiceAt=-1;}
- if(take(kPerformGenerateAll)&&recordState.load()!=1&&recordState.load()!=2){if(run&&!countIn){pendingPerformanceDice=true;performanceDiceAt=std::ceil((start+1e-8)/4)*4;}else if(!countIn){snapshotPerformanceUndo();regeneratePerformance();}}
+ if(take(kPerformGenerateAll)&&recordState.load()!=1&&recordState.load()!=2&&!countIn){pendingPerformanceDice=false;performanceDiceAt=-1;snapshotPerformanceUndo();regeneratePerformance();}
  if(pendingPerformanceDice&&run&&performanceDiceAt>=start-1e-8&&performanceDiceAt<end){pendingPerformanceDice=false;performanceDiceAt=-1;if(recordState.load()!=1&&recordState.load()!=2){snapshotPerformanceUndo();regeneratePerformance();}}
  if(take(kPerformUndo)){pendingPerformanceDice=false;performanceDiceAt=-1;if(recordState.load()!=1&&recordState.load()!=2)restorePerformanceUndo();}
- if(take(kPerformUnlock))for(int n=0;n<12;++n)layerSet(performanceLock(n),0);
- if(take(kPerformLearnLoop)){learnConflict.store(false);learnSlot.store(12);}
- if(take(kPerformLearnStop)){learnConflict.store(false);learnSlot.store(13);}
- if(take(kPerformLearn)){learnConflict.store(false);learnSlot.store(learnSlot.load()<0?selectedPerformance():-1);}
+ if(take(kPerformUnlock))for(int n=0;n<12;++n)if(padPerformanceSlot(n))layerSet(performanceLock(n),0);
+ if(take(kPerformLearnLoop))learnSlot.store(-1);
+ if(take(kPerformLearnStop))learnSlot.store(-1);
+ if(take(kPerformLearn)&&padPerformanceSlot(selectedPerformance())){learnConflict.store(false);learnSlot.store(learnSlot.load()<0?selectedPerformance():-1);}
  if(take(kPerformRecord)&&isPerformanceFill(selectedPerformance())){layerSet(kFillSlot,selectedPerformance()-4);set(kRecord,getBool(kRecord)?0:1);}
  if(take(kPerformEditFill)&&isPerformanceFill(selectedPerformance())){layerSet(kFillSlot,selectedPerformance()-4);layerSet(kPerformOpen,0);layerSet(kEditor,1);}
  if(take(kCapture)){if(capture.state.load()==1)stopCaptureAt(performanceNow);else if(capture.begin(currentTempo.load()))captureOrigin=start;displayPending.store(true);}
  if(take(kExportMidi)){stopCaptureAt(performanceNow);if(capture.count.load()>0&&capture.state.load()!=3)capture.state.store(3);displayPending.store(true);}
- if(take(kPerformLoop)){if(hostRunning){if(!performanceMuted)loopStopAt=std::ceil((start+1e-8)/4)*4;else performanceMuted=false;}else if(!countIn){if(getBool(kPreview))loopStopAt=std::ceil((start+1e-8)/4)*4;else{layerSet(kPreview,1);performanceLoopPending=true;}}}
- if(take(kPerformStop)){performanceMuted=true;layerSet(kPreview,0);loopStopAt=-1;stopPerformance();stopCaptureAt(performanceNow);run=false;}
+ if(take(kPerformLoop)&&!countIn){bool active=!performanceMuted&&(hostRunning||getBool(kPreview));if(active){stopAllPerformance(start);run=false;}else{performanceMuted=false;loopStopAt=-1;if(!hostRunning)layerSet(kPreview,1);run=true;}}
+ if(take(kPerformStop)){stopAllPerformance(performanceNow);run=false;}
  if(loopStopAt>=0&&start>=loopStopAt-1e-8){performanceMuted=true;layerSet(kPreview,0);loopStopAt=-1;stopPerformance();}
  if(performanceLoopPending){performanceMuted=false;performanceLoopPending=false;}
  if(!hostRunning&&!getBool(kPreview))performanceMuted=false;
  if(performanceMuted)run=false;
+ performanceRunning=run;
 }
 bool performanceMidi(const mpc::MidiEvent&e,double now,bool countIn){
- if(e.isAllNotesOff()){stopPerformance();return false;}
- if(e.isNoteOn()&&learnSlot.load()>=0){bool used=e.note()>=96&&e.note()<=98;for(int r=0;r<8;++r)used|=e.note()==getInt(kPadNote0+r*9);if(used){learnConflict.store(true);changed[kPerformPadInfo].store(true);displayPending.store(true);return true;}int selected=learnSlot.load();if(getInt(performanceNoteKey(selected))<0){for(int j=0;j<14;++j)if(j!=selected&&getInt(performanceNoteKey(j))==e.note()){learnConflict.store(true);changed[kPerformPadInfo].store(true);displayPending.store(true);return true;}}learnConflict.store(false);stopPerformance();int n=learnSlot.exchange(-1),old=getInt(performanceNoteKey(n));for(int other=0;other<14;++other)if(other!=n&&getInt(performanceNoteKey(other))==e.note())layerSet(performanceNoteKey(other),old);layerSet(performanceNoteKey(n),e.note());displayPending.store(true);return true;}
+ if(e.isAllNotesOff()||e.data[0]==0xfc){loopHeld={};padCommands.reset();stopAllPerformance(now);return true;}
+ if((e.isNoteOn()||e.isNoteOff())&&e.note()<128&&loopHeld[e.channel()][e.note()]){if(e.isNoteOff())loopHeld[e.channel()][e.note()]=false;return true;}
+ if(e.isNoteOn()&&learnSlot.load()>=0){bool used=e.note()>=96&&e.note()<=98;for(int r=0;r<8;++r)used|=e.note()==getInt(kPadNote0+r*9);if(used){learnConflict.store(true);changed[kPerformPadInfo].store(true);displayPending.store(true);return true;}int selected=learnSlot.load();if(getInt(performanceNoteKey(selected))<0){for(int j=0;j<14;++j)if(j!=selected&&padPerformanceSlot(j)&&getInt(performanceNoteKey(j))==e.note()){learnConflict.store(true);changed[kPerformPadInfo].store(true);displayPending.store(true);return true;}}learnConflict.store(false);stopPerformance();int n=learnSlot.exchange(-1),old=getInt(performanceNoteKey(n));for(int other=0;other<14;++other)if(other!=n&&padPerformanceSlot(other)&&getInt(performanceNoteKey(other))==e.note())layerSet(performanceNoteKey(other),old);layerSet(performanceNoteKey(n),e.note());displayPending.store(true);return true;}
  if(!e.isNoteOn()&&!e.isNoteOff())return false;
  if(e.note()>=96&&e.note()<=98){if(e.isNoteOn()){trigger(8+e.note()-96,e.velocity());recordInput(now,6,e.velocity());}return true;}
  for(int role=0;role<8;++role)if(e.note()==getInt(kPadNote0+role*9))return false;
- for(int n=0;n<14;++n)if(e.note()==getInt(performanceNoteKey(n))){
+ for(int n=0;n<12;++n)if(padPerformanceSlot(n)&&e.note()==getInt(performanceNoteKey(n))){
   performanceMidiHits.fetch_add(1);bool on=e.isNoteOn();
   if(n<12){triggerPerformance(n,now,on,countIn,true);}
-  else if(on){int key=n==12?kPerformLoop:kPerformStop;if(n==13){performanceMuted=true;layerSet(kPreview,0);stopPerformance();stopCaptureAt(performanceNow);}else set(key,!getBool(key));}
+  else if(on){int key=n==12?kPerformLoop:kPerformStop;if(n==13){stopAllPerformance(now);}else{loopHeld[e.channel()][e.note()]=true;set(key,!getBool(key));}}
   return true;
  }
  return false;

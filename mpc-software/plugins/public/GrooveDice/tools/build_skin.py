@@ -63,13 +63,18 @@ def button(text,key,b,index=1,count=1,kind='cream',toggle=False):
   parts.append(conditional(label('KIT FIXED',f'0 0 {w} {h}',18,'fff9e9c8'),'IndexedEnabling/1/2/'+H('KitLock')))
  if text=='ROLL DICE':
   put(get(parts[1],'bounds'),'bounds',f'52 0 {w-68} {h}');parts.append(image('dice-icon.png',f'18 {(h-32)//2} 48 32'))
+ if key=='PerformLoop':
+  prefix='A4 'if text.startswith('A4 ')else''
+  put(get(get(parts[1],'componentData'),'data'),'text',prefix+'LOOP OFF')
+  conditional(parts[1],'IndexedEnabling/0/2/'+H('PerformLoopState'))
+  parts.append(conditional(label(prefix+'LOOP ON',f'0 0 {w} {h}',23 if w>=180 else 19,'fff9e9c8'),'IndexedEnabling/1/2/'+H('PerformLoopState')))
  if toggle:
-  if key in ('Preview','Follow','KitLock','PatternLock','Separate','SoundDetails','SoundInvert','CymbalView','SampleBrowserOpen','FillGridPage','PoolOpen','PerformEdit')or key.startswith(('SoundOn','SoundSolo','SoundLock','SoundRev','SoundPolarity','DiceLock','DiceValueLock','SoundValueLock','FillDiceLock')):
+  if key in ('Preview','Follow','KitLock','PatternLock','Separate','SoundDetails','SoundInvert','CymbalView','SampleBrowserOpen','FillGridPage','PoolOpen','PerformEdit','CommandPads')or key.startswith(('SoundOn','SoundSolo','SoundLock','SoundRev','SoundPolarity','DiceLock','DiceValueLock','SoundValueLock','FillDiceLock')):
    parts.append(g.entry('caption toggle hit','Button',g.button_data('hit.png','hit.png',1,1),f'0 0 {w} {h}','No','Show','Always',remap=[('Data',H(key))]));define('Btn'+str(counter),parts);return instance('Btn'+str(counter),b)
   # Independent UI-local press gate: the continuous surface owns release.
   # The engine command still toggles exactly once on Mouse Down (never on release).
   press='Local/2/gdPress'+str(counter)
-  put(get(parts[0],'handle remapping'),'map',[O(('key','Data'),('value',press))])
+  put(get(parts[0],'handle remapping'),'map',[O(('key','Data'),('value',H('PerformLoopState')if key=='PerformLoop'else press))])
   put(get(get(parts[0],'componentData'),'data'),'gestureBehaviour','Hold')
   surface=O(('version',2),('sliderType','ColourBar'),('direction','Horizontal'),('backgroundColour','00000000'),('outlineColour','00000000'),('valueColour','00000000'),('isBipolar',False),('handleName','ResetOnGestureEnd/'+press))
   parts.append(g.entry('command press surface','Slider',surface,f'0 0 {w} {h}','No','Show','Always'))
@@ -145,7 +150,7 @@ main.append(conditional(label('HATS REST ON RIDE','1036 279 216 22',16,'ff6a4930
 define('SelectPoolButton',[g.entry('selected pool','Button',g.button_data(art(192,40,'orange'),art(192,40,'cream'),2,3),'0 0 192 40','No','Show','Always',remap=[('Data',H('DicePool'))]),label('SELECT KITS','0 0 192 40',22)], [g.action('Mouse Down','Toggle Switch',H('PoolOpen'),'')])
 main +=[label('SOUNDS','16 420 88 60',17,'fff7e9c7'),button('<','KitPrev','108 420 48 60',toggle=True),value('XKit','164 420 252 60'),button('>','KitNext','424 420 48 60',toggle=True),button('LOCK KIT','KitLock','484 420 130 60',toggle=True),button('<','PackPrev','626 420 48 60',toggle=True),label('','682 420 290 60',21,'fff7e9c7','PackInfo'),button('>','PackNext','980 420 48 60',toggle=True),button('SAVE KIT','SaveKit','1040 420 224 60',kind='dark',toggle=True),
 label('DICE POOL','16 484 164 44',20,'fff7e9c7'),button('THIS PACK','DicePool','188 484 176 44',0,3),button('ALL PACKS','DicePool','376 484 176 44',1,3),instance('SelectPoolButton','568 486 192 40'),button('LOCK PATTERN','PatternLock','776 484 184 44',toggle=True),
-label('PLAY','16 532 88 44',17,'fff7e9c7'),button('MPC SYNC','Follow','108 532 156 44',toggle=True),button('PLAY LOOP','Preview','272 532 168 44',toggle=True),value('FillSlot','448 532 72 44'),button('PLAY FILL','Trigger','528 532 156 44',kind='orange',toggle=True),button('EDIT FILL','Editor','692 532 176 44',toggle=True),label('','880 532 384 44',20,'fff7e9c7','ActionInfo')]
+label('PLAY','16 532 88 44',17,'fff7e9c7'),button('MPC SYNC','Follow','108 532 156 44',toggle=True),button('LOOP ON / OFF','PerformLoop','272 532 168 44',toggle=True),value('FillSlot','448 532 72 44'),button('PLAY FILL','Trigger','528 532 156 44',kind='orange',toggle=True),button('EDIT FILL','Editor','692 532 176 44',toggle=True),label('','880 532 384 44',20,'fff7e9c7','ActionInfo')]
 
 
 
@@ -190,7 +195,7 @@ for ti,tab in enumerate(tabs[2:],2):
  if page.name=='GROOVE':
   children +=[label('HAT RHYTHM · LIVE','16 492 664 28',21,'fff5e5c3'),value('HatRhythmFull','16 526 664 44')]
  if page.name=='KITS':children +=[value('KitDiceMode','16 446 600 50'),button('<','PackPrev','650 526 54 44',toggle=True),label('','710 526 494 44',21,'fff7e8c7','PackInfo'),button('>','PackNext','1210 526 54 44',toggle=True),button('SAVE KIT','SaveKit','16 526 300 44',kind='orange',toggle=True),button('LOAD KIT','LoadKit','334 526 300 44',toggle=True)]
- if page.name=='ROUTING':children +=[button('LEARN LOOP','PerformLearnLoop','16 526 220 44',toggle=True),button('LEARN STOP','PerformLearnStop','248 526 220 44',toggle=True),label('','480 526 506 44',19,'fff7e9c7','PerformPadInfo'),button('SEPARATE OUT','Separate','1000 526 264 44',toggle=True)]
+ if page.name=='ROUTING':children +=[label('C MAJOR / A1-6 PERFORMANCE / C1-8 DRUMS','16 480 960 36',19,'fff7e9c7'),button('SEPARATE OUT','Separate','1000 526 264 44',toggle=True)]
  put(tab,'componentDefinition',g.component_definition([],children,'ffeed9b3'));put(tab,'qlinkBoundsData',bounds)
 
 from sound_skin import build_sound_skin

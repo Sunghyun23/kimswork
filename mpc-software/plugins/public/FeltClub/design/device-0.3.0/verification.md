@@ -1,0 +1,5 @@
+# Felt Club0.3.0 actual-device verification
+
+MPC XL / OS3.10.1.12, internal NVMe: final0.3.0installed through the official SDK,600files independently SHA-256 read back against the local release folder. Owner authorized restart/discard; current QA is a new project. All7native pages draw and navigation retains Tine/SundayVelvet. Internal category→EP→SundayVelvet loads the new51/57/26character recipe and expectedFX. Host PRESET displays nonempty named factory rows. MAIN A4 touch-drag changes Noise to60%; MODEL keeps Bark. Tone51%andNoise60%locks survive Dice while Body57→61,Bell26→34,Release510→359andotherunlockedvalueschange; Tine/Sync/chordsremain. Undo restores the previous visible values with locks intact. Final CHORD contrast refresh changes only two caption PNGs; TUI/QLinks byte-identical, targeted CHORD capture confirms readableSTRUM/GLIDE. SD/SSD and other plugins untouched.
+
+This is remote UI/parameter verification. Hardware audio listening/recording, physical Q-Link rotation, pads/keyboard/CC64, worst-case CPU/polyphony and full MPC project-save recall are not certified. Site audio examples are native computer renders, not MPC recordings.

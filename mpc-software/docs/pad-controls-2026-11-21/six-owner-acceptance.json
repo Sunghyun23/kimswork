@@ -1,0 +1,20 @@
+{
+  "status": "owner confirmed all supplied checklist items work",
+  "message": "모두 잘됨.",
+  "installed_candidates": {
+    "FeltClub": "0.3.1",
+    "DonutTheory": "1.15.4",
+    "GrooveDice": "1.11.0"
+  },
+  "scope": [
+    "fresh MAIN/POLY",
+    "removed command menus",
+    "C-bank direct drums",
+    "six A-bank one-shot performances",
+    "removed instrument MIDI action commands",
+    "four selected-slot Q-Links"
+  ],
+  "verification_source": "owner physical test",
+  "public_release": false,
+  "sd_ssd_touched": false
+}

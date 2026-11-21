@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-21",
+  "status": "Actual public YouTube audio obtained and numerically analyzed; no subjective listening/equivalence certification",
+  "direct_keyscape_render_forbidden_by_user": true,
+  "sources": [
+    {
+      "instrument": "Tine EP",
+      "title": "ROBERT GLASPER Electric Piano Explorations | Keyscape Sessions",
+      "channel": "SpectrasonicsVIDEO",
+      "url": "https://www.youtube.com/watch?v=l4oHRyHmkc8",
+      "metadata": "Official description identifies Classic Rhodes Suitcase, Vintage Vibe and later mechanical-noise increase. Separate these sections before measuring.",
+      "audio_access": true
+    },
+    {
+      "instrument": "Wurli",
+      "title": "Shaun Martin Keyscape session",
+      "channel": "SpectrasonicsVIDEO",
+      "url": "https://www.youtube.com/watch?v=-H89jnDO0nQ&t=854s",
+      "start_seconds": 854,
+      "metadata": "Official description chapter14:14 Wurlitzer140b.",
+      "audio_access": true
+    },
+    {
+      "instrument": "Upright",
+      "title": "Shaun Martin Keyscape session",
+      "channel": "SpectrasonicsVIDEO",
+      "url": "https://www.youtube.com/watch?v=-H89jnDO0nQ&t=1965s",
+      "start_seconds": 1965,
+      "metadata": "Official description chapter32:45 Upright Ballad.",
+      "audio_access": true
+    },
+    {
+      "instrument": "Clav",
+      "title": "Greg Phillinganes Keyscape Clavinet classics",
+      "channel": "SpectrasonicsVIDEO",
+      "url": "https://www.youtube.com/watch?v=j1A1P5uFRg0",
+      "metadata": "Official description identifies Clavinet C and Vibanet; separate patches/FX before measuring.",
+      "audio_access": true
+    }
+  ],
+  "limits": "Public performances contain unknown MIDI, velocity, note age, FX and possible overlapping notes. Dominant-note spectrum proxy only; independent physical engine, no Keyscape/reference audio bundled.",
+  "audio_acquisition": "Temporary yt-dlp standard public playback download, decoded with macOS AVFoundation and isolated ffmpeg for WebM. No Keyscape direct rendering."
+}

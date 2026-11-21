@@ -10,7 +10,7 @@ struct Rig{std::unique_ptr<DonutTheory>p=std::make_unique<DonutTheory>();float l
 static constexpr int syncs[]={kSync,kModSync,kLfo2Sync},rates[]={kRate,kTremRate,kLfo2Rate},relays[]={kLfoRateControl,kModRateControl,kLfo2RateControl},full[]={kLfo1SyncDivision,kMotionSyncDivision,kLfo2SyncDivision},legacy[]={kDivision,kModDivision,kLfo2Division};
 static std::vector<uint8_t> prefix(DonutTheory&p,int count){auto s=p.internalSaveState();size_t end=12;for(int i=0;i<count;++i)end+=1+s[end]+8;s.resize(end+4);for(int b=0;b<4;++b){s[end+b]=0;s[8+b]=uint8_t(count>>(8*b));}return s;}
 int main(){
- static_assert(kLfo1SyncDivision==388&&kMotionSyncDivision==389&&kLfo2SyncDivision==390&&kNumParams==399,"append-only sync grid");
+ static_assert(kLfo1SyncDivision==388&&kMotionSyncDivision==389&&kLfo2SyncDivision==390&&kCommandPads==399&&kNumParams==405,"append-only sync grid");
  for(int old=0;old<5;++old){const char*base[]={"1/16","1/8","1/4","1/2","1 bar"};float beats[]={.25f,.5f,1,2,4};for(auto suffix:{" D"," T"}){std::string name=std::string(base[old])+suffix;bool found=false;for(int i=0;i<15;++i)if(name==donut::kSyncNames[i]){assert(std::abs(donut::kSyncBeats[i]-beats[old]*(suffix[1]=='D'?1.5f:2.f/3))<.000001f);found=true;}assert(found);}}
  for(int i=1;i<15;++i)assert(donut::kSyncBeats[i]<donut::kSyncBeats[i-1]);
  for(int module=0;module<3;++module){Rig h;auto&p=*h.p;p.set(rates[module],1.37f);p.set(syncs[module],1);p.set(full[module],0);h.block();const float hz=p.getNormalised(rates[module]);std::array<bool,15>seen{};

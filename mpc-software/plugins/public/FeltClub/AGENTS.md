@@ -1,0 +1,162 @@
+# Felt Club
+
+Read root AGENTS.md, docs/repository-policy.md, ../../../docs/plugins/felt-club/spec.md and implementation.md. Current visual approval: design/approved-vintage-main.png (2026-11-20 user explicitly required identical design). Earlier design/approved-main.png is historical. Vendor kim/UID KnAw;7modal models, no commercial samples. Do not substitute oscillator presets for physical models or promise calibrated realism without listening/measurement.
+
+Preserve reference-extracted olive/aged-ivory/burnished brass artwork, ridged black bakelite knobs and serif brand. User override2026-11-20: knobs must be separate original assets, not crops from the mockup. Use assets/knob/bakelite-face-source.png; face/lighting stay stationary and only the pointer rotates. Other approved panel materials remain intact. MAIN A=Tone/Body/modelCharacter3/4; B=full ADSR; C=Rate/Depth/Drift/Width with TREM/PAN/SYNC touch choices; D=Drive/Chorus/Delay/Room. All knobs72px; locks transparent44px upper-left; four chord pads70px. Shared footer x16/188/440,y578,h44 and dice icon on every ROLL DICE button. First native key toggles MAIN/CHORD; model/sound state never changes from page navigation. Choice sidebars hide behind-page Q-Link guides.
+
+238initial parameters before first release. After first installed public version freeze IDs/order, append only. Master0 harmless on host nudge. Factory/Dice sound only: preserve chord root/type/voicing/octave/key/transposition/MIDI learn/slot count. Sync is preserved by Dice. Exact sound Undo preserves current locks. Direct/chord/touch voice ownership and pending strum cancellation must be safe on release/sustain/reset/page/slot change. Smooth-top search UI only, never render. No allocation/locking/I/O/logging/host callbacks in process. Physical0.2.0uses force/contact-driven EP/struck strings, physically deflected Muted/Thumb, shared piano body and progressive modal dampers. Preserve238parameter IDs/order and UID; no silent model fallbacks or sample substitutions. Do not call numerical tests perceptual realism certification.
+
+Use unmodified pinned SDK, own local VST bridge and original MIT chord helpers from Donut Theory. Never overwrite other projects or uncommitted Donut work. NVMe only; do not read/write SD or SSD or modify Groove owner files. Build native/bothARM, run SDK/RT/state/chord/audio/UI checks and compare actual screen to approval before reporting complete. No automatic public release/push/site publishing for this project was requested.
+
+Quick MAIN EDIT is touch-only and masks hidden sound relay writes; native CHORD owns16correctScreenQLinks. This avoids transient modal context changing serialized sound alias meaning. Host19PASS/0WARN/0FAIL after this separation.
+
+2026-11-20 Tine-only0.2.1 candidate: selected round2 of3 against EQ-processed real Rhodes reference;20heldout examples improve weighted spectral/envelope fit180.1569→24.0017. Reference audio private-only, never bundled. Twelve global physics coefficients plus level/register balance; runtime constexpr, mutable calibration only in offline bridge. Six other model renders bit-identical;238parameters/UID/UI preserved. BothARM/native/SDK/full regression/host19PASS0WARN0FAIL. NVMe597files verified; restart/device validation pending. No public publication or Lounge Lizard equivalence claim. See design/validation-0.2.1 and design/audio-0.2.1.
+
+2026-11-21 user requested full-model clarity0.2.2. All7models: unified strike/held Tone law,5ms smoothing, variable second pole, model-sensitive bandwidth; shorter hammer contact/EP upper modes; Muted motion pickup/Thumb approximate motion radiation and balanced gains. Preserve approved UI,238params/UID/57names.0.2.1Rhodes fit scores are historical; no commercial-equivalence claim for0.2.2. Proof and original matched audio under design/validation-0.2.2 and audio-0.2.2. NVMe final install/readback and restart approval tracked there; do not touch SD/SSD/other projects.
+
+2026-11-21 further-improvement0.2.3: bounded Wurli/piano/Clav register gain; true initial displacement seeds Muted/Thumb pickup derivative (no first-sample DC impulse); less double Release attenuation; voice reuse clears noise history;20Hz sample-rate-independent output DC blocker. UI/UID/238params/57names preserved. Evidence and matched7model audio in design/validation-0.2.3 and audio-0.2.3. Native/bothARM/SDK/full regression/host passed; NVMe readback status tracked in evidence, restart approval still pending. Other projects/SD/SSD untouched; no public release or perceptual equivalence claim.
+
+2026-11-21 latest reference override: Keyscape YouTube demos only; no direct rendering of installed Keyscape. Canceled real-room/sample fit; runtime remains0.2.3, no fitted profile applied. Official reference metadata and audio-access limits recorded in mpc-software/docs/plugins/felt-club/keyscape-reference-status.md. Do not claim actual listening/audio analysis from video descriptions; playback access is unavailable. Await accessible reference audio for measured comparison.
+
+2026-11-21 superseding audio-access limitation: public YouTube download + local PCM decode succeeded; actual official demos analyzed, no direct Keyscape render.0.2.4accepts Wurli/Upright/Felt global pickup/modal readout profiles after >=10%training+heldout spectrum-proxy improvement. Tine/Clav failed and remain0.2.3, with Muted/Thumb; four model renders byte-identical. Unknown MIDI/velocity/age/FX means no direct A/B or perceptual/Keyscape-equivalence claim. Evidence/provenance/own audio in design/validation-0.2.4 and audio-0.2.4. Native/bothARM/SDK/full regression/host passed. UI/238IDs/UID/57names unchanged. NVMe readback tracked there; restart pending current Custom work permission. No public release/push/site publish.
+
+2026-11-21 physical-modeling research: see mpc-software/docs/plugins/felt-club/physical-modeling-research.md. Confirmed old Tine demo loss excludes6.267/17.55inharmonic modes and integer-harmonic purity selection can reject bell-rich attacks. Correct diagnostics before tuning again. Literature supports reviewing2Dpickup trajectory/flux, dissipative hammer contact and modal/tone-bar coupling; these are proposed work, not implemented. Runtime remains0.2.4; no new public release/UI change or Keyscape render.
+
+2026-11-21 user-approved research application0.2.5: Tine-only mass-normalized exact linear tone-bar coupling, separate vertical/horizontal flux readout with axial curvature, dissipative contact and separate register gain. No full nonlinear beam/globalPHS/perceptual-equivalence claim. Six other native model renders bit-identical;UI/238IDs/UID/57names unchanged. New Tine diagnostics include inharmonic bell/decay; old harmonic-only optimizer rejects--model0. Native/bothARM/SDK/full regressions/host19PASS0WARN0FAIL; extra coupling-energy/2Dflux/contact tests. Evidence/audio in design/validation-0.2.5 and audio-0.2.5. NVMe readback tracked there; restart still pending Custom-work permission. SD/SSD/other projects untouched;no public release or Keyscape render.
+
+
+2026-11-21 user-approved Tine touch0.2.6: low hard-strike effective gap compensation and upper-register velocity-dependent modal T60, bounded empirical voicing not measured material/pickup physics. MIDI48strong attack centroid574→490Hz; MIDI72late/early held RMS becomes progressively lower for35/65/95vel; MIDI60three takes byte-identical. Six other model renders and591runtime skin files unchanged;238IDs/UID/57programs preserved. Native/bothARM/SDK/full regressions and host19PASS0WARN0FAIL. Added3rate held-energy regression. Same-performance native audio and isolated touch audit under design/audio-0.2.6 and velocity-audit-0.2.6; evidence design/validation-0.2.6. No installation/restart/publication; device remains0.2.5files with earlier pending runtime restart approval.
+
+
+2026-11-21 Wurli-only0.2.7: original smooth finite capacitance/charge-difference readout, dissipative hammer, fundamental-led reed without struck near-unison auxiliaries, revised loss/register voicing. Reduced surrogate, not FEM/calibrated real instrument. Selected3geometry candidates; measurements/audio in design/validation-0.2.7 and audio-0.2.7. Approved Tine and other5model renders byte-identical;591skin files unchanged;238IDs/UID/57programs preserved. Native/bothARM/SDK/full regressions and host19PASS0WARN0FAIL. No device install/restart/publication.
+
+
+2026-11-21 USER REJECTED Wurli0.2.7 as unlike a real Wurli. Treat its sound as an unaccepted local candidate; prior tests are numerical correctness only. Do not promote/install/release it as an improvement. Research restart/source audit in mpc-software/docs/plugins/felt-club/wurli-research-restart.md; own H2/H1 audit shows about10dB second-harmonic loss at MIDI60 versus0.2.6. Next design must validate finite through-slot reed/lead/electrode geometry and electrical load before further spectral mellowing. Research-only turn; no source DSP/binary changes. Approved Tine0.2.6 remains accepted and unchanged.
+
+
+2026-11-21 USER REQUIRES ALL7ENGINES ISOLATED.0.2.8moves all DSP/state/calibration to independent src/engines/{tine,wurli,upright,felt,clav,muted,thumb}; independent hammer/modal/circuit/envelope/noise and piano bodies. PhysicalVoice is fixed-storage routing only. No shared tunable physics/profile table or cross-engine header imports; keep future edits inside owning engine. VoiceTypes/VoicingTypes only POD/schema/stateless math; SDK instances own state. UI/MIDI/presets/global post-FX remain host features. Fixed host Tone/ADSR edits altering another model's held voices. Native/bothARM/SDK/full tests+host19PASS0WARN0FAIL;49profile mutations/42engine pairs/7standalone compiles/3rate fresh reuse/21native float comparisons.5models sample-identical; Tine/Wurli differences max2.105e-7/8.941e-8FS, relative RMS below-129.97/-131.45dB (do not claim bit identity).591skin files preserved. UID/238IDs/57programs stable. Wurli0.2.7still rejected/pending redesign. No install/restart/publication; device files0.2.5. See mpc-software/docs/plugins/felt-club/engine-isolation.md and design/validation-0.2.8.
+
+
+2026-11-21 user-authorized Wurli0.2.9candidate: own2Dconstant-panel electrostatic through-slot/reed/triangular-solder field lookup (normalized unmeasured geometry), C1cubic interpolation,4readout substeps and explicit3500Hzload surrogate; separate post-readout register gain. Old analytic bell curve/proxy tilt removed. Model not measured200A/FEM/fullamp/cabinet; listening acceptance pending. Native/bothARM/SDK/full tests+host19PASS0WARN0FAIL;12,672Wurli extreme-parameter strikes stay inside expanded±36field; mesh/dynamic boundary checks pass. Tine+other5engines source hashes and3rate native samples identical;591skin files unchanged;238IDs/UID/57programs stable. See design/validation-0.2.9 and audio-0.2.9. No install/restart/publication; device0.2.5files remain.
+
+
+2026-11-21 user-approved follow-up implementation0.2.10Wurli-only: bounded strong-touch speed/contact hardness/dissipation; component-derived passive200Ainput + isolated compensation approximation (not fullactivepreamp/cabinet); canonical reed coordinates remove unmeasured key60flip; progressive released felt contact. BEMtable/UI/238IDs/UID/57programs unchanged. New762native full-velocity audio audit,3rate circuit/polarity/pedal/damper checks; allbuilds/SDK/fulltests andhost19PASS0WARN0FAIL. Six other engine sources and3rate native samples bit-identical. Old response already continuous; do not claim discontinuity bug fixed. New audition/evidence in design/audio-0.2.10 and validation-0.2.10. No install/restart/publication; listening/device validation pending; MPCfiles0.2.5remain.
+
+
+2026-11-21 Upright-only0.2.11candidate: dissipative felt contact, reduced prompt/aftersound unison losses, sample-rate-independent pedal/closed damper timing. Not reciprocal bridge/full soundboard or calibrated realism. Six other engines source and three-rate native float output sample-identical,591skinfiles unchanged;238IDs/UID/57programs preserved. Native/bothARM/SDK/fullUBSan+host19PASS0WARN0FAIL; original matched audio/evidence in design/audio-0.2.11 and validation-0.2.11. No install/restart/publication; devicefiles0.2.5remain. See mpc-software/docs/plugins/felt-club/upright-research.md.
+
+
+2026-11-21 OWNER REJECTED Upright0.2.11 as not piano-like. Do not install/promote/publish as accepted tone. Structural re-review found direct motion-readout bypass of an8mode additive body; measured body/direct varies -8.24 to-32.31dB across tested register. Forty-eight modes split48/24/16harmonics; no reciprocal unison/bridge coupling, unvalidated coupled contact integration and obsolete harmonic-proxy voicing gate. No DSP change in review. Next: explicit bridge-force/main-radiation path, bounded string/contact treatment, dry attack/body/decay evaluation and separate owner listening gate. Existing official private reference is processed unknown-MIDI performance, not measured IR. See upright-research.md and validation-0.2.11/rejected-review. Tine/Wurli and other engines preserved.
+
+
+2026-11-21 Upright-only0.2.12redesign candidate: explicit modal bridge force,96string modes, passive common-velocity unison loss,64mode main body/radiation +2.5%direct leakage. Legacy .5upper/-.35tilt and arbitrary unison T60split removed. Plate/strip geometry/radiation are original reduced assumptions, not calibrated/complete acoustic solver; hammer/string integration remains approximate. Native/bothARM/SDK/fulltests+host19PASS;528full-radiation cases and local coupling passivity tests. Six other source trees and3rate native output exact;591skin/238IDs/57programs/UID stable. Auditions/evidence design/audio-0.2.12 and validation-0.2.12. Listening acceptance pending: do not claim real-piano equivalence or automatically install/publish. Device0.2.5files unchanged.
+
+
+Upright 0.2.13 local candidate. The matched MAPS/BiVib analysis in upright-research.md supersedes uncalibrated voicing claims. Use the held-out notes and independent recordings when assessing changes, and keep touch, release and listening results distinct. The six other engines, UI and parameter layout are preserved. Reference recordings remain outside the repository.
+
+
+The owner rejected the Upright 0.2.13 audition as unlike an acoustic upright. The local 0.2.14 candidate adds a force-driven case response and two short stereo radiation paths. Record listening acceptance separately from numerical attack, mono and host checks. See upright-research.md and the 0.2.14 validation and audio directories.
+
+
+Upright 0.2.15 candidate softens light contact, shortens high-partial treble decay, and fixes half-missing, sample-rate-dependent sympathetic resonance. The pedal test covers all semitones and tuning. MAPS/BiVib metrics and auditions are under design/validation-0.2.15 and design/audio-0.2.15. Listening, hardware and publication status remain pending. See upright-research.md.
+
+
+Upright 0.2.16 candidate applies a bounded, partial-dependent early radiation rise while preserving contact and string states. The owner still found 0.2.15 unnatural. Use the identical dry comparisons and record listening independently of timing evidence. Build/measurement records in design/validation-0.2.16 and audio-0.2.16. Installation and publication pending.
+
+
+Upright 0.2.17 responds to the owner finding the 0.2.16 attack too rounded. Transient-only gain on the existing high partials, with matched native evidence and paired dry auditions under design/validation-0.2.17 and design/audio-0.2.17. Keep the rise, existing hammer/contact laws, other model outputs and UI. Listening and device verification pending.
+
+
+Upright 0.2.18 local candidate adjusts middle-register second-partial radiation to reduce the held-note unison trough. Preserve the existing hammer, string mechanics, other engines and skin. See upright-research.md, design/validation-0.2.18 and design/audio-0.2.18 for the matched tests and listening material. Device and listening verification are pending.
+
+
+Upright 0.2.19 local audition calibrates F3–E4 against matched soft, medium and strong Disklavier strikes. Whole-key holdouts 56 and 61 use adjacent profiles. See upright-research.md and design/{audio,validation}-0.2.19. Listening and MPC hardware checks are pending. The current evaluation covers this octave.
+
+
+Upright 0.2.20 local audition refines the monotonic hammer launch curve, velocity-dependent felt contact and frequency-dependent damper closure within F3–E4. It uses the existing 0.2.19 MIDI-aligned reference set. Matched paired audio and guardrail results are in design/audio-0.2.20 and design/validation-0.2.20. See upright-research.md. MPC hardware and owner listening checks are pending.
+
+
+Upright 0.2.21 local audition changes the soundboard drive balance and radiates upper-unison difference pressure through two short panel paths. The change follows a middle-register taper. See upright-research.md and design/audio-0.2.21 and design/validation-0.2.21 for measurements and matched auditions. Device and listening verification are pending.
+
+
+Upright 0.2.22 addresses the Clav-like bass with a local contact position, bridge pressure and first-four-partial unison loss calibration. See upright-research.md and design/audio-0.2.22 and design/validation-0.2.22 for the matched recordings and regression evidence. Device and owner listening verification are pending.
+
+
+Upright 0.2.23 models reciprocal hammer and modal string contact with a centered impulse, softens effective bass felt, and uses two stages of damper loss on pedal-up. See upright-research.md and design/{audio,validation}-0.2.23 for matched acoustic and timing results. Listening and MPC hardware checks are pending.
+
+
+The owner approved the lighter Upright audition. Felt Club 0.2.24 applies that sound through the existing Sunday Upright factory program, with Body 50, Release 520 ms, and a 330 Hz −1.8 dB peaking cut on the isolated Upright output. Preserve persisted knob values on project recall and manual model selection. See design/validation-0.2.24 for the native render and C4 touch check. Device verification is pending.
+
+
+User-approved Roll Dice policy 0.2.25 retains the selected model and velocity curve, uses per-engine bounded profiles, pairs Body with Release, and selects at most one unlocked color effect. An enabled locked color effect suppresses new unlocked color effects. Respect every lock, Sync, chord state and exact Undo. Evidence design/validation-0.2.25. Device verification is pending.
+
+
+Felt Piano 0.2.26 is the first dedicated soft-contact audition, with gradual hammer stiffness, dissipative felt contact and finite contact width. Pedal ramp and closed damping use seconds. See design/validation-0.2.26. Six other native engines match across three rates. Owner listening acceptance and device checks are pending. Continue Thumb after Felt approval.
+
+
+User reset Felt on 2026-11-21: 0.2.27 independently copies the approved Upright engine into engines/felt, including its own contact solver, acoustic profiles and soundboard. With matching controls the two native models produce identical samples at three rates. This supersedes the rejected 0.2.26 softer-contact attempt. Treat current Felt as an acoustic piano starting point; a distinct felt voicing is pending. Keep future Felt changes isolated. See design/validation-0.2.27.
+
+
+Felt 0.2.28 refines its independently copied piano basis with a compliant felt layer. Touch-dependent stiffness, contact width and loss preserve bright firm strikes while softening light ones. Three candidates were screened and the light candidate selected. Six other models match native samples at three rates. See design/validation-0.2.28. Owner listening and hardware acceptance pending.
+
+
+Felt 0.2.29 responds to the owner requesting a more muffled tone. Effective layer stiffness starts at 0.46, added width at 0.007 string lengths and added contact loss at 0.045, all varying with touch. Preserve its independent piano basis and six other engines. Build/host evidence design/validation-0.2.29; listening and device checks pending.
+
+
+Owner approved Felt 0.2.29 tone on 2026-11-21. This supersedes pending listening status for that candidate. Preserve this as the accepted Felt baseline. Device verification remains pending. Remaining dedicated engine refinement order is Thumb (kalimba), Clav, then Muted, following the owner’s requested sequential workflow.
+
+
+Thumb 0.2.30 is a local listening candidate: original supported-beam FEM table with six modes and three short fixed-frequency empirical body modes. Preserve the approved Tine, Wurli, Upright and Felt baselines; all six other native models are sample-identical across three rates. See thumb-research.md and design/{audio,validation}-0.2.30. Geometry/radiation are assumptions, not a measured acoustic match. Owner listening and MPC verification pending; no installation/publication. Keep the requested remaining order Thumb, Clav, then Muted.
+
+
+Owner rejected Thumb 0.2.30 as cheap sounding. Do not treat numerical PASS as tone approval. New reference direction: vintage soul, especially Maurice White / Earth, Wind & Fire — Evil (1973) and Kalimba Story (1974). Research found official recordings and Hugh Tracey amplified-kalimba context; audio has not yet been auditioned or quantitatively analyzed in this research turn. Keep all accepted engines unchanged.
+
+
+Thumb 0.2.31 follows the corrected owner reference Nas One Love / The Heath Brothers Smilin’ Billy Suite Part II (Stanley Cowell mbira), not Represent. Actual official Strata-East preview analysis guides supported-beam geometry, empirical body/readout and bounded register losses. Source audio stays private; only original synthesis auditions in design/audio-0.2.31. See thumb-research.md and validation-0.2.31 for single-note training versus held-out decay limits. No acoustic-equivalence claim. Preserve all six other models, UI/238 IDs/57 names/UID. Owner listening and MPC checks pending; no installation/publication.
+
+
+Owner rejected Thumb 0.2.31 audition. It is not an accepted timbre despite passing numerical proxy and regression checks. Reassess the complete One Love tone and matched musical/register/FX context before further tuning. Four broad spectral bands and short decay windows are insufficient to establish the target timbre.
+
+
+Thumb 0.2.32 supersedes rejected 0.2.31. Time-resolved source audit found a strong fast high attack alongside a weak longer tail; runtime separates these and adds a weak adjacent pitch-following resonance. Eleven active modes, fixed 12 storage; empirical extensions, not a calibrated 3D instrument. Polynomial readout removed and body boost reduced. Six other native engines match 0.2.31 at three rates; full build/test/host checks recorded in validation-0.2.32. Compare same brief notes/controls/RMS without FX in audio-0.2.32. Listening/MPC acceptance pending; no installation or publication.
+
+
+Owner found Thumb 0.2.32 closer and requested gentler refinement. 0.2.33 changes only fast metal radiation: velocity-sensitive gain and 0.9–2.1ms rise after differentiation, with explicitly seeded/reset pickup state. Preserve geometry, Tone, main/body/tail and all other engines. Matched early metal energy drops about2.09dB; late band ratio unchanged within0.001dB. See thumb-research.md and design/{audio,validation}-0.2.33. Full build/test/host pass; other six models exact at3rates. Listening/MPC acceptance pending; no install/publication.
+
+
+Thumb 0.2.34 refines high-register metal tails and adjacent register/touch voicing after further owner feedback. Keep softened fast radiation and fundamental/register decay unchanged. Four offline variants/12cases preserve their isolated modal energies; final full tests and six-other-native comparisons pass at3rates. See thumb-research.md and design/{audio,validation}-0.2.34. Adjacent component remains empirical; no measured-geometry/perceptual claim. Listening/MPC acceptance pending; no installation/publication.
+
+
+OWNER APPROVED Thumb0.2.34 as final on2026-11-21. This supersedes its pending listening status. Preserve it as the accepted Thumb baseline during subsequent engine work; accepted headers/hashes are under design/validation-0.2.34/accepted-source. Keep Tine/Wurli/Upright/Felt approvals intact. Remaining refinement order: Clav, then Muted. MPC checks remain pending; this approval does not request installation/publication.
+
+
+Owner requirement2026-11-21: Muted means muted GUITAR, with Hikaru Utada Fly Me to the Moon as the reference. See muted-guitar-research.md. Original2000 vs2007Mix is being clarified;2000 is provisional, not confirmed. No audio match/listening claim or Muted DSP change yet. Preserve approved Thumb0.2.34 and other accepted engines. Continue refinement order Clav, then Muted. Avoid treating a short ADSR on generic strings as a complete palm-muted-guitar model.
+
+
+Clav0.2.35 is a new listening candidate: independent finite tangent pulse, separate curved pickup/readout paths, modal register losses and short yarn-release pitch/loss approximation. See clav-research.md and design/{audio,validation}-0.2.35. This is an original uncalibrated reduced modal model, not the paper DWG/full-contact model or measured commercial equivalence. Full native/bothARM/SDK/tests/host19PASS; six other native models exact at3rates. Approved Thumb0.2.34 headers unchanged. Preserve all other accepted engines. Listening/MPC acceptance pending; no installation/publication. Proceed to the owner-specified muted guitar after Clav review.
+
+
+Owner rejected Clav0.2.35 as too bright and selected Stevie Wonder Superstition.0.2.36 is a warmer candidate: compliant modal taper, center-weighted blend,9kTone ceiling/stronger second pole,1.65level compensation. Reference preview is a full mix; no isolated-record spectral fit or exact model-C/effects match claim. See clav-research.md and design/{audio,validation}-0.2.36. Full build/test/host pass; six other native models and approved Thumb source remain exact. Listening/MPC acceptance pending; no installation/publication.
+
+
+OWNER APPROVED Clav0.2.36 and moved to Muted on2026-11-21. Preserve accepted Clav headers/hashes under validation-0.2.36/accepted-source, approved Thumb0.2.34 and all piano/EP engines. Muted implementation is now authorized, targeting muted guitar and Hikaru Utada Fly Me to the Moon. Use the2000original provisionally and examine the2007mix as context; exact version has not been specified. No publication/install authorized.
+
+Muted0.2.37 is the current local candidate: finite-width pluck/two passive palm contacts. Six other native models exact at3rates and accepted Clav/Thumb hashes preserved. All-target/SDK/full tests pass. Listening/MPC pending; no plugin installation/release. Owner explicitly authorized website guide publication with many original beginner diagrams, all7approaches and candid candidate/hardware status.
+
+
+LATEST2026-11-21: owner explicitly authorized0.3.0all-engine factory revoice/instrument-preserving Dice/public Release/site update/NVMe application. Supersedes earlier local-only restrictions for this project. Preserve all7engine sources and238IDs/names/order/art.57explicitrecipes in factory-sounds.json generate FactorySounds.h; SoundProfiles.h owns per-model musical bounds. Dice preserves selected model/Sync/velocity curve/playing/chords/locks, short attacks/bounded drift, one generated color and no random noise. Native/bothARM/SDK/full checks pass; all7final native outputs sample-identical to0.2.37 at3rates,57oldchunks exact. NVMe599file SHAreadback complete; current app restart/UI validation awaiting explicit answer for WarmCurrent/BlueHour. SD/SSD/otherprojects untouched. Release/site preparation is authorized, publication still pending completion.
+
+
+LATEST front Noise approval: owner chose MAIN A4=Noise instead of Bark, with Width staying C4. Keep Character4(Bark/Board/Mute) on MODEL; Mechanical remains TOUCH. Hiss/LockHiss append238/239, total240, prefix238exact. Separate continuous band-limited post-color/pre-Master floor,25mssmoothing, independent RNG;0retains engine output. Sparsebounded5–18%Dicehiss/locks/Undo, subtle dustyfactory5–9%; oldchunks defaultnewpairto0beforeload. Full organization HTMLproposal was not explicitly approved, so do not silently implement its wider relocation/help diagrams. Newcaptionrendering uses Georgia instead of mismatched DIN. Originalart/72px/44px/70px/presetnames/UIDpreserved.0.3.0notyetpublic; supersede its pre-Noisepackages/installproof with final240-parameterbuild. Owner restartauthorization persists for our unchanged freshQAproject during this update.
+
+2026-11-21 Felt Club 0.3.0 release authorization: owner approved stable publication/site updates/NVMe and restart/discard. Final MAIN A4 Noise; Character4 stays MODEL, Width C4. Appended Hiss/LockHiss at238/239; old238parameter prefix and57program identities exact. All7engine sources unchanged and21native comparisons sample-identical withNoise0. Native/bothARM/SDK/host19PASS;1539factory strikes/266individual-lock cases/448Dice/57legacy chunks/3rate noise checks pass. Final NVMe600files independently SHA256read back, all7pages and preset/Noise/locks/Dice/Undo remotely checked. Actual final screenshots/manual/7native previews prepared; broader organization mockup not approved/applied. SD/SSD/otherplugins untouched. Physical inputs/hardware audio/CPU/project recall remain unverified. Publication identifiers recorded separately after verification.
+
+Latest approved pad action order: A1 Roll Dice, A2 Previous Preset, A3 Next Preset; Groove A4 LOOP start only, physical MPC STOP ends playback. Preserve other approved pad rows and learned custom maps. See mpc-software/shared/ui/pad-actions.md. Candidate source only until fresh build/native/real MIDI/device evidence; prior screenshots do not verify this layout.
+
+2026-11-21 common A1Dice/A2Prev/A3Next device application complete on NVMe: see mpc-software/docs/pad-controls-2026-11-21/README.md. BothARM/native/SDK/criticalregressions and all installed hashes verified; Groove19ownerfiles retained. FreshQAtrack Chromatic+Continuous configured, physical confirmation pending. No new public release/site push here. Earlier pending-install notes are historical; preserve saved custom mappings and current QA while awaiting actual input.
+
+2026-11-21 latest owner override: remove all MIDI preset/Dice/action-Learn commands and PAD COMMANDS menus, preserve ordinary instrument playing. Groove alone retains six C Major A-bank performance pads (Fill A/B, Snare A/B, Hat A/B) and C-bank direct drums. Retain inert serialized command IDs and all old stored/learned data. Donut POLY name stays unchanged. Startup native-page selection is host-owned; only fresh MAIN/POLY and transient editor restore checks are currently established. See mpc-software/docs/pad-controls-2026-11-21/six-performance-policy.md; this supersedes earlier chromatic action-row policy. No new public release authorization.
+
+2026-11-22 CPU optimization0.3.2: no timbre/voice/mode-count/UI/246ID changes. Virgin-body sleep preserves pedal history, per-engine pitch caches invalidate on configure, piano coupling algebra/free-group loop keep passivity and modal order, next-due Strum dispatch, virgin FX skip with Chorus history/tails preserved. Native/bothARM/SDK/full regression+host19PASS0WARN0FAIL;77audio comparisons max<1e-6FS/SNR>100dB. Mac6-note FX/Drift/pedal reductions roughly60/58/26/25percent forTine/Wurli/Upright/Felt, not MPC measured percentages. NVMe600filesSHAexact, owner approved discard/restart completed. Actual owner playing/CPU confirmation pending. Otherplugins/SD/SSD untouched; no public release. Evidence:design/validation-0.3.2/.
+
+2026-11-22 owner chose to stop optimization and explicitly authorized stable releases, website updates, SD copies and Open MPC submissions for all current products. Felt0.3.2 owner subsequently reported MPC CPU peaks above100%; exact engine/workload was not isolated. Disclose unresolved hardware CPU limit. Do not resume CPU redesign. SD reads disconnected the MPC before any new SD writes; complete safe backup/preservation is required before replacement. SSD untouched. Publication is pending, not yet completed.

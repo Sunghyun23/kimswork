@@ -1,0 +1,10 @@
+{
+  "version": "0.3.2",
+  "drive": "NVMe",
+  "files": 600,
+  "sha256_readback": "all exact",
+  "sdk": "febd2ca5bd9eb16c4a412837196e145566bc981b",
+  "restart": "owner explicitly approved discard/restart; SDK reports running again",
+  "owner_audio_cpu_confirmation": "pending owner playing",
+  "other_plugins_sd_ssd": "untouched"
+}

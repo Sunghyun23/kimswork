@@ -1,3 +1,7 @@
+## 1.15.2 — common footer candidate (2026-11-20)
+
+Common footer on seven pages; compact browsing preserves70px chord pads. CHORD rows/utilities reflow. RETRIG retained.399parameter declarations/Q-Link targets/DSP unchanged. Shared coordinates and scopes: mpc-software/shared/ui/README.md. Older layouts below are historical. Public1.15.0unchanged.
+
 ## 2026-11-19 — local 1.14.2 selector alignment
 
 ## 1.15.0 — Phase and eight waves (current)

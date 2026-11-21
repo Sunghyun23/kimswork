@@ -1,0 +1,49 @@
+{
+  "engine_version": "0.2.4",
+  "source": "tools/calibration/fit_demo_voicing.py integer harmonics1\u201316 versus PhysicalVoice.h mode ratios",
+  "checks": [
+    {
+      "note": 36,
+      "mode_ratio": 6.267,
+      "distance_to_compared_harmonic_hz": 17.46350648381498,
+      "mask_halfwidth_hz": 8,
+      "covered": false
+    },
+    {
+      "note": 36,
+      "mode_ratio": 17.55,
+      "distance_to_compared_harmonic_hz": 101.37990655398201,
+      "mask_halfwidth_hz": 8,
+      "covered": false
+    },
+    {
+      "note": 60,
+      "mode_ratio": 6.267,
+      "distance_to_compared_harmonic_hz": 69.85402593525993,
+      "mask_halfwidth_hz": 10.465022612023946,
+      "covered": false
+    },
+    {
+      "note": 60,
+      "mode_ratio": 17.55,
+      "distance_to_compared_harmonic_hz": 405.51962621592804,
+      "mask_halfwidth_hz": 10.465022612023946,
+      "covered": false
+    },
+    {
+      "note": 72,
+      "mode_ratio": 6.267,
+      "distance_to_compared_harmonic_hz": 139.70805187051985,
+      "mask_halfwidth_hz": 20.93004522404789,
+      "covered": false
+    },
+    {
+      "note": 72,
+      "mode_ratio": 17.55,
+      "distance_to_compared_harmonic_hz": 811.0392524318561,
+      "mask_halfwidth_hz": 20.93004522404789,
+      "covered": false
+    }
+  ],
+  "scope": "Analysis finding only; runtime unchanged"
+}

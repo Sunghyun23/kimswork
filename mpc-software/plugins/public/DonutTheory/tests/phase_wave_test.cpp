@@ -5,7 +5,7 @@
 static float circular(float x){return x-std::floor(x);}
 static void quiet(Rig&m){m.p->setProgram(0);for(int k:{kSub,kNoise,kFM,kTone,kDepth,kLfo2Depth,kDrift,kMotion,kVibrato,kChorus,kDelay,kSpace,kTremDepth,kOscFine1,kOscFine2,kOscTune1,kOscTune2})m.p->set(k,0);m.p->set(kWave1Full,0);m.p->set(kWave2Full,0);m.p->set(kVoiceMode,2);m.block();}
 int main(){
- static_assert(kOscPhase==391&&kNumParams==399,"append-only phase palette");
+ static_assert(kOscPhase==391&&kCommandPads==399&&kNumParams==405,"append-only phase palette");
  for(double sr:{44100.,48000.,96000.})for(int wave=0;wave<4;++wave)for(float hz:{55.f,440.f,11000.f}){donut::ExpandedOscillator x;mpc::dsp::PolyBlepOsc b;mpc::dsp::WavetableSine a;x.setSampleRate(sr);b.setSampleRate(sr);a.setSampleRate(sr);x.setWave(wave,false);b.setWave(wave);x.setFrequency(hz);b.setFrequency(hz);a.setFrequency(std::min(hz,float(sr*.49)));x.setPulseWidth(.31);b.setPulseWidth(.31);x.resetPhase(.23);b.resetPhase(.23);a.resetPhase(.23);for(int n=0;n<8192;++n){float expected=wave==0?a.process(.017f):b.process();assert(x.process(.017f)==expected);}}
  std::cout<<"PASS original4oscillator paths sample-identical at3rates x3frequencies including FM/PW\n";
  {std::set<std::array<int,128>>seen;for(int wave=0;wave<8;++wave){donut::ExpandedOscillator x;x.setSampleRate(48000);x.setWave(wave,false);x.setFrequency(375);x.setPulseWidth(.3);x.resetPhase(0);std::array<int,128>fingerprint{};double energy=0;for(int n=0;n<8192;++n){float sample=x.process();assert(std::isfinite(sample)&&std::abs(sample)<2);if(n>=4096)energy+=sample*sample;if(n>=4096&&n<4224)fingerprint[n-4096]=std::lround(sample*10000);}assert(energy>10);seen.insert(fingerprint);}assert(seen.size()==8);}

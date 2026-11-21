@@ -1,15 +1,18 @@
-# Groove Dice 1.9.0
+# Groove Dice 1.11.0
 
-Neo-soul and hip-hop drums for MPC: generate a one-bar groove, perform musical fills and rolls, then capture your take as editable MIDI.
+Neo-soul and hip-hop drums with musical grooves, original sounds and independent expansion packs.
 
-- PERFORM uses the first native MAIN/PERFORM key. Bank B1–B4: snare rolls; B5–B8: fills; B9–B12: hat rolls; B13: LOOP; B14: STOP. B15/B16are unused. A-bank direct drums remain unchanged.
-- One press plays a complete selected1/2/4-beat phrase ending at a bar boundary. Late presses wait for the next valid ending. Early release never truncates it; recorded fills retain their full stored length.
-- Phrase-based random generation uses rhythmic cells, rests, strong/weak accents and restrained grace hits. Fills keep the main kick motif and2/4snare anchors, adding coherent snare/tom/perc replies. Hat rolls replace the automatic hat/ride/bell lane during their phrase.
-- Rate/Velocity/Humanize/Length share four selected-slot Screen Q-Links. All twelve slots have locks and explicit GENERATE. MAIN Dice changes the main groove/controls and configured kit choices, preserving stored performance slots and FX. PERFORM Dice regenerates its unlocked twelve slots only. Each screen has its own Undo; recordings/edits lock automatically.
-- MAIN has sixteen value padlocks, sixteen RULE styles per part and24straight/dotted/triplet/fill/roll hat rhythms. Hat Rhythm/Open Hat/Ride/Crash stay on MAIN; Drive/Dust/real stereo Room reverb stay on FX.
-- Four kick/snare layers, linked hats, a percussion ensemble and independent Ride/Crash/Bell. SOUND1/2=Sample/Level/Tune/Shift; SOUND2/2=Start/Decay/LowCut/HighCut, with48px page arrows, REV on both pages and independent polarity on page2.
-- Choose sounds from This Pack, All Packs or up to64selected kits. Kit/role/layer protection, user kits, MIDI learn, sample preview and eight stereo output pairs remain available.
-- CAPTURE stores actual generated/direct drum notes; EXPORT MIDI writes a960PPQ SMF for import into MPC. Performance trigger keys are consumed. Live plugin MIDI output to the sequencer is unavailable.
+## 1.11.0 — six performance pads, immediate Dice
+
+MAIN Dice changes the eligible main groove, controls and configured kit choices immediately. Stored performances and master FX stay unchanged. PERFORM Dice regenerates only its six visible unlocked slots: Fill A/B, Snare Roll A/B and Hat Roll A/B. Recorded/edited fills lock automatically. Each screen has its own Undo. Amount 0 leaves generation unchanged. GENERATE explicitly replaces the selected slot.
+
+Default physical performance inputs fit one C Major octave: **A1 Fill A (24), A2 Fill B (26), A3 Snare Roll A (28), A4 Snare Roll B (29), A5 Hat Roll A (31), A6 Hat Roll B (33)**. Numbers are MIDI notes, not automatic bank detection. Notes mode/root/scale affect actual incoming notes; use slot Learn for another layout. No physical preset, Dice, LOOP or STOP commands remain. Use the screen PLAY LOOP toggle or MPC transport.
+
+Direct drums default to **C1–C8: Kick, Snare, Closed Hat, Open Hat, Clap, Tom, Cymbal, Perc**, MIDI **72/74/76/77/79/81/83/84**. ROUTING can match another layout without changing MPC settings. Fill/roll presses schedule the complete chosen length ending at a bar boundary. A late press waits for the next valid ending; releasing early does not truncate it.
+
+Old four-slot recordings, hidden C/D sequences and custom learned notes are retained for compatibility. The simplified PERFORM page and its bulk Dice expose only A/B of each family. First 918 parameter declarations remain in place; six retired action IDs are inert compatibility data, for 924 total. They cannot enable old MIDI action commands.
+
+The owner confirmed the supplied six-pad/startup/menu/command-removal checklist on MPC XL / OS 3.10.1.12. Native/both-ARM/SDK, full regressions and the final host run (19 PASS, 0 WARN, 0 FAIL using direct-drum notes 72/74/76) pass. This does not certify every hardware route, physical encoder, full project recall or worst-case CPU.
 
 ## Install and update
 
@@ -19,9 +22,7 @@ Preserve **Content/Expansions** and **Content/Captures** during manual updates. 
 
 ## Compatibility and verification
 
-Vendor kim/UID KpGy. First917parameter declarations remain exact;PerformUndo appends for918total. Original fill/snare state layouts are retained; a separate suffix stores new hat sequences. Known default LOOP/STOP62/64move to69/71; custom learned mappings remain. A new hat slot conflicting with a retained mapping shows LEARN PAD until assigned. The plugin never changes MPC pad/scale settings. Older engines cannot retain the new settings.
-
-Native/ARM32/ARM64, SDK validation, complete engine/UBSan/allocation/state/skin/expansion/VST suites pass; host simulator19PASS/0WARN/0FAIL. Actual MPC XL/OS3.10.1.12 remote tests verify the twelve-slot UI, hat playback/end, editing, locks/Dice and a55-note balanced MIDI export. The previous B1/B3physical confirmation remains targeted; fresh complete physical-pad/Q-Link, hardware-audio, latency/route and worst-case CPU certification are not implied. Signed Shift retains a30msbaseline latency. See VALIDATION.md and the [performance specification](../../../docs/plugins/groove-dice/performance.md).
+Vendor kim / UID KpGy; 924 stable parameter declarations. Retired action IDs remain inert. Existing custom note maps, hidden legacy slot data and recordings are retained. Native/both-ARM/SDK/full regressions and host19 PASS/0 WARN/0 FAIL pass. Owner six-pad acceptance covers the current MPC XL / OS3.10.1.12 checklist, not all hardware audio/CPU/project-recall conditions. Signed Shift retains a30ms baseline latency.
 
 ## Create packs
 

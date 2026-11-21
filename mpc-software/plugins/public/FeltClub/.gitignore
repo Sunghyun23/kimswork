@@ -1,0 +1,14 @@
+build/
+dist/
+__pycache__/
+# Keep local iteration audio, private reference analysis and historical diagnostics local.
+design/audio-*/
+design/validation-*/
+design/velocity-audit-*/
+design/device-*/
+design/development-history.md
+!design/validation-0.3.0/
+!design/device-0.3.0/
+
+!design/validation-0.3.2/
+!design/device-0.3.2/

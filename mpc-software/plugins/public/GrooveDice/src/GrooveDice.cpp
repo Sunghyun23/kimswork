@@ -3,6 +3,7 @@
 // Signal: samples -> role/choke voices -> part gain/pan -> drive/dust/room/duck -> main or stereo stems.
 // Sequencer uses host PPQ with block-local sample offsets; physical/touch input alone feeds fill recording.
 #include "mpc_plugin.h"
+#include "../../../../shared/ui/PadCommands.h"
 #include "dsp/wav.h"
 #include "Parameters.h"
 #include "SoundBank.h"
@@ -53,9 +54,10 @@ public:
  std::atomic<int> lastAction{-1};std::atomic<unsigned> actionCount{0};
  std::atomic<unsigned> diceRolls{0};std::atomic<int> diceResult{0};std::atomic<bool> factoryDirty{false};
  std::atomic<int> recordState{0},recorded{0},fired{0};
+ kimswork::PadCommands padCommands;
  std::atomic<float> position{0},currentTempo{92};std::atomic<int>lastMidiNote{-1},lastMidiRole{-1};
 
- static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Groove Dice";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','p','G','y');i.version=10900;i.latencySamples=1323;i.isInstrument=true;i.numInputs=0;i.numOutputs=16;return i;}
+ static mpc::PluginInfo description(){mpc::PluginInfo i;i.name="Groove Dice";i.vendor="kim";i.uniqueId=MPC_FOURCC('K','p','G','y');i.version=11100;i.latencySamples=1323;i.isInstrument=true;i.numInputs=0;i.numOutputs=16;return i;}
  GrooveDice():mpc::Plugin(description()){
   declareParameters(*this);
   for(auto& n:lengths)n.store(4*PPQ);
@@ -92,7 +94,7 @@ public:
  #include "Performance.inc"
  void prepare(double rate,int)override{sr=rate;setLatency(int(std::llround(rate*.030)));for(auto&fx:roomFx)fx.prepare(rate);}
  void reset()override{resetPerformance();set(kUnlockDice,0);set(kRollFill,0);set(kRollFx,0);
-  hostRecordGate.reset();cymbalStart=-1;cymbalFillEnd=-1;for(auto&fx:roomFx)fx.reset();lastAutoBar=-1;budgets={};lastHat=-1e12;for(auto& v:voices)deactivate(v);lastEnd=-1e12;lastRawEnd=-1e12;transportOffset=0;previewPpq=0;fillStart=-1;fillEnd=-1;recStart=-1;recEnd=-1;recordState.store(0);recorded.store(0);ducker=0;hitCounter=lastKickHit=0;auditionPending=-1;mixGain.fill(1);
+  padCommands.reset();hostWasPlaying=false;hostRecordGate.reset();cymbalStart=-1;cymbalFillEnd=-1;for(auto&fx:roomFx)fx.reset();lastAutoBar=-1;budgets={};lastHat=-1e12;for(auto& v:voices)deactivate(v);lastEnd=-1e12;lastRawEnd=-1e12;transportOffset=0;previewPpq=0;fillStart=-1;fillEnd=-1;recStart=-1;recEnd=-1;recordState.store(0);recorded.store(0);ducker=0;hitCounter=lastKickHit=0;auditionPending=-1;mixGain.fill(1);
   // Saved editor context is restored; a newly created instance defaults to MAIN.
   for(int i=0;i<kParamCount;++i)last[i]=getNormalised(i);
   lastPackFilter=getInt(kPackFilter);for(int q=0;q<5;++q)catalogSeen[q].store(restoringHasX?getInt(q==0?kXKit:kXSoundKick+q-1):-1);lastLibraryKind=getInt(kLibraryKind);lastKit=getInt(kKit);lastSlot=getInt(kFillSlot);lastLength=getInt(kFillLength);lastSelected=getInt(kNoteSelect);
@@ -187,6 +189,7 @@ public:
   if(i==kLibraryInfo){int kind=getInt(kLibraryKind),folder=getInt(kXLibraryFolder),count=browserCount();out=std::string(kind<3&&folder==0?"FOLDERS ":"FILES ")+std::to_string(getInt(kXLibraryPage)+1)+" / "+std::to_string(std::max(1,(count+7)/8))+"  |  "+std::to_string(count);return true;}
   if(i>=kXSample0&&i<=kXSample7){int id=getInt(i);out=id>0&&id<=int(library.entries.size())?sampleCaption(id,30):"Core Sounds";return true;}
   if(i==kXBeat||i==kXGroove){int k=i==kXBeat?3:4,id=getInt(i);out=id>0&&id<=int(library.categories[k].size())?shortCaption(library.entries[library.categories[k][id-1]].name,26):"OFF";return true;}
+  if(i==kCommandInfo){int learn=getInt(kCommandLearn);if(learn)out=std::string("PRESS PAD: ")+(learn==1?"PREV":learn==2?"NEXT":"DICE");else out="PREV "+std::to_string(getInt(kCmdPrevNote))+" / NEXT "+std::to_string(getInt(kCmdNextNote))+" / DICE "+std::to_string(getInt(kCmdDiceNote));return true;}
   if(i==kBankInfo){out=library.loaded?"LIBRARY "+std::to_string(library.categories[0].size()+library.categories[1].size()+library.categories[2].size())+" WAV / "+std::to_string(library.categories[3].size()+library.categories[4].size())+" MIDI":bank.loaded?"BANK · 64 SOUNDS":"BANK MISSING · TEST SOUNDS";for(int r=0;r<8;++r)if(getInt(kXSample0+r)>0&&library.active[r].load()!=getInt(kXSample0+r))out=library.failed[r].load()?"LIBRARY SAMPLE ERROR":"LOADING SOUND";for(auto& m:missingSample)if(m.load())out="MISSING SAMPLE";if(library.expansionErrors>0)out="EXPANSION LOAD ERROR / "+std::to_string(library.expansionErrors);if(lastMidiNote.load()>=0){static const char* role[]={"KICK","SNARE","CLOSED HAT","OPEN HAT","CLAP","TOM","CYMBAL","PERC"};int r=lastMidiRole.load();out=std::string(library.loaded?"LIBRARY | ":bank.loaded?"BANK64 | ":"TEST | ")+std::to_string(lastMidiNote.load())+" "+(r>=0?role[r]:"UNASSIGNED");}bool missing=false;for(auto&m:missingSample)missing|=m.load();if(missing)out="MISSING SAMPLE";else if(orphanMidi[0].load()>0)out="MISSING PATTERN";else if(orphanMidi[1].load()>0)out="MISSING GROOVE";return true;}
   if(i>=kQ1&&i<=kQ16){int t=proxyTarget(i-kQ1);if(t<0){out="--";return true;}if(isRuleSelector(t)||t>=kRuleKickStyle&&t<=kRulePercStyle||t>=kXQKit&&t<=kXQPerc||t>=kXSoundKick&&t<=kXSoundPerc||t==kHatRhythmFull)return formatValue(t,get(t),out);out=param(t).display(get(t));if(!param(t).unit.empty())out+=" "+param(t).unit;return true;}
   if(i==kStatus){static const char* status[]={"READY","COUNT-IN","RECORDING","RECORDED","QUEUED","PLAYING","FULL"};out=status[mpc::clamp(recordState.load(),0,6)];return true;}
@@ -198,11 +201,15 @@ public:
   return false;
  }
  void process(mpc::ProcessContext& c)override{
+
   markRenderThread();
   std::array<int,groove::Library::Channels> desired{};for(int r=0;r<8;++r)desired[r]=getInt(kXSample0+r);for(int slot=0;slot<6;++slot)desired[8+slot]=layerMissing[slot].load()?0:getInt(kL0Sample+slot*LayerFields);for(int kind=0;kind<3;++kind)desired[14+kind]=(cymbalWanted(kind)||getBool(kCymbalView))?cymbalSource(kind):0;library.poll(desired);
   sr=c.sampleRate;const double bpm=c.transport.tempoValid?mpc::clamp(c.transport.bpm,20.,300.):get(kPreviewBpm);
   currentTempo.store(float(bpm));
   const double step=bpm/(60.*sr);
+  bool stoppedByHost=c.transport.valid&&hostWasPlaying&&!c.transport.playing;
+  if(c.transport.valid)hostWasPlaying=c.transport.playing;
+  if(stoppedByHost)stopAllPerformance(performanceNow);
   bool hostRunning=getBool(kFollow)&&c.transport.playing&&c.transport.ppqValid;
   // Do not let Preview bypass host record pre-roll. Keep the raw host
   // block origin when suspended; the release/seek starts at its real position.
@@ -272,7 +279,7 @@ public:
   if(!loading&&getInt(kXSoundPage)>pages){internal=true;set(kXSoundPage,pages);internal=false;}
   for(int row=0;row<8;++row)if(command(kSoundPick0+row)){int visible=getInt(kXSoundPage)*8+row;const auto&list=soundItems(sg);int index=visible<int(list.size())?list[visible]+1:0;if(index>0){internal=true;set(kXSoundKick+sg,index);set(kSoundOpen,0);internal=false;soundRequests[sg].store(float(index));soundDirty.fetch_or(1u<<sg);}}
   unsigned sd=soundDirty.exchange(0);for(int g=0;g<4;++g)if(sd&(1u<<g))applySound(g,int(std::lround(soundRequests[g].load())));
-  if(command(kRoll)){if(run){pendingRoll.store(true);rollAt=std::ceil((start+1e-8)/4)*4;}else{pendingRoll.store(false);snapshotUndo(true);roll();liveDirty.store(0);}}
+  if(command(kRoll)){pendingRoll.store(false);rollAt=-1;snapshotUndo(true);roll();liveDirty.store(0);}
   if(pendingRoll.load()&&run&&rollAt>=start-1e-8&&rollAt<end){snapshotUndo(true);roll();liveDirty.store(0);pendingRoll.store(false);rollAt=-1;}
   if(command(kUndo)){pendingRoll.store(false);liveDirty.store(0);if(haveUndo)restoreUndo();}
   if(command(kKeep)){keep=true;}
@@ -432,7 +439,7 @@ private:
  std::array<std::atomic<bool>,kParamCount> changed{};std::array<std::atomic<uintptr_t>,8> renderThreads{};std::atomic<bool>renderOverflow{false},displayPending{false},restoring{false};std::atomic_flag flushing=ATOMIC_FLAG_INIT;int lastUiState=-1,lastUiCount=-1,lastUiBar=-1;
  std::array<int,16>proxySeenTarget{};std::array<float,16>proxySeenValue{};
  std::array<float,kParamCount> last{};std::atomic<unsigned> noteDirty{0},liveDirty{0};std::array<std::atomic<int>,4>lastRuleStyle{{1,1,2,2}};std::array<float,kParamCount> undoValues{};std::array<uint32_t,7*MaxNotes*2+7> undoNotes{};bool haveUndo=false;
- std::array<groove::RoomReverb,8> roomFx;float low[8][2]{},high[8][2]{},master=.7f,ducker=0,driveS=.1f,dustS=.1f,roomS=.08f,duckS=.15f;double sr=44100,previewPpq=0,lastEnd=-1e12,lastRawEnd=-1e12,transportOffset=0,modPhase=0;bool wasRunning=false;std::atomic<bool> keep{false};
+ std::array<groove::RoomReverb,8> roomFx;float low[8][2]{},high[8][2]{},master=.7f,ducker=0,driveS=.1f,dustS=.1f,roomS=.08f,duckS=.15f;double sr=44100,previewPpq=0,lastEnd=-1e12,lastRawEnd=-1e12,transportOffset=0,modPhase=0;bool wasRunning=false,hostWasPlaying=false;std::atomic<bool> keep{false};
  double fillStart=-1,fillEnd=-1,recStart=-1,recEnd=-1;int lastLibraryKind=-1,activeFill=0,recSlot=0,recLength=4*PPQ,recMode=0,lastKit=-1,lastSlot=-1,lastSelected=-1,lastLength=-1,lastAutoBar=-1;bool recCleared=false;std::atomic<uint32_t> randomState{0x784571};
  struct Event{int offset,role,velocity;bool input;int gate;};std::array<Event,512>events{};int eventCount=0;
  static int lengthForChoice(int n){static const int l[]={1,2,4,8,16};return l[mpc::clamp(n,0,4)]*PPQ;}

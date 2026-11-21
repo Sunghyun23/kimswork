@@ -4,7 +4,7 @@ from pathlib import Path
 P=Path(__file__).resolve().parents[1];S=P/'skins';pd=json.loads((S/'TUI.json').read_text())['pageData'];q=json.loads((S/'Q-Links.json').read_text());params=json.loads((P/'parameters.json').read_text());ix={p['key']:i for i,p in enumerate(params)}
 defs={e['key']:e['value']for e in pd['componentDefinitions']['localComponentDefinitions']}
 old=json.loads((P/'tests/legacy-353-parameters.json').read_text());assert params[:353]==old
-assert len(params)==399 and len({p['key']for p in params})==399
+assert len(params)==405 and len({p['key']for p in params})==405
 assert [t['tabName']for t in pd['tabs']]==['POLY','MONO','OSC','ENV','MOD','FX','CHORD']
 assert [(t['fnKeyIndex'],t['fnKeySubIndex'])for t in pd['tabs']]==[(0,0),(1,0),(2,0),(3,0),(4,0),(5,0),(0,1)]
 front=[['PerfWaveFull','PerfPitch','PerfLevel','PerfCharacter'],['Cutoff','Resonance','BodyTone','Drive'],['PerfLfoRate','PerfLfoDepth','PerfLfoDelay','PerfLfoTarget']]
@@ -114,3 +114,6 @@ print('PASS:native value labels inherit bound Data without recursive self-aliase
 
 assert params[:391]==json.loads((P/'tests/legacy-391-parameters.json').read_text())
 print('PASS exact391legacy metadata; eight-wave fronts/detail; shared Drift/Phase relay')
+
+assert params[:399]==json.loads((P/"tests/legacy-399-parameters.json").read_text())
+assert [params[ix[k]]["default"]for k in ["CmdDiceNote","CmdPrevNote","CmdNextNote"]]==[24,25,26]

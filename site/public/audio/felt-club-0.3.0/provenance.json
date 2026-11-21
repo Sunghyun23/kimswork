@@ -1,0 +1,76 @@
+{
+  "version": "0.3.0",
+  "native_sha256": "ea071ca5cb8f31c71170d81d0e8ef02d09e7f7bfefdbcf02e0967a633573627b",
+  "bpm": 88,
+  "note_ons": 15,
+  "velocity_range": [
+    48,
+    72
+  ],
+  "post": "one fixed gain per take toward -24dBFS RMS; peak at most0.8;150ms final fade; AAC128kbps",
+  "takes": [
+    {
+      "engine": "tine",
+      "program": 2,
+      "name": "Sunday Velvet",
+      "role": "Soft chord bed",
+      "raw_peak_dbfs": -24.401988591870747,
+      "fixed_gain_db": 16.39838796076037,
+      "aac_sha256": "9bce7d920bfbd4ef033736958b871b198b92a817779428f954fb9084af61d2c2"
+    },
+    {
+      "engine": "wurli",
+      "program": 9,
+      "name": "Copper Wurli",
+      "role": "Dry reed",
+      "raw_peak_dbfs": -19.817883614039587,
+      "fixed_gain_db": 13.221337515775474,
+      "aac_sha256": "68f8c0a5cc6eaad4cc3786d83ad7b2f92c40e41a432769e10a95bd265731d061"
+    },
+    {
+      "engine": "upright",
+      "program": 17,
+      "name": "Sunday Upright",
+      "role": "Approved dry upright",
+      "raw_peak_dbfs": -22.671291811974807,
+      "fixed_gain_db": 19.86371436619545,
+      "aac_sha256": "647d8695faf025ed9eb5481560ed6ff111a1552d4d82d84330f07d0c1e5be247"
+    },
+    {
+      "engine": "felt",
+      "program": 27,
+      "name": "Moss Chords",
+      "role": "Soft chorus bed",
+      "raw_peak_dbfs": -23.355431394139373,
+      "fixed_gain_db": 19.867575194468408,
+      "aac_sha256": "fec105ca9b790b3428a2253e2a5eb8bb29644ef91f24016cbfa5d338e8d93f0a"
+    },
+    {
+      "engine": "clav",
+      "program": 33,
+      "name": "Dusty Clav",
+      "role": "Dry dark clav",
+      "raw_peak_dbfs": -21.055161608833583,
+      "fixed_gain_db": 18.395804011042994,
+      "aac_sha256": "1492b8e5277a6a5d2deca5017a0447927214ff1986c5cc3187d5c80f39ffd8a2"
+    },
+    {
+      "engine": "muted",
+      "program": 47,
+      "name": "Night Pocket",
+      "role": "Eighth-note echo and room",
+      "raw_peak_dbfs": -16.997299185753086,
+      "fixed_gain_db": 15.059098925591956,
+      "aac_sha256": "068d7d5d1e782f752b739050c6bfde230bc559d9350b5fa7a951ee5f2c467f0b"
+    },
+    {
+      "engine": "thumb",
+      "program": 49,
+      "name": "Thumb Notes",
+      "role": "Dry rounded thumb",
+      "raw_peak_dbfs": -19.499877100615624,
+      "fixed_gain_db": 17.33055332879415,
+      "aac_sha256": "786beeac6fe00ccf992ea1d43d6f348fea1044115909934cd744fa08db262691"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "platform": "native macOS arm64, clang++ -O3; not MPC CPU measurement",
+  "conditions": "48000Hz/128frames, FX25%, Drift9%, sustain pedal, best of3 x1200blocks after200warmup blocks",
+  "rows": [
+    {
+      "model": 0,
+      "voices": 6,
+      "before_ms": 81.5938,
+      "after_ms": 32.5393,
+      "reduction_pct": 60.12
+    },
+    {
+      "model": 0,
+      "voices": 12,
+      "before_ms": 111.079,
+      "after_ms": 58.0427,
+      "reduction_pct": 47.75
+    },
+    {
+      "model": 1,
+      "voices": 6,
+      "before_ms": 84.1459,
+      "after_ms": 35.1322,
+      "reduction_pct": 58.25
+    },
+    {
+      "model": 1,
+      "voices": 12,
+      "before_ms": 116.194,
+      "after_ms": 62.3244,
+      "reduction_pct": 46.36
+    },
+    {
+      "model": 2,
+      "voices": 6,
+      "before_ms": 423.2,
+      "after_ms": 312.662,
+      "reduction_pct": 26.12
+    },
+    {
+      "model": 2,
+      "voices": 12,
+      "before_ms": 811.259,
+      "after_ms": 681.599,
+      "reduction_pct": 15.98
+    },
+    {
+      "model": 3,
+      "voices": 6,
+      "before_ms": 418.96,
+      "after_ms": 315.331,
+      "reduction_pct": 24.73
+    },
+    {
+      "model": 3,
+      "voices": 12,
+      "before_ms": 796.362,
+      "after_ms": 681.032,
+      "reduction_pct": 14.48
+    },
+    {
+      "model": 4,
+      "voices": 6,
+      "before_ms": 90.8508,
+      "after_ms": 41.1992,
+      "reduction_pct": 54.65
+    },
+    {
+      "model": 4,
+      "voices": 12,
+      "before_ms": 129.151,
+      "after_ms": 73.5166,
+      "reduction_pct": 43.08
+    },
+    {
+      "model": 5,
+      "voices": 6,
+      "before_ms": 129.951,
+      "after_ms": 81.5698,
+      "reduction_pct": 37.23
+    },
+    {
+      "model": 5,
+      "voices": 12,
+      "before_ms": 203.826,
+      "after_ms": 152.495,
+      "reduction_pct": 25.18
+    },
+    {
+      "model": 6,
+      "voices": 6,
+      "before_ms": 74.381,
+      "after_ms": 24.2675,
+      "reduction_pct": 67.37
+    },
+    {
+      "model": 6,
+      "voices": 12,
+      "before_ms": 90.2743,
+      "after_ms": 40.8278,
+      "reduction_pct": 54.77
+    }
+  ]
+}
