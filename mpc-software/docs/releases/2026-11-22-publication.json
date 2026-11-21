@@ -1,0 +1,345 @@
+{
+  "date": "2026-11-22",
+  "source": "94cd887bc25dfaaae31bebf408dd5ef46cae6ceb",
+  "releases": [
+    {
+      "tag": "felt-club/v0.3.2",
+      "id": 453791735,
+      "url": "https://github.com/Sunghyun23/kimswork/releases/tag/felt-club/v0.3.2",
+      "source": "94cd887bc25dfaaae31bebf408dd5ef46cae6ceb",
+      "assets": [
+        {
+          "name": "felt-club-0.3.2-mpc.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc.zip",
+          "sha256": "7b18c422aecbe19cb3b4926f63df9ad6a4fd5cedd8f17006f9409a9517ea7e62"
+        },
+        {
+          "name": "felt-club-0.3.2-mpc.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc.zip.sha256",
+          "sha256": "aee49a609f107943156b701602bbf321c3fdf2977ed95cc01a37607575bef615"
+        },
+        {
+          "name": "felt-club-0.3.2-mpc-aarch64.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc-aarch64.zip",
+          "sha256": "8282ff92214b04fb4a7a3e5b28cd0ccea9f1a119cd9b1fbb79cc95dfe08fea72"
+        },
+        {
+          "name": "felt-club-0.3.2-mpc-aarch64.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc-aarch64.zip.sha256",
+          "sha256": "5bc8c994b3ef489f93aa0fe74acd58c7a2095e72721585d0ef1e678b35f8ff39"
+        },
+        {
+          "name": "felt-club-0.3.2-mpc-armv7.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc-armv7.zip",
+          "sha256": "04698e26854f913af0f5d567d2114d59cebeef357944c23f6277e94160e05e49"
+        },
+        {
+          "name": "felt-club-0.3.2-mpc-armv7.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc-armv7.zip.sha256",
+          "sha256": "5d640c4c7e844faa529064d7798a9ca9eb796d84d1c1821035352801f2d87f52"
+        }
+      ]
+    },
+    {
+      "tag": "donut-theory/v1.15.4",
+      "id": 453791860,
+      "url": "https://github.com/Sunghyun23/kimswork/releases/tag/donut-theory/v1.15.4",
+      "source": "94cd887bc25dfaaae31bebf408dd5ef46cae6ceb",
+      "assets": [
+        {
+          "name": "donut-theory-1.15.4-mpc.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc.zip",
+          "sha256": "5ecc6f9889de91e4aa6763c19c6c1248065b721447152ca36a7c9f4c64e99c07"
+        },
+        {
+          "name": "donut-theory-1.15.4-mpc.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc.zip.sha256",
+          "sha256": "92b055918e9dd30de3c253203e4a1a03a880942bf3c807067b1bd5e03f147817"
+        },
+        {
+          "name": "donut-theory-1.15.4-mpc-aarch64.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc-aarch64.zip",
+          "sha256": "c7a76e46020e16cda055fd0ab2903a1205582ba13ffd8ace63eefebeb1658eac"
+        },
+        {
+          "name": "donut-theory-1.15.4-mpc-aarch64.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc-aarch64.zip.sha256",
+          "sha256": "f9d64090530490b632f5925c77142c0b5213b03862f1a179d3faff6758462594"
+        },
+        {
+          "name": "donut-theory-1.15.4-mpc-armv7.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc-armv7.zip",
+          "sha256": "b9a1832875ed01057b6c27f8b9780b7e0efad389bafe91976d8707b5254dd55d"
+        },
+        {
+          "name": "donut-theory-1.15.4-mpc-armv7.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc-armv7.zip.sha256",
+          "sha256": "7be4f6481df31f08112e61f3873b6a5aebd6a2636db377e30f1935938454f0af"
+        }
+      ]
+    },
+    {
+      "tag": "groove-dice/v1.11.0",
+      "id": 453791995,
+      "url": "https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.11.0",
+      "source": "94cd887bc25dfaaae31bebf408dd5ef46cae6ceb",
+      "assets": [
+        {
+          "name": "groove-dice-1.11.0-mpc.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc.zip",
+          "sha256": "4cfa191161245c791cf0be4e1fafed50dbdd9b39d331d3747b9328f7ce6a732f"
+        },
+        {
+          "name": "groove-dice-1.11.0-mpc.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc.zip.sha256",
+          "sha256": "f54600df77f1b0f0b406fbdbcee3440eaecc12820b92fa617e3be3e2cc26ebfd"
+        },
+        {
+          "name": "groove-dice-1.11.0-mpc-aarch64.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc-aarch64.zip",
+          "sha256": "d3edf78d136f0c72170215ca2694c88cd842818250bc9aa2748eea7417b9e476"
+        },
+        {
+          "name": "groove-dice-1.11.0-mpc-aarch64.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc-aarch64.zip.sha256",
+          "sha256": "0b87f9b8dc5dcef4eb3b2262b32cde3e9935c23a8c1a90bd9548ec6f2141bbd2"
+        },
+        {
+          "name": "groove-dice-1.11.0-mpc-armv7.zip",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc-armv7.zip",
+          "sha256": "e095ddac11a2e1024f3868cada5b518e2b552e6b46500636c3041f58f9f9bcdc"
+        },
+        {
+          "name": "groove-dice-1.11.0-mpc-armv7.zip.sha256",
+          "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc-armv7.zip.sha256",
+          "sha256": "0f7604d335bb75ee605917f89df1356b0edc517f8836b1b9cfa2213a5c68a731"
+        }
+      ]
+    }
+  ],
+  "open_mpc": [
+    {
+      "slug": "felt-club",
+      "version": "0.3.2",
+      "number": 1073,
+      "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1073",
+      "head_sha": "dbece7a4b60b833e1a3b0d857e71358609afde78",
+      "branch": "catalog/felt-club-032",
+      "state": "open",
+      "merged": false,
+      "checks": [
+        {
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920687629/job/136895838532"
+        }
+      ]
+    },
+    {
+      "slug": "donut-theory",
+      "version": "1.15.4",
+      "number": 1074,
+      "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1074",
+      "head_sha": "4888f133cec8dbd49cd66f7be96a45d4fa96b983",
+      "branch": "catalog/donut-theory-1154",
+      "state": "open",
+      "merged": false,
+      "checks": [
+        {
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920693982/job/136895858682"
+        }
+      ]
+    },
+    {
+      "slug": "groove-dice",
+      "version": "1.11.0",
+      "number": 1075,
+      "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1075",
+      "head_sha": "499a6a78eefdad52c757fd6c8b7952f20f869f4c",
+      "branch": "catalog/groove-dice-1110",
+      "state": "open",
+      "merged": false,
+      "checks": [
+        {
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920697442/job/136895870078"
+        }
+      ]
+    },
+    {
+      "slug": "crate-press",
+      "version": "0.2.6",
+      "number": 1076,
+      "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1076",
+      "head_sha": "5e75e3bedc6b579ad848a78a1e3f048c3810b20d",
+      "branch": "catalog/crate-press-026",
+      "state": "open",
+      "merged": false,
+      "checks": [
+        {
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920703683/job/136895890514"
+        }
+      ]
+    }
+  ],
+  "package_checks": [
+    {
+      "path": "/private/tmp/final-release/final-portable/felt-club/felt-club-0.3.2-mpc-aarch64.zip",
+      "sha256": "8282ff92214b04fb4a7a3e5b28cd0ccea9f1a119cd9b1fbb79cc95dfe08fea72",
+      "id": "felt-club",
+      "version": "0.3.2",
+      "arch": "aarch64",
+      "user_data": [],
+      "validation": "OK: felt-club 0.3.2 (0 warnings)"
+    },
+    {
+      "path": "/private/tmp/final-release/final-portable/felt-club/felt-club-0.3.2-mpc-armv7.zip",
+      "sha256": "04698e26854f913af0f5d567d2114d59cebeef357944c23f6277e94160e05e49",
+      "id": "felt-club",
+      "version": "0.3.2",
+      "arch": "armv7",
+      "user_data": [],
+      "validation": "OK: felt-club 0.3.2 (0 warnings)"
+    },
+    {
+      "path": "/private/tmp/final-release/final-portable/donut-theory/donut-theory-1.15.4-mpc-aarch64.zip",
+      "sha256": "c7a76e46020e16cda055fd0ab2903a1205582ba13ffd8ace63eefebeb1658eac",
+      "id": "donut-theory",
+      "version": "1.15.4",
+      "arch": "aarch64",
+      "user_data": [],
+      "validation": "OK: donut-theory 1.15.4 (0 warnings)"
+    },
+    {
+      "path": "/private/tmp/final-release/final-portable/donut-theory/donut-theory-1.15.4-mpc-armv7.zip",
+      "sha256": "b9a1832875ed01057b6c27f8b9780b7e0efad389bafe91976d8707b5254dd55d",
+      "id": "donut-theory",
+      "version": "1.15.4",
+      "arch": "armv7",
+      "user_data": [],
+      "validation": "OK: donut-theory 1.15.4 (0 warnings)"
+    },
+    {
+      "path": "/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/open-mpc/1.11.0/groove-dice-1.11.0-mpc-aarch64.zip",
+      "sha256": "d3edf78d136f0c72170215ca2694c88cd842818250bc9aa2748eea7417b9e476",
+      "id": "groove-dice",
+      "version": "1.11.0",
+      "arch": "aarch64",
+      "user_data": [
+        "Content/Expansions",
+        "Content/Captures"
+      ],
+      "validation": "OK: groove-dice 1.11.0 (0 warnings)"
+    },
+    {
+      "path": "/Users/sunghyunkim/source/kimswork/mpc-software/plugins/public/GrooveDice/build/open-mpc/1.11.0/groove-dice-1.11.0-mpc-armv7.zip",
+      "sha256": "e095ddac11a2e1024f3868cada5b518e2b552e6b46500636c3041f58f9f9bcdc",
+      "id": "groove-dice",
+      "version": "1.11.0",
+      "arch": "armv7",
+      "user_data": [
+        "Content/Expansions",
+        "Content/Captures"
+      ],
+      "validation": "OK: groove-dice 1.11.0 (0 warnings)"
+    }
+  ],
+  "anonymous_download_checks": [
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc.zip",
+      "sha256": "7b18c422aecbe19cb3b4926f63df9ad6a4fd5cedd8f17006f9409a9517ea7e62"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc.zip.sha256",
+      "sha256": "aee49a609f107943156b701602bbf321c3fdf2977ed95cc01a37607575bef615"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc-aarch64.zip",
+      "sha256": "8282ff92214b04fb4a7a3e5b28cd0ccea9f1a119cd9b1fbb79cc95dfe08fea72"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc-aarch64.zip.sha256",
+      "sha256": "5bc8c994b3ef489f93aa0fe74acd58c7a2095e72721585d0ef1e678b35f8ff39"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc-armv7.zip",
+      "sha256": "04698e26854f913af0f5d567d2114d59cebeef357944c23f6277e94160e05e49"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/felt-club/v0.3.2/felt-club-0.3.2-mpc-armv7.zip.sha256",
+      "sha256": "5d640c4c7e844faa529064d7798a9ca9eb796d84d1c1821035352801f2d87f52"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc.zip",
+      "sha256": "5ecc6f9889de91e4aa6763c19c6c1248065b721447152ca36a7c9f4c64e99c07"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc.zip.sha256",
+      "sha256": "92b055918e9dd30de3c253203e4a1a03a880942bf3c807067b1bd5e03f147817"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc-aarch64.zip",
+      "sha256": "c7a76e46020e16cda055fd0ab2903a1205582ba13ffd8ace63eefebeb1658eac"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc-aarch64.zip.sha256",
+      "sha256": "f9d64090530490b632f5925c77142c0b5213b03862f1a179d3faff6758462594"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc-armv7.zip",
+      "sha256": "b9a1832875ed01057b6c27f8b9780b7e0efad389bafe91976d8707b5254dd55d"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/donut-theory/v1.15.4/donut-theory-1.15.4-mpc-armv7.zip.sha256",
+      "sha256": "7be4f6481df31f08112e61f3873b6a5aebd6a2636db377e30f1935938454f0af"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc.zip",
+      "sha256": "4cfa191161245c791cf0be4e1fafed50dbdd9b39d331d3747b9328f7ce6a732f"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc.zip.sha256",
+      "sha256": "f54600df77f1b0f0b406fbdbcee3440eaecc12820b92fa617e3be3e2cc26ebfd"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc-aarch64.zip",
+      "sha256": "d3edf78d136f0c72170215ca2694c88cd842818250bc9aa2748eea7417b9e476"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc-aarch64.zip.sha256",
+      "sha256": "0b87f9b8dc5dcef4eb3b2262b32cde3e9935c23a8c1a90bd9548ec6f2141bbd2"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc-armv7.zip",
+      "sha256": "e095ddac11a2e1024f3868cada5b518e2b552e6b46500636c3041f58f9f9bcdc"
+    },
+    {
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/groove-dice/v1.11.0/groove-dice-1.11.0-mpc-armv7.zip.sha256",
+      "sha256": "0f7604d335bb75ee605917f89df1356b0edc517f8836b1b9cfa2213a5c68a731"
+    }
+  ],
+  "site": {
+    "url": "https://kimswork.app",
+    "pages_run": 44920260518,
+    "conclusion": "success",
+    "responsive_cases": 66,
+    "local_reference_checks": 408,
+    "decoded_original_audio_previews": 7
+  },
+  "limits": {
+    "felt_cpu": "Owner reported MPC CPU peaks above100% after optimization; triggering engine/workload not isolated. Unresolved and publicly disclosed.",
+    "screenshots": "Felt MAIN actual0.3.2; Donut/Groove galleries and pinned OpenMPC images accurately identify earlier actual captures. New captures blocked by current disconnect.",
+    "sd": "No new SD writes. Official SDK export disconnected while reading Donut after only Crate backup completed. Preserve old card contents; no blind overwrite. SSD untouched. Copy and readback pending device reconnection.",
+    "hardware": "No new universal hardware audio/physical encoder/full recall/worst-case CPU certification.",
+    "crate_package": "Stable0.2.6unchanged. Current checker has one reviewed older-uninstall-template warning; use explicit -t for the actual VST2 Plugins directory when uninstalling."
+  }
+}
