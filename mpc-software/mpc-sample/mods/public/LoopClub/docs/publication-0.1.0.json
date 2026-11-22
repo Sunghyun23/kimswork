@@ -1,0 +1,114 @@
+{
+  "release_id": 454461570,
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.1.0",
+  "commit": "6cd778286ca8b2ae82edfd76c83e4bc8e9e7a4b1",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "loop-club-0.1.0-mpc-sample.zip",
+      "size": 585479,
+      "digest": "sha256:ed826ef9fd5039ea05c432931c5b0cfb6f5b22280dd419cff224263e216ae605"
+    },
+    {
+      "name": "loop-club-0.1.0-mpc-sample.zip.sha256",
+      "size": 97,
+      "digest": "sha256:a165227afecc06623a3fbb9a92069a3845d3c92a4b54f1d20395a315393dab4e"
+    }
+  ],
+  "anonymous_downloads": [
+    {
+      "name": "loop-club-0.1.0-mpc-sample.zip",
+      "anonymous_bytes_sha256": "ed826ef9fd5039ea05c432931c5b0cfb6f5b22280dd419cff224263e216ae605",
+      "match": true
+    },
+    {
+      "name": "loop-club-0.1.0-mpc-sample.zip.sha256",
+      "anonymous_bytes_sha256": "a165227afecc06623a3fbb9a92069a3845d3c92a4b54f1d20395a315393dab4e",
+      "match": true
+    }
+  ],
+  "date": "2026-11-22",
+  "website": "https://kimswork.app/mods/loop-club/",
+  "manual": "https://kimswork.app/mods/loop-club/manual/",
+  "pages_run": {
+    "id": 45026859610,
+    "status": "success",
+    "url": "https://github.com/Sunghyun23/kimswork/actions/runs/45026859610"
+  },
+  "live_checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 8637
+    },
+    {
+      "path": "/software/",
+      "status": 200,
+      "bytes": 6520
+    },
+    {
+      "path": "/software/sample-mods/",
+      "status": 200,
+      "bytes": 3531
+    },
+    {
+      "path": "/mods/loop-club/",
+      "status": 200,
+      "bytes": 9408
+    },
+    {
+      "path": "/mods/loop-club/manual/",
+      "status": 200,
+      "bytes": 17571
+    },
+    {
+      "path": "/mods/loop-club/public-install.txt",
+      "status": 200,
+      "bytes": 2473
+    },
+    {
+      "path": "/images/loop-club-main-0.1.0.webp",
+      "status": 200,
+      "sha256": "7402bf3d053f5535527f15540d94ca2bb126bcf92cec30b0b44768854d2dfd0e"
+    },
+    {
+      "path": "/images/loop-club-texture-0.1.0.webp",
+      "status": 200,
+      "sha256": "8f4b39a7d01d7b5aa2cc4b72fdb03d52fdb8488b17848b73b5a4643406fdbad5"
+    },
+    {
+      "path": "/images/loop-club-sidechain-0.1.0.webp",
+      "status": 200,
+      "sha256": "48202ffa050da84e8b332bfb48326140db7eab63b27fc63d385a787cdaaead80"
+    },
+    {
+      "path": "/images/loop-club-pan-0.1.0.webp",
+      "status": 200,
+      "sha256": "4481fb0edda9b7eaa3b65c8216b7448e952f1e2986bad18c7f8b4d719048cc3e"
+    },
+    {
+      "path": "/images/loop-club-two-track-fx-0.1.0.webp",
+      "status": 200,
+      "sha256": "a4ae017984bc427a00acc7007fcc8dc245eedea15468e4a9f2783675ae04a3c4"
+    },
+    {
+      "path": "/images/loop-club-layers-0.1.0.webp",
+      "status": 200,
+      "sha256": "08ec85f624539cc557c42ad39c51a074b473ae83c24d2aa2b2fef98ad30064f5"
+    }
+  ],
+  "local_web_checks": {
+    "pages": 23,
+    "references": 488,
+    "browser_viewport_test": "not performed; no compatible browser-control session available"
+  },
+  "device": {
+    "public_library_sha256": "ce0e6cf9673da144e1c288485ddddeaa40cc0232441b9d928a9f9c604de95e1c",
+    "runtime_sd_and_zip_match": true,
+    "existing_boot_files_preserved": 20,
+    "readback_files_verified": 20,
+    "owner_projects_and_banks": "untouched",
+    "initial_loop_before_input": true,
+    "physical_input_and_power_cycle_acceptance": false
+  }
+}
