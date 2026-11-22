@@ -1,0 +1,108 @@
+--- a/src/event.rs
++++ b/src/event.rs
+@@ -262,6 +262,12 @@
+ /// When present they replace the corresponding `Mod` callback.
+ #[derive(Clone, Copy, Default)]
+ pub struct InputHooks {
++    /// Button decisions independent of the Mod UI mutex. No retained pointers.
++    pub button: Option<fn(ButtonEvent) -> Flow>,
++    /// CC decisions independent of the Mod UI mutex.
++    pub cc: Option<fn(CcEvent) -> Flow>,
++    /// DATA decisions independent of the Mod UI mutex.
++    pub encoder: Option<fn(EncoderEvent) -> Flow>,
+     /// Hardware pad press and release decisions.
+     pub pad: Option<fn(PadEvent) -> PadResponse>,
+     /// Complete a nonzero pad token after the native handler has returned.
+--- a/src/sites.rs
++++ b/src/sites.rs
+@@ -409,6 +409,15 @@
+     with_mod(call).unwrap_or(Flow::Forward)
+ }
+ 
++/// Independent callbacks keep input ownership even while UI rendering is busy.
++fn independent_control<T>(
++    handler: Option<fn(T) -> Flow>,
++    event: T,
++    fallback: impl FnOnce() -> Flow,
++) -> Flow {
++    handler.map_or_else(fallback, |handle| handle(event))
++}
++
+ /// Keep a button's release with the recipient of its press, even when the mod
+ /// callback is unavailable for one edge.
+ fn button_flow(code: u32, pressed: bool, flow: Flow) -> Flow {
+@@ -437,7 +446,9 @@
+ /// The app calls this with its own surface and delta.
+ unsafe extern "C" fn data(surface: usize, delta: i32) {
+     let event = EncoderEvent { surface, delta };
+-    let flow = decide(|module| module.on_encoder(event));
++    let flow = independent_control(crate::loader::input_hooks().encoder, event, || {
++        decide(|module| module.on_encoder(event))
++    });
+     if flow == Flow::Forward {
+         // SAFETY: the original is the app's own handler.
+         unsafe {
+@@ -585,7 +596,9 @@
+         low,
+         range,
+     };
+-    let flow = decide(|module| module.on_cc(message));
++    let flow = independent_control(crate::loader::input_hooks().cc, message, || {
++        decide(|module| module.on_cc(message))
++    });
+     if flow == Flow::Forward {
+         // SAFETY: the original is the app's own handler.
+         unsafe {
+@@ -653,7 +666,10 @@
+         erase: event::erase(),
+         surface,
+     };
+-    let flow = button_flow(code, pressed, decide(|module| module.on_button(message)));
++    let decision = independent_control(crate::loader::input_hooks().button, message, || {
++        decide(|module| module.on_button(message))
++    });
++    let flow = button_flow(code, pressed, decision);
+     // Track the hold state after the mod has seen the event, so it sees the
+     // state that was in effect when the key was pressed.
+     if code == event::button::SHIFT {
+@@ -927,3 +943,40 @@
+         assert!(!notes_ready());
+     }
+ }
++
++#[cfg(test)]
++mod independent_control_tests {
++    use super::{ButtonEvent, Flow, independent_control};
++    fn consume(_: ButtonEvent) -> Flow {
++        Flow::Consume
++    }
++    fn button() -> ButtonEvent {
++        ButtonEvent {
++            event: 0,
++            bytes: [0; 16],
++            code: 7,
++            value: 127,
++            pressed: true,
++            shift: false,
++            erase: false,
++            surface: 0,
++        }
++    }
++    #[test]
++    fn busy_mod_mutex_cannot_forward_an_independently_owned_button() {
++        let module = std::sync::Mutex::new(());
++        let _busy = module.lock().unwrap();
++        let flow = independent_control(Some(consume as fn(ButtonEvent) -> Flow), button(), || {
++            assert!(module.try_lock().is_err());
++            Flow::Forward
++        });
++        assert_eq!(flow, Flow::Consume);
++    }
++    #[test]
++    fn absent_independent_handler_retains_the_legacy_fallback() {
++        assert_eq!(
++            independent_control(None, button(), || Flow::Forward),
++            Flow::Forward
++        );
++    }
++}

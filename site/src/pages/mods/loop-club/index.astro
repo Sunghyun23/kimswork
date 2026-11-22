@@ -1,0 +1,26 @@
+---
+import Base from '../../../layouts/Base.astro';
+import {url} from '../../../data/plugins';
+import {loopClub as p} from '../../../data/loop-club';
+---
+<Base title="Loop Club — 16-track looper for MPC Sample | Kim’s Work" description={p.summary}>
+<article class="wrap guide">
+<a class="back" href={url('software/sample-mods/')}>← MPC Sample mods</a>
+<p class="eyebrow">MPC SAMPLE · PUBLIC PREVIEW 0.1.0 · BY KIM</p>
+<h1>Build a loop.<br/>Keep playing.</h1>
+<p class="lead">Sixteen independent audio, synth and drum tracks. Record a phrase, set its length and keep capturing while your other loops play.</p>
+<figure class="device-shot"><img src={url(`images/${p.image}`)} width="320" height="240" alt={p.imageAlt}/><figcaption>Actual MPC Sample screen · Native320×240 display.</figcaption></figure>
+<div class="manual-actions"><a class="button" href={p.download}>Download preview0.1.0 ↓</a><a href={url('mods/loop-club/manual/')}>Read the manual →</a><a href={p.release}>Release & SHA-256 ↗</a></div>
+<p class="platform-note">MPC Sample firmware1.3.0.12 only. An SD preload mod, not an MPC OS plugin or a firmware image. Preserve your existing autorun before installing.</p>
+<h2>The looper comes first.</h2>
+<p>Choose a track, choose Audio / Synth / Drum, then press REC. Set a whole-bar length and continue recording with Replace or Overdub. Each track keeps its own length: a one-bar part repeats alongside a four-bar phrase. Select tracks with pads; the fader follows your selection with pickup.</p>
+<div class="feature-grid"><section><h3>Synth and stereo movement</h3><p>Two oscillators, individual Tune/Fine/Level, resonant filter and separate amp/filter ADSRs. A six-shape LFO moves Pitch, Filter, Volume or Pan. The PAN page shares the mixer's base position.</p></section><section><h3>Drums with room to shape</h3><p>Sixteen original procedural sounds, musical pattern generation and subdivision velocity accents. Two layers per sound with Volume, Tune, relative Shift, Decay and sample REV. Optional user banks stay outside the app.</p></section><section><h3>Tap an effect. Keep the others.</h3><p>Track and master FX use4×4pad boards with direct tap-on/tap-off and visible states. Two track effects stay on together without silent replacement. Master combines Dust, Drive, Squeeze, Wobble, Dub Echo, Duck and two custom FX; bypass keeps settings.</p></section><section><h3>Sidechain that follows your beat</h3><p>Use an individual drum or a whole track as the detector. Duck the other tracks, choose a custom target mask, or pump the full master. Depth, sensitivity, free/tempo-synced recovery and a reduction meter.</p></section></div>
+<div class="screens-grid">{[['texture','Master4×4FXpad board with independent ON/OFF states'],['sidechain','Drum or whole-track sidechain with explicit targets'],['pan','Base Pan and LFO Pan depth in the synth editor']].map(([name,alt])=><figure><img src={url(`images/loop-club-${name}-0.1.0.webp`)} width="320" height="240" alt={alt} loading="lazy"/><figcaption>{alt}. Actual MPC Sample capture.</figcaption></figure>)}</div>
+<h2>What this preview verifies.</h2>
+<p>144 native tests and strict Clippy pass. Actual remote-control checks cover navigation, synth editing, loop recording, count-in, drum generation, audio-frame capture, chopping, mixers, simultaneous FX and save/recall. Named-device USB recordings verify stereo movement and drum-triggered ducking. The screenshots above come from the active device display.</p>
+<p>Physical finger controls, calibrated analog latency, final power-cycle recovery and long-session reliability remain separate acceptance checks.32voices are shared; CPU headroom depends on polyphony and FX. A short stress run is not a guarantee for every project.</p>
+<h2>Know the boundaries.</h2>
+<ul><li>USB currently exposes one stereo pair. MAIN / USB / MAIN+USB destinations do not provide individual drum USB stems.</li><li>No time stretching, raw USB-input recording or bank MIDI import. GRID currently displays the first64events.</li><li>The download contains no commercial samples, personal expansions, firmware or QA management agent.</li><li>Source and SDK licenses are MIT. Follow the <a href={url('mods/loop-club/manual/')}>installation and recovery instructions</a> before changing your SD boot.</li></ul>
+</article>
+</Base>
+<style>.device-shot{max-width:640px;margin:32px auto}.device-shot img,.screens-grid img{display:block;width:100%;height:auto;background:#11271e;border:1px solid #5d6544;image-rendering:pixelated}.device-shot figcaption,.screens-grid figcaption{font-size:.9rem;color:var(--muted);margin-top:10px}.screens-grid,.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:32px 0}.screens-grid figure{margin:0;min-width:0}.feature-grid section{padding:24px;border:1px solid var(--line);background:#211f19}@media(max-width:620px){.screens-grid,.feature-grid{grid-template-columns:1fr}.feature-grid section{padding:18px}}</style>

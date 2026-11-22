@@ -21,6 +21,8 @@ mpc-software/
     public/original-workshop/              Own sounds, kits and MIDI authoring
     private/splat-to-clat/                 Local-only source and optional pack
   shared/groove-dice-expansion/             Dedicated .gdexp manager/validator
+  mpc-sample/                              MPC Sample hardware mods/tools/docs
+    mods/public/LoopClub/                  Loop Club 16-track looper (0.1.0 preview)
   docs/                                    Product specifications and records
   scripts/                                 Build/test/bootstrap entry points
   third_party/mpc-plugin-builder-sdk/       One pinned, unmodified SDK checkout
@@ -50,9 +52,10 @@ Install developer dependencies from `mpc-software/requirements-dev.txt`. Follow 
 | Crate Press | [0.2.6 stable](https://github.com/Sunghyun23/kimswork/releases/tag/crate-press/v0.2.6), partial hardware verification | [Manual](mpc-software/docs/plugins/crate-press/manual.md), [verification](mpc-software/docs/plugins/crate-press/validation.md) |
 | Groove Dice | [1.11.0 stable](https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.11.0), original core | [README](mpc-software/plugins/public/GrooveDice/README.md), [verification](mpc-software/plugins/public/GrooveDice/VALIDATION.md) |
 | Felt Club | [0.3.2 stable](https://github.com/Sunghyun23/kimswork/releases/tag/felt-club/v0.3.2) | [Manual](mpc-software/docs/plugins/felt-club/manual.md), [verification](mpc-software/plugins/public/FeltClub/design/validation-0.3.2/README.md) |
+| Loop Club | [0.1.0 public preview](https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.1.0), MPC Sample1.3.0.12 | [Manual](mpc-software/mpc-sample/mods/public/LoopClub/docs/manual.md), [verification](mpc-software/mpc-sample/mods/public/LoopClub/docs/release-0.1.0.md) |
 | Groove Dice Pack Builder | 1.0.0 standalone macOS/Windows app | [Project](mpc-software/apps/public/GrooveDicePackBuilder/README.md) |
 
-MPC installation requires standalone OS3.10.1+ and Enable Enhancements / External Plugin Support. Current NVMe builds are Donut Theory1.15.4, Groove Dice1.11.0, Felt Club0.3.2 and Crate Press0.2.6. Existing owner Groove packs/captures are preserved; public ZIPs contain only the original core. The latest SD copy is **pending**: card backup disconnected before any new SD write. Do not overwrite old card content without preserving it. SSD remains untouched. Open MPC submission/CI, hardware limits and actual-image scope are recorded in [current publication](mpc-software/docs/releases/2026-11-22.md).
+MPC OS plugin installation requires standalone OS3.10.1+ and Enable Enhancements / External Plugin Support. Current NVMe builds are Donut Theory1.15.4, Groove Dice1.11.0, Felt Club0.3.2 and Crate Press0.2.6. Existing owner Groove packs/captures are preserved; public ZIPs contain only the original core. The latest SD copy is **pending**: card backup disconnected before any new SD write. Do not overwrite old card content without preserving it. SSD remains untouched. Open MPC submission/CI, hardware limits and actual-image scope are recorded in [current publication](mpc-software/docs/releases/2026-11-22.md).
 
 Groove Dice 1.3.3 adds visible MAIN randomisation and16 persistent Dice locks, seven playable RULE selectors without a LOCK value, HATS/CYMBALS, tap-to-browse sample selection, isolated preview and Decay-first SOUND controls. Native/ARM builds, SDK validation and regressions pass; host simulator19 PASS /0 WARN /0 FAIL. The owner confirmed locks/Dice/RULE operation on MPC XL OS3.10.1.12. Public packages contain only Original Workshop. Release notes, manual and actual-device screenshots document remaining hardware limits.
 
@@ -73,3 +76,9 @@ Felt Club 0.3.2 includes seven isolated physical engines, 57 curated factory sou
 Current release update (2026-11-22): Donut Theory1.15.4, Groove Dice1.11.0 and Felt Club0.3.2 remove MIDI preset/Dice action commands. Groove alone retains six C Major performance triggers and C-bank direct drums. Crate Press0.2.6 remains stable unchanged. **Felt Club has a known owner-reported MPC CPU peak above100%; the optimization does not certify worst-case hardware load.** Public code is MIT within each public plugin folder; private expansions and commercial reference material are excluded.
 
 Open MPC: [Felt Club](https://open-mpc.github.io/p/felt-club.html), [Donut Theory](https://open-mpc.github.io/p/donut-theory.html), [Groove Dice](https://open-mpc.github.io/p/groove-dice.html), [Crate Press](https://open-mpc.github.io/p/crate-press.html). All four updates are merged and live; SD copying remains pending device reconnection.
+
+## MPC Sample hardware development
+
+A separate [mpc-sample area](mpc-software/mpc-sample/README.md) holds device-specific Rust mods and a SampleBoot integration plan. Dependencies are independently pinned in sample-sdk.lock.json. Existing MPC VST products/SDK remain separate; no Sample mod or boot change is installed by setup.
+
+Loop Club is separate MPC Sample software, requiring Sample firmware1.3.0.12 rather than MPC OS. Its public ZIP has original procedural drums only; individual USB drum stems and complete physical/power-cycle acceptance remain pending. Original Loop Club source is MIT licensed in its project folder.

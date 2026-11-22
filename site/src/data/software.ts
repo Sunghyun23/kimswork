@@ -1,5 +1,7 @@
 import {repo} from './plugins';
+import {loopClub} from './loop-club';
 export const categories = [
+ {slug:'sample-mods',name:'MPC Sample',description:'SD-based tools for MPC Sample hardware. Separate from MPC OS VST plugins.'},
  {slug:'instruments',name:'Instruments',description:'Hands-on instruments that run inside MPC standalone.'},
  {slug:'effects',name:'Effects',description:'Character and performance effects for MPC tracks and master buses.'},
  {slug:'apps',name:'Apps',description:'Desktop tools that help you prepare, organize and make music.'},
@@ -24,6 +26,7 @@ export const workshop = {
 // One product source for the overview and category pages; thumbnails always show real software.
 import {plugins} from './plugins';
 export const softwareItems = [
+ loopClub,
  ...plugins.map(p=>({name:p.name,path:`plugins/${p.slug}/`,summary:p.summary,image:p.image,imageAlt:p.imageAlt,category:p.kind==='effect'?'effects':'instruments',status:p.release?`${p.release.preview?'Public preview':'Available'} · ${p.release.version}`:'In development'})),
  {...companion,imageAlt:'Groove Dice Pack Builder running on macOS',category:'apps',status:'macOS Apple Silicon · Windows x64'},
  {...workshop,imageAlt:'Workshop Sessions selected in Groove Dice1.3.4 on MPC XL',category:'expansions',status:'For Groove Dice 1.0.0 or later'}

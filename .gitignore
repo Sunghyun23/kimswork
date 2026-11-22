@@ -21,3 +21,13 @@ mpc-software/expansions/*/public/*/work/
 mpc-software/expansions/*/public/*/dist/
 
 mpc-software/plugins/public/GrooveDice/Content/Captures/
+
+# MPC Sample hardware development: dependencies/builds and private mods
+/mpc-software/third_party/mpc-sample-sdk/
+/mpc-software/third_party/sampleboot/
+/mpc-software/mpc-sample/mods/*/*/target/
+/mpc-software/mpc-sample/mods/*/*/build/
+/mpc-software/mpc-sample/mods/*/*/dist/
+/mpc-software/mpc-sample/mods/private/*
+!/mpc-software/mpc-sample/mods/private/README.md
+!/mpc-software/mpc-sample/mods/private/AGENTS.md

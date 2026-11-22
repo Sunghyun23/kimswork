@@ -1,0 +1,2 @@
+import {repo} from './plugins';
+export const loopClub={name:'Loop Club',version:'0.1.0',path:'mods/loop-club/',category:'sample-mods',image:'loop-club-main-0.1.0.webp',imageAlt:'Loop Club 16-track loop overview captured directly from an MPC Sample',summary:'A hands-on 16-track audio, synth and drum looper for MPC Sample. Independent loops, layered drums and playable effects.',status:'Public preview · 0.1.0 · MPC Sample only',release:`${repo}/releases/tag/loop-club%2Fv0.1.0`,download:`${repo}/releases/download/loop-club%2Fv0.1.0/loop-club-0.1.0-mpc-sample.zip`};

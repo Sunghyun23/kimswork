@@ -1,0 +1,10 @@
+{
+  "product": "Loop Club",
+  "credit": "by kim",
+  "alignment": "lower right, aligned to main wordmark",
+  "source": "imagegen original design",
+  "original": "loop-club-logo-by-kim-right.png",
+  "sha256": "198f276d8e66e763dd9fb969e1daad0a26254b80ca68c8bdfdafd9acfb1c463c",
+  "intended_use": "MPC Sample 320x240 loading screen",
+  "runtime_integration": "asset prepared; loading runtime integration pending"
+}

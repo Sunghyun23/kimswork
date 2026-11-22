@@ -1,0 +1,50 @@
+{
+  "product": "Loop Club",
+  "version": "0.1.0",
+  "status": "public preview",
+  "date": "2026-11-22",
+  "firmware": "MPC Sample 1.3.0.12",
+  "native_tests": 144,
+  "clippy": "PASS",
+  "arm64": "PASS; maximum imported glibc2.30",
+  "launcher_fixtures": 8,
+  "direct_install_fixtures": 4,
+  "other_installer_fixtures": 7,
+  "actual_remote_matrix_cases": 10,
+  "auto_pan": "PASS; actual stereo USB energy movement",
+  "sidechain": "PASS; actual kick-triggered right-channel attenuation with source isolated left",
+  "sidechain_reductions": [
+    0.854999303817749,
+    0.854999303817749,
+    0.854999303817749,
+    0.854999303817749
+  ],
+  "two_track_fx": true,
+  "five_master_texture_stages": true,
+  "public_binary_smoke": "PASS; initial MAIN and SENSE maximum",
+  "usb_audio_finite": true,
+  "portaudio_status": "",
+  "audio_run_timing": {
+    "blocks": 72798,
+    "max_deadline_pct": 127.0071,
+    "p99_deadline_pct_upper": 35.0,
+    "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+  },
+  "short_stress_timing": {
+    "blocks": 88412,
+    "max_deadline_pct": 127.0071,
+    "p99_deadline_pct_upper": 90.0,
+    "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+  },
+  "physical_controls": false,
+  "power_cycle_acceptance": false,
+  "analog_output_jack_recording": false,
+  "public_zip_sha256": "ed826ef9fd5039ea05c432931c5b0cfb6f5b22280dd419cff224263e216ae605",
+  "public_library_sha256": "ce0e6cf9673da144e1c288485ddddeaa40cc0232441b9d928a9f9c604de95e1c",
+  "private_content_in_public_package": false,
+  "usb_output_channels": 2,
+  "usb_drum_multichannel": "not implemented",
+  "device_installation": "PASS; exact public library runtime/SD SHA matches;20existing boot files preserved and20readbacks verified; optional owner development QA environment retained",
+  "fx_pad_boards": "PASS; direct4x4track/master toggles, occupied-slot protection, saved bypass",
+  "initial_page_before_any_remote_input": 0
+}

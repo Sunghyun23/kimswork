@@ -1,0 +1,39 @@
+Loop Club 0.1.0 — MPC Sample public preview — by kim
+
+MPC Sample firmware 1.3.0.12 only. Not an MPC OS VST or a firmware image.
+Remote controls, actual display and USB audio have been tested. Physical
+controls, power-cycle recovery and long-session reliability remain pending.
+32 shared voices; isolated scheduling-inclusive CPU peaks may exceed budget.
+
+1. Save your native project. Power off before removing the SD card.
+2. Back up your card's existing autorun folder and your projects.
+3. If you already have SampleBoot, place this complete autorun folder at
+   <card>/autorun/mods/Loop Club/. Do not replace SampleBoot itself.
+   Otherwise place the complete autorun folder at the card root only after
+   moving the old autorun to your backup. Never merge old/new boot files.
+4. Safely eject, insert the card and power on. Under SampleBoot select
+   Loop Club; direct autorun starts without a menu. Press SAMPLE if needed.
+5. LOOP: pads select tracks. B1 SOURCE selects Audio/Synth/Drum. B2 SOUND
+   opens its editor. REC starts a take; REC again sets length and continues
+   loop recording; REC again finishes capture at the loop end. B3 switches
+   Replace/Overdub. DATA or SHIFT+pad toggles an existing loop.
+6. FX section: B1 MIX / B2 TRACK FX / B3 MASTER FX. Track FX has two slots.
+   TRACK FX and MASTER FX show4x4pad boards. Tap an effect ON; tap again OFF.
+   Two track effects can stay on; a third never silently replaces one.
+   MASTER pads1-5 toggle texture, pad6 DUCK, pads7/8 custom FX1/2.
+   Pad10 SC SET opens routing. Pad9 PERF EDIT changes custom effects.
+   Turn DATA to select knobs without toggling; pad13 turns master FX off.
+7. Save stopped from SHIFT+DATA -> PROJECT -> SAVE. Projects live outside
+   autorun, at <card>/LoopClub/Projects/. Banks live in LoopClub/Expansions/.
+   Neither folder is included or replaced by this package.
+
+To return to stock: power off, remove the card (or restore your preserved
+previous autorun), then power on. No firmware or internal persistent service
+is modified. Do not remove media while recording/writing.
+
+Manual: https://kimswork.app/mods/loop-club/manual/
+Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.1.0/mpc-software/mpc-sample/mods/public/LoopClub
+
+USB is currently stereo. Per-drum USB multichannel output is not implemented.
+No third-party/commercial samples or MIDI, QA server/agent, or firmware is
+included. Original procedural drums are built in; user banks are optional.

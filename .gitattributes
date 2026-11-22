@@ -1,0 +1,2 @@
+# Unified-diff context lines use a mandatory leading space, including empty lines.
+mpc-software/mpc-sample/tools/sdk_patches/*.patch whitespace=-blank-at-eol

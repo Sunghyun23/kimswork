@@ -94,3 +94,9 @@ The user approved stable Groove Dice1.0.0, Pack Builder1.0.0, a real app-authore
 ## Crate Press and software thumbnails — 2026-11-16
 
 The user authorized Crate Press publication and website updates after verification. The first public package is 0.2.2 **preview**, with partial hardware checks explicitly recorded. Do not label outstanding audio, physical Q-Link, multi-touch or CPU certification complete. Software overview and category lists must begin each product card with its real software screenshot. Keep Effects separate from Instruments, Apps and Expansions.
+
+2026-11-22 user-approved MPC Sample separation: use mpc-software/mpc-sample/{mods/public,mods/private,tools,docs}, never ambiguous sample/. Existing MPC VST projects remain in plugins/ and retain their SDK/UIDs/releases. Separate pinned Sample SDK and SampleBoot source live under ignored third_party paths, tracked by sample-sdk.lock.json. Read mpc-sample/AGENTS.md. Approval covers local development preparation, not device installation/restart/SD changes; earlier stopped XL SD work remains stopped. Actual Sample version1.3.0.12 obtained through read-only updater GET; firmware fingerprint/hook/boot/audio validation remains pending.
+
+## Loop Club public preview — 2026-11-22
+
+The owner authorized public release and website updates after autonomous implementation/QA. Loop Club lives at `mpc-software/mpc-sample/mods/public/LoopClub`, uses `loop-club/v0.1.0` and `loop-club-0.1.0-mpc-sample.zip`, and is listed separately under Software → MPC Sample. Publish original procedural content only; never publish private .lcbank files, QA sessions or the management agent. Actual screen/USB and remote tests do not certify physical controls, power-cycle recovery or unlimited CPU headroom. The initial release is a public preview with known callback peaks, stereo USB only and explicitly documented limits.

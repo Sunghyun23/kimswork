@@ -10,3 +10,7 @@ mpc-software/third_party/mpc-plugin-builder-sdk/.sdk-tools/zigenv/bin/python -m 
 ```
 
 The initial build uses Apple clang for quick native builds and Zig for ARM builds. Python 3.13.7, Apple clang 16 and Pillow 11.3.0 were used. UI asset generation/preview requires Pillow. These are developer dependencies, not MPC runtime dependencies.
+
+## MPC Sample dependencies
+
+Use `python3 mpc-software/scripts/bootstrap_sample_sdk.py --with-sampleboot`. Separate sample-sdk.lock.json pins the community Rust SDK and optional SampleBoot launcher. Each checkout is ignored and unmodified. This does not upgrade the existing official SDK or install software on any device.
