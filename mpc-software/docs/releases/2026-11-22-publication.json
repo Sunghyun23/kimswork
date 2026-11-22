@@ -125,13 +125,31 @@
       "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1073",
       "head_sha": "dbece7a4b60b833e1a3b0d857e71358609afde78",
       "branch": "catalog/felt-club-032",
-      "state": "open",
-      "merged": false,
+      "state": "closed",
+      "merged": true,
       "checks": [
         {
+          "name": "mirror",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920687629/job/136896137502"
+        },
+        {
+          "name": "deploy",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920687629/job/136896137290"
+        },
+        {
+          "name": "mirror-org",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920687629/job/136896137203"
+        },
+        {
           "name": "build",
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "success",
           "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920687629/job/136895838532"
         }
       ]
@@ -143,13 +161,31 @@
       "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1074",
       "head_sha": "4888f133cec8dbd49cd66f7be96a45d4fa96b983",
       "branch": "catalog/donut-theory-1154",
-      "state": "open",
-      "merged": false,
+      "state": "closed",
+      "merged": true,
       "checks": [
         {
+          "name": "deploy",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920693982/job/136896159920"
+        },
+        {
+          "name": "mirror",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920693982/job/136896159681"
+        },
+        {
+          "name": "mirror-org",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920693982/job/136896159669"
+        },
+        {
           "name": "build",
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "success",
           "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920693982/job/136895858682"
         }
       ]
@@ -161,13 +197,31 @@
       "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1075",
       "head_sha": "499a6a78eefdad52c757fd6c8b7952f20f869f4c",
       "branch": "catalog/groove-dice-1110",
-      "state": "open",
-      "merged": false,
+      "state": "closed",
+      "merged": true,
       "checks": [
         {
+          "name": "deploy",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920697442/job/136896226994"
+        },
+        {
+          "name": "mirror-org",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920697442/job/136896226791"
+        },
+        {
+          "name": "mirror",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920697442/job/136896226654"
+        },
+        {
           "name": "build",
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "success",
           "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920697442/job/136895870078"
         }
       ]
@@ -179,13 +233,31 @@
       "url": "https://github.com/open-mpc/mpc-vst-plugins/pull/1076",
       "head_sha": "5e75e3bedc6b579ad848a78a1e3f048c3810b20d",
       "branch": "catalog/crate-press-026",
-      "state": "open",
-      "merged": false,
+      "state": "closed",
+      "merged": true,
       "checks": [
         {
+          "name": "mirror-org",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920703683/job/136896166650"
+        },
+        {
+          "name": "mirror",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920703683/job/136896166581"
+        },
+        {
+          "name": "deploy",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920703683/job/136896166234"
+        },
+        {
           "name": "build",
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "success",
           "url": "https://github.com/open-mpc/mpc-vst-plugins/actions/runs/44920703683/job/136895890514"
         }
       ]
@@ -341,5 +413,35 @@
     "sd": "No new SD writes. Official SDK export disconnected while reading Donut after only Crate backup completed. Preserve old card contents; no blind overwrite. SSD untouched. Copy and readback pending device reconnection.",
     "hardware": "No new universal hardware audio/physical encoder/full recall/worst-case CPU certification.",
     "crate_package": "Stable0.2.6unchanged. Current checker has one reviewed older-uninstall-template warning; use explicit -t for the actual VST2 Plugins directory when uninstalling."
-  }
+  },
+  "open_mpc_live": [
+    {
+      "slug": "felt-club",
+      "url": "https://open-mpc.github.io/p/felt-club.html",
+      "status": 200,
+      "expected": "0.3.2",
+      "has_version": true
+    },
+    {
+      "slug": "donut-theory",
+      "url": "https://open-mpc.github.io/p/donut-theory.html",
+      "status": 200,
+      "expected": "1.15.4",
+      "has_version": true
+    },
+    {
+      "slug": "groove-dice",
+      "url": "https://open-mpc.github.io/p/groove-dice.html",
+      "status": 200,
+      "expected": "1.11.0",
+      "has_version": true
+    },
+    {
+      "slug": "crate-press",
+      "url": "https://open-mpc.github.io/p/crate-press.html",
+      "status": 200,
+      "expected": "0.2.6",
+      "has_version": true
+    }
+  ]
 }
