@@ -1,0 +1,20 @@
+{
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.11.2",
+  "release_id": 455563829,
+  "source_commit": "6b1c949b5fae0cf1aa42304c1aaf87cfbb3484f6",
+  "assets": [
+    {
+      "name": "loop-club-0.11.2-mpc-sample.zip",
+      "size": 773899,
+      "digest": "sha256:af9805f516317c1a50ad010b4934ea67590001b1d74002ac69c78198adcbb5f4",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.11.2/loop-club-0.11.2-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.11.2-mpc-sample.zip.sha256",
+      "size": 98,
+      "digest": "sha256:d209bde9230165ab0b95ac837611e9600dfa7ce4f8dc256e1658588f744f67c4",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.11.2/loop-club-0.11.2-mpc-sample.zip.sha256"
+    }
+  ],
+  "existing_video_assets_changed": false
+}
