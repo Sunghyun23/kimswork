@@ -1688,22 +1688,22 @@ fn fx_quick_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     };
     for i in 0..3 {
         let x = 5 + i as i32 * 105;
-        p.rect(x, 53, 100, 43, PANEL);
+        p.rect(x, 193, 100, 43, PANEL);
         p.text(
             x + 3,
-            54,
+            194,
             94,
             17,
             14.,
             DIM,
             &format!("K{} {}", i + 1, names[i]),
         );
-        p.text(x + 3, 73, 94, 21, 18., GOLD, &values[i]);
+        p.text(x + 3, 213, 94, 21, 18., GOLD, &values[i]);
     }
 }
 fn fx_cell(p: &mut impl Painter, pad: usize, title: &str, state: &str, on: bool) {
     let x = 5 + (pad % 4) as i32 * 79;
-    let y = 103 + (3 - pad / 4) as i32 * 34;
+    let y = 55 + (3 - pad / 4) as i32 * 34;
     p.rect(x, y, 74, 32, if on { GOLD } else { PANEL });
     if title.is_empty() {
         return;
@@ -1713,7 +1713,7 @@ fn fx_cell(p: &mut impl Painter, pad: usize, title: &str, state: &str, on: bool)
 }
 fn fx_focus(p: &mut impl Painter, pad: usize) {
     let x = 5 + (pad % 4) as i32 * 79;
-    let y = 103 + (3 - pad / 4) as i32 * 34;
+    let y = 55 + (3 - pad / 4) as i32 * 34;
     p.rect(x + 3, y + 1, 68, 1, INK);
 }
 fn fx_settings_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {

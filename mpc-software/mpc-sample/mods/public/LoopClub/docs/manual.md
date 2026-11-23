@@ -1,6 +1,6 @@
 # Loop Club manual
 
-Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.9.2 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
+Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.9.3 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
 
 ## Start with the loop
 
@@ -78,7 +78,7 @@ MIX shows16track pads and horizontal volume-setting bars. Select a pad, then use
 
 ### FX performance pads
 
-Press an effect pad to select and enable it immediately. Its K1/K2/K3 controls appear directly above the4×4board; no DATA focus or separate settings page is required. The header names the selected effect. K1/K2 edit its two parameters and K3 edits Mix (Duck uses Depth/Release/Sense). The last touched effect receives knob edits; with two effects active the other remains unchanged. After release the effect turns off and its slot settings remain editable without re-enabling it. The board shows effect names and OFF / HOLD / LATCH states. Press normally for immediate HOLD and release to disable it. SHIFT+press toggles LATCH; SHIFT+press again disables it. Releases follow the original effect after navigation. Track inserts have two slots; a third effect shows FULL and never replaces an active effect.
+Press an effect pad to select and enable it immediately. Its K1/K2/K3 controls appear directly below the4×4board; no DATA focus or separate settings page is required. The header names the selected effect. K1/K2 edit its two parameters and K3 edits Mix (Duck uses Depth/Release/Sense). The last touched effect receives knob edits; with two effects active the other remains unchanged. After release the effect turns off and its slot settings remain editable without re-enabling it. The board shows effect names and OFF / HOLD / LATCH states. Press normally for immediate HOLD and release to disable it. SHIFT+press toggles LATCH; SHIFT+press again disables it. Releases follow the original effect after navigation. Track inserts have two slots; a third effect shows FULL and never replaces an active effect.
 
 Track pads1–14are Filter, Isolator, Repeat, Reverse, Tape Stop, Dub Echo, Crush, Wobble, Drive, Compressor, LoFi, Tremolo, Auto Pan and Auto Filter. MASTER pads1–8retain Dust, Drive, Squeeze, Wobble, Dub Echo, Duck and two named custom effects; pads9–11offer Tremolo, Auto Pan and Auto Filter using those same two custom slots. When a custom slot contains a dedicated modulation effect, its old duplicate tile is blank/inert. Other positions are inert blanks.
 
@@ -227,6 +227,6 @@ A destination containing a loop, recorded events, source audio or loaded kit is 
 Save/load preserves the stopped transport frame and each independent loop origin. A copied loop inherits its source origin, so its phase stays aligned on resume. Old project formats lacked those offsets; the app preserves their legacy zero-origin interpretation. This format7 change does not alter audio generation or the FX shown in the recorded0.9.0 performance video.
 
 
-## Direct FX controls in 0.9.2
+## Direct FX controls in 0.9.3
 
-Press any track/performance FX pad and its controls appear immediately above the pad board. The header names the selected effect; K1/K2 edit its parameters and K3 edits Mix. Master texture pads show their matching controls, including Duck depth/recovery/sensitivity. Press/release still means HOLD; SHIFT+press still means LATCH. After release, editing the stored slot values does not switch the effect back on. With two effects, the last pressed pad receives edits; a refused third effect cannot change either occupied insert. DATA remains optional for advanced modulation Shape/Sync. Original artwork/colors and the4×4physical-pad mapping are retained.
+Press any track/performance FX pad and its controls appear immediately below the pad board. The header names the selected effect; K1/K2 edit its parameters and K3 edits Mix. Master texture pads show their matching controls, including Duck depth/recovery/sensitivity. Press/release still means HOLD; SHIFT+press still means LATCH. After release, editing the stored slot values does not switch the effect back on. With two effects, the last pressed pad receives edits; a refused third effect cannot change either occupied insert. DATA remains optional for advanced modulation Shape/Sync. Original artwork/colors and the4×4physical-pad mapping are retained.

@@ -1,6 +1,6 @@
 [package]
 name = "loop-club"
-version = "0.9.2"
+version = "0.9.3"
 edition = "2024"
 rust-version = "1.97"
 authors = ["kim"]

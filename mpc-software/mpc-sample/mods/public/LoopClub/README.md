@@ -1,8 +1,8 @@
 # Loop Club
 
-A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.9.2 targets firmware1.3.0.12. This is an SD preload mod, not an MPC OS VST or a firmware image.
+A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.9.3 targets firmware1.3.0.12. This is an SD preload mod, not an MPC OS VST or a firmware image.
 
-[Manual](docs/manual.md) · [Installation](docs/public-install.txt) · [Verification](docs/release-0.9.2.md) · [Source specification](../../../docs/looper-srs.md)
+[Manual](docs/manual.md) · [Installation](docs/public-install.txt) · [Verification](docs/release-0.9.3.md) · [Source specification](../../../docs/looper-srs.md)
 
 - LOOP/MUTE/CHAIN pad modes; record from LOOP without changing the screen; REC ends at the bar boundary.
 - Independent bar-aligned audio, synth and drum loops; count-in; Replace/Overdub; MIDI grid.
@@ -63,4 +63,4 @@ Local0.8.0 adds Drum XPM file→bank→16pads import through SOURCE pad5 or SHIF
 Local0.9.0 adds in-place LOOP editing: stopped **SHIFT+LOOP**, then B1 COPY / B2 DELETE / B3 MOVE. Copy/move target an empty slot and preserve the full source/kit/sound configuration; deletion confirms with the same pad and retains the instrument. All support latest-edit Undo/Redo. The detailed follow-up also fixes loading saved projects after changing the SOURCE of an imported XPM kit. See [manual](docs/manual.md) and [QA](docs/qa-0.9.0.md). Public0.1.0 remains unchanged.
 
 
-Latest public preview0.9.2 supersedes the historical local-candidate/public0.1.0 status notes above. Includes Audio/XPM/loop edits, format7 phase-preserving recall/copy, and immediate top K1/K2/K3 controls when pressing FX pads.293 Debug/293 Release, strict host/ARM64 Clippy and actual39FX contexts plus phase/copy recall passed. See docs/release-0.9.2.md/json for hashes and remaining limits. Public video source banks are not included in the ZIP.
+Latest public preview0.9.3 supersedes the historical local-candidate/public0.1.0 status notes above. Includes Audio/XPM/loop edits, format7 phase-preserving recall/copy, and immediate bottom K1/K2/K3 controls when pressing FX pads.293 Debug/293 Release, strict host/ARM64 Clippy and actual39FX contexts plus phase/copy recall passed. See docs/release-0.9.3.md/json for hashes and remaining limits. Public video source banks are not included in the ZIP.

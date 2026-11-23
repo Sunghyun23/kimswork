@@ -7,7 +7,7 @@ parser.add_argument('--execute',action='store_true')
 if not parser.parse_args().execute:parser.error('--execute is required')
 p=Path(__file__).resolve().parents[1];sys.path.insert(0,str(p/'tools'))
 from qa_device_matrix import QA,state,pair
-q=QA(p/'build/qa-device/release-0.9.2');result={}
+q=QA(p/'build/qa-device/release-0.9.3');result={}
 def install(path,name):
  with(q.out/(name+'.log')).open('w')as f:subprocess.run(['python3',str(p/'tools/qa_manage.py'),'--stage',str(path),'--restart','--discard-session'],stdout=f,stderr=subprocess.STDOUT,check=True)
 def raw(i,on,shift=False):q.event(kind='pad',index=i,on=on,velocity=80 if on else 0,shift=shift)
@@ -23,7 +23,7 @@ def check_board(master=False):
 s=state();assert s['project_storage']['session_id']is None and s['words'][9]==0 and s['words'][4]&1==0
 q.setup();seq=state()['project_io']['sequence'];q.pad(7);before=q.wait(lambda s:s['project_io']['sequence']>seq and s['project_io']['result']==1,timeout=20)
 try:
- install(q.out/'qa.so','qa-stage');assert state()['version']=='0.9.2';q.kind(0,1);q.button(0);check_board()
+ install(q.out/'qa.so','qa-stage');assert state()['version']=='0.9.3';q.kind(0,1);q.button(0);check_board()
  # Last pressed effect owns only its own knobs; full refusal cannot edit other inserts.
  raw(0,True);raw(2,True);q.knob(0,.78);s=state();assert abs(pair(s['words'][325])[0]-.78)<.015 and abs(pair(s['words'][321])[0]-.24)<.015;raw(3,True);q.knob(0,.11);assert abs(pair(state()['words'][325])[0]-.78)<.015;q.capture('actual-two-fx-full');raw(3,False);raw(2,False);raw(0,False)
  q.button(14)
