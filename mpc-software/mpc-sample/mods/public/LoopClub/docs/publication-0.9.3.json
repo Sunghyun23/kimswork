@@ -1,0 +1,49 @@
+{
+  "release_id": 455182139,
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.9.3",
+  "source_commit": "249771413d71fb83cbc8ee719ff1328ca8b27b98",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "loop-club-0.9.3-mpc-sample.zip",
+      "size": 740811,
+      "digest": "sha256:75205fc1fc9f5e5fc39360d59d48830c5a892181cf5fcd7f552b7c0ce64f3514",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.9.3/loop-club-0.9.3-mpc-sample.zip",
+      "anonymous_verified": true,
+      "content_type": "application/octet-stream"
+    },
+    {
+      "name": "loop-club-0.9.3-mpc-sample.zip.sha256",
+      "size": 97,
+      "digest": "sha256:e3200bfd11256910017c023e33a2bab83ace7d12c0507322d15485199c70fc60",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.9.3/loop-club-0.9.3-mpc-sample.zip.sha256",
+      "anonymous_verified": true,
+      "content_type": "application/octet-stream"
+    },
+    {
+      "name": "loop-club-late-pocket-with-fx-mpc.mp4",
+      "size": 5670898,
+      "digest": "sha256:6159128a42430b481aeaaa02ae00514020d7d445bad9cb651a3b8b06d0d3d0d8",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.9.3/loop-club-late-pocket-with-fx-mpc.mp4",
+      "anonymous_verified": true,
+      "content_type": "application/octet-stream"
+    },
+    {
+      "name": "loop-club-live-fx-mpc.mp4",
+      "size": 1973826,
+      "digest": "sha256:6d66ec36e62130ad1b3b7f5fdbaba088e012a10777cf218d2a6fd3abf617dffd",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.9.3/loop-club-live-fx-mpc.mp4",
+      "anonymous_verified": true,
+      "content_type": "application/octet-stream"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "size": 397,
+      "digest": "sha256:2d72d072307ae4fce36fea13cfd059845b747be700864361ed5f83fcca5155f5",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.9.3/SHA256SUMS.txt",
+      "anonymous_verified": true,
+      "content_type": "application/octet-stream"
+    }
+  ],
+  "anonymous_assets_verified": true
+}
