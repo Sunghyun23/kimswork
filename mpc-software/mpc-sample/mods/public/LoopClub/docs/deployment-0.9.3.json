@@ -1,0 +1,54 @@
+{
+  "version": "0.9.3",
+  "workflow": "https://github.com/Sunghyun23/kimswork/actions/runs/45143304409",
+  "source_commit": "af7f868ff75bbf3bc5476340427345abd3eea8d7",
+  "conclusion": "success",
+  "live_checks": [
+    {
+      "url": "https://kimswork.app/mods/loop-club/",
+      "status": 200,
+      "sha256": "1b464a4a0569c1616f4f53a6b2e830066e450db92ff9966e53baf84fccb9645d"
+    },
+    {
+      "url": "https://kimswork.app/mods/loop-club/manual/",
+      "status": 200,
+      "sha256": "0f97e9dbb869edc5ebb780507264a0f9be29f0534f4c059ab3d3207f2f68d77d"
+    },
+    {
+      "url": "https://kimswork.app/mods/loop-club/public-install.txt",
+      "status": 200,
+      "sha256": "196fdcb73768d854d4a40b296399188fe5ed7ec543620b211c5a1a3f48d592f4"
+    },
+    {
+      "url": "https://kimswork.app/software/sample-mods/",
+      "status": 200,
+      "sha256": "97e14ad4ae63595e0039723469a40f031192832d3ce925fab8a55065491501fe"
+    },
+    {
+      "url": "https://kimswork.app/images/loop-club-main-0.9.3.webp",
+      "status": 200,
+      "sha256": "4f5daabcf68bc2dbebf9db3c3f69e1cd24cd468e1054398d9a3c0b2ba2e0496b"
+    },
+    {
+      "url": "https://kimswork.app/images/loop-club-edit-0.9.3.webp",
+      "status": 200,
+      "sha256": "6f7caa737a4ba421e62bfe38a02622197df7396703b4c7cf121c71237f41cc17"
+    },
+    {
+      "url": "https://kimswork.app/images/loop-club-fx-0.9.3.webp",
+      "status": 200,
+      "sha256": "63b81664cc8ffc7a4da1531312483eb9f6751b7d57f7ce05ee0946cf1dc4059a"
+    },
+    {
+      "url": "https://kimswork.app/images/loop-club-synth-0.9.3.webp",
+      "status": 200,
+      "sha256": "53cc27b1a653bdfe15cc346d06dcd8927380ca8078eb21aa0fb4fcd9c7531f6d"
+    },
+    {
+      "url": "https://kimswork.app/images/loop-club-performance-0.9.3.webp",
+      "status": 200,
+      "sha256": "ef44d1a7d838536f9dc55b803936c9f9e6abf6c27f397aa4a3b362a438109871"
+    }
+  ],
+  "browser_visual_check": "not performed; actual native device images inspected, Astro build and488local references checked"
+}
