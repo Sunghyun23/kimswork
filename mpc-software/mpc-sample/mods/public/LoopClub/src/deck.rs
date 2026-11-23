@@ -215,12 +215,22 @@ impl Player {
         filtered.gain(self.attack * self.cut_gain)
     }
 }
+/// Shared by cubic audio reads and the waveform/disk position display.
+pub fn wrapped_position(head: f64, len: usize) -> f64 {
+    if len == 0 || !head.is_finite() {
+        return 0.;
+    }
+    let n = len as f64;
+    let wrapped = head.rem_euclid(n);
+    if wrapped >= n { 0. } else { wrapped }
+}
+pub fn position_fraction(head: f64, len: usize) -> f32 {
+    let fraction = (wrapped_position(head, len) / len.max(1) as f64) as f32;
+    fraction.min(f32::from_bits(1_f32.to_bits() - 1))
+}
 fn read(pcm: &[Frame], head: f64) -> Frame {
     let n = pcm.len() as i64;
-    let wrapped = head.rem_euclid(n as f64);
-    // rem_euclid can round a tiny negative remainder up to exactly len.
-    // Treat that endpoint as the loop start before indexing or interpolating.
-    let pos = if wrapped >= n as f64 { 0. } else { wrapped };
+    let pos = wrapped_position(head, pcm.len());
     let i = pos.floor() as i64;
     let f = (pos - i as f64) as f32;
     let a = pcm[(i - 1).rem_euclid(n) as usize];

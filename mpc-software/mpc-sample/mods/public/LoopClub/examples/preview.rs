@@ -97,6 +97,8 @@ fn main() -> std::io::Result<()> {
         (Page::TrackFx, "track-fx"),
         (Page::MasterFx, "master-fx"),
         (Page::Setup, "setup"),
+        (Page::Setup, "setup-timing"),
+        (Page::Setup, "setup-timing-on"),
         (Page::Chop, "chop"),
         (Page::Chop, "chop-transient"),
         (Page::Chop, "chop-bpm"),
@@ -146,8 +148,13 @@ fn main() -> std::io::Result<()> {
                 ui.chop_cursor = 3000;
             }
         }
+        let previous_metronome = e.metronome;
+        if name == "setup-timing-on" {
+            e.metronome = true;
+        }
         let s = Snapshot::capture(&e);
         ui.navigate(page, &s);
+        ui.setup_timing = name.starts_with("setup-timing");
         let mut canvas = Canvas::default();
         view::render(&ui, &s, &mut canvas);
         let data = json!({"kind":"host-render-not-device-screenshot","width":320,"height":240,"ops":canvas.ops});
@@ -155,6 +162,7 @@ fn main() -> std::io::Result<()> {
             dir.join(format!("{name}.json")),
             serde_json::to_vec_pretty(&data)?,
         )?;
+        e.metronome = previous_metronome;
     }
     e.selected = 0;
     ui.selected = 0;

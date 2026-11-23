@@ -3,7 +3,7 @@ import sys,json,time,subprocess,collections,wave
 import numpy as np,sounddevice as sd
 p=Path(__file__).resolve().parents[1];sys.path.insert(0,str(p/'tools'));from qa_device_matrix import QA,state,request
 import argparse
-parser=argparse.ArgumentParser(description='Isolated actual tempo/count/USB QA. Requires explicitly authorized discard/restarts.')
+parser=argparse.ArgumentParser(description='Isolated actual tempo/setup/fader/USB QA; explicit discard/restart authorization required.')
 parser.add_argument('--execute',action='store_true')
 if not parser.parse_args().execute:parser.error('--execute is required')
 out=p/'build/qa-device/tempo-0.11.4';q=QA(out);saved=json.loads((p/'build/qa-device/pad-notes-0.11.3/public-owner-restored.json').read_text());audio=collections.deque(maxlen=4000);stream=None;report={}
@@ -31,6 +31,9 @@ def capture_sound(seconds):audio.clear();time.sleep(seconds);return samples()
 def stop():q.button(81);q.wait(lambda s:s['words'][4]&1==0);time.sleep(.1)
 try:
  install(out/'qa.so','qa-stage');assert state()['project_storage']['session_id']=='tempo-count-20261124-r1';pid=state()['pid'];assert all(state()['words'][20+12*i]==0 for i in range(16))
+ q.button(6);q.button(111,True);q.wait(lambda s:s['page']==7 and s['ui_position']&(1<<52));q.capture('actual-setup-timing')
+ q.button(12);q.wait(lambda s:s['words'][4]&(1<<16));q.button(12);q.wait(lambda s:s['words'][4]&(1<<16)==0)
+ q.button(13);q.wait(lambda s:(s['words'][4]>>8)&255==0);q.button(13);q.wait(lambda s:(s['words'][4]>>8)&255==1);q.button(14);q.wait(lambda s:s['page']==0);report['setup_buttons_and_back']=True
  q.kind(0,1);taps(.5);report['tap_120_bpm']=bpm();taps(.6);report['tap_100_bpm']=bpm();q.capture('actual-tap-tempo')
  b=bpm();button(True);q.wait(lambda s:s['words'][4]&(1<<16));assert bpm()==b;button(True);q.wait(lambda s:s['words'][4]&(1<<16)==0);assert bpm()==b;report['shift_tap_only_toggles_metronome']=True
  q.setup();q.knob(1,.5);q.wait(lambda s:(s['words'][4]>>8)&255==1);q.button(6)
@@ -44,6 +47,17 @@ try:
  # The USB host sends digital zero; monitoring clicks must not become source PCM.
  assert state()['input_source']['selected']==2
  q.kind(1,0);button(True);q.wait(lambda s:s['words'][4]&(1<<16));q.pad(1,shift=True);q.wait(lambda s:s['words'][9]==2 and s['words'][8]>=s['words'][10],timeout=7);time.sleep(.2);q.pad(1,shift=True);q.wait(lambda s:s['words'][9]==0,timeout=7);stop();button(True);q.wait(lambda s:s['words'][4]&(1<<16)==0);assert state()['words'][39]>0;q.button(13);q.button(12);q.wait(lambda s:(s['words'][28]>>21)&3==1);q.event(kind='pad',index=0,on=True,velocity=90);x=capture_sound(.4);q.event(kind='pad',index=0,on=False,velocity=0);assert float(np.max(np.abs(x)))<.0001;report['click_not_printed_to_recorded_usb_pcm_peak']=float(np.max(np.abs(x)))
+ # Full fader travel is relative to the grab anchor, not an absolute seek.
+ for _ in range(3):q.button(12)
+ q.wait(lambda s:(s['words'][28]>>21)&3==3);q.knob(1,1);q.knob(4,.5);q.event(kind='pad',index=0,on=True,velocity=90);q.wait(lambda s:s['words'][1191]&2)
+ import struct
+ pair=lambda word:struct.unpack('<ff',int(word).to_bytes(8,'little'))
+ anchor=pair(state()['words'][1192])[0];n=state()['words'][770];span=2*60/bpm()*44100;level=state()['words'][29];endpoints={}
+ for value in [0.,1.]:
+  q.knob(4,value);expected=((value-anchor)*span)%n/n
+  q.wait(lambda s:abs(pair(s['words'][1190])[0]-expected)<.001,timeout=5)
+  current=state();assert pair(current['words'][1192])[0]==value;assert current['words'][768]==0 and current['words'][769]==n;assert current['words'][29]==level;endpoints[str(value)]={'wave_fraction':pair(current['words'][1190])[0],'expected':expected,'normalized_fader':pair(current['words'][1192])[0]};q.capture('actual-fader-'+('min'if value==0 else'max'))
+ q.event(kind='pad',index=0,on=False,velocity=0);stop();report['fader_endpoints_full_wave_and_unchanged_level']=endpoints
  button(True);q.wait(lambda s:s['words'][4]&(1<<16));q.setup();seq=state()['project_io']['sequence'];q.pad(7);q.wait(lambda s:s['project_io']['sequence']>seq and s['project_io']['result']==1,timeout=15);q.pad(8);q.wait(lambda s:s['project_io']['sequence']>seq+1 and s['project_io']['result']==2,timeout=15);q.button(6);q.wait(lambda s:s['words'][4]&(1<<16));q.capture('actual-metronome-recalled');assert state()['pid']==pid;report['saved_metronome_option_recalls']=True;report['same_pid_entire_test']=pid
  (out/'verification.json').write_text(json.dumps(report,indent=2));print('TAP / METRONOME / FOUR-COUNT DEVICE PASS',json.dumps(report),flush=True)
 finally:

@@ -157,8 +157,10 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             ),
             Page::Setup => if ui.input_view {
                 "INPUT SOURCE"
+            } else if ui.setup_timing {
+                "SETUP 1/2"
             } else {
-                "PROJECT"
+                "PROJECT 2/2"
             }
             .to_owned(),
             Page::Chop => "CHOP".to_owned(),
@@ -200,8 +202,13 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 && ui.fx_edit.is_some_and(|e| e.texture || e.target != 0))
         {
             format!(
-                "{:.0} BPM M{:.0}%{}",
+                "{:.0}{} M{:.0}%{}",
                 s.bpm(),
+                if s.words[4] & (1 << 16) != 0 {
+                    ""
+                } else {
+                    " BPM"
+                },
                 s.level(16) * 100.,
                 if s.words[4] & (1 << 16) != 0 {
                     " CLK"
@@ -211,8 +218,13 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             )
         } else {
             format!(
-                "{:.0} BPM {}{}",
+                "{:.0}{} {}{}",
                 s.bpm(),
+                if s.words[4] & (1 << 16) != 0 {
+                    ""
+                } else {
+                    " BPM"
+                },
                 if s.words[4] & 1 != 0 { "RUN" } else { "STOP" },
                 if s.words[4] & (1 << 16) != 0 {
                     " CLK"
@@ -271,7 +283,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         tabs = ["BACK", "SOURCE", "TARGET"];
     }
     if ui.page == Page::Source {
-        tabs = ["BACK", "PROJECT", "LOAD"];
+        tabs = ["BACK", "SETUP", "LOAD"];
     }
     if ui.page == Page::DrumSound {
         tabs = ["BACK", "LAYER 1", "LAYER 2"];
@@ -341,8 +353,14 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             };
         }
     }
-    if ui.page == Page::Setup && ui.input_view {
-        tabs = ["BACK", "SELECT", "LOOP"];
+    if ui.page == Page::Setup {
+        tabs = if ui.input_view {
+            ["BACK", "SELECT", "LOOP"]
+        } else if ui.setup_timing {
+            ["METRO", "PREROLL", "BACK"]
+        } else {
+            ["TIMING", "LOOP", "INPUT"]
+        };
     }
     if ui.page == Page::FxSettings {
         let fx = ui.edited_fx(s);
@@ -368,7 +386,9 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         tabs = ["ERASE NOTES", "COPY NOTES", "DONE"];
     }
     for (i, title) in tabs.iter().enumerate() {
-        let active = if let Some(copy) = ui.pad_notes_edit {
+        let active = if ui.page == Page::Setup && ui.setup_timing && !ui.input_view {
+            i == 0 && s.words[4] & (1 << 16) != 0 || i == 1 && (s.words[4] >> 8) & 255 != 0
+        } else if let Some(copy) = ui.pad_notes_edit {
             i == usize::from(copy)
         } else if ui.page == Page::Loop && ui.loop_edit {
             i == ui.edit_operation as usize
@@ -760,6 +780,49 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                     fx_cell(p, pad, "", "", false);
                 }
             }
+        }
+        Page::Setup if ui.setup_timing => {
+            let count = ((s.words[4] >> 8) & 255) as u8;
+            let metro = s.words[4] & (1 << 16) != 0;
+            for (i, (title, on, detail)) in [
+                ("METRONOME", metro, "PLAY / RECORD"),
+                (
+                    "PREROLL",
+                    count > 0,
+                    match count {
+                        1 => "1 BAR / 4 BEATS",
+                        2 => "2 BARS / 8 BEATS",
+                        _ => "COUNT-IN OFF",
+                    },
+                ),
+            ]
+            .iter()
+            .enumerate()
+            {
+                let x = 5 + i as i32 * 158;
+                p.rect(x, 58, 152, 91, PANEL);
+                p.text(x + 8, 63, 136, 23, 18., INK, title);
+                p.rect(x + 8, 91, 136, 31, if *on { GOLD } else { BG });
+                p.text(
+                    x + 10,
+                    93,
+                    132,
+                    27,
+                    23.,
+                    if *on { BG } else { DIM },
+                    if *on { "ON" } else { "OFF" },
+                );
+                p.text(x + 6, 127, 140, 18, 13., DIM, detail);
+            }
+            p.text(
+                6,
+                156,
+                308,
+                19,
+                14.,
+                INK,
+                "B1 / PAD1: CLICK | B2 / PAD2: PRE",
+            );
         }
         Page::Setup => {
             let names = [
@@ -1328,8 +1391,10 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             }
             .into()
         }
+    } else if ui.page == Page::Setup && ui.setup_timing {
+        "+/-: PROJECT | B3: BACK TO LOOP".into()
     } else if ui.page == Page::Setup {
-        "SHIFT K3: SWING GRID / MIDI ONLY".into()
+        "+/-: TIMING | SHIFT K3: GRID".into()
     } else if ui.page == Page::Output {
         "USB STEREO / MASTER FX ON BOTH".into()
     } else if ui.page == Page::Mix {
@@ -2627,12 +2692,12 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         15.,
         GOLD,
         &format!(
-            "{:.0} BPM{}",
+            "{:.0} {}",
             s.bpm(),
             if s.words[4] & (1 << 16) != 0 {
-                " CLK"
+                "CLK"
             } else {
-                ""
+                "BPM"
             }
         ),
     );
@@ -2762,15 +2827,32 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         if grabbed { "GRABBED" } else { "PAD 1 GRAB" },
     );
     p.rect(5, 170, 310, 21, PANEL);
-    let mut wave = TimelinePreview {
-        p,
-        x: 5,
-        y: 170,
-        w: 310,
-        h: 21,
-    };
-    audio_timeline(s, &mut wave);
-    p.rect(5 + (s.deck_head() * 309.) as i32, 170, 1, 21, GOLD);
+    // Draw directly in this strip: the generic timeline has its own margins
+    // and transport cursor, neither of which represents the scratch head.
+    if s.words[768] == 0 && s.words[769] == s.words[770] {
+        for i in 0..256 {
+            let low = f32::from_bits(s.words[512 + i] as u32);
+            let high = f32::from_bits((s.words[512 + i] >> 32) as u32);
+            let left = 5 + i as i32 * 310 / 256;
+            let right = 5 + (i + 1) as i32 * 310 / 256;
+            let top = 180 - (high.clamp(-1., 1.) * 10.) as i32;
+            let bottom = 180 - (low.clamp(-1., 1.) * 10.) as i32;
+            p.rect(
+                left,
+                top,
+                (right - left).max(1),
+                (bottom - top).max(1),
+                GOLD,
+            );
+        }
+        p.rect(
+            5 + ((s.deck_head() * 310.) as i32).min(309),
+            170,
+            1,
+            21,
+            GOLD,
+        );
+    }
     for (i, (name, value)) in [
         ("K1 SPEED", format!("{:.2}x", s.deck().speed)),
         (

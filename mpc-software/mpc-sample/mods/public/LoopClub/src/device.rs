@@ -736,6 +736,15 @@ impl Mod for LoopClub {
             }
             return Flow::Consume;
         }
+        if self.ui.page == Page::Setup
+            && !self.ui.input_view
+            && !event.shift
+            && matches!(event.code, 54 | 55)
+        {
+            self.ui.setup_timing = !self.ui.setup_timing;
+            self.ui.notice = "";
+            return Flow::Consume;
+        }
         if event.shift && matches!(event.code, 54 | 55) {
             send(if event.code == 55 {
                 Command::Undo
@@ -757,6 +766,7 @@ impl Mod for LoopClub {
             match event.code {
                 12 => {
                     self.ui.input_view = false;
+                    self.ui.setup_timing = true;
                     return Flow::Consume;
                 }
                 13 | 111 => {
@@ -836,7 +846,9 @@ impl Mod for LoopClub {
             1 => self.ui.navigate(Page::Mix, &self.snapshot),
             0 => self.ui.navigate(Page::TrackFx, &self.snapshot),
             111 => {
-                if self.ui.page == Page::Loop && self.ui.loop_edit && !event.shift {
+                if self.ui.page == Page::Setup && !event.shift {
+                    self.ui.navigate(Page::Loop, &self.snapshot);
+                } else if self.ui.page == Page::Loop && self.ui.loop_edit && !event.shift {
                     self.ui.loop_edit = false;
                     self.ui.edit_source = None;
                     self.ui.notice = "";
@@ -878,7 +890,8 @@ impl Mod for LoopClub {
                         at: self.ui.chop_cursor,
                     });
                 } else if event.shift {
-                    self.ui.navigate(Page::Setup, &self.snapshot)
+                    self.ui.navigate(Page::Setup, &self.snapshot);
+                    self.ui.setup_timing = true;
                 } else {
                     if self.snapshot.words[16 + self.ui.selected * 12 + 4] > 0 {
                         send(Command::Pad(self.ui.selected, false));
@@ -1159,6 +1172,9 @@ impl Mod for LoopClub {
         if !self.ui.active {
             return;
         }
+        if let Some(command) = turntable_wave_reset(&self.ui, &self.snapshot) {
+            send(command);
+        }
         if self.browser.open {
             self.browser.render(&mut NativePainter(*graphics))
         } else {
@@ -1172,6 +1188,20 @@ impl Mod for LoopClub {
 // Constructor only on the intended target; host tests never install hooks.
 #[cfg(all(target_os = "linux", target_arch = "aarch64"))]
 mpc_sample_sdk::export_mod!(LoopClub);
+
+/// TURN renders full-source coordinates; a previous CHOP viewport is unrelated.
+pub fn turntable_wave_reset(ui: &Ui, s: &Snapshot) -> Option<Command> {
+    (ui.page == Page::Play
+        && s.words[3] == ui.selected as u64
+        && s.track_kind(ui.selected) == Kind::Audio
+        && s.audio_target(ui.selected) == crate::audio::RecordTarget::Turntable
+        && (s.words[768] != 0 || s.words[769] != s.words[770]))
+        .then_some(Command::WaveView {
+            track: ui.selected,
+            start: 0,
+            end: s.words[770] as u32,
+        })
+}
 
 /// Normalize the current raw CC value; `low` is not the current control value.
 pub fn normalize_cc(raw: u32, _low: f32, range: f32) -> f32 {

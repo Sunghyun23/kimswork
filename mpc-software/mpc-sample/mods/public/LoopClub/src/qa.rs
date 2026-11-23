@@ -319,6 +319,7 @@ pub fn paint(ui: &crate::ui::Ui, s: &Snapshot, browser: bool) {
             | ((ui.texture_slot as u64) << 32)
             | ((ui.fx_focus as u64) << 40)
             | (u64::from(ui.perform_section) << 48)
+            | (u64::from(ui.setup_timing) << 52)
             | (u64::from(ui.pad_notes_edit.is_some()) << 56)
             | (u64::from(ui.pad_notes_edit == Some(true)) << 57)
             | (u64::from(ui.loop_edit) << 58)

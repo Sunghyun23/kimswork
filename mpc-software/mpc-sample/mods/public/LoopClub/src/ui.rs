@@ -185,14 +185,17 @@ impl Snapshot {
         s.words[1187] = e.active_voices() as u64;
         s.words[1189] = pair(current.deck.speed, f32::from(current.deck.range));
         let d = e.decks[e.selected];
-        let n = current.source_frames.max(1) as f64;
-        s.words[1190] = pair((d.state.head.rem_euclid(n) / n) as f32, d.rate);
+        let n = current.source_frames;
+        s.words[1190] = pair(crate::deck::position_fraction(d.state.head, n), d.rate);
         s.words[1191] = u64::from(current.deck.slip)
             | (u64::from(d.state.grabbed) << 1)
             | (u64::from(d.active) << 2)
             | (u64::from(current.deck.reverse_cut) << 3)
             | (u64::from(d.state.returning) << 4);
-        s.words[1192] = pair(d.state.fader, (d.state.slip.rem_euclid(n) / n) as f32);
+        s.words[1192] = pair(
+            d.state.fader,
+            crate::deck::position_fraction(d.state.slip, n),
+        );
 
         s.words[1188] = e.swing.map_or(0, |v| {
             u64::from(v.amount.to_bits()) | (u64::from(v.sixteenth) << 32) | (1 << 33)
@@ -629,6 +632,8 @@ pub struct Ui {
     pub loop_record_seen: bool,
     pub loop_play_track: usize,
     pub loop_start_revision: u64,
+    pub setup_timing: bool,
+    pub last_preroll: u8,
     pub input_view: bool,
     pub input_choice: usize,
     pub synth_page: u8,
@@ -691,6 +696,8 @@ impl Default for Ui {
             loop_record_seen: false,
             loop_play_track: 0,
             loop_start_revision: 0,
+            setup_timing: false,
+            last_preroll: 1,
             input_view: false,
             input_choice: 0,
             page: Page::Loop,
@@ -1089,6 +1096,35 @@ impl Ui {
             }
             return;
         }
+        if self.page == Page::Setup && !self.input_view {
+            if self.setup_timing {
+                match key {
+                    0 => send(Command::ToggleMetronome),
+                    1 => {
+                        let current = ((s.words[4] >> 8) & 255) as u8;
+                        let next = if current > 0 {
+                            self.last_preroll = current;
+                            0
+                        } else {
+                            self.last_preroll.clamp(1, 2)
+                        };
+                        send(Command::Preroll(next));
+                    }
+                    _ => self.navigate(Page::Loop, s),
+                }
+            } else {
+                match key {
+                    0 => self.setup_timing = true,
+                    1 => self.navigate(Page::Loop, s),
+                    _ => {
+                        self.input_view = true;
+                        self.input_choice = usize::from(crate::input_hw::selected());
+                    }
+                }
+            }
+            self.notice = "";
+            return;
+        }
         if self.page == Page::Loop && self.loop_edit {
             self.edit_operation = key.min(2) as u8;
             self.edit_source = None;
@@ -1182,6 +1218,7 @@ impl Ui {
                 self.navigate(Page::Loop, s);
             } else if key == 1 {
                 self.navigate(Page::Setup, s);
+                self.setup_timing = true;
             }
             return;
         }
@@ -1378,6 +1415,12 @@ impl Ui {
         mut send: impl FnMut(Command),
     ) -> Action {
         if pad >= 16 {
+            return Action::None;
+        }
+        if on && self.page == Page::Setup && self.setup_timing && !self.input_view {
+            if pad < 2 {
+                self.soft(pad, false, s, send);
+            }
             return Action::None;
         }
         if on && self.page == Page::Setup && self.input_view {
@@ -2648,7 +2691,13 @@ impl Ui {
             }
             Page::Setup => match index {
                 0 => send(Command::Bpm((40. + f64::from(value) * 200.).round())),
-                1 => send(Command::Preroll((value * 2.99) as u8)),
+                1 => {
+                    let current = ((s.words[4] >> 8) & 255) as u8;
+                    if current > 0 {
+                        self.last_preroll = current;
+                    }
+                    send(Command::Preroll((value * 2.99) as u8));
+                }
                 2 => {
                     let mut swing = s.swing().unwrap_or(crate::swing::Basis {
                         amount: 50.,

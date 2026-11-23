@@ -39,7 +39,10 @@ class QA:
             self.event(kind='encoder',delta=1 if delta>0 else -1)
             self.wait(lambda s:s['words'][3]==current)
         self.wait(lambda s:s['words'][3]==index)
-    def setup(self):self.button(6);self.button(111,True);self.wait(lambda s:s['page']==7)
+    def setup(self):
+        self.button(6);self.button(111,True);s=self.wait(lambda s:s['page']==7)
+        if s['ui_position']&(1<<52):
+            self.button(54);self.wait(lambda s:s['ui_position']&(1<<52)==0)
     def kind(self,index,kind):self.select(index);self.setup();self.pad(kind);self.wait(lambda s:s['words'][16+index*12]&255==kind)
     def capture(self,name):
         time.sleep(.3) # Wait for the visible DRM page to catch up with queued state.
