@@ -1,0 +1,59 @@
+{
+  "version": "0.4.0",
+  "date": "2026-11-23T01:36:32.451137+00:00",
+  "scope": "local MPC Sample candidate; no new public release",
+  "normal_sha256": "3252d9c511dcbbadac2a049ed8239fdeb4606e1bc75f0f66b86fe1e323dd7910",
+  "project_format": 4,
+  "project_versions_readable": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "older_loop_club_cannot_read_v4_saves": true,
+  "native_tests": {
+    "debug": 203,
+    "release": 203
+  },
+  "strict_clippy": [
+    "host all-targets PASS",
+    "ARM64 lib PASS"
+  ],
+  "arm64_build": "PASS",
+  "device_checks": {
+    "track_settings_fader_target": true,
+    "track_tremolo_settings_no_auto_enable_all_divisions_shapes_hold_latch": true,
+    "real_usb_auto_pan_audio": {
+      "finite": true,
+      "peak": 0.24413318932056427,
+      "left_minus_right_min": -0.1853942722082138,
+      "left_minus_right_max": 0.19879385828971863
+    },
+    "auto_filter_release_after_navigation_preserves_pan_latch": true,
+    "master_settings_fader_target": true,
+    "master_modulation_hold_latch_settings_and_capacity": true,
+    "temporary_master_hold_not_persisted_and_latch_recalled": true,
+    "existing_wobble_sync_shape_and_release_from_settings": true,
+    "new_sound_has_seven_pages_pitch_filter_lfo": true,
+    "modulation_project_save_load": true
+  },
+  "actual_callback_timing": {
+    "max_deadline_pct": 59.7503,
+    "p99_deadline_pct_upper": 40.0,
+    "scope": "actual primary callback elapsed time including scheduler interruptions; QA instrumentation"
+  },
+  "owner_restore": "all 16 owner track data slots compared after normal runtime restoration",
+  "sd_persistence": {
+    "runtime_and_boot_sha256_match": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20
+  },
+  "screenshots": "actual DRM captures inspected; private QA evidence under build/qa-device/modulation-0.4.0",
+  "limits": [
+    "Remote queued controller checks do not certify physical pad/SHIFT/DATA/fader transport.",
+    "Latest hardware power-cycle and long-duration worst-case CPU load not certified.",
+    "Historical QA builds have exceeded a callback deadline; the final measured load is not a worst-case or zero-overrun guarantee.",
+    "USB remains one stereo pair; multi-channel USB routing not implemented.",
+    "Completed-recording UNDO/REDO not implemented; SAMPLE REC/SEQ REC still share the loop command."
+  ]
+}

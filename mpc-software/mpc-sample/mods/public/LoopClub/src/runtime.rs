@@ -56,6 +56,7 @@ pub struct Runtime {
     import_done: AtomicPtr<crate::sample::ImportJob>,
     external: [AtomicU64; 512],
     requested_track: AtomicUsize,
+    recording_track: AtomicUsize,
     was_active: AtomicBool,
     engine: UnsafeCell<Option<Box<Engine>>>,
     busy: AtomicBool,
@@ -91,6 +92,7 @@ impl Default for Runtime {
             import_done: AtomicPtr::new(std::ptr::null_mut()),
             external: std::array::from_fn(|_| AtomicU64::new(0)),
             requested_track: AtomicUsize::new(0),
+            recording_track: AtomicUsize::new(16),
             was_active: AtomicBool::new(false),
             engine: UnsafeCell::new(None),
             busy: AtomicBool::new(false),
@@ -141,6 +143,16 @@ impl Runtime {
     }
     /// Keep note-off ownership when the selected track changes. Four independent
     /// external sources per pitch; source IDs are the SDK's 32-bit firmware IDs.
+    fn midi_target(&self) -> usize {
+        let recording = self.recording_track.load(Ordering::Acquire);
+        if recording < crate::model::ACTIVE_TRACKS {
+            recording
+        } else {
+            self.requested_track
+                .load(Ordering::Acquire)
+                .min(crate::model::ACTIVE_TRACKS - 1)
+        }
+    }
     pub fn external_note(&self, source: u32, note: u8, velocity: u8, on: bool) -> bool {
         if note > 127 {
             return false;
@@ -170,7 +182,7 @@ impl Runtime {
                 if !active {
                     return false;
                 }
-                let selected = self.requested_track.load(Ordering::Acquire).min(15);
+                let selected = self.midi_target();
                 if self.external[slot]
                     .compare_exchange(
                         old,
@@ -203,7 +215,7 @@ impl Runtime {
         if !active || !on || velocity == 0 {
             return false;
         }
-        let track = self.requested_track.load(Ordering::Acquire).min(15);
+        let track = self.midi_target();
         for slot in start..start + 4 {
             if self.external[slot]
                 .compare_exchange(
@@ -285,7 +297,7 @@ impl Runtime {
     }
     pub fn enqueue(&self, c: Command) {
         if let Command::Select(track) | Command::Pad(track, _) = c
-            && track < 16
+            && track < crate::model::ACTIVE_TRACKS
         {
             self.requested_track.store(track, Ordering::Release);
         }
@@ -325,6 +337,8 @@ impl Runtime {
                     }
                 }
             }
+            let before_selected = e.selected;
+            let before_requested = self.requested_track.load(Ordering::Acquire);
             let active = self.active.load(Ordering::Acquire);
             if active && !self.was_active.swap(active, Ordering::AcqRel) {
                 for _ in 0..16384 {
@@ -342,24 +356,27 @@ impl Runtime {
                 let Some(c) = (unsafe { self.commands.pop_shared() }) else {
                     break;
                 };
-                let is_capture = matches!(c, Command::Record(_))
-                    || matches!(c,Command::Pad(i,false) if i<16&&e.tracks[i].empty());
+                let is_capture = matches!(c, Command::Record(_) | Command::LoopRecord(_))
+                    || matches!(c,Command::Pad(i,false) if i<crate::model::ACTIVE_TRACKS&&e.tracks[i].empty());
                 let track = match c {
-                    Command::Record(i) | Command::Pad(i, _) => i,
+                    Command::Record(i) | Command::LoopRecord(i) | Command::Pad(i, _) => i,
                     _ => 16,
                 };
                 if is_capture
-                    && track < 16
+                    && track < crate::model::ACTIVE_TRACKS
                     && e.tracks[track].kind == Kind::Audio
+                    && (!matches!(c,Command::LoopRecord(_)) || e.tracks[track].audio_target==crate::audio::RecordTarget::Input)
                     && (!self.input_seen.load(Ordering::Acquire)
                         || self.input_rate.load(Ordering::Relaxed) != rate)
                 {
-                    let _ = e.command(Command::Select(track));
+                    if e.recorder.is_none() { let _ = e.command(Command::Select(track)); }
+                    if matches!(c,Command::LoopRecord(_)){e.loop_revision=e.loop_revision.wrapping_add(1);}
                     e.error = Some(Error::InputUnavailable);
                     continue;
                 }
                 let _ = e.command(c);
             }
+            self.recording_track.store(e.recorder.filter(|r|r.midi).map_or(16,|r|r.track),Ordering::Release);
             if self.kit_done.load(Ordering::Acquire).is_null() {
                 let ptr = self.kit_ready.swap(std::ptr::null_mut(), Ordering::AcqRel);
                 if !ptr.is_null() {
@@ -383,7 +400,7 @@ impl Runtime {
                 let input = unsafe { self.input.pop_shared() };
                 if input.is_none()
                     && e.recorder.is_some_and(|r| {
-                        e.tracks[r.track].kind == Kind::Audio
+                        !r.midi
                             && !r.resample
                             && e.clock.tick() >= r.start
                     })
@@ -417,7 +434,8 @@ impl Runtime {
                             (seconds * frequency * std::f32::consts::TAU).sin()
                                 * (1. - seconds / 0.025)
                                 * 0.08
-                                * e.master_gain,
+                                * e.master_gain
+                                * e.hardware_gain,
                         );
                         s = s.combine(click);
                         if !e.separate_usb {
@@ -438,6 +456,12 @@ impl Runtime {
                     *dst = added.clamp(f64::from(i32::MIN), f64::from(i32::MAX)) as i32;
                 }
             }
+            // The recorder can hand off inside this block. Publish its final owner,
+            // preserving any newer UI selection queued concurrently.
+            if e.selected != before_selected {
+                let _ = self.requested_track.compare_exchange(before_requested, e.selected, Ordering::AcqRel, Ordering::Acquire);
+            }
+            self.recording_track.store(e.recorder.filter(|r| r.midi).map_or(16, |r| r.track), Ordering::Release);
             let mut s = Snapshot::capture(e);
             s.words[792] = self.lost_input.load(Ordering::Relaxed);
             s.words[793] = self.missing_input.load(Ordering::Relaxed);

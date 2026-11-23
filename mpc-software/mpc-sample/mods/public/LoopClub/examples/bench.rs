@@ -74,12 +74,14 @@ fn main() {
                 a: 0.6,
                 b: 0.3,
                 mix: 0.7,
+                ..Fx::default()
             };
             e.performance[1] = Fx {
                 effect: Effect::Wobble,
                 a: 0.2,
                 b: 0.3,
                 mix: 0.2,
+                ..Fx::default()
             };
         }
         let mut times = Vec::new();

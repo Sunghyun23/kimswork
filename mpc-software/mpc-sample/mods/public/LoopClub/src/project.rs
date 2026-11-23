@@ -12,7 +12,13 @@ use std::{
 #[derive(Serialize, Deserialize)]
 struct TrackState {
     #[serde(default)]
+    origin: u64,
+    #[serde(default)]
     kit_frames: [usize; 16],
+    #[serde(default)]
+    xpm: Option<crate::xpm::Meta>,
+    #[serde(default)]
+    xpm_frames: [[usize; 3]; 16],
     #[serde(default)]
     secondary_frames: [usize; 16],
     #[serde(default)]
@@ -26,6 +32,14 @@ struct TrackState {
     #[serde(default)]
     source_frames: usize,
     #[serde(default)]
+    source_ticks: u64,
+    #[serde(default)]
+    audio_sequence: bool,
+    #[serde(default)]
+    audio_settings: crate::audio::Settings,
+    #[serde(default)]
+    audio_target: crate::audio::RecordTarget,
+    #[serde(default)]
     chops: crate::chop::Chops,
     #[serde(default)]
     generated: bool,
@@ -35,6 +49,8 @@ struct TrackState {
     pattern: crate::music::PatternConfig,
     #[serde(default)]
     chord: crate::music::ChordConfig,
+    #[serde(default)]
+    chord_mode: bool,
     kind: Kind,
     name: String,
     mix: Mix,
@@ -50,6 +66,10 @@ struct TrackState {
 }
 #[derive(Serialize, Deserialize)]
 struct State {
+    #[serde(default)]
+    transport_frame: u64,
+    #[serde(default)]
+    chain: crate::chain::Config,
     version: u32,
     rate: u32,
     bpm: f64,
@@ -75,7 +95,9 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
         ));
     }
     let state = State {
-        version: 3,
+        chain: engine.chain.config,
+        version: 7,
+        transport_frame: engine.clock.frame,
         rate: engine.clock.rate,
         bpm: engine.clock.bpm,
         preroll: engine.preroll,
@@ -83,24 +105,34 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
         performance: engine.performance,
         bus_fx: engine.saved_bus_fx(),
         master_fx: engine.master_fx,
-        sidechain: engine.sidechain,
-        texture: engine.texture,
+        sidechain: engine.saved_sidechain(),
+        texture: engine.saved_texture(),
         tracks: (0..16)
             .map(|i| {
                 let t = &engine.tracks[i];
                 TrackState {
+                    origin: t.origin,
                     kit_frames: t.kit.clips.each_ref().map(Vec::len),
+                    xpm: t.kit.xpm.as_ref().map(|x| x.meta),
+                    xpm_frames: t.kit.xpm.as_ref().map_or([[0; 3]; 16], |x| {
+                        x.extra.each_ref().map(|a| a.each_ref().map(Vec::len))
+                    }),
                     secondary_frames: t.kit.secondary.each_ref().map(Vec::len),
                     layer_names: t.kit.names.clone(),
                     kit_name: t.kit.name.clone(),
                     kit_id: t.kit.id.clone(),
                     record_mode: t.record_mode,
                     source_frames: t.source_frames,
+                    source_ticks: t.source_ticks,
+                    audio_sequence: t.audio_sequence,
+                    audio_settings: t.audio_settings,
+                    audio_target: t.audio_target,
                     chops: t.chops,
                     generated: t.generated,
                     generated_sounds: t.generated_sounds,
                     pattern: t.pattern,
                     chord: t.chord,
+                    chord_mode: t.chord_mode,
                     kind: t.kind,
                     name: t.name.clone(),
                     mix: t.mix,
@@ -155,6 +187,14 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
                     f.write_all(&sample.r.to_le_bytes())?;
                 }
             }
+            if let Some(x) = &t.kit.xpm {
+                for clip in x.extra.iter().flatten() {
+                    for sample in clip {
+                        f.write_all(&sample.l.to_le_bytes())?;
+                        f.write_all(&sample.r.to_le_bytes())?;
+                    }
+                }
+            }
         }
         f.flush()?;
         f.get_ref().sync_all()?;
@@ -185,11 +225,13 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
     f.read_exact(&mut bytes)?;
     let s: State = serde_json::from_slice(&bytes)?;
     if s.tracks.len() != 16
-        || ![1, 2, 3].contains(&s.version)
+        || ![1, 2, 3, 4, 5, 6, 7].contains(&s.version)
+        || s.transport_frame > u64::from(s.rate) * u64::from(u32::MAX)
         || s.rate != expected_rate
         || !s.bpm.is_finite()
         || !(40.0..=240.0).contains(&s.bpm)
         || s.preroll > 2
+        || !s.chain.valid()
         || !s.master.is_finite()
         || !(0.0..=1.0).contains(&s.master)
         || !s.performance.iter().all(Fx::valid)
@@ -203,16 +245,26 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
     let mut total = 0_u64;
     let mut kit_total = 0usize;
     for t in &s.tracks {
+        if s.version >= 7
+            && t.origin
+                > crate::clock::Clock::new(s.rate, s.bpm)
+                    .tick_at(s.transport_frame)
+                    .saturating_add(16 * PPQ)
+        {
+            return Err(invalid("Invalid saved loop origin"));
+        }
         let frames = t
             .kit_frames
             .iter()
             .chain(t.secondary_frames.iter())
+            .chain(t.xpm_frames.iter().flatten())
             .try_fold(0usize, |a, b| a.checked_add(*b))
             .ok_or_else(|| invalid("Kit size overflow"))?;
         if frames > crate::bank::KIT_BYTES / 8
             || t.kit_frames
                 .iter()
                 .chain(t.secondary_frames.iter())
+                .chain(t.xpm_frames.iter().flatten())
                 .any(|n| *n > expected_rate as usize * 16)
             || t.layer_names
                 .iter()
@@ -225,6 +277,26 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
             || t.kit_id.chars().any(char::is_control)
         {
             return Err(invalid("Invalid saved kit"));
+        }
+        if let Some(meta) = t.xpm {
+            // Kit data survives SOURCE changes, just like the pre-XPM kit layers.
+            // Validate all dormant zones too; they become audible only on Drum tracks.
+            if s.version < 6 || !meta.valid() {
+                return Err(invalid("Invalid XPM metadata"));
+            }
+            for pad in 0..16 {
+                let count = usize::from(meta.pads[pad].count);
+                if count > 0 && t.kit_frames[pad] == 0 {
+                    return Err(invalid("Missing XPM primary layer"));
+                }
+                for z in 0..3 {
+                    if (z + 1 < count) != (t.xpm_frames[pad][z] > 0) {
+                        return Err(invalid("XPM layer frame count mismatch"));
+                    }
+                }
+            }
+        } else if t.xpm_frames.iter().flatten().any(|n| *n > 0) {
+            return Err(invalid("XPM PCM without metadata"));
         }
         kit_total = kit_total
             .checked_add(frames * 8)
@@ -244,6 +316,8 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
             || !t.synth.valid()
             || !t.drums.iter().all(Drum::valid)
             || !t.fx.iter().all(Fx::valid)
+            || !t.audio_settings.valid()
+            || t.source_ticks > PPQ * 4 * 4096
             || t.source_frames > capacity
             || t.audio_frames > capacity + (s.rate as usize * 6)
             || t.events.len() > MAX_EVENTS
@@ -252,7 +326,9 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
             return Err(invalid("Invalid track settings"));
         }
         if (t.kind != Kind::Audio && t.audio_frames != 0)
-            || (t.kind == Kind::Audio && !t.events.is_empty())
+            || (t.kind == Kind::Audio && !t.audio_sequence && !t.events.is_empty())
+            || (t.audio_sequence
+                && (t.kind != Kind::Audio || t.audio_frames == 0 || t.source_ticks == 0))
         {
             return Err(invalid("Content does not match track kind"));
         }
@@ -275,9 +351,12 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
             return Err(invalid("Content in empty track"));
         }
         if t.events.windows(2).any(|e| e[0].tick > e[1].tick)
-            || t.events
-                .iter()
-                .any(|e| e.note > 127 || e.velocity > 127 || e.tick >= t.length_ticks)
+            || t.events.iter().any(|e| {
+                e.note > 127
+                    || e.velocity > 127
+                    || e.tick >= t.length_ticks
+                    || (e.slice && (t.kind != Kind::Audio || e.note >= t.chops.count))
+            })
         {
             return Err(invalid("Invalid MIDI events"));
         }
@@ -289,13 +368,21 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         return Err(invalid("Truncated or trailing project data"));
     }
     let mut e = Engine::new(expected_rate, s.bpm, capacity);
+    if s.version >= 7 {
+        e.clock.frame = s.transport_frame;
+    }
     e.preroll = s.preroll;
+    e.chain.config = s.chain;
     e.master = s.master;
     e.master_gain = s.master;
-    e.performance = s.performance.map(|fx| Fx {
-        effect: Effect::Off,
-        ..fx
-    });
+    e.performance = if s.version >= 4 {
+        s.performance
+    } else {
+        s.performance.map(|fx| Fx {
+            effect: Effect::Off,
+            ..fx
+        })
+    };
     e.bus_fx = s.bus_fx;
     e.master_fx = s.master_fx;
     e.sidechain = s.sidechain;
@@ -306,6 +393,15 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         dst.generated_sounds = t.generated_sounds;
         dst.pattern = t.pattern;
         dst.chord = t.chord;
+        dst.chord_mode = t.chord_mode;
+        dst.audio_settings = t.audio_settings;
+        dst.audio_target = t.audio_target;
+        dst.source_ticks = if t.kind == Kind::Audio && t.source_ticks == 0 {
+            t.length_ticks
+        } else {
+            t.source_ticks
+        };
+        dst.audio_sequence = t.audio_sequence;
         dst.source_frames = if t.source_frames == 0 {
             t.audio_frames
         } else {
@@ -321,6 +417,7 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         if t.audio_frames > dst.audio.len() {
             dst.audio.resize(t.audio_frames, Frame::ZERO);
         }
+        dst.origin = if s.version >= 7 { t.origin } else { 0 };
         dst.kind = t.kind;
         dst.record_mode = t.record_mode;
         dst.name = t.name;
@@ -387,6 +484,30 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
                 }
             }
         }
+        if let Some(meta) = t.xpm {
+            let mut x = Box::new(crate::xpm::Data {
+                meta,
+                ..Default::default()
+            });
+            for pad in 0..16 {
+                for zone in 0..3 {
+                    let clip = &mut x.extra[pad][zone];
+                    clip.resize(t.xpm_frames[pad][zone], Frame::ZERO);
+                    for sample in clip {
+                        let mut raw = [0; 8];
+                        f.read_exact(&mut raw)?;
+                        *sample = Frame {
+                            l: f32::from_le_bytes(raw[..4].try_into().unwrap()),
+                            r: f32::from_le_bytes(raw[4..].try_into().unwrap()),
+                        };
+                        if !sample.finite() || sample.peak() > 8. {
+                            return Err(invalid("Invalid XPM PCM"));
+                        }
+                    }
+                }
+            }
+            dst.kit.xpm = Some(x);
+        }
     }
     Ok(e)
 }
@@ -406,4 +527,19 @@ pub fn session_directory(base: &std::path::Path, qa: bool) -> std::path::PathBuf
     } else {
         base.to_path_buf()
     }
+}
+
+/// Project selection never resets the physical MAIN VOLUME control. Device
+/// controls are independent of the saved mix; preserve their current smoothing.
+pub fn load_for_replacement(
+    path: &Path,
+    rate: u32,
+    capacity: usize,
+    live: &Engine,
+) -> io::Result<Engine> {
+    let mut loaded = load(path, rate, capacity)?;
+    loaded.selected = live.selected.min(ACTIVE_TRACKS - 1);
+    loaded.hardware_volume = live.hardware_volume;
+    loaded.hardware_gain = live.hardware_gain;
+    Ok(loaded)
 }

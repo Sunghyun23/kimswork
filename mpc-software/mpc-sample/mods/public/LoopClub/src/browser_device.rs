@@ -12,6 +12,7 @@ use std::{
 #[derive(Clone, Copy)]
 struct Request {
     drum: bool,
+    xpm: bool,
     target: Option<(usize, usize)>,
     up: bool,
     index: usize,
@@ -36,6 +37,7 @@ fn publish(view: &BrowserView) {
     }
 }
 pub struct FileWorker {
+    xpm_program: Option<crate::xpm::Program>,
     kit_paths: Vec<PathBuf>,
     record_indices: Vec<usize>,
     kit_bank: Option<crate::bank::Bank>,
@@ -58,6 +60,7 @@ impl FileWorker {
     }
     pub fn with_root(root: Option<PathBuf>, rate: u32, capacity: usize) -> Self {
         Self {
+            xpm_program: None,
             kit_paths: Vec::new(),
             record_indices: Vec::new(),
             kit_bank: None,
@@ -107,6 +110,14 @@ impl FileWorker {
             return loaded;
         };
         if self.pending {
+            return loaded;
+        }
+        if request.xpm {
+            if let Err(error) = self.handle_xpm(request, r) {
+                self.kit_view.pending = false;
+                self.kit_view.error = error.to_string();
+                publish(&self.kit_view);
+            }
             return loaded;
         }
         if request.drum {
@@ -228,6 +239,86 @@ impl FileWorker {
         };
         Ok(())
     }
+
+    fn handle_xpm(&mut self, request: Request, r: &Runtime) -> std::io::Result<()> {
+        if request.open {
+            let root = self
+                .root
+                .as_ref()
+                .ok_or_else(|| std::io::Error::other("SD root unavailable"))?;
+            self.browser = Some(Browser::open_programs(root)?);
+            self.xpm_program = None;
+        }
+        if !request.open && request.revision != self.kit_view.revision {
+            return Err(std::io::Error::other("XPM list changed; select again"));
+        }
+        if self.xpm_program.is_some() && !request.open {
+            if request.up {
+                self.xpm_program = None;
+            } else {
+                let program = self.xpm_program.as_ref().unwrap();
+                let bank = *program
+                    .banks
+                    .get(request.index)
+                    .ok_or_else(|| std::io::Error::other("Choose an available bank"))?;
+                let job = program.prepare(bank, request.track, self.rate)?;
+                if r.submit_kit(job).is_err() {
+                    return Err(std::io::Error::other("Kit load busy"));
+                }
+                self.pending = true;
+                self.kit_view.pending = true;
+                self.kit_view.error.clear();
+                publish(&self.kit_view);
+                return Ok(());
+            }
+        } else if !request.open {
+            let browser = self
+                .browser
+                .as_mut()
+                .ok_or_else(|| std::io::Error::other("Open XPM browser first"))?;
+            if request.up {
+                browser.up()?;
+            } else {
+                let path = browser.resolve(request.index)?;
+                if path.is_dir() {
+                    browser.enter(request.index)?;
+                } else {
+                    self.xpm_program = Some(crate::xpm::Program::open(
+                        &path,
+                        self.root.as_ref().unwrap(),
+                    )?);
+                }
+            }
+        }
+        let revision = self.kit_view.revision.wrapping_add(1);
+        self.kit_view = if let Some(program) = &self.xpm_program {
+            BrowserView {
+                path: program.name.clone(),
+                revision,
+                error: if program.native_fx {
+                    "MPC FX/warp not imported".into()
+                } else {
+                    "32 shared voices / choose bank".into()
+                },
+                entries: program
+                    .banks
+                    .iter()
+                    .map(|b| crate::sample::Entry {
+                        name: format!("BANK {} / 16 PADS", (b'A' + *b as u8) as char),
+                        path: std::path::PathBuf::new(),
+                        directory: false,
+                    })
+                    .collect(),
+                pending: false,
+            }
+        } else {
+            let mut view = self.browser.as_ref().unwrap().view.clone();
+            view.revision = revision;
+            view
+        };
+        publish(&self.kit_view);
+        Ok(())
+    }
     fn handle_kit(&mut self, request: Request, r: &Runtime) -> std::io::Result<()> {
         if request.open {
             return self.show_packs();
@@ -309,6 +400,7 @@ impl FileWorker {
 #[derive(Default)]
 pub struct BrowserUi {
     drum: bool,
+    xpm: bool,
     pub target: Option<(usize, usize)>,
     pub open: bool,
     pub row: usize,
@@ -325,7 +417,27 @@ impl BrowserUi {
     pub fn start(&mut self, track: usize) {
         self.start_kind(track, false);
     }
+    pub fn start_xpm(&mut self, track: usize) {
+        self.xpm = true;
+        self.drum = false;
+        self.open = true;
+        self.row = 0;
+        self.track = track;
+        self.target = None;
+        self.view = BrowserView::default();
+        self.send(Request {
+            drum: false,
+            xpm: true,
+            target: None,
+            up: false,
+            index: 0,
+            revision: 0,
+            track,
+            open: true,
+        });
+    }
     pub fn start_kind(&mut self, track: usize, drum: bool) {
+        self.xpm = false;
         self.drum = drum;
         self.open = true;
         self.row = 0;
@@ -333,6 +445,7 @@ impl BrowserUi {
         self.view = BrowserView::default();
         self.send(Request {
             drum,
+            xpm: false,
             target: self.target,
             up: false,
             index: 0,
@@ -370,19 +483,28 @@ impl BrowserUi {
             };
         }
     }
+    pub fn total(&self) -> usize {
+        self.total
+    }
     pub fn encoder(&mut self, delta: i32) {
+        self.refresh();
         if self.total > 0 {
-            self.row = (self.row as i64 + i64::from(delta)).rem_euclid(self.total as i64) as usize;
+            self.row = (self.row as i64 + i64::from(delta))
+                .clamp(0, self.total.saturating_sub(1) as i64) as usize;
         }
         self.refresh();
     }
     pub fn button(&mut self, code: u32) {
+        self.button_with_shift(code, false);
+    }
+    pub fn button_with_shift(&mut self, code: u32, shift: bool) {
         match code {
-            54 => self.encoder(6),
-            55 => self.encoder(-6),
+            54 => self.encoder(if shift { 6 } else { 1 }),
+            55 => self.encoder(if shift { -6 } else { -1 }),
             14 => self.open = false,
             12 | 13 | 111 => self.send(Request {
                 drum: self.drum,
+                xpm: self.xpm,
                 target: self.target,
                 up: code == 12,
                 index: self.row,
@@ -406,7 +528,9 @@ impl BrowserUi {
             23,
             19.,
             ink,
-            if self.drum {
+            if self.xpm {
+                "XPM PROGRAM / BANK"
+            } else if self.drum {
                 if self.target.is_some() {
                     "LAYER SAMPLE"
                 } else {
@@ -444,7 +568,15 @@ impl BrowserUi {
                 if selected { gold } else { ink },
                 &format!(
                     "{} {}",
-                    if self.drum {
+                    if self.xpm {
+                        if entry.directory {
+                            "[DIR]"
+                        } else if entry.path.as_os_str().is_empty() {
+                            ""
+                        } else {
+                            "XPM"
+                        }
+                    } else if self.drum {
                         if entry.directory {
                             "[BANK]"
                         } else if self.target.is_some() {
@@ -469,7 +601,7 @@ impl BrowserUi {
             14.,
             ink,
             &format!(
-                "DATA / +/- PAGE  {}/{}  T{:02}",
+                "DATA / +/- SELECT {}/{} T{:02}",
                 if self.total == 0 { 0 } else { self.row + 1 },
                 self.total,
                 self.track + 1
@@ -483,7 +615,9 @@ impl BrowserUi {
             14.,
             gold,
             if self.view.pending {
-                if self.drum {
+                if self.xpm {
+                    "IMPORTING XPM BANK..."
+                } else if self.drum {
                     "LOADING SELECTED KIT..."
                 } else {
                     "DECODING WAV..."
@@ -491,8 +625,66 @@ impl BrowserUi {
             } else if !self.view.error.is_empty() {
                 &self.view.error
             } else {
-                "ORIGINAL FILE IS PRESERVED"
+                "SHIFT +/- PAGE / SOURCE KEPT"
             },
         );
+    }
+}
+
+pub fn qa_browser_view() -> serde_json::Value {
+    VIEW.get().and_then(|v|v.lock().ok()).map_or_else(||serde_json::json!({}),|v|serde_json::json!({"path":v.path,"revision":v.revision,"pending":v.pending,"error":v.error,"entries":v.entries.iter().enumerate().take(256).map(|(i,e)|serde_json::json!({"index":i,"name":e.name,"directory":e.directory})).collect::<Vec<_>>()}))
+}
+
+#[cfg(test)]
+mod cursor_tests {
+    use super::*;
+    fn list(total: usize) -> BrowserUi {
+        BrowserUi {
+            open: true,
+            total,
+            ..BrowserUi::default()
+        }
+    }
+    #[test]
+    fn ordinary_buttons_move_one_row_in_short_and_long_lists() {
+        for total in [0, 1, 2, 3, 4, 5, 6, 7, 12, 64, 1001] {
+            let mut ui = list(total);
+            for row in 0..total.min(15) {
+                ui.button(54);
+                assert_eq!(ui.row, (row + 1).min(total.saturating_sub(1)));
+            }
+            for _ in 0..total.min(16) {
+                ui.button(55);
+            }
+            assert_eq!(ui.row, 0);
+        }
+    }
+    #[test]
+    fn no_modulo_wrap_at_list_edges_and_shift_pages_are_bounded() {
+        for total in [0, 1, 4, 6, 7, 12, 1001] {
+            let mut ui = list(total);
+            ui.encoder(-1);
+            assert_eq!(ui.row, 0);
+            ui.button_with_shift(54, true);
+            assert_eq!(ui.row, 6.min(total.saturating_sub(1)));
+            ui.encoder(i32::MAX);
+            assert_eq!(ui.row, total.saturating_sub(1));
+            ui.button(54);
+            assert_eq!(ui.row, total.saturating_sub(1));
+            ui.encoder(i32::MIN);
+            assert_eq!(ui.row, 0);
+        }
+    }
+    #[test]
+    fn scaled_hardware_data_cannot_cancel_against_the_list_length() {
+        for total in [2, 4, 8, 16, 32, 64, 128] {
+            let mut ui = list(total);
+            ui.encoder(crate::device::normalize_encoder(128));
+            assert_eq!(ui.row, 1);
+            ui.encoder(crate::device::normalize_encoder(65536));
+            assert_eq!(ui.row, 2.min(total - 1));
+            ui.encoder(crate::device::normalize_encoder(-128));
+            assert_eq!(ui.row, 2.min(total - 1).saturating_sub(1));
+        }
     }
 }

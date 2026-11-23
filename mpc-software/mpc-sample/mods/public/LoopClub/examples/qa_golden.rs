@@ -46,6 +46,7 @@ fn main() {
                         a: 0.4,
                         b: 0.5,
                         mix: 0.6,
+                        ..Fx::default()
                     };
                 }
                 if i == 24000 {

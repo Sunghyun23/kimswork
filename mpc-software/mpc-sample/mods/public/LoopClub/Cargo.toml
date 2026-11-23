@@ -1,6 +1,6 @@
 [package]
 name = "loop-club"
-version = "0.1.0"
+version = "0.9.2"
 edition = "2024"
 rust-version = "1.97"
 authors = ["kim"]
@@ -15,6 +15,7 @@ crate-type = ["rlib", "cdylib"]
 mpc-sample-sdk = { path = "../../../../third_party/mpc-sample-sdk" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+roxmltree = "=0.21.1"
 
 [profile.release]
 lto = "thin"

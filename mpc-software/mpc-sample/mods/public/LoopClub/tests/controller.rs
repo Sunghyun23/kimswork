@@ -34,9 +34,10 @@ fn releasing_superseded_fx_pad_does_not_disable_current_effect() {
     press(&mut ui, &mut e, 0, true);
     press(&mut ui, &mut e, 1, true);
     press(&mut ui, &mut e, 0, false);
-    assert_eq!(e.tracks[0].fx[0].effect, Effect::Isolator);
-    press(&mut ui, &mut e, 1, false);
     assert_eq!(e.tracks[0].fx[0].effect, Effect::Off);
+    assert_eq!(e.tracks[0].fx[1].effect, Effect::Isolator);
+    press(&mut ui, &mut e, 1, false);
+    assert_eq!(e.tracks[0].fx[1].effect, Effect::Off);
 }
 #[test]
 fn fx_navigation_preserves_playback_and_parameters() {
@@ -90,19 +91,20 @@ fn stop_clears_unfinished_audio_metadata() {
 fn master_bus_fx_targets_do_not_change_track_or_other_bus() {
     let (mut e, mut ui) = state();
     ui.page = Page::MasterFx;
-    press(&mut ui, &mut e, 13, true);
+    ui.master_target = 1;
     press(&mut ui, &mut e, 0, true);
     assert_eq!(e.bus_fx[0].effect, Effect::Filter);
     assert_eq!(e.bus_fx[1].effect, Effect::Off);
     assert_eq!(e.performance[0].effect, Effect::Off);
-    ui.latch = true;
-    press(&mut ui, &mut e, 11, true);
+    press(&mut ui, &mut e, 0, false);
     assert_eq!(e.bus_fx[0].effect, Effect::Off);
     assert_eq!(e.tracks[0].fx[0].effect, Effect::Off);
 }
 #[test]
 fn cc_normalization_follows_sdk_float_geometry() {
-    assert_eq!(loop_club::device::normalize_cc(0, 63.5, 127.), 0.5);
+    assert_eq!(loop_club::device::normalize_cc(64, 0., 127.), 64. / 127.);
+    assert_eq!(loop_club::device::normalize_cc(127, 0., 254.), 0.5);
+    assert_eq!(loop_club::device::normalize_cc(64, 0.5, 1.), 64. / 127.);
     assert_eq!(loop_club::device::normalize_cc(127, 0., 0.), 1.);
 }
 #[test]
@@ -198,24 +200,26 @@ fn chop_soft_buttons_cycle_and_apply_modes_without_leaving_editor() {
 }
 
 #[test]
-fn looper_pad_select_is_silent_and_shift_controls_existing_loop_only() {
+fn data_select_is_silent_and_shift_pad_starts_recording_instead_of_playback_toggle() {
     let (mut e, mut ui) = state();
+    e.preroll = 0;
     e.tracks[0].length_ticks = 4 * PPQ;
     e.tracks[0].playing = true;
     e.running = true;
-    ui.pad(0, true, 90, false, false, &Snapshot::capture(&e), |c| {
-        e.command(c).unwrap()
+    ui.encoder(1, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
     });
-    assert!(e.tracks[0].playing);
-    ui.pad(1, true, 90, true, false, &Snapshot::capture(&e), |c| {
-        e.command(c).unwrap()
-    });
-    assert!(e.recorder.is_none());
     assert_eq!(e.selected, 1);
-    ui.pad(0, true, 90, true, false, &Snapshot::capture(&e), |c| {
-        e.command(c).unwrap()
+    assert!(e.recorder.is_none());
+    ui.pad(1, true, 90, true, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
     });
-    assert!(!e.tracks[0].playing);
+    assert_eq!(e.recorder.unwrap().track, 1);
+    ui.pad(0, true, 90, true, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert_eq!(e.next_record, Some(0));
+    assert!(e.tracks[0].playing);
 }
 
 #[test]
@@ -241,4 +245,206 @@ fn changing_sound_requires_fader_pickup_again() {
             ..
         })
     ));
+}
+
+#[test]
+fn project_data_encoder_adjusts_tempo_one_bpm_without_changing_selected_track() {
+    let (mut e, mut ui) = state();
+    ui.selected = 3;
+    ui.navigate(Page::Setup, &Snapshot::capture(&e));
+    ui.knob(0, 38. / 127., &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap()
+    });
+    assert_eq!(e.clock.bpm, 100.);
+    ui.encoder(1, &Snapshot::capture(&e), |c| e.command(c).unwrap());
+    assert_eq!(e.clock.bpm, 101.);
+    assert_eq!(ui.selected, 3);
+    ui.encoder(-1, &Snapshot::capture(&e), |c| e.command(c).unwrap());
+    assert_eq!(e.clock.bpm, 100.);
+    e.command(Command::Bpm(40.)).unwrap();
+    ui.encoder(-1, &Snapshot::capture(&e), |c| e.command(c).unwrap());
+    assert_eq!(e.clock.bpm, 40.);
+    e.command(Command::Bpm(240.)).unwrap();
+    ui.encoder(1, &Snapshot::capture(&e), |c| e.command(c).unwrap());
+    assert_eq!(e.clock.bpm, 240.);
+}
+
+#[test]
+fn drum_sound_shift_pad_generates_and_undoes_without_playing_preview() {
+    let (mut e, mut ui) = state();
+    e.tracks[0].kind = Kind::Drum;
+    ui.navigate(Page::DrumSound, &Snapshot::capture(&e));
+    let s = Snapshot::capture(&e);
+    let mut commands = Vec::new();
+    ui.pad(0, true, 90, true, false, &s, |c| commands.push(c));
+    assert_eq!(commands.len(), 1);
+    assert!(matches!(
+        commands[0],
+        Command::GenerateDrumPart { track: 0, sound: 0 }
+    ));
+    e.command(commands[0]).unwrap();
+    assert!(!e.tracks[0].events.is_empty());
+    let s = Snapshot::capture(&e);
+    commands.clear();
+    ui.pad(0, true, 90, true, true, &s, |c| commands.push(c));
+    assert!(matches!(
+        commands[0],
+        Command::UndoDrumPart { track: 0, sound: 0 }
+    ));
+}
+
+#[test]
+fn lfo_sync_and_smooth_controls_do_not_change_record_mode_or_note_mode() {
+    let (mut e, mut ui) = state();
+    e.tracks[0].kind = Kind::Synth;
+    ui.navigate(Page::Play, &Snapshot::capture(&e));
+    ui.synth_page = 6;
+    ui.soft(2, true, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert!(e.tracks[0].synth.lfo_sync);
+    assert_eq!(e.tracks[0].record_mode, RecordMode::Replace);
+    ui.knob(0, 1., &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert_eq!(e.tracks[0].synth.lfo_division, 15);
+    ui.soft(1, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert!(ui.chord_modes[0]);
+    ui.soft(1, true, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert!(!e.tracks[0].chord.smooth);
+    assert!(ui.chord_modes[0]);
+}
+
+#[test]
+fn input_picker_changes_only_selection_and_returns_an_explicit_action() {
+    let (e, mut ui) = state();
+    ui.navigate(Page::Setup, &Snapshot::capture(&e));
+    ui.input_view = true;
+    let mut commands = Vec::new();
+    ui.encoder(1, &Snapshot::capture(&e), |c| commands.push(c));
+    assert_eq!(ui.input_choice, 1);
+    ui.knob(0, 1., &Snapshot::capture(&e), |c| commands.push(c));
+    assert!(commands.is_empty());
+    assert_eq!(
+        ui.pad(2, true, 90, false, false, &Snapshot::capture(&e), |c| {
+            commands.push(c)
+        }),
+        loop_club::ui::Action::InputSource(2)
+    );
+    assert!(commands.is_empty());
+    assert!(loop_club::input_hw::accepts_period(2, 24));
+    assert!(!loop_club::input_hw::accepts_period(2, 128));
+    assert!(!loop_club::input_hw::accepts_period(0, 24));
+    assert!(loop_club::input_hw::accepts_period(1, 128));
+}
+
+#[test]
+fn shifted_loop_pad_records_and_normal_pad_always_plays_configured_chord() {
+    let (mut e, mut ui) = state();
+    e.preroll = 0;
+    e.tracks[15].kind = Kind::Synth;
+    ui.chord_modes[15] = true;
+    let s = Snapshot::capture(&e);
+    ui.pad(15, true, 90, true, false, &s, |c| {
+        e.command(c).unwrap();
+    });
+    assert_eq!(ui.page, Page::Loop);
+    assert_eq!(ui.selected, 15);
+    assert_eq!(e.active_voices(), 0);
+    ui.sync_loop_role(&Snapshot::capture(&e));
+    ui.pad(15, false, 0, false, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    ui.pad(0, true, 90, false, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert_eq!(ui.page, Page::Loop);
+    assert_eq!(ui.selected, 15);
+    assert_eq!(e.active_voices(), 4);
+    assert_eq!(e.visible_events(15).len(), 4);
+    for _ in 0..1000 {
+        e.process(Frame::ZERO);
+    }
+    e.command(Command::LoopRecord(15)).unwrap();
+    for _ in 0..7001 {
+        e.process(Frame::ZERO);
+    }
+    ui.sync_loop_role(&Snapshot::capture(&e));
+    assert!(ui.loop_perform);
+    assert!(e.recorder.is_none());
+    assert!(e.tracks[15].playing);
+    assert_eq!(e.tracks[15].length_ticks, 4 * PPQ);
+    assert!(ui.chord_modes[15]);
+    ui.pad(0, false, 0, false, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+}
+
+#[test]
+fn shift_latches_the_same_effect_without_retargeting_and_normal_release_is_independent() {
+    let (mut e, mut u) = state();
+    u.page = Page::TrackFx;
+    for on in [true, false] {
+        u.pad(0, on, 90, true, false, &Snapshot::capture(&e), |c| {
+            e.command(c).unwrap();
+        });
+    }
+    assert_eq!(e.tracks[0].fx[0].effect, Effect::Filter);
+    press(&mut u, &mut e, 5, true);
+    assert_eq!(e.tracks[0].fx[1].effect, Effect::DubEcho);
+    press(&mut u, &mut e, 5, false);
+    assert_eq!(e.tracks[0].fx[1].effect, Effect::Off);
+    assert_eq!(e.tracks[0].fx[0].effect, Effect::Filter);
+    u.pad(0, true, 90, true, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert_eq!(e.tracks[0].fx[0].effect, Effect::Off);
+}
+#[test]
+fn held_texture_release_survives_navigation_and_shift_can_latch_a_held_effect() {
+    let (mut e, mut u) = state();
+    u.page = Page::Texture;
+    press(&mut u, &mut e, 0, true);
+    assert!(e.texture.enabled[0]);
+    u.page = Page::Loop;
+    press(&mut u, &mut e, 0, false);
+    assert!(!e.texture.enabled[0]);
+    u.page = Page::Texture;
+    press(&mut u, &mut e, 0, true);
+    u.pad(0, true, 90, true, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    press(&mut u, &mut e, 0, false);
+    assert!(e.texture.enabled[0]);
+    u.pad(0, true, 90, true, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert!(!e.texture.enabled[0]);
+}
+
+#[test]
+fn master_hold_ownership_transfers_between_fx_boards_without_stale_release() {
+    let (mut e, mut u) = state();
+    u.page = Page::MasterFx;
+    press(&mut u, &mut e, 0, true);
+    assert_eq!(e.performance[0].effect, Effect::Filter);
+    u.page = Page::Texture;
+    press(&mut u, &mut e, 6, true);
+    press(&mut u, &mut e, 0, false);
+    assert!(!e.texture.master_bypass[0]);
+    press(&mut u, &mut e, 6, false);
+    assert!(e.texture.master_bypass[0]);
+    press(&mut u, &mut e, 6, true);
+    u.page = Page::MasterFx;
+    u.selected = 1;
+    u.pad(0, true, 90, true, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    press(&mut u, &mut e, 6, false);
+    assert!(!e.texture.master_bypass[0]);
+    assert_eq!(e.performance[0].effect, Effect::Filter);
 }

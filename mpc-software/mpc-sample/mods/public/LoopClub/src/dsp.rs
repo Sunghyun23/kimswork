@@ -7,6 +7,10 @@ pub struct Voice {
     pub source: u16,
     pub drum: Option<usize>,
     pub layer: usize,
+    pub xpm_zone: usize,
+    pub pcm_gate: bool,
+    pcm_release: bool,
+    pcm_release_env: f32,
     pub delay_frames: u32,
     gate: bool,
     age: u64,
@@ -32,6 +36,10 @@ impl Default for Voice {
             source: 0,
             drum: None,
             layer: 0,
+            xpm_zone: 0,
+            pcm_gate: false,
+            pcm_release: false,
+            pcm_release_env: 1.,
             delay_frames: 0,
             gate: false,
             age: 0,
@@ -80,6 +88,9 @@ impl Voice {
         }
     }
     pub fn release(&mut self) {
+        if self.pcm_gate {
+            self.pcm_release = true;
+        }
         self.gate = false
     }
     pub fn age(&self) -> u64 {
@@ -99,6 +110,13 @@ impl Voice {
             self.active = false;
             return Frame::ZERO;
         }
+        if self.pcm_release {
+            self.pcm_release_env = (self.pcm_release_env - 1. / (rate * 0.005)).max(0.);
+            if self.pcm_release_env <= 0. {
+                self.active = false;
+                return Frame::ZERO;
+            }
+        }
         let f = self.pcm_pos.fract() as f32;
         let reverse = *self
             .pcm_reverse
@@ -113,7 +131,10 @@ impl Voice {
         let a = at(index);
         let b = at((index + 1).min(pcm.len() - 1));
         let fade = ((duration - self.age_seconds) / (duration * 0.05).max(0.002)).clamp(0., 1.);
-        let x = a.gain(1. - f).combine(b.gain(f)).gain(self.velocity * fade);
+        let x = a
+            .gain(1. - f)
+            .combine(b.gain(f))
+            .gain(self.velocity * fade * self.pcm_release_env);
         if self.pcm_tune != drum.tune {
             self.pcm_step = f64::from(2_f32.powf(drum.tune / 12.));
             self.pcm_tune = drum.tune;
@@ -195,11 +216,23 @@ pub struct FxState {
     tone: Frame,
     hold: Frame,
     hold_phase: u32,
-    phase: f32,
+    mod_lfo: crate::synth::Lfo,
+    mod_rate_key: (u32, u32, bool, u8, u8),
+    mod_hz: f32,
+    mod_signal: f32,
+    mod_depth: f32,
+    mod_filter: Frame,
+    mod_coefficient: f32,
+    mod_counter: u8,
     tape: f32,
     wet: f32,
     last: Fx,
     read: f64,
+    history_written: usize,
+    history_signal_age: usize,
+    repeat_ready: bool,
+    repeat_requested: bool,
+    repeat_remaining: usize,
 }
 impl FxState {
     pub fn new(rate: u32) -> Self {
@@ -213,27 +246,51 @@ impl FxState {
             tone: Frame::ZERO,
             hold: Frame::ZERO,
             hold_phase: 0,
-            phase: 0.,
+            mod_lfo: Default::default(),
+            mod_rate_key: (0, 0, false, 0, 0),
+            mod_hz: 0.,
+            mod_signal: 0.,
+            mod_depth: 0.,
+            mod_filter: Frame::ZERO,
+            mod_coefficient: 0.,
+            mod_counter: 0,
             tape: 1.,
             wet: 0.,
             last: Fx::default(),
             read: 0.,
+            history_written: 0,
+            history_signal_age: usize::MAX,
+            repeat_ready: false,
+            repeat_requested: false,
+            repeat_remaining: 0,
         }
     }
     fn at(&self, delay: f64) -> Frame {
         let n = self.history.len();
-        let p = (self.write as f64 - delay).rem_euclid(n as f64);
+        let p = wrap_history(self.write as f64 - delay, n as f64);
         let i = p.floor() as usize;
         let f = p.fract() as f32;
         self.history[i]
             .gain(1. - f)
-            .combine(self.history[(i + 1) % n].gain(f))
+            .combine(self.history[if i + 1 == n { 0 } else { i + 1 }].gain(f))
     }
+    fn remember_signal(&mut self, input: Frame) {
+        self.history_written = (self.history_written + 1).min(self.history.len());
+        self.history_signal_age = if input.peak() > 1e-6 {
+            0
+        } else {
+            self.history_signal_age.saturating_add(1)
+        };
+    }
+    #[inline]
     pub fn process(&mut self, input: Frame, fx: Fx, rate: f32, bpm: f32) -> Frame {
-        // Preserve the complete history even while bypassed, so a later Reverse
-        // or Repeat trigger still sees the same audio without the full FX path.
-        if fx.effect == Effect::Off && self.wet == 0. {
+        // Keep bypass small enough to inline into the16-track mixer. The full
+        // effect function otherwise forces a large config copy/call32times/frame.
+        if fx.effect == Effect::Off && self.wet < 0.00001 {
+            self.repeat_requested = false;
+            self.wet = 0.;
             self.history[self.write] = input;
+            self.remember_signal(input);
             self.write += 1;
             if self.write == self.history.len() {
                 self.write = 0;
@@ -242,16 +299,46 @@ impl FxState {
             self.read = 0.;
             return input;
         }
+        self.process_active(input, fx, rate, bpm)
+    }
+    fn process_active(&mut self, input: Frame, fx: Fx, rate: f32, bpm: f32) -> Frame {
+        let repeat_entered = fx.effect == Effect::Repeat && !self.repeat_requested;
+        self.repeat_requested = fx.effect == Effect::Repeat;
+        let mut repeat_capture_complete = false;
         if fx.effect != Effect::Off && fx.effect != self.last.effect {
             self.read = 0.;
             self.tape = 1.;
         }
-        let freeze = fx.effect == Effect::Repeat
+        if repeat_entered {
+            self.read = 0.;
+            let len = (rate * 60. / bpm * [0.125, 0.25, 0.5, 1.][(fx.a * 3.99) as usize])
+                .max(1.)
+                .min((self.history.len() - 1) as f32) as usize;
+            self.repeat_ready = self.history_written >= len && self.history_signal_age < len;
+            self.repeat_remaining = 0;
+        }
+        // A stopped/silent source must not become a permanently frozen zero loop.
+        // Arm from the first audible sample and collect one complete repeat window.
+        if fx.effect == Effect::Repeat && !self.repeat_ready {
+            if self.repeat_remaining == 0 && input.peak() > 1e-6 {
+                self.repeat_remaining =
+                    (rate * 60. / bpm * [0.125, 0.25, 0.5, 1.][(fx.a * 3.99) as usize])
+                        .max(1.)
+                        .min((self.history.len() - 1) as f32) as usize;
+            }
+            if self.repeat_remaining > 0 {
+                self.repeat_remaining -= 1;
+                repeat_capture_complete = self.repeat_remaining == 0;
+            }
+        }
+        let freeze = (fx.effect == Effect::Repeat && self.repeat_ready)
             || (fx.effect == Effect::Off
                 && self.last.effect == Effect::Repeat
+                && self.repeat_ready
                 && self.wet > 0.00001);
         if !freeze {
             self.history[self.write] = input;
+            self.remember_signal(input);
         }
         let target = if fx.effect == Effect::Off { 0. } else { fx.mix };
         if fx.effect != Effect::Off {
@@ -319,19 +406,20 @@ impl FxState {
                     };
                     self.low.gain(p.a * 2.).combine(high.gain(p.b * 2.))
                 }
+                Effect::Repeat if !self.repeat_ready => input,
                 Effect::Repeat => {
                     let divisions = [0.125, 0.25, 0.5, 1.];
                     let beats = divisions[(p.a * 3.99) as usize];
                     let len = ((rate * 60. / bpm * beats).max(1.) as f64)
                         .min((self.history.len() - 1) as f64);
-                    self.read = (self.read + 1.).rem_euclid(len);
+                    self.read = wrap_history(self.read + 1., len);
                     let edge = (self.read.min(len - self.read) / (1. + f64::from(p.b) * len * 0.05))
                         .clamp(0., 1.) as f32;
                     self.at(len - self.read).gain(edge)
                 }
                 Effect::Reverse => {
                     let len = f64::from(rate * (0.08 + p.a * 0.8));
-                    self.read = (self.read + 2.).rem_euclid(len);
+                    self.read = wrap_history(self.read + 2., len);
                     self.at(self.read)
                 }
                 Effect::TapeStop => {
@@ -346,11 +434,53 @@ impl FxState {
                     self.history[self.write] = input.combine(delayed.gain(p.b * 0.7));
                     input.combine(delayed)
                 }
-                Effect::Wobble => {
-                    self.phase = (self.phase + (0.2 + p.a * 4.) / rate).fract();
-                    let delay =
-                        rate * (0.008 + 0.006 * p.b * (self.phase * std::f32::consts::TAU).sin());
-                    self.at(f64::from(delay))
+                Effect::Wobble | Effect::Tremolo | Effect::AutoPan | Effect::AutoFilter => {
+                    let key = (
+                        p.a.to_bits(),
+                        bpm.to_bits(),
+                        p.modulation.sync,
+                        p.modulation.division,
+                        p.effect as u8,
+                    );
+                    if self.mod_rate_key != key {
+                        self.mod_rate_key = key;
+                        self.mod_hz = p.rate_hz(bpm);
+                    }
+                    let lfo = self.mod_lfo.sample(rate, self.mod_hz, p.modulation.shape);
+                    self.mod_signal += (lfo - self.mod_signal) * 0.02;
+                    self.mod_depth += (p.b - self.mod_depth) * 0.004;
+                    let value = self.mod_signal;
+                    let depth = self.mod_depth;
+                    match p.effect {
+                        Effect::Tremolo => input.gain(1. - depth * (value + 1.) * 0.5),
+                        Effect::AutoPan => {
+                            let pan = (value * depth).clamp(-1., 1.);
+                            let mid = (input.l + input.r) * 0.5;
+                            let side = (input.l - input.r) * 0.5 * (1. - pan.abs()).sqrt();
+                            Frame {
+                                l: mid * (1. - pan).sqrt() + side,
+                                r: mid * (1. + pan).sqrt() - side,
+                            }
+                        }
+                        Effect::AutoFilter => {
+                            if self.mod_counter == 0 {
+                                let cutoff =
+                                    (800. * 2_f32.powf(value * depth * 4.)).clamp(40., rate * 0.18);
+                                self.mod_coefficient =
+                                    1. - (-std::f32::consts::TAU * cutoff / rate).exp();
+                            }
+                            self.mod_counter = (self.mod_counter + 1) % 16;
+                            self.mod_filter = self.mod_filter.combine(
+                                Frame {
+                                    l: input.l - self.mod_filter.l,
+                                    r: input.r - self.mod_filter.r,
+                                }
+                                .gain(self.mod_coefficient),
+                            );
+                            input.gain(1. - depth).combine(self.mod_filter.gain(depth))
+                        }
+                        _ => self.at(f64::from(rate * (0.008 + 0.006 * depth * value))),
+                    }
                 }
             };
             if matches!(p.effect, Effect::Drive | Effect::Reverse | Effect::TapeStop) {
@@ -373,6 +503,10 @@ impl FxState {
             if self.write == self.history.len() {
                 self.write = 0;
             }
+        }
+        if repeat_capture_complete {
+            self.repeat_ready = true;
+            self.read = 0.;
         }
         input.gain(1. - self.wet).combine(out.gain(self.wet))
     }
@@ -427,5 +561,48 @@ impl Room {
             out = out.combine(sample.gain(0.25));
         }
         out
+    }
+}
+
+// FX positions normally stay within one cycle. Keep the full modulo fallback
+// for abrupt rate/window changes and parameter extremes.
+#[inline]
+fn wrap_history(position: f64, length: f64) -> f64 {
+    let p = if position < 0. {
+        position + length
+    } else if position >= length {
+        position - length
+    } else {
+        position
+    };
+    if p >= 0. && p < length {
+        return p;
+    }
+    let p = position.rem_euclid(length);
+    if p >= length { 0. } else { p }
+}
+#[cfg(test)]
+mod history_wrap_tests {
+    #[test]
+    fn fast_wrap_matches_reference_for_boundaries_and_abrupt_window_changes() {
+        for n in [1., 3., 8001., 88201.] {
+            for p in [
+                -1e9,
+                -3. * n,
+                -n,
+                -0.001,
+                -f64::MIN_POSITIVE,
+                0.,
+                n - 0.001,
+                n,
+                2. * n + 0.3,
+                1e9,
+            ] {
+                let actual = super::wrap_history(p, n);
+                let expected = p.rem_euclid(n);
+                assert!(actual >= 0. && actual < n);
+                assert!((actual - expected).abs() < 1e-10 || expected == n && actual == 0.);
+            }
+        }
     }
 }

@@ -32,24 +32,28 @@ fn main() -> std::io::Result<()> {
     e.tracks[0].length_ticks = 4 * PPQ;
     e.tracks[0].events.extend([
         Event {
+            slice: false,
             tick: 0,
             note: 60,
             velocity: 80,
             on: true,
         },
         Event {
+            slice: false,
             tick: PPQ,
             note: 60,
             velocity: 0,
             on: false,
         },
         Event {
+            slice: false,
             tick: 2 * PPQ,
             note: 65,
             velocity: 66,
             on: true,
         },
         Event {
+            slice: false,
             tick: 3 * PPQ,
             note: 65,
             velocity: 0,

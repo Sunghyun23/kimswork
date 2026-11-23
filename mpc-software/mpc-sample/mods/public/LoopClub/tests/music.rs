@@ -173,3 +173,51 @@ fn generated_ghosts_are_softer_than_backbeat_and_triplets_have_accents() {
         assert!(notes.iter().all(|h| h.velocity < 120));
     }
 }
+
+#[test]
+fn smooth_voicings_preserve_pitch_classes_and_reduce_large_jumps() {
+    let config = ChordConfig {
+        color: 2,
+        ..Default::default()
+    };
+    let (first, n) = config.notes(0);
+    let (distant, len) = config.notes(14);
+    let moved = loop_club::music::smooth_voicing(distant, len, first, n);
+    assert_eq!(len, n);
+    let cost = |notes: [u8; 5]| {
+        (0..n)
+            .map(|i| (i32::from(notes[i]) - i32::from(first[i])).abs())
+            .sum::<i32>()
+    };
+    assert!(cost(moved) < cost(distant));
+    let mut a = distant[..len].iter().map(|n| n % 12).collect::<Vec<_>>();
+    let mut b = moved[..len].iter().map(|n| n % 12).collect::<Vec<_>>();
+    a.sort();
+    b.sort();
+    assert_eq!(a, b);
+    assert!(moved[..len].windows(2).all(|w| w[0] <= w[1]));
+    assert_eq!(
+        loop_club::music::smooth_voicing(distant, len, [0; 5], 0),
+        distant
+    );
+}
+
+#[test]
+fn sync_divisions_follow_bpm_and_old_synth_json_stays_free() {
+    let mut synth: Synth = serde_json::from_str("{}").unwrap();
+    assert!(!synth.lfo_sync);
+    synth.lfo_sync = true;
+    synth.lfo_division = 7;
+    assert!((synth.effective_lfo_rate(120.) - 4.).abs() < 1e-5);
+    synth.lfo_division = 8;
+    assert!((synth.effective_lfo_rate(120.) - 8. / 3.).abs() < 1e-5);
+    synth.lfo_division = 9;
+    assert!((synth.effective_lfo_rate(120.) - 6.).abs() < 1e-5);
+    assert!((synth.effective_lfo_rate(60.) - 3.).abs() < 1e-5);
+    assert_eq!(
+        serde_json::from_str::<Synth>(&serde_json::to_string(&synth).unwrap())
+            .unwrap()
+            .lfo_division,
+        9
+    );
+}

@@ -1,0 +1,277 @@
+{
+  "version": "0.6.1",
+  "date": "2026-11-23T04:06:33.194859+00:00",
+  "scope": "local MPC Sample QA candidate; public release unchanged",
+  "normal_sha256": "e2f4c0b9fcffd341997be3f2ca199336b8fd6678647b98ef71167c7c34b59e7b",
+  "native_tests": {
+    "debug": 240,
+    "release": 240
+  },
+  "strict_clippy": [
+    "host all-targets PASS",
+    "ARM64 lib PASS"
+  ],
+  "arm64_build": "normal and fresh isolated QA PASS",
+  "fixed_issues": [
+    {
+      "issue": "Completed Audio REPLACE playback length was shortened before commit; cancel could make source metadata unloadable.",
+      "fix": "Keep completed PCM frame length intact until commit; capture preview stays separate."
+    },
+    {
+      "issue": "A synth note held through count-in had no recorded note-on; its note-off could become orphaned.",
+      "fix": "Track held count-in notes and seed them once at tick0; exclude released notes and early drum hits."
+    },
+    {
+      "issue": "After automatic recording handoff ended, external MIDI could target the older instrument.",
+      "fix": "Publish the final recorder/selection owner after each audio block while preserving newer queued UI selection."
+    },
+    {
+      "issue": "Sound CHROMATIC/CHORD mode was UI-only and disappeared on load/restart.",
+      "fix": "Store a per-track boolean with serde defaults; refresh UI from the engine snapshot."
+    },
+    {
+      "issue": "Rejected Audio handoff could still change selected instrument while another track was recording.",
+      "fix": "Failed input validation leaves the active recording selection/queue intact."
+    },
+    {
+      "issue": "Actual USB MIDI note-off did not arrive at the SDK upper note hook.",
+      "fix": "Observe original ALSA sequencer note-on/off without changing its arguments/result/event bytes; retain port/channel ownership and suppress duplicate upper replay."
+    },
+    {
+      "issue": "Browsing from an occupied Audio track gave the misleading instruction to select an Audio track.",
+      "fix": "Show USE EMPTY AUDIO TRACK while preserving the existing non-destructive import guard."
+    },
+    {
+      "issue": "The instrument performance home and idle Audio track advertised misleading pad roles.",
+      "fix": "Restrict recording instructions to LOOP; performance home shows16PADS:PLAY and Audio shows input recording guidance."
+    }
+  ],
+  "device_matrix": [
+    {
+      "case": "all16pads",
+      "result": "PASS",
+      "seconds": 36.03
+    },
+    {
+      "case": "held_countin",
+      "result": "PASS",
+      "seconds": 4.032
+    },
+    {
+      "case": "midi_after_handoff",
+      "result": "PASS",
+      "seconds": 4.646
+    },
+    {
+      "case": "chord_persistence",
+      "result": "PASS",
+      "seconds": 3.29
+    },
+    {
+      "case": "audio_cancel_chops",
+      "result": "PASS",
+      "seconds": 13.498
+    },
+    {
+      "case": "drum_browser_layers",
+      "result": "PASS",
+      "seconds": 8.593
+    },
+    {
+      "case": "mixer_route_chain",
+      "result": "PASS",
+      "seconds": 6.982
+    },
+    {
+      "case": "fx_and_soak",
+      "result": "PASS",
+      "seconds": 32.599
+    },
+    {
+      "case": "navigation_recall",
+      "result": "PASS",
+      "seconds": 11.896
+    }
+  ],
+  "device_checks": {
+    "all_16_record_targets_and_all_16_performance_pads": true,
+    "held_countin_note_on_ticks": [
+      [
+        0,
+        60
+      ],
+      [
+        0,
+        64
+      ]
+    ],
+    "external_midi_after_finished_handoff": true,
+    "chord_mode_save_load_and_live_chord": true,
+    "audio_replace_cancel_then_save_load_original_source_frames": 44100,
+    "all_chop_modes_and_split_undo_redo": true,
+    "bank_browser_kit_load_and_two_layer_controls": true,
+    "output_routes_mix_mute_and_chain": true,
+    "fx_settings_hold_latch_capacity_usb_soak": {
+      "seconds": 18.874433292003232,
+      "usb_peaks": [
+        0.12678007781505585,
+        0.11610835790634155,
+        0.11489927768707275,
+        0.10708855092525482,
+        0.12129878252744675
+      ],
+      "live_midi_notes_during_soak": 32,
+      "longest_near_zero_runs_frames": [
+        863,
+        0,
+        0,
+        0,
+        23
+      ],
+      "near_zero_regions_frames": [
+        [
+          [
+            980,
+            1843
+          ],
+          [
+            3932,
+            3940
+          ],
+          [
+            3954,
+            4086
+          ],
+          [
+            6268,
+            7038
+          ]
+        ],
+        [],
+        [],
+        [],
+        [
+          [
+            68132,
+            68140
+          ],
+          [
+            68143,
+            68166
+          ]
+        ]
+      ],
+      "before_timing": {
+        "blocks": 33370,
+        "max_deadline_pct": 110.9692,
+        "overrun_blocks": 2,
+        "p99_deadline_pct_upper": 40.0,
+        "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+      },
+      "audio_timing": {
+        "blocks": 39871,
+        "max_deadline_pct": 110.9692,
+        "overrun_blocks": 2,
+        "p99_deadline_pct_upper": 85.0,
+        "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+      }
+    },
+    "repeated_navigation_and_saved_fx_recall": true
+  },
+  "supplemental_checks": {
+    "actual_midi_0x80_and_velocity_zero_release": true,
+    "master_insert_board_hold_release_after_navigation": true,
+    "chop_gate_and_one_shot_actual_usb_peak": 0.007164498325437307,
+    "warmed_continuous_usb_32_note_repeat": {
+      "frames": 131072,
+      "peak": 0.11469493806362152,
+      "longest_near_zero_frames": 0,
+      "host_capture_status": [],
+      "before_timing": {
+        "blocks": 6276,
+        "max_deadline_pct": 129.8107,
+        "overrun_blocks": 2,
+        "p99_deadline_pct_upper": 85.0,
+        "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+      },
+      "after_timing": {
+        "blocks": 7315,
+        "max_deadline_pct": 129.8107,
+        "overrun_blocks": 2,
+        "p99_deadline_pct_upper": 85.0,
+        "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+      }
+    }
+  },
+  "screen_review": {
+    "synth_subpages_captured": 8,
+    "settings_unchanged": true,
+    "original_loop_page_restored": true
+  },
+  "owner_restoration": {
+    "tracks_compared": 16,
+    "global_bpm_master_fx_and_selected_synth_match": true,
+    "current_version": "0.6.1"
+  },
+  "sd_persistence": {
+    "runtime_and_boot_sha256_match": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20
+  },
+  "performance": {
+    "main_32_note_window_deadline_overruns": 0,
+    "warmed_repeat_deadline_overruns": 0,
+    "main_run_p99_deadline_pct_upper": 85.0,
+    "main_run_max_deadline_pct": 110.9692,
+    "main_initial_recorder_zero_regions": [
+      [
+        [
+          980,
+          1843
+        ],
+        [
+          3932,
+          3940
+        ],
+        [
+          3954,
+          4086
+        ],
+        [
+          6268,
+          7038
+        ]
+      ],
+      [],
+      [],
+      [],
+      [
+        [
+          68132,
+          68140
+        ],
+        [
+          68143,
+          68166
+        ]
+      ]
+    ],
+    "warmed_continuous_longest_near_zero_frames": 0,
+    "warmed_host_capture_status": [],
+    "scope": "observed finite workloads; p99 uses coarse5percent histogram bins; elapsed callbacks include scheduling",
+    "remaining_observation": "Some separate startup/restart runs crossed a callback deadline before the warmed measurement window. No universal zero-overrun or worst-case guarantee."
+  },
+  "limits": [
+    "Physical SHIFT/pads/DATA/fader input delivery was not exercised by the remote queue. Actual USB MIDI/audio and active DRM were exercised.",
+    "Analog LINE/MIC jacks, unplug/replug and power-cycle boot not newly certified.",
+    "One stereo USB output pair; no multichannel USB stems.",
+    "GRID retains its documented first64-event display limit; per-track recording capacity stays4096.",
+    "RAM clip history remains one last edit, cleared on load/restart.",
+    "No new public release/site publication."
+  ],
+  "full_matrix_build": {
+    "normal_sha256": "5a79d4f244321ad52def154e7ba784b3c40b6192c4311ab247c0c59c0428cebf",
+    "subsequent_change": "UI role text only; final supplemental/audio/screen checks are rerun"
+  },
+  "private_evidence": "build/qa-device/detailed-qa-0.6.1; no personal bank contents in this report"
+}

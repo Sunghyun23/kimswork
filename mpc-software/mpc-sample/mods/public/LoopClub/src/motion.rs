@@ -122,6 +122,7 @@ pub const TEXTURES: [&str; 5] = ["DUST", "DRIVE", "SQUEEZE", "WOBBLE", "DUB ECHO
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Texture {
+    pub modulation: [crate::model::FxMod; 5],
     pub enabled: [bool; 5],
     pub master_bypass: [bool; 2],
     pub params: [[f32; 3]; 5],
@@ -129,6 +130,7 @@ pub struct Texture {
 impl Default for Texture {
     fn default() -> Self {
         Self {
+            modulation: [crate::model::FxMod::default(); 5],
             enabled: [false; 5],
             master_bypass: [false; 2],
             params: [
@@ -143,10 +145,14 @@ impl Default for Texture {
 }
 impl Texture {
     pub fn valid(self) -> bool {
-        self.params
+        self.modulation
             .iter()
-            .flatten()
-            .all(|v| v.is_finite() && (0.0..=1.0).contains(v))
+            .all(|m| m.division < 16 && m.shape < 6)
+            && self
+                .params
+                .iter()
+                .flatten()
+                .all(|v| v.is_finite() && (0.0..=1.0).contains(v))
     }
 }
 pub struct TextureState {
@@ -198,6 +204,7 @@ impl TextureState {
                     a,
                     b,
                     mix,
+                    modulation: t.modulation[i],
                 };
                 s = if i == 3 {
                     self.wobble.process(s, fx, rate, bpm)

@@ -235,7 +235,7 @@ fn direct_pad_toggle_keeps_two_effects_and_refuses_silent_replacement() {
     fn tap(ui: &mut Ui, e: &mut Engine, pad: usize) {
         for on in [true, false] {
             let s = Snapshot::capture(e);
-            ui.pad(pad, on, 90, false, false, &s, |c| e.command(c).unwrap());
+            ui.pad(pad, on, 90, true, false, &s, |c| e.command(c).unwrap());
         }
     }
     tap(&mut ui, &mut e, 0);
@@ -259,7 +259,7 @@ fn master_pad_bypass_preserves_effect_and_knobs_and_recall() {
     fn tap(ui: &mut Ui, e: &mut Engine, pad: usize) {
         for on in [true, false] {
             let s = Snapshot::capture(e);
-            ui.pad(pad, on, 90, false, false, &s, |c| e.command(c).unwrap());
+            ui.pad(pad, on, 90, true, false, &s, |c| e.command(c).unwrap());
         }
     }
     tap(&mut ui, &mut e, 6);
@@ -286,7 +286,7 @@ fn master_pad_duck_bypass_keeps_depth_and_source() {
     ui.navigate(Page::Texture, &Snapshot::capture(&e));
     for enabled in [false, true] {
         let s = Snapshot::capture(&e);
-        ui.pad(5, true, 90, false, false, &s, |c| e.command(c).unwrap());
+        ui.pad(5, true, 90, true, false, &s, |c| e.command(c).unwrap());
         assert_eq!(e.sidechain.enabled, enabled);
         assert_eq!(e.sidechain.depth, 0.8);
         assert_eq!(e.sidechain.source, 4);
@@ -304,6 +304,7 @@ fn custom_master_bypass_restores_audio_without_destroying_effect() {
         a: 0.,
         b: 0.,
         mix: 1.,
+        ..Fx::default()
     };
     e.command(Command::PlayAll).unwrap();
     for _ in 0..5000 {

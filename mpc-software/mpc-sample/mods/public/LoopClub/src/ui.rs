@@ -3,7 +3,7 @@ use crate::{
     engine::{Command, Engine},
     model::*,
 };
-pub const WORDS: usize = 1056;
+pub const WORDS: usize = 1184;
 #[derive(Clone, Copy)]
 pub struct Snapshot {
     pub words: [u64; WORDS],
@@ -42,10 +42,55 @@ fn effect(n: u64) -> Effect {
         9 => Effect::DubEcho,
         10 => Effect::Crush,
         11 => Effect::Wobble,
+        12 => Effect::Tremolo,
+        13 => Effect::AutoPan,
+        14 => Effect::AutoFilter,
         _ => Effect::Off,
     }
 }
 impl Snapshot {
+    pub fn audio_settings(&self) -> crate::audio::Settings {
+        let w = self.words[13];
+        crate::audio::Settings {
+            root: (w & 255) as u8,
+            warp: w & (1 << 8) != 0,
+            tune: hi(w),
+        }
+    }
+    pub fn audio_target(&self, i: usize) -> crate::audio::RecordTarget {
+        match (self.words[16 + i * 12] >> 21) & 3 {
+            1 => crate::audio::RecordTarget::Chromatic,
+            2 => crate::audio::RecordTarget::Chop,
+            _ => crate::audio::RecordTarget::Input,
+        }
+    }
+    pub fn audio_sequence(&self, i: usize) -> bool {
+        self.words[16 + i * 12] & (1 << 20) != 0
+    }
+    pub fn note_view(&self, i: usize) -> bool {
+        self.track_kind(i) != Kind::Audio
+            || self.audio_sequence(i)
+            || (self.words[9] == i as u64 + 1 && self.words[12] & (1 << 4) != 0)
+    }
+
+    pub fn chain_config(&self) -> crate::chain::Config {
+        let mut c = crate::chain::Config {
+            len: (self.words[1048] & 255).min(16) as u8,
+            repeat: self.words[1048] & (1 << 8) != 0,
+            ..Default::default()
+        };
+        for i in 0..16 {
+            let w = self.words[1051 + i / 4] >> ((i % 4) * 16);
+            c.steps[i] = crate::chain::Step {
+                track: (w & 255).min(15) as u8,
+                repeats: ((w >> 8) & 255).clamp(1, 16) as u8,
+            };
+        }
+        c
+    }
+    pub fn chain_running(&self) -> bool {
+        self.words[1048] & (1 << 9) != 0
+    }
     pub fn sidechain(&self) -> crate::motion::Sidechain {
         let w = self.words[1026];
         crate::motion::Sidechain {
@@ -69,6 +114,12 @@ impl Snapshot {
             ..crate::motion::Texture::default()
         };
         for i in 0..5 {
+            let m = self.words[1029 + i / 4] >> ((i % 4) * 16);
+            t.modulation[i] = FxMod {
+                sync: m & 1 != 0,
+                division: ((m >> 1) & 15) as u8,
+                shape: ((m >> 5) & 7).min(5) as u8,
+            };
             t.params[i] = [
                 lo(self.words[1032 + i * 2]),
                 hi(self.words[1032 + i * 2]),
@@ -89,6 +140,7 @@ impl Snapshot {
         s.words[5] = pair(e.master, e.master_meter.l);
         s.words[6] = pair(e.master_meter.r, 0.);
         s.words[1024] = pair(e.usb_meter.l, e.usb_meter.r);
+        s.words[1043] = pair(e.hardware_volume, e.hardware_gain);
         s.words[1025] = pair(
             e.tracks[e.selected].synth.lfo_pan,
             e.tracks[e.selected].pan_current,
@@ -102,12 +154,43 @@ impl Snapshot {
             | (u64::from(sc.enabled) << 41);
         s.words[1027] = pair(sc.depth, sc.release);
         s.words[1028] = pair(sc.threshold, e.duck.reduction());
+        for i in 0..5 {
+            let m = e.texture.modulation[i];
+            s.words[1029 + i / 4] |=
+                (u64::from(m.sync) | (u64::from(m.division) << 1) | (u64::from(m.shape) << 5))
+                    << ((i % 4) * 16);
+        }
         s.words[1042] =
             u64::from(e.texture.master_bypass[0]) | (u64::from(e.texture.master_bypass[1]) << 1);
         for i in 0..5 {
             s.words[1032 + i * 2] = pair(e.texture.params[i][0], e.texture.params[i][1]);
             s.words[1033 + i * 2] = pair(e.texture.params[i][2], f32::from(e.texture.enabled[i]));
         }
+        for i in 0..128 {
+            let peak = e.input_preview_peak(i);
+            s.words[1056 + i] = pair(peak.min, peak.max);
+        }
+        s.words[1046] = e.history_status();
+        s.words[1047] = e.loop_revision;
+        s.words[1055] = u64::from(e.is_idle());
+        let c = &e.chain;
+        s.words[1048] = u64::from(c.config.len)
+            | (u64::from(c.config.repeat) << 8)
+            | (u64::from(c.running) << 9)
+            | ((c.index as u64) << 16)
+            | (u64::from(c.remaining) << 24)
+            | (c.current.map_or(0, |i| i as u64 + 1) << 32)
+            | (u64::from(c.members) << 48);
+        s.words[1049] = c.boundary;
+        s.words[1050] = c.duration;
+        for i in 0..16 {
+            let step = c.config.steps[i];
+            s.words[1051 + i / 4] |=
+                (u64::from(step.track) | (u64::from(step.repeats) << 8)) << ((i % 4) * 16);
+        }
+        let live = e.active_note_mask(e.selected);
+        s.words[1044] = live[0];
+        s.words[1045] = live[1];
         s.words[7] = e.error.map_or(0, |e| e as u64 + 1);
         s.words[8] = e.clock.tick();
         if let Some(r) = e.recorder {
@@ -117,7 +200,13 @@ impl Snapshot {
             s.words[12] = u64::from(r.repeating)
                 | (u64::from(r.stop_after_cycle) << 1)
                 | ((r.mode as u64) << 2)
+                | (u64::from(r.midi) << 4)
+                | (e.next_record.map_or(0, |i| i as u64 + 1) << 8)
         }
+        let a = e.tracks[e.selected].audio_settings;
+        s.words[13] =
+            u64::from(a.root) | (u64::from(a.warp) << 8) | (u64::from(a.tune.to_bits()) << 32);
+        s.words[14] = e.tracks[e.selected].source_ticks;
         for i in 0..16 {
             let t = &e.tracks[i];
             let b = 16 + i * 12;
@@ -125,7 +214,10 @@ impl Snapshot {
                 | ((e.status(i) as u64) << 8)
                 | (u64::from(t.mix.mute) << 16)
                 | (u64::from(t.mix.solo) << 17)
-                | ((t.record_mode as u64) << 18);
+                | ((t.record_mode as u64) << 18)
+                | (u64::from(t.chord_mode) << 19)
+                | (u64::from(t.audio_sequence) << 20)
+                | ((t.audio_target as u64) << 21);
             s.words[b + 1] = pair(t.mix.level, t.mix.pan);
             s.words[b + 2] = pair(t.mix.delay, t.mix.room);
             s.words[b + 3] = pair(t.meter, t.gain);
@@ -192,7 +284,10 @@ impl Snapshot {
             let b = 320 + i * 4;
             s.words[b] = fx.effect as u64;
             s.words[b + 1] = pair(fx.a, fx.b);
-            s.words[b + 2] = pair(fx.mix, 0.)
+            s.words[b + 2] = pair(fx.mix, 0.);
+            s.words[b + 3] = u64::from(fx.modulation.sync)
+                | (u64::from(fx.modulation.division) << 1)
+                | (u64::from(fx.modulation.shape) << 5);
         }
         for (i, slice) in t.chops.slices.iter().enumerate() {
             s.words[482 + i] = u64::from(slice.start) | (u64::from(slice.end) << 32);
@@ -210,11 +305,7 @@ impl Snapshot {
         s.words[506] = u64::from(t.chops.gate)
             | ((t.chops.mode as u64) << 8)
             | (u64::from(t.chops.count) << 16);
-        let frames = if t.source_frames == 0 {
-            t.audio_frames
-        } else {
-            t.source_frames
-        };
+        let (features, frames) = e.visible_audio(e.selected);
         let (start, end) = if t.wave_view.0 < t.wave_view.1 && t.wave_view.1 as usize <= frames {
             t.wave_view
         } else {
@@ -223,9 +314,7 @@ impl Snapshot {
         for i in 0..256 {
             let a = u64::from(start) + u64::from(end - start) * i as u64 / 256;
             let b = u64::from(start) + u64::from(end - start) * (i + 1) as u64 / 256;
-            let peak = t
-                .features
-                .window(a as usize, (b as usize).max(a as usize + 1));
+            let peak = features.window(a as usize, (b as usize).max(a as usize + 1));
             s.words[512 + i] = pair(peak.min, peak.max);
         }
         s.words[768] = u64::from(start);
@@ -241,7 +330,8 @@ impl Snapshot {
             | (u64::from(t.chord.scale) << 8)
             | (u64::from(t.chord.color) << 16)
             | ((t.chord.octave as u8 as u64) << 24)
-            | (u64::from(t.chord.open) << 32);
+            | (u64::from(t.chord.open) << 32)
+            | (u64::from(t.chord.smooth) << 33);
         s.words[348] = u64::from(t.synth.wave) | ((t.synth.octave as u8 as u64) << 8);
         s.words[349] = pair(t.synth.cutoff, t.synth.attack);
         s.words[350] = pair(t.synth.release, t.synth.detune);
@@ -269,12 +359,15 @@ impl Snapshot {
         s.words[783] = pair(t.synth.env_amount, 0.);
         s.words[784] = pair(t.synth.lfo_rate, t.synth.lfo_pitch);
         s.words[785] = pair(t.synth.lfo_filter, t.synth.lfo_volume);
-        s.words[786] = u64::from(t.synth.lfo_shape);
+        s.words[786] = u64::from(t.synth.lfo_shape)
+            | (u64::from(t.synth.lfo_sync) << 8)
+            | (u64::from(t.synth.lfo_division) << 16);
         for (i, event) in e.visible_events(e.selected).iter().take(64).enumerate() {
             let b = 352 + i * 2;
             s.words[b] = event.tick;
             s.words[b + 1] = u64::from(event.note)
                 | (u64::from(event.velocity) << 8)
+                | (u64::from(event.slice) << 24)
                 | (u64::from(event.on) << 16)
         }
         s
@@ -290,6 +383,7 @@ impl Snapshot {
     pub fn chord(&self) -> crate::music::ChordConfig {
         let v = self.words[480];
         crate::music::ChordConfig {
+            smooth: self.words[480] & (1 << 33) != 0,
             key: v as u8,
             scale: (v >> 8) as u8,
             color: (v >> 16) as u8,
@@ -329,11 +423,17 @@ impl Snapshot {
         )
     }
     pub fn fx(&self, base: usize) -> Fx {
+        let m = self.words[base + 3];
         Fx {
             effect: effect(self.words[base]),
             a: lo(self.words[base + 1]),
             b: hi(self.words[base + 1]),
             mix: lo(self.words[base + 2]),
+            modulation: FxMod {
+                sync: m & 1 != 0,
+                division: ((m >> 1) & 15) as u8,
+                shape: ((m >> 5) & 7).min(5) as u8,
+            },
         }
     }
     pub fn track_kind(&self, i: usize) -> Kind {
@@ -341,6 +441,8 @@ impl Snapshot {
     }
     pub fn synth(&self) -> Synth {
         Synth {
+            lfo_sync: self.words[786] & (1 << 8) != 0,
+            lfo_division: (self.words[786] >> 16) as u8,
             lfo_rate: lo(self.words[784]),
             lfo_pitch: hi(self.words[784]),
             lfo_filter: lo(self.words[785]),
@@ -426,15 +528,46 @@ impl Snapshot {
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Action {
+    Transfer {
+        source: usize,
+        target: usize,
+        moving: bool,
+    },
+    InputSource(u8),
     Browse,
+    BrowseXpm,
     None,
     Save,
     Load,
     Exit,
 }
+#[derive(Clone, Copy)]
+pub struct FxEdit {
+    pub from: Page,
+    pub target: u8,
+    pub track: usize,
+    pub slot: usize,
+    pub effect: Effect,
+    pub texture: bool,
+}
 pub struct Ui {
+    pub loop_edit: bool,
+    pub edit_operation: u8,
+    pub edit_source: Option<usize>,
+    pub fx_focus: usize,
+    pub fx_edit: Option<FxEdit>,
+    pub loop_mode: u8,
+    pub chain_step: usize,
+    pub loop_perform: bool,
+    pub loop_record_seen: bool,
+    pub loop_play_track: usize,
+    pub loop_start_revision: u64,
+    pub input_view: bool,
+    pub input_choice: usize,
     pub synth_page: u8,
     pub texture_slot: usize,
+    pub texture_held: [bool; 8],
+    pub fx_refused: Option<usize>,
     pub layer: usize,
     pub layer_detail: bool,
     pub chop_slice: usize,
@@ -462,8 +595,15 @@ pub struct Ui {
 impl Default for Ui {
     fn default() -> Self {
         Self {
+            loop_edit: false,
+            edit_operation: 0,
+            edit_source: None,
+            fx_focus: 0,
+            fx_edit: None,
             synth_page: 0,
             texture_slot: 0,
+            texture_held: [false; 8],
+            fx_refused: None,
             layer: 0,
             layer_detail: false,
             chop_slice: 0,
@@ -472,6 +612,14 @@ impl Default for Ui {
             held_slices: [None; 16],
             chord_modes: [false; 16],
             held_chords: [None; 16],
+            loop_mode: 0,
+            chain_step: 0,
+            loop_perform: false,
+            loop_record_seen: false,
+            loop_play_track: 0,
+            loop_start_revision: 0,
+            input_view: false,
+            input_choice: 0,
             page: Page::Loop,
             selected: 0,
             sound: 0,
@@ -500,6 +648,30 @@ pub const PERFORMANCE: [Effect; 8] = [
     Effect::Crush,
     Effect::Wobble,
 ];
+pub const FX_PADS: [Effect; 14] = [
+    Effect::Filter,
+    Effect::Isolator,
+    Effect::Repeat,
+    Effect::Reverse,
+    Effect::TapeStop,
+    Effect::DubEcho,
+    Effect::Crush,
+    Effect::Wobble,
+    Effect::Drive,
+    Effect::Compressor,
+    Effect::LoFi,
+    Effect::Tremolo,
+    Effect::AutoPan,
+    Effect::AutoFilter,
+];
+pub fn synth_page_count(s: &Snapshot) -> u8 {
+    let t = s.synth();
+    if t.lfo_volume > 0. || t.lfo_pan > 0. {
+        8
+    } else {
+        7
+    }
+}
 pub fn effect_name(e: Effect) -> &'static str {
     match e {
         Effect::Off => "OFF",
@@ -514,16 +686,211 @@ pub fn effect_name(e: Effect) -> &'static str {
         Effect::DubEcho => "DUB",
         Effect::Crush => "CRUSH",
         Effect::Wobble => "WOBBLE",
+        Effect::Tremolo => "TREMOLO",
+        Effect::AutoPan => "AUTO PAN",
+        Effect::AutoFilter => "AUTO FLT",
     }
 }
 impl Ui {
+    /// Context for the last pressed pad. Reading/editing an OFF effect never enables it.
+    pub fn quick_fx(&self, s: &Snapshot) -> Option<(u8, usize, Fx)> {
+        let (target, effect, fixed) = match self.page {
+            Page::TrackFx => (0, FX_PADS[self.fx_focus.min(FX_PADS.len() - 1)], None),
+            Page::MasterFx => (
+                self.master_target + 1,
+                FX_PADS[self.fx_focus.min(FX_PADS.len() - 1)],
+                None,
+            ),
+            Page::Texture if (6..=7).contains(&self.texture_slot) => {
+                let slot = self.texture_slot - 6;
+                let fx = s.fx(fx_base(1, slot));
+                if matches!(
+                    fx.effect,
+                    Effect::Tremolo | Effect::AutoPan | Effect::AutoFilter
+                ) {
+                    return None;
+                }
+                (
+                    1,
+                    if fx.effect == Effect::Off {
+                        if slot == 0 {
+                            Effect::Filter
+                        } else {
+                            Effect::Repeat
+                        }
+                    } else {
+                        fx.effect
+                    },
+                    Some(slot),
+                )
+            }
+            Page::Texture if (8..=10).contains(&self.texture_slot) => (
+                1,
+                [Effect::Tremolo, Effect::AutoPan, Effect::AutoFilter][self.texture_slot - 8],
+                None,
+            ),
+            _ => return None,
+        };
+        let count = if target >= 2 { 1 } else { 2 };
+        let slot = fixed
+            .or_else(|| (0..count).find(|i| s.fx(fx_base(target, *i)).effect == effect))
+            .or_else(|| {
+                (self.fx_slot < count && s.fx(fx_base(target, self.fx_slot)).effect == Effect::Off)
+                    .then_some(self.fx_slot)
+            })
+            .or_else(|| (0..count).find(|i| s.fx(fx_base(target, *i)).effect == Effect::Off))?;
+        Some((
+            target,
+            slot,
+            Fx {
+                effect,
+                ..s.fx(fx_base(target, slot))
+            },
+        ))
+    }
+    pub fn edited_fx(&self, s: &Snapshot) -> Fx {
+        let Some(edit) = self.fx_edit else {
+            return Fx::default();
+        };
+        if edit.texture {
+            let t = s.texture();
+            let [a, b, mix] = t.params[edit.slot];
+            Fx {
+                effect: edit.effect,
+                a,
+                b,
+                mix,
+                modulation: t.modulation[edit.slot],
+            }
+        } else {
+            Fx {
+                effect: edit.effect,
+                ..s.fx(fx_base(edit.target, edit.slot))
+            }
+        }
+    }
+    fn fx_edit_value(&self, index: u8, value: f32, mut send: impl FnMut(Command)) {
+        if let Some(e) = self.fx_edit {
+            if e.texture {
+                send(Command::TextureValue {
+                    slot: e.slot,
+                    index: if index >= 3 { index + 1 } else { index },
+                    value,
+                });
+            } else {
+                send(Command::FxValue {
+                    target: e.target,
+                    track: e.track,
+                    slot: e.slot,
+                    index,
+                    value,
+                });
+            }
+        }
+    }
+    pub fn open_fx_settings(&mut self, s: &Snapshot) {
+        if self.page == Page::FxSettings {
+            if let Some(e) = self.fx_edit {
+                self.navigate(e.from, s);
+                if !e.texture {
+                    self.fx_slot = e.slot;
+                }
+            }
+            return;
+        }
+        let from = self.page;
+        if from == Page::Texture && self.texture_slot == 5 {
+            self.navigate(Page::Sidechain, s);
+            return;
+        }
+        if from == Page::Texture && self.texture_slot < 5 {
+            self.fx_edit = Some(FxEdit {
+                from,
+                target: 1,
+                track: self.selected,
+                slot: self.texture_slot,
+                effect: [
+                    Effect::LoFi,
+                    Effect::Drive,
+                    Effect::Compressor,
+                    Effect::Wobble,
+                    Effect::DubEcho,
+                ][self.texture_slot],
+                texture: true,
+            });
+            self.page = Page::FxSettings;
+            return;
+        }
+        let target = if from == Page::Texture {
+            1
+        } else if from == Page::MasterFx {
+            self.master_target + 1
+        } else {
+            0
+        };
+        let effect = if from == Page::Texture {
+            if self.texture_slot >= 8 {
+                [Effect::Tremolo, Effect::AutoPan, Effect::AutoFilter]
+                    [(self.texture_slot - 8).min(2)]
+            } else {
+                let slot = self.texture_slot.saturating_sub(6).min(1);
+                let fx = s.fx(fx_base(1, slot));
+                if fx.effect == Effect::Off {
+                    if slot == 0 {
+                        Effect::Filter
+                    } else {
+                        Effect::Repeat
+                    }
+                } else {
+                    fx.effect
+                }
+            }
+        } else {
+            FX_PADS[self.fx_focus.min(FX_PADS.len() - 1)]
+        };
+        let count = if target >= 2 { 1 } else { 2 };
+        let chosen = if from == Page::Texture && (6..=7).contains(&self.texture_slot) {
+            Some(self.texture_slot - 6)
+        } else {
+            (0..count)
+                .find(|slot| s.fx(fx_base(target, *slot)).effect == effect)
+                .or_else(|| {
+                    (0..count).find(|slot| s.fx(fx_base(target, *slot)).effect == Effect::Off)
+                })
+        };
+        if let Some(slot) = chosen {
+            self.fx_slot = slot;
+            self.fx_edit = Some(FxEdit {
+                from,
+                target,
+                track: self.selected,
+                slot,
+                effect,
+                texture: false,
+            });
+            self.page = Page::FxSettings;
+            self.notice = "";
+        } else {
+            self.notice = "2 FX MAX: RELEASE ONE";
+            self.fx_refused = Some(if from == Page::Texture {
+                self.texture_slot
+            } else {
+                self.fx_focus
+            });
+        }
+    }
     pub fn navigate(&mut self, page: Page, s: &Snapshot) {
+        self.input_view = false;
+        if page != Page::Loop {
+            self.loop_edit = false;
+            self.edit_source = None;
+        }
         let page = if page == Page::Play && s.track_kind(self.selected) == Kind::Audio {
             if s.words[16 + self.selected * 12 + 11] == 0 {
                 self.notice = "RECORD OR LOAD A WAV FIRST";
                 return;
             }
-            Page::Chop
+            Page::Play
         } else {
             page
         };
@@ -554,6 +921,7 @@ impl Ui {
             self.layer_detail = false;
         }
         self.page = page;
+        self.fx_refused = None;
         self.notice = "";
         let level = if matches!(page, Page::KitMix | Page::DrumSound) {
             s.drum(self.sound).level
@@ -569,11 +937,40 @@ impl Ui {
         self.pickup.select(level)
     }
     pub fn soft(&mut self, key: usize, shift: bool, s: &Snapshot, mut send: impl FnMut(Command)) {
+        if self.page == Page::Loop && self.loop_edit {
+            self.edit_operation = key.min(2) as u8;
+            self.edit_source = None;
+            self.notice = "";
+            return;
+        }
+
+        if self.page == Page::FxSettings {
+            if key == 0 {
+                if let Some(e) = self.fx_edit {
+                    self.navigate(e.from, s);
+                    if !e.texture {
+                        self.fx_slot = e.slot;
+                    }
+                }
+            } else {
+                let fx = self.edited_fx(s);
+                if fx.effect.modulated() {
+                    if key == 1 {
+                        self.fx_edit_value(5, f32::from((fx.modulation.shape + 1) % 6) / 5., send);
+                    } else {
+                        self.fx_edit_value(3, f32::from(!fx.modulation.sync), send);
+                    }
+                }
+            }
+            return;
+        }
+
         if self.page == Page::Output {
             if key == 0 {
                 self.navigate(Page::Mix, s);
             } else {
-                self.selected = (self.selected + if key == 1 { 15 } else { 1 }) % 16;
+                self.selected =
+                    (self.selected + if key == 1 { ACTIVE_TRACKS - 1 } else { 1 }) % ACTIVE_TRACKS;
                 send(Command::Select(self.selected));
             }
             return;
@@ -606,6 +1003,15 @@ impl Ui {
             }
             return;
         }
+        if self.page == Page::Loop && shift {
+            if s.words[9] != 0 {
+                self.notice = "FINISH REC BEFORE MODE CHANGE";
+            } else {
+                self.loop_mode = key.min(2) as u8;
+                self.notice = "";
+            }
+            return;
+        }
         if self.page == Page::Loop && key < 2 {
             self.navigate(
                 if key == 0 {
@@ -631,6 +1037,40 @@ impl Ui {
             }
             return;
         }
+        if self.page == Page::Play && s.track_kind(self.selected) == Kind::Synth && shift {
+            if key == 2 && self.synth_page >= 6 {
+                send(Command::SynthValue {
+                    track: self.selected,
+                    index: 28,
+                    value: if s.synth().lfo_sync { 0. } else { 1. },
+                });
+                return;
+            }
+            if key == 1 && self.chord_modes[self.selected] {
+                send(Command::ChordValue {
+                    track: self.selected,
+                    index: 5,
+                    value: if s.chord().smooth { 0. } else { 1. },
+                });
+                return;
+            }
+        }
+        if self.page == Page::Play && s.track_kind(self.selected) == Kind::Audio {
+            if key == 0 {
+                let next = match s.audio_target(self.selected) {
+                    crate::audio::RecordTarget::Input => crate::audio::RecordTarget::Chromatic,
+                    crate::audio::RecordTarget::Chromatic => crate::audio::RecordTarget::Chop,
+                    crate::audio::RecordTarget::Chop => crate::audio::RecordTarget::Input,
+                };
+                send(Command::AudioTarget(self.selected, next));
+                self.notice = "";
+                return;
+            }
+            if key == 1 {
+                self.navigate(Page::Chop, s);
+                return;
+            }
+        }
         if matches!(self.page, Page::Loop | Page::Play) && key == 2 {
             let mode = if s.words[16 + self.selected * 12] & (1 << 18) == 0 {
                 RecordMode::Overdub
@@ -643,6 +1083,10 @@ impl Ui {
         }
         if self.page == Page::Play && key == 1 && s.track_kind(self.selected) == Kind::Synth {
             self.chord_modes[self.selected] = !self.chord_modes[self.selected];
+            send(Command::ChordMode(
+                self.selected,
+                self.chord_modes[self.selected],
+            ));
             self.notice = "";
             return;
         }
@@ -701,7 +1145,48 @@ impl Ui {
         if pad >= 16 {
             return Action::None;
         }
+        if on && self.page == Page::Setup && self.input_view {
+            if pad < 3 {
+                self.input_choice = pad;
+                return Action::InputSource(pad as u8);
+            }
+            return Action::None;
+        }
         if !on {
+            if pad < 8 && self.texture_held[pad] {
+                self.texture_held[pad] = false;
+                match pad {
+                    0..=4 => {
+                        send(Command::TextureValue {
+                            slot: pad,
+                            index: 7,
+                            value: 0.,
+                        });
+                        send(Command::TextureValue {
+                            slot: pad,
+                            index: 3,
+                            value: 0.,
+                        });
+                    }
+                    5 => {
+                        send(Command::SidechainHeld(false));
+                        let mut c = s.sidechain();
+                        c.enabled = false;
+                        send(Command::Sidechain(c));
+                    }
+                    _ => {
+                        let slot = pad - 6;
+                        send(Command::FxSelect {
+                            target: 1,
+                            track: self.selected,
+                            slot,
+                            effect: s.fx(fx_base(1, slot)).effect,
+                            temporary: false,
+                        });
+                        send(Command::MasterBypass { slot, bypass: true });
+                    }
+                }
+            }
             if let Some(track) = self.held_slices[pad].take() {
                 send(Command::Slice {
                     track,
@@ -736,6 +1221,59 @@ impl Ui {
             }
             return Action::None;
         }
+        if self.page == Page::Loop && self.loop_edit {
+            if s.words[9] != 0 || s.words[4] & 1 != 0 {
+                self.notice = "STOP BEFORE LOOP EDIT";
+                return Action::None;
+            }
+            self.selected = pad;
+            send(Command::Select(pad));
+            self.pickup.select(s.level(pad));
+            if self.edit_operation == 1 {
+                if self.edit_source == Some(pad) {
+                    send(Command::Clear(pad));
+                    self.edit_source = None;
+                    self.notice = "DELETED / SHIFT -: UNDO";
+                } else {
+                    self.edit_source = Some(pad);
+                    self.notice = "PRESS SAME PAD TO DELETE";
+                }
+            } else if let Some(source) = self.edit_source {
+                if source == pad {
+                    self.edit_source = None;
+                    self.notice = "SOURCE CLEARED";
+                } else {
+                    self.edit_source = None;
+                    self.notice = "LOOP EDIT WORKING...";
+                    return Action::Transfer {
+                        source,
+                        target: pad,
+                        moving: self.edit_operation == 2,
+                    };
+                }
+            } else {
+                self.edit_source = Some(pad);
+                self.notice = "CHOOSE EMPTY DESTINATION";
+            }
+            return Action::None;
+        }
+        if self.page == Page::Loop && self.loop_mode == 0 {
+            if shift {
+                if crate::input_hw::pending() {
+                    self.notice = "WAIT FOR INPUT SWITCH";
+                    return Action::None;
+                }
+                send(Command::LoopRecord(pad));
+                if s.words[9] == 0 {
+                    self.selected = pad;
+                    self.pickup.select(s.level(pad));
+                }
+                self.notice = "";
+                return Action::None;
+            }
+            self.sync_loop_role(s);
+            return self.perform_pad(pad, velocity, false, false, s, &mut send);
+        }
         match self.page {
             Page::Output => {
                 if pad < 3 {
@@ -752,6 +1290,19 @@ impl Ui {
                 self.chop_slice = pad;
                 self.chop_cursor = s.slice(pad).start;
                 self.wave_request(s, &mut send);
+                if !shift && s.audio_target(self.selected) == crate::audio::RecordTarget::Chop {
+                    let note = pad as u8;
+                    let source = 100 + pad as u16;
+                    self.held[pad] = Some((self.selected, note, source));
+                    send(Command::Note {
+                        track: self.selected,
+                        note,
+                        velocity,
+                        on: true,
+                        source,
+                    });
+                    return Action::None;
+                }
                 self.held_slices[pad] = Some(self.selected);
                 if !shift {
                     send(Command::Slice {
@@ -769,11 +1320,38 @@ impl Ui {
                         [Kind::Audio, Kind::Synth, Kind::Drum][pad],
                     ));
                     self.navigate(Page::Loop, s);
+                } else if (4..=6).contains(&pad) && s.track_kind(self.selected) == Kind::Audio {
+                    send(Command::AudioTarget(
+                        self.selected,
+                        [
+                            crate::audio::RecordTarget::Input,
+                            crate::audio::RecordTarget::Chromatic,
+                            crate::audio::RecordTarget::Chop,
+                        ][pad - 4],
+                    ));
+                    self.notice = "";
+                } else if pad == 4 && s.track_kind(self.selected) == Kind::Drum {
+                    return Action::BrowseXpm;
                 } else if pad == 12 {
                     return Action::Browse;
                 }
             }
             Page::DrumSound => {
+                if shift {
+                    self.sound = pad;
+                    send(if erase {
+                        Command::UndoDrumPart {
+                            track: self.selected,
+                            sound: pad,
+                        }
+                    } else {
+                        Command::GenerateDrumPart {
+                            track: self.selected,
+                            sound: pad,
+                        }
+                    });
+                    return Action::None;
+                }
                 if self.sound != pad {
                     self.pickup.select(s.drum(pad).level);
                 }
@@ -788,15 +1366,50 @@ impl Ui {
                 });
             }
             Page::Loop => {
-                // Selection never accidentally starts/stops a loop; DATA controls selected-loop playback.
-                send(Command::Select(pad));
-                if shift && s.words[16 + pad * 12 + 4] > 0 {
-                    send(Command::Pad(pad, false));
+                if self.loop_mode == 1 {
+                    send(Command::Mute(pad));
+                    return Action::None;
                 }
-                self.selected = pad;
-                self.pickup.select(s.level(pad));
+                if self.loop_mode == 2 {
+                    let config = s.chain_config();
+                    let len = usize::from(config.len);
+                    if erase {
+                        let focus = self.chain_step.min(len.saturating_sub(1));
+                        let found = if len > 0 && usize::from(config.steps[focus].track) == pad {
+                            Some(focus)
+                        } else {
+                            config.steps[..len]
+                                .iter()
+                                .position(|step| usize::from(step.track) == pad)
+                        };
+                        if let Some(i) = found {
+                            send(Command::ChainRemove(i));
+                            self.chain_step = i.min(len.saturating_sub(2));
+                            self.notice = "";
+                        } else {
+                            self.notice = "LOOP NOT IN CHAIN";
+                        }
+                        return Action::None;
+                    }
+                    if s.words[16 + pad * 12 + 4] == 0 {
+                        self.notice = "RECORD LOOP BEFORE ADDING";
+                    } else if len >= 16 {
+                        self.notice = "CHAIN FULL / REMOVE A STEP";
+                    } else {
+                        send(Command::ChainAppend(pad));
+                        self.chain_step = len;
+                        self.selected = pad;
+                        send(Command::Select(pad));
+                        self.pickup.select(s.level(pad));
+                        self.notice = "";
+                    }
+                    return Action::None;
+                }
             }
             Page::Mix => {
+                if pad >= ACTIVE_TRACKS {
+                    return Action::None;
+                }
                 self.selected = pad;
                 send(Command::Select(pad));
                 self.pickup.select(s.level(pad));
@@ -827,57 +1440,13 @@ impl Ui {
                     });
                 }
             }
-            Page::Play => {
-                if shift && s.track_kind(self.selected) == Kind::Drum {
-                    self.sound = pad;
-                    send(if erase {
-                        Command::UndoDrumPart {
-                            track: self.selected,
-                            sound: pad,
-                        }
-                    } else {
-                        Command::GenerateDrumPart {
-                            track: self.selected,
-                            sound: pad,
-                        }
-                    });
-                } else if shift {
-                    self.selected = pad;
-                    send(Command::Select(pad));
-                    self.pickup.select(s.level(pad));
-                } else if s.track_kind(self.selected) == Kind::Synth
-                    && self.chord_modes[self.selected]
-                {
-                    self.held_chords[pad] = Some(self.selected);
-                    send(Command::Chord {
-                        track: self.selected,
-                        pad,
-                        velocity,
-                        on: true,
-                    });
-                } else {
-                    let note = if s.track_kind(self.selected) == Kind::Drum {
-                        pad as u8
-                    } else {
-                        48 + pad as u8
-                    };
-                    if s.track_kind(self.selected) == Kind::Drum {
-                        self.sound = pad;
-                    }
-                    let source = 100 + pad as u16;
-                    self.held[pad] = Some((self.selected, note, source));
-                    send(Command::Note {
-                        track: self.selected,
-                        note,
-                        velocity,
-                        on: true,
-                        source,
-                    });
-                }
-            }
+            Page::Play => return self.perform_pad(pad, velocity, shift, erase, s, &mut send),
             Page::Sidechain => {
                 let mut c = s.sidechain();
                 if shift {
+                    if pad >= ACTIVE_TRACKS {
+                        return Action::None;
+                    }
                     c.mode = 1;
                     c.mask ^= 1 << pad;
                 } else {
@@ -885,212 +1454,92 @@ impl Ui {
                 }
                 send(Command::Sidechain(c));
             }
+            Page::FxSettings => {}
+            Page::Texture if (8..=10).contains(&pad) => {
+                self.texture_slot = pad;
+                self.trigger_fx(
+                    pad,
+                    [Effect::Tremolo, Effect::AutoPan, Effect::AutoFilter][pad - 8],
+                    1,
+                    shift,
+                    s,
+                    &mut send,
+                );
+            }
             Page::Texture => {
+                if pad >= 8 {
+                    return Action::None;
+                }
+                self.texture_slot = pad;
+                let was_held = self.texture_held[pad];
+                self.texture_held[pad] = !shift;
                 if pad < 5 {
-                    self.texture_slot = pad;
+                    let active = s.texture().enabled[pad];
+                    send(Command::TextureValue {
+                        slot: pad,
+                        index: 7,
+                        value: f32::from(!shift),
+                    });
                     send(Command::TextureValue {
                         slot: pad,
                         index: 3,
-                        value: if s.texture().enabled[pad] { 0. } else { 1. },
+                        value: f32::from(!shift || !active || was_held),
                     });
                 } else if pad == 5 {
-                    self.texture_slot = 5;
                     let mut c = s.sidechain();
+                    let active = c.enabled && c.depth > 0.;
                     if c.depth == 0. {
                         c.depth = 0.65;
-                        c.enabled = true;
-                    } else {
-                        c.enabled = !c.enabled;
                     }
+                    c.enabled = !shift || !active || was_held;
+                    send(Command::SidechainHeld(!shift));
                     send(Command::Sidechain(c));
-                } else if pad == 6 || pad == 7 {
-                    self.texture_slot = pad;
+                } else {
                     let slot = pad - 6;
+                    if matches!(
+                        s.fx(fx_base(1, slot)).effect,
+                        Effect::Tremolo | Effect::AutoPan | Effect::AutoFilter
+                    ) {
+                        self.texture_held[pad] = false;
+                        return Action::None;
+                    }
+                    for held in &mut self.fx_held {
+                        if held.is_some_and(|(h, t, _)| h == slot && t == 1) {
+                            *held = None;
+                        }
+                    }
                     let fx = s.fx(fx_base(1, slot));
-                    if fx.effect == Effect::Off {
-                        send(Command::FxSelect {
-                            target: 1,
-                            track: self.selected,
-                            slot,
-                            effect: if slot == 0 {
+                    let active = fx.effect != Effect::Off && !s.texture().master_bypass[slot];
+                    send(Command::FxSelect {
+                        target: 1,
+                        track: self.selected,
+                        slot,
+                        effect: if fx.effect == Effect::Off {
+                            if slot == 0 {
                                 Effect::Filter
                             } else {
                                 Effect::Repeat
-                            },
-                            temporary: false,
-                        });
-                        send(Command::MasterBypass {
-                            slot,
-                            bypass: false,
-                        });
-                    } else {
-                        send(Command::MasterBypass {
-                            slot,
-                            bypass: !s.texture().master_bypass[slot],
-                        });
-                    }
-                } else {
-                    match pad {
-                        8 => {
-                            self.master_target = 0;
-                            self.navigate(Page::MasterFx, s);
-                        }
-                        9 => self.navigate(Page::Sidechain, s),
-                        10 | 11 => {
-                            self.master_target = (pad - 9) as u8;
-                            self.navigate(Page::MasterFx, s);
-                        }
-                        12 => {
-                            for slot in 0..5 {
-                                send(Command::TextureValue {
-                                    slot,
-                                    index: 3,
-                                    value: 0.,
-                                });
                             }
-                            for slot in 0..2 {
-                                send(Command::MasterBypass { slot, bypass: true });
-                            }
-                            let mut c = s.sidechain();
-                            c.enabled = false;
-                            send(Command::Sidechain(c));
-                        }
-                        _ => {}
-                    }
+                        } else {
+                            fx.effect
+                        },
+                        temporary: !shift,
+                    });
+                    send(Command::MasterBypass {
+                        slot,
+                        bypass: shift && active && !was_held,
+                    });
                 }
             }
             Page::TrackFx | Page::MasterFx => {
-                let master = self.page == Page::MasterFx;
-                if pad < 8 {
-                    let slot = self.fx_slot;
-                    let target = if master { self.master_target + 1 } else { 0 };
-                    for held in &mut self.fx_held {
-                        if held.is_some_and(|(h, m, t)| {
-                            (target >= 2 || h == slot)
-                                && m == target
-                                && (target != 0 || t == self.selected)
-                        }) {
-                            *held = None
-                        }
-                    }
-                    let effect = if shift {
-                        [
-                            Effect::Drive,
-                            Effect::Compressor,
-                            Effect::LoFi,
-                            Effect::Filter,
-                            Effect::TapeStop,
-                            Effect::DubEcho,
-                            Effect::Crush,
-                            Effect::Wobble,
-                        ][pad]
+                if pad < FX_PADS.len() {
+                    self.fx_focus = pad;
+                    let target = if self.page == Page::MasterFx {
+                        self.master_target + 1
                     } else {
-                        PERFORMANCE[pad]
+                        0
                     };
-                    if self.latch {
-                        let count = if target >= 2 { 1 } else { 2 };
-                        let existing =
-                            (0..count).find(|i| s.fx(fx_base(target, *i)).effect == effect);
-                        let chosen = existing.or_else(|| {
-                            (0..count).find(|i| s.fx(fx_base(target, *i)).effect == Effect::Off)
-                        });
-                        if let Some(slot) = chosen {
-                            self.fx_slot = slot;
-                            let mut fx = s.fx(fx_base(target, slot));
-                            fx.effect = if existing.is_some() {
-                                Effect::Off
-                            } else {
-                                effect
-                            };
-                            send(fx_command(target, self.selected, slot, fx, false));
-                            if target == 1 {
-                                send(Command::MasterBypass {
-                                    slot,
-                                    bypass: false,
-                                });
-                            }
-                        } else {
-                            self.notice = if count == 1 {
-                                "BUS FULL: TURN FX OFF"
-                            } else {
-                                "2 FX MAX: TURN ONE OFF"
-                            };
-                        }
-                        return Action::None;
-                    }
-                    let current = s.fx(fx_base(target, slot));
-                    let enabled = !(self.latch && current.effect == effect);
-                    let fx = Fx {
-                        effect: if enabled { effect } else { Effect::Off },
-                        ..current
-                    };
-                    send(fx_command(target, self.selected, slot, fx, !self.latch));
-                    if !self.latch {
-                        self.fx_held[pad] = Some((slot, target, self.selected))
-                    }
-                } else {
-                    match pad {
-                        8 => self.fx_slot = 0,
-                        9 => {
-                            if !master || self.master_target == 0 {
-                                self.fx_slot = 1
-                            }
-                        }
-                        10 => self.latch = !self.latch,
-                        11 => {
-                            for held in &mut self.fx_held {
-                                if held.is_some_and(|(_, target, track)| {
-                                    if master {
-                                        target == self.master_target + 1
-                                    } else {
-                                        target == 0 && track == self.selected
-                                    }
-                                }) {
-                                    *held = None
-                                }
-                            }
-                            if master && self.master_target != 0 {
-                                send(Command::BusFx {
-                                    slot: usize::from(self.master_target - 1),
-                                    fx: Fx::default(),
-                                })
-                            } else if master {
-                                send(Command::FxOff)
-                            } else {
-                                for slot in 0..2 {
-                                    send(Command::SetFx {
-                                        track: self.selected,
-                                        slot,
-                                        fx: Fx::default(),
-                                    })
-                                }
-                            }
-                        }
-                        12 => {
-                            if master {
-                                self.master_target = 0
-                            } else {
-                                send(Command::Route(self.selected, Route::Dry))
-                            }
-                        }
-                        13 => {
-                            if master {
-                                self.master_target = 1;
-                                self.fx_slot = 0;
-                            } else {
-                                send(Command::Route(self.selected, Route::A))
-                            }
-                        }
-                        14 => {
-                            if master {
-                                self.master_target = 2;
-                                self.fx_slot = 0;
-                            } else {
-                                send(Command::Route(self.selected, Route::B))
-                            }
-                        }
-                        _ => self.navigate(Page::Setup, s),
-                    }
+                    self.trigger_fx(pad, FX_PADS[pad], target, shift, s, &mut send);
                 }
             }
             Page::Setup => match pad {
@@ -1123,15 +1572,237 @@ impl Ui {
         }
         Action::None
     }
+    fn trigger_fx(
+        &mut self,
+        pad: usize,
+        effect: Effect,
+        target: u8,
+        shift: bool,
+        s: &Snapshot,
+        send: &mut dyn FnMut(Command),
+    ) {
+        self.fx_refused = None;
+        let count = if target >= 2 { 1 } else { 2 };
+        let existing = (0..count).find(|slot| s.fx(fx_base(target, *slot)).effect == effect);
+        let chosen = existing
+            .or_else(|| (0..count).find(|slot| s.fx(fx_base(target, *slot)).effect == Effect::Off));
+        if let Some(slot) = chosen {
+            let was_held =
+                self.fx_is_held(target, slot) || (target == 1 && self.texture_held[slot + 6]);
+            for held in &mut self.fx_held {
+                if held.is_some_and(|(h, t, track)| {
+                    h == slot && t == target && (target != 0 || track == self.selected)
+                }) {
+                    *held = None;
+                }
+            }
+            if target == 1 {
+                self.texture_held[slot + 6] = false;
+            }
+            let mut fx = s.fx(fx_base(target, slot));
+            let enabled = !shift
+                || existing.is_none()
+                || was_held
+                || (target == 1 && s.texture().master_bypass[slot]);
+            fx.effect = if enabled { effect } else { Effect::Off };
+            send(fx_command(target, self.selected, slot, fx, !shift));
+            if target == 1 {
+                send(Command::MasterBypass {
+                    slot,
+                    bypass: false,
+                });
+            }
+            self.fx_slot = slot;
+            if !shift {
+                self.fx_held[pad] = Some((slot, target, self.selected));
+            }
+            self.notice = "";
+        } else {
+            self.fx_refused = Some(pad);
+            self.notice = if count == 1 {
+                "BUS FULL: RELEASE FX"
+            } else {
+                "2 FX MAX: RELEASE ONE"
+            };
+        }
+    }
+    fn perform_pad(
+        &mut self,
+        pad: usize,
+        velocity: u8,
+        shift: bool,
+        erase: bool,
+        s: &Snapshot,
+        send: &mut impl FnMut(Command),
+    ) -> Action {
+        if s.track_kind(self.selected) == Kind::Audio {
+            if shift {
+                return Action::None;
+            }
+            if s.words[16 + self.selected * 12 + 11] == 0 {
+                self.notice = "RECORD OR LOAD A WAV FIRST";
+                return Action::None;
+            }
+            let note = if s.audio_target(self.selected) == crate::audio::RecordTarget::Chop {
+                pad as u8
+            } else {
+                48 + pad as u8
+            };
+            let source = 100 + pad as u16;
+            self.sound = pad;
+            self.held[pad] = Some((self.selected, note, source));
+            send(Command::Note {
+                track: self.selected,
+                note,
+                velocity,
+                on: true,
+                source,
+            });
+            return Action::None;
+        }
+        if shift && s.track_kind(self.selected) == Kind::Drum {
+            self.sound = pad;
+            send(if erase {
+                Command::UndoDrumPart {
+                    track: self.selected,
+                    sound: pad,
+                }
+            } else {
+                Command::GenerateDrumPart {
+                    track: self.selected,
+                    sound: pad,
+                }
+            });
+        } else if shift {
+            if pad >= ACTIVE_TRACKS {
+                return Action::None;
+            }
+            self.selected = pad;
+            send(Command::Select(pad));
+            self.pickup.select(s.level(pad));
+        } else if s.track_kind(self.selected) == Kind::Synth && self.chord_modes[self.selected] {
+            self.sound = pad;
+            self.held_chords[pad] = Some(self.selected);
+            send(Command::Chord {
+                track: self.selected,
+                pad,
+                velocity,
+                on: true,
+            });
+        } else {
+            let note = if s.track_kind(self.selected) == Kind::Drum {
+                pad as u8
+            } else {
+                48 + pad as u8
+            };
+            if s.track_kind(self.selected) == Kind::Drum {
+                self.sound = pad;
+            }
+            let source = 100 + pad as u16;
+            self.held[pad] = Some((self.selected, note, source));
+            send(Command::Note {
+                track: self.selected,
+                note,
+                velocity,
+                on: true,
+                source,
+            });
+        }
+        Action::None
+    }
+    pub fn sync_chord_modes(&mut self, s: &Snapshot) {
+        for i in 0..16 {
+            self.chord_modes[i] = s.words[16 + i * 12] & (1 << 19) != 0;
+        }
+    }
+    pub fn sync_loop_role(&mut self, s: &Snapshot) {
+        self.loop_perform = self.loop_mode == 0;
+        if self.page == Page::Loop && s.words[9] > 0 {
+            let track = (s.words[9] - 1) as usize;
+            if self.selected != track {
+                self.pickup.select(s.level(track));
+            }
+            self.selected = track;
+        }
+        self.loop_play_track = self.selected;
+    }
+    pub fn fx_is_held(&self, target: u8, slot: usize) -> bool {
+        self.fx_held.iter().any(|held| {
+            held.is_some_and(|(h, t, track)| {
+                h == slot && t == target && (target != 0 || track == self.selected)
+            })
+        })
+    }
     pub fn encoder(&mut self, delta: i32, s: &Snapshot, mut send: impl FnMut(Command)) {
+        if self.page == Page::Loop && self.loop_edit {
+            self.edit_source = None;
+        }
+        if self.page == Page::FxSettings {
+            let fx = self.edited_fx(s);
+            if fx.effect.modulated() && fx.modulation.sync {
+                self.fx_edit_value(
+                    4,
+                    (i32::from(fx.modulation.division) + delta).clamp(0, 15) as f32 / 15.,
+                    send,
+                );
+            }
+            return;
+        }
+        if matches!(self.page, Page::TrackFx | Page::MasterFx) {
+            self.fx_focus =
+                (self.fx_focus as i32 + delta).rem_euclid(FX_PADS.len() as i32) as usize;
+            return;
+        }
+
+        if self.page == Page::Loop && s.words[9] != 0 {
+            self.notice = "REC TRACK LOCKED / REC: FINISH";
+            return;
+        }
+
+        if self.page == Page::Loop && self.loop_mode == 2 {
+            let len = usize::from(s.chain_config().len).max(1);
+            self.chain_step = (self.chain_step as i32 + delta).rem_euclid(len as i32) as usize;
+            let config = s.chain_config();
+            if config.len > 0 {
+                self.selected = usize::from(config.steps[self.chain_step].track);
+                send(Command::Select(self.selected));
+                self.pickup.select(s.level(self.selected));
+            }
+            self.notice = "";
+            return;
+        }
+        if self.page == Page::Setup && self.input_view {
+            self.input_choice = (self.input_choice as i32 + delta).clamp(0, 2) as usize;
+            return;
+        }
+        if self.page == Page::Setup {
+            send(Command::Bpm(
+                (s.bpm() + f64::from(delta)).round().clamp(40., 240.),
+            ));
+            return;
+        }
         if self.page == Page::Sidechain {
             let mut c = s.sidechain();
-            c.source = (i32::from(c.source) + delta).rem_euclid(16) as u8;
+            c.source = (i32::from(c.source) + delta).rem_euclid(ACTIVE_TRACKS as i32) as u8;
             send(Command::Sidechain(c));
             return;
         }
         if self.page == Page::Texture {
-            self.texture_slot = (self.texture_slot as i32 + delta).rem_euclid(8) as usize;
+            let available = (0..11)
+                .filter(|pad| {
+                    !(6..=7).contains(pad)
+                        || !matches!(
+                            s.fx(fx_base(1, *pad - 6)).effect,
+                            Effect::Tremolo | Effect::AutoPan | Effect::AutoFilter
+                        )
+                })
+                .collect::<Vec<_>>();
+            let old = available
+                .iter()
+                .position(|pad| *pad == self.texture_slot)
+                .unwrap_or(0);
+            self.texture_slot =
+                available[(old as i32 + delta).rem_euclid(available.len() as i32) as usize];
             return;
         }
         if self.page == Page::Grid {
@@ -1161,7 +1832,8 @@ impl Ui {
             self.sound = (self.sound as i32 + delta).rem_euclid(16) as usize;
             self.pickup.select(s.drum(self.sound).level)
         } else {
-            self.selected = (self.selected as i32 + delta).rem_euclid(16) as usize;
+            self.selected =
+                (self.selected as i32 + delta).rem_euclid(ACTIVE_TRACKS as i32) as usize;
             send(Command::Select(self.selected));
             self.pickup.select(s.level(self.selected))
         }
@@ -1191,7 +1863,15 @@ impl Ui {
                 });
             }
         } else {
-            let i = if matches!(self.page, Page::MasterFx | Page::Texture | Page::Sidechain) {
+            let i = if self.page == Page::FxSettings {
+                self.fx_edit.map_or(self.selected, |e| {
+                    if e.texture || e.target != 0 {
+                        16
+                    } else {
+                        e.track
+                    }
+                })
+            } else if matches!(self.page, Page::MasterFx | Page::Texture | Page::Sidechain) {
                 16
             } else {
                 self.selected
@@ -1206,11 +1886,79 @@ impl Ui {
         }
     }
     pub fn knob(&mut self, index: usize, value: f32, s: &Snapshot, mut send: impl FnMut(Command)) {
+        if self.page == Page::Setup && self.input_view {
+            return;
+        }
         let value = value.clamp(0., 1.);
+        if matches!(self.page, Page::TrackFx | Page::MasterFx)
+            || self.page == Page::Texture && self.texture_slot >= 6
+        {
+            if index > 2 {
+                return;
+            }
+            if let Some((target, slot, fx)) = self.quick_fx(s) {
+                send(Command::FxValue {
+                    target,
+                    track: self.selected,
+                    slot,
+                    index: if index == 0 && fx.effect.modulated() && fx.modulation.sync {
+                        4
+                    } else {
+                        index as u8
+                    },
+                    value,
+                });
+            } else {
+                self.notice = "RELEASE AN FX FIRST";
+            }
+            return;
+        }
+
+        if self.page == Page::FxSettings {
+            if index <= 2 {
+                let fx = self.edited_fx(s);
+                self.fx_edit_value(
+                    if index == 0 && fx.effect.modulated() && fx.modulation.sync {
+                        4
+                    } else {
+                        index as u8
+                    },
+                    value,
+                    send,
+                );
+            }
+            return;
+        }
+
         if index > 2 {
             return;
         }
+        if self.page == Page::Loop && self.loop_mode == 2 {
+            match index {
+                0 if s.chain_config().len > 0 => send(Command::ChainRepeats(
+                    self.chain_step.min(usize::from(s.chain_config().len) - 1),
+                    (1. + value * 15.).round() as u8,
+                )),
+                1 => send(Command::ChainRepeat(value >= 0.5)),
+                _ => {}
+            }
+            return;
+        }
+        if self.page == Page::Grid && !s.note_view(self.selected) {
+            return;
+        }
+        if self.page == Page::Play && s.track_kind(self.selected) == Kind::Audio {
+            let mut a = s.audio_settings();
+            match index {
+                0 => a.root = (value * 127.).round() as u8,
+                1 => a.tune = (value * 48. - 24.).round(),
+                _ => a.warp = value >= 0.5,
+            };
+            send(Command::AudioSettings(self.selected, a));
+            return;
+        }
         match self.page {
+            Page::FxSettings => {}
             Page::Sidechain => {
                 let mut c = s.sidechain();
                 match index {
@@ -1224,10 +1972,37 @@ impl Ui {
                 send(Command::Sidechain(c));
             }
             Page::Texture => {
-                if self.texture_slot < 5 {
+                if (8..=10).contains(&self.texture_slot) {
+                    let effect = [Effect::Tremolo, Effect::AutoPan, Effect::AutoFilter]
+                        [self.texture_slot - 8];
+                    let slot = (0..2)
+                        .find(|i| s.fx(fx_base(1, *i)).effect == effect)
+                        .or_else(|| (0..2).find(|i| s.fx(fx_base(1, *i)).effect == Effect::Off));
+                    if let Some(slot) = slot {
+                        let fx = s.fx(fx_base(1, slot));
+                        send(Command::FxValue {
+                            target: 1,
+                            track: self.selected,
+                            slot,
+                            index: if index == 0 && fx.modulation.sync {
+                                4
+                            } else {
+                                index as u8
+                            },
+                            value,
+                        });
+                    }
+                } else if self.texture_slot < 5 {
                     send(Command::TextureValue {
                         slot: self.texture_slot,
-                        index: index as u8,
+                        index: if self.texture_slot == 3
+                            && index == 0
+                            && s.texture().modulation[3].sync
+                        {
+                            5
+                        } else {
+                            index as u8
+                        },
                         value,
                     });
                 } else if self.texture_slot == 5 {
@@ -1235,7 +2010,6 @@ impl Ui {
                     match index {
                         0 => {
                             c.depth = value;
-                            c.enabled = value > 0.;
                         }
                         1 => c.release = value,
                         _ => c.threshold = (0.5 - value * 0.49).max(0.01),
@@ -1350,7 +2124,14 @@ impl Ui {
                     target,
                     track: self.selected,
                     slot: self.fx_slot,
-                    index: index as u8,
+                    index: if index == 0
+                        && s.fx(fx_base(target, self.fx_slot)).effect.modulated()
+                        && s.fx(fx_base(target, self.fx_slot)).modulation.sync
+                    {
+                        4
+                    } else {
+                        index as u8
+                    },
                     value,
                 });
             }
@@ -1360,13 +2141,17 @@ impl Ui {
                         0 => send(Command::Pan(self.selected, value * 2. - 1.)),
                         1 => send(Command::SynthValue {
                             track: self.selected,
-                            index: 27,
+                            index: if self.shift_view { 26 } else { 27 },
                             value,
                         }),
                         _ => send(Command::SynthValue {
                             track: self.selected,
-                            index: 22,
-                            value: 0.05 * 400_f32.powf(value),
+                            index: if s.synth().lfo_sync { 29 } else { 22 },
+                            value: if s.synth().lfo_sync {
+                                (value * 15.99).floor()
+                            } else {
+                                0.05 * 400_f32.powf(value)
+                            },
                         }),
                     }
                     return;
@@ -1374,9 +2159,10 @@ impl Ui {
                 if s.track_kind(self.selected) == Kind::Synth && self.synth_page > 0 {
                     let (field, v) = match (self.synth_page, index, self.shift_view) {
                         (6, 0, true) => (23, (value * 5.99).floor()),
+                        (6, 0, false) if s.synth().lfo_sync => (29, (value * 15.99).floor()),
                         (6, 0, false) => (22, 0.05 * 400_f32.powf(value)),
                         (6, 1, _) => (24, value * 200.),
-                        (6, _, true) => (26, value),
+                        (6, _, true) => (25, value * 4.),
                         (6, _, false) => (25, value * 4.),
                         (1, 0, _) => (3, (value * 3.99).floor()),
                         (2, 0, _) => (6, (value * 3.99).floor()),
@@ -1453,7 +2239,7 @@ impl Ui {
                 }
             }
             Page::Setup => match index {
-                0 => send(Command::Bpm(40. + f64::from(value) * 200.)),
+                0 => send(Command::Bpm((40. + f64::from(value) * 200.).round())),
                 1 => send(Command::Preroll((value * 2.99) as u8)),
                 _ => {}
             },
@@ -1465,7 +2251,12 @@ impl Ui {
                     return;
                 }
                 let note = if index == 0 {
-                    (value * 127.) as u8
+                    (value
+                        * if flags & (1 << 24) != 0 {
+                            f32::from(((s.words[506] >> 16) & 255) as u8).max(1.) - 1.
+                        } else {
+                            127.
+                        }) as u8
                 } else {
                     flags as u8
                 };
@@ -1481,7 +2272,9 @@ impl Ui {
                     ((self.grid_event + 1)..n)
                         .find(|i| {
                             let f = s.words[353 + i * 2];
-                            f & (1 << 16) == 0 && f as u8 == flags as u8
+                            f & (1 << 16) == 0
+                                && f as u8 == flags as u8
+                                && f & (1 << 24) == flags & (1 << 24)
                         })
                         .map_or(PPQ / 4, |i| s.words[352 + i * 2].saturating_sub(tick))
                 };

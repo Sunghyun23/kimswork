@@ -314,6 +314,7 @@ pub fn event_tick(tick: u32) -> u64 {
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 #[serde(default)]
 pub struct ChordConfig {
+    pub smooth: bool,
     pub key: u8,
     pub scale: u8,
     pub color: u8,
@@ -323,6 +324,7 @@ pub struct ChordConfig {
 impl Default for ChordConfig {
     fn default() -> Self {
         Self {
+            smooth: true,
             key: 0,
             scale: 0,
             color: 1,
@@ -471,4 +473,50 @@ pub fn next_config(mut config: PatternConfig, sound: usize) -> PatternConfig {
         config.rules[2] = 2;
     }
     config
+}
+
+/// Search inversions and octave placement without allocating or changing pitch classes.
+pub fn smooth_voicing(
+    notes: [u8; 5],
+    len: usize,
+    previous: [u8; 5],
+    previous_len: usize,
+) -> [u8; 5] {
+    if len == 0 || len > 5 || previous_len == 0 || previous_len > 5 {
+        return notes;
+    }
+    let mut best = notes;
+    let mut score = i32::MAX;
+    for inversion in 0..len {
+        for shift in -3..=3 {
+            let mut candidate = [0u8; 5];
+            let mut valid = true;
+            for i in 0..len {
+                let n = i32::from(notes[(i + inversion) % len])
+                    + if i + inversion >= len { 12 } else { 0 }
+                    + shift * 12;
+                if !(0..=127).contains(&n) {
+                    valid = false;
+                    break;
+                }
+                candidate[i] = n as u8;
+            }
+            if !valid {
+                continue;
+            }
+            candidate[..len].sort_unstable();
+            let movement = (0..len)
+                .map(|i| {
+                    (i32::from(candidate[i]) - i32::from(previous[i * previous_len / len])).abs()
+                })
+                .sum::<i32>();
+            let top = (i32::from(candidate[len - 1]) - i32::from(previous[previous_len - 1])).abs();
+            let cost = movement * 4 + top * 3;
+            if cost < score {
+                score = cost;
+                best = candidate;
+            }
+        }
+    }
+    best
 }

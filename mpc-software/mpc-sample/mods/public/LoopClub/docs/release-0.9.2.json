@@ -1,0 +1,68 @@
+{
+  "version": "0.9.2",
+  "status": "public preview",
+  "date": "2026-11-23",
+  "native_tests": {
+    "debug": 293,
+    "release": 293
+  },
+  "strict_host_and_arm64_clippy": "PASS",
+  "arm64_build": "PASS",
+  "project_format": 7,
+  "phase_device": {
+    "version": "0.9.1",
+    "project_format": 7,
+    "stopped_frame_before_after": 488960,
+    "loop_phases_before_after": [
+      140091656,
+      5873928,
+      140091656
+    ],
+    "copy_phase_matches_source": true,
+    "differently_started_loops_remain_distinct": true,
+    "save_load_result": "PASS"
+  },
+  "quick_fx_device": {
+    "track_14_contexts": "PASS",
+    "texture_11_contexts": "PASS",
+    "master_14_contexts": "PASS",
+    "latch_inline_controls": "PASS"
+  },
+  "previous_full_matrix": "0.9.0:12actual groups plus Audio/XPM/edit supplements; see validation-0.9.0.json",
+  "public_zip_sha256": "750a9e6fb7f7a87aa6fcce7af00b80a22fd496d0dc686ef70ddbe5f3abd0a96c",
+  "public_library_sha256": "af8b9896b8755ff8e47559f047ab9352f2cc8be5403d68553b33474ff3b65c12",
+  "payload_files": [
+    "autorun/INSTALL.txt",
+    "autorun/LICENSE",
+    "autorun/SDK-LICENSE",
+    "autorun/autorun.check",
+    "autorun/autorun.json",
+    "autorun/autorun.sh",
+    "autorun/compatibility.json",
+    "autorun/loop-club.so",
+    "autorun/sampleboot.txt"
+  ],
+  "private_banks_in_zip": false,
+  "qa_agent_in_zip": false,
+  "limitations": [
+    "Physical controls/calibrated analog/power-cycle not newly certified",
+    "32shared Synth/Drum voices and16sampler voices; scheduling-inclusive deadline overruns can occur",
+    "GRID first64events",
+    "XPM native FX/envelopes/Warp not reproduced"
+  ],
+  "videos": "User-approved actual MPC Sample capture: original song on0.9.0, updated FX performance on0.9.2; optional Cosmic Vintage kit not distributed as a bank",
+  "exact_public_binary_smoke": {
+    "version": "0.9.2",
+    "public_library_sha256": "af8b9896b8755ff8e47559f047ab9352f2cc8be5403d68553b33474ff3b65c12",
+    "actual_public_start": "PASS",
+    "inline_filter_pad_and_knob": "PASS",
+    "owner_project_load": "PASS",
+    "owner_16_tracks_restored": true,
+    "management_environment": "Existing owner opt-in QA retained; not enabled by public ZIP"
+  },
+  "sd": {
+    "files_readback_verified": 20,
+    "old_files_preserved": 20,
+    "public_library_sha256": "af8b9896b8755ff8e47559f047ab9352f2cc8be5403d68553b33474ff3b65c12"
+  }
+}

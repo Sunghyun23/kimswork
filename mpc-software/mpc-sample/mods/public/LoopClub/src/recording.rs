@@ -1,54 +1,143 @@
 //! Single preallocated take buffer: completed loops survive cancellation/replace.
 use super::*;
 impl Engine {
+    pub(super) fn check_record_capacity(&self, i: usize) -> Result<(), Error> {
+        let t = &self.tracks[i];
+        if t.kind == Kind::Audio && t.audio_target != crate::audio::RecordTarget::Input {
+            return if t.empty() || t.audio_frames == 0 {
+                Err(Error::NoContent)
+            } else {
+                Ok(())
+            };
+        }
+        if t.kind == Kind::Audio
+            && !t.empty()
+            && t.record_mode == RecordMode::Overdub
+            && (t.audio_sequence
+                || t.audio_frames
+                    .abs_diff(self.clock.frame_at(t.length_ticks) as usize)
+                    > 1)
+        {
+            return Err(Error::ResampleFirst);
+        }
+        let bar_frames = 60. / self.clock.bpm * 4. * f64::from(self.clock.rate);
+        let bars = (self.capture_audio.len().min(t.audio.len()) as f64 / bar_frames).floor() as u64;
+        if bars == 0 || (!t.empty() && t.length_ticks > bars * 4 * PPQ) {
+            return Err(Error::Capacity);
+        }
+        Ok(())
+    }
+    pub(super) fn start_loop_record(&mut self, i: usize, at: Option<u64>) -> Result<(), Error> {
+        if self.chain_protects(i) {
+            return Err(Error::Busy);
+        }
+        self.arm_at(i, false, at, true)?;
+        if self.tracks[i].record_mode == RecordMode::Replace {
+            let start = at.unwrap_or_else(|| {
+                self.clock.bar_at_or_after(self.clock.tick()) + u64::from(self.preroll) * 4 * PPQ
+            });
+            if let Some(r) = &mut self.recorder {
+                r.limit = start + r.limit.saturating_sub(r.start);
+                r.start = start;
+                r.end = None;
+                r.repeating = false;
+            }
+            self.prepare_take();
+        }
+        self.selected = i;
+        Ok(())
+    }
     pub(super) fn arm(&mut self, i: usize, resample: bool) -> Result<(), Error> {
+        self.arm_at(i, resample, None, false)
+    }
+    fn arm_at(
+        &mut self,
+        i: usize,
+        resample: bool,
+        at: Option<u64>,
+        selected_target: bool,
+    ) -> Result<(), Error> {
         if self.recorder.is_some() {
             return Err(Error::Busy);
         }
         if resample && (self.tracks[i].kind != Kind::Audio || !self.tracks[i].empty()) {
             return Err(Error::WrongKind);
         }
+        let midi = self.tracks[i].kind != Kind::Audio
+            || (selected_target
+                && self.tracks[i].audio_target != crate::audio::RecordTarget::Input);
+        if midi && self.tracks[i].kind == Kind::Audio && self.tracks[i].audio_frames == 0 {
+            return Err(Error::NoContent);
+        }
         let existing = !self.tracks[i].empty();
         let now = self.clock.tick();
         let t = &self.tracks[i];
-        let start = if existing && self.running && t.playing {
-            let phase = t.phase(now);
-            now + if phase == 0 {
-                0
+        let start = at.unwrap_or_else(|| {
+            if existing && self.running && t.playing {
+                let phase = t.phase(now);
+                now + if phase == 0 {
+                    0
+                } else {
+                    t.length_ticks - phase
+                }
             } else {
-                t.length_ticks - phase
+                self.clock.bar_at_or_after(now) + u64::from(self.preroll) * 4 * PPQ
             }
-        } else {
-            self.clock.bar_at_or_after(now) + u64::from(self.preroll) * 4 * PPQ
-        };
+        });
+        if !midi
+            && t.kind == Kind::Audio
+            && !t.empty()
+            && t.record_mode == RecordMode::Overdub
+            && (t.audio_sequence
+                || t.audio_frames
+                    .abs_diff(self.clock.frame_at(t.length_ticks) as usize)
+                    > 1)
+        {
+            return Err(Error::ResampleFirst);
+        }
         let bar_frames = 60. / self.clock.bpm * 4. * f64::from(self.clock.rate);
         let bars = (self.capture_audio.len().min(t.audio.len()) as f64 / bar_frames).floor() as u64;
-        if bars == 0 || existing && t.length_ticks > bars * 4 * PPQ {
+        if bars == 0 || !midi && existing && t.length_ticks > bars * 4 * PPQ {
             return Err(Error::Capacity);
         }
         let length = t.length_ticks;
+        self.record_before = Some(ClipState::read(t));
+        self.record_history_committed = false;
+        let previous_origin = t.origin;
+        let previous_playing = t.playing;
         if !existing {
             self.tracks[i].origin = start;
             self.tracks[i].events.clear();
             self.tracks[i].audio_frames = 0;
             self.tracks[i].generated = false;
             self.tracks[i].generated_sounds = 0;
-        } else if !self.running || !self.tracks[i].playing {
+        } else if at.is_some() || !self.running || !self.tracks[i].playing {
             self.tracks[i].origin = start;
             self.tracks[i].playing = true;
             self.tracks[i].cursor = 0;
             self.tracks[i].last_phase = u64::MAX;
         }
+        self.next_record = None;
         self.running = true;
         self.capture_velocities = [0; 128];
         self.open_notes[i] = [false; 128];
         self.recorder = Some(Recorder {
+            midi,
+            preserve_on_cancel: existing,
+            previous_origin,
+            previous_playing,
             track: i,
             start,
             end: existing.then_some(start + length),
-            limit: start + bars * 4 * PPQ,
+            limit: start
+                + if midi {
+                    (bars * 4 * PPQ).max(length)
+                } else {
+                    bars * 4 * PPQ
+                },
             resample,
             finish_started: false,
+            notes_started: false,
             repeating: existing,
             stop_after_cycle: resample,
             mode: self.tracks[i].record_mode,
@@ -73,18 +162,52 @@ impl Engine {
         self.recorder = Some(r);
         Ok(())
     }
-    fn prepare_take(&mut self) {
+    pub(super) fn prepare_take(&mut self) {
         let r = self.recorder.unwrap();
         let t = &self.tracks[r.track];
         self.capture_events.clear();
-        if r.repeating && (r.mode == RecordMode::Overdub || t.kind == Kind::Drum) {
+        if r.midi && r.repeating && (r.mode == RecordMode::Overdub || t.kind == Kind::Drum) {
             self.capture_events.extend_from_slice(&t.events);
         }
-        *self.capture_features = crate::features::Features::default();
-        if t.kind == Kind::Synth {
+        if r.midi
+            && r.repeating
+            && r.mode == RecordMode::Overdub
+            && t.kind == Kind::Audio
+            && !t.audio_sequence
+        {
+            self.capture_events.push(Event {
+                slice: false,
+                tick: 0,
+                note: t.audio_settings.root,
+                velocity: 127,
+                on: true,
+            });
+            self.capture_events.push(Event {
+                slice: false,
+                tick: t.length_ticks - 1,
+                note: t.audio_settings.root,
+                velocity: 0,
+                on: false,
+            });
+        }
+        self.capture_prepared = 0;
+        if !r.midi && r.repeating && r.mode == RecordMode::Overdub && t.kind == Kind::Audio {
+            self.capture_features.begin_overdub(&t.features);
+        } else {
+            *self.capture_features = crate::features::Features::default();
+        }
+    }
+    fn begin_capture_notes(&mut self, r: &mut Recorder) {
+        if r.notes_started || self.clock.tick() < r.start {
+            return;
+        }
+        if r.midi && self.tracks[r.track].kind != Kind::Drum {
             for (note, &velocity) in self.capture_velocities.iter().enumerate() {
                 if velocity > 0 && self.capture_events.len() < MAX_EVENTS - 128 {
                     self.capture_events.push(Event {
+                        slice: self.tracks[r.track].kind == Kind::Audio
+                            && self.tracks[r.track].audio_target
+                                == crate::audio::RecordTarget::Chop,
                         tick: 0,
                         note: note as u8,
                         velocity,
@@ -93,10 +216,17 @@ impl Engine {
                 }
             }
         }
+        r.notes_started = true;
+        self.recorder = Some(*r);
     }
+
     pub(super) fn cancel_capture(&mut self) {
+        self.next_record = None;
         if let Some(r) = self.recorder.take() {
-            if !r.repeating {
+            if r.preserve_on_cancel {
+                self.tracks[r.track].origin = r.previous_origin;
+                self.tracks[r.track].playing = r.previous_playing;
+            } else if !r.repeating {
                 let t = &mut self.tracks[r.track];
                 t.length_ticks = 0;
                 t.audio_frames = 0;
@@ -111,6 +241,11 @@ impl Engine {
                     v.release();
                 }
             }
+            for v in &mut self.slice_voices {
+                if v.track == r.track && v.sampler.is_some_and(|s| s.source != 1) {
+                    v.release = true;
+                }
+            }
             self.open_notes[r.track] = [false; 128];
         }
     }
@@ -118,11 +253,21 @@ impl Engine {
         let Some(mut r) = self.recorder.filter(|r| r.track == i) else {
             return;
         };
-        let tick = self.clock.tick();
-        if tick < r.start || tick >= r.end.unwrap_or(r.limit) {
+        if !r.midi {
             return;
         }
+        let tick = self.clock.tick();
         let on = on && velocity > 0;
+        if tick < r.start {
+            if self.tracks[i].kind != Kind::Drum {
+                self.capture_velocities[usize::from(note)] = if on { velocity } else { 0 };
+                self.open_notes[i][usize::from(note)] = on;
+            }
+            return;
+        }
+        if tick >= r.end.unwrap_or(r.limit) {
+            return;
+        }
         if self.tracks[i].kind == Kind::Drum && on {
             let bit = 1 << (note % 16);
             if r.mode == RecordMode::Replace && r.touched & bit == 0 {
@@ -143,6 +288,8 @@ impl Engine {
             return;
         }
         self.capture_events.push(Event {
+            slice: self.tracks[r.track].kind == Kind::Audio
+                && self.tracks[r.track].audio_target == crate::audio::RecordTarget::Chop,
             tick: tick - r.start,
             note,
             velocity,
@@ -153,38 +300,94 @@ impl Engine {
     }
     fn commit_take(&mut self, mut r: Recorder, end: u64) {
         let i = r.track;
-        let length = end - r.start;
-        let frames = (self.clock.frame_at(end) - self.clock.frame_at(r.start)) as usize;
+        let captured_length = end - r.start;
+        let captured_frames = (self.clock.frame_at(end) - self.clock.frame_at(r.start)) as usize;
+        let keep_length = r.repeating && r.mode == RecordMode::Overdub;
+        let length = if keep_length {
+            self.tracks[i].length_ticks
+        } else {
+            captured_length
+        };
+        let frames = if keep_length && self.tracks[i].kind == Kind::Audio {
+            self.tracks[i].audio_frames
+        } else {
+            captured_frames
+        };
+        if !self.record_history_committed {
+            // Save the pre-arm metadata; old PCM/events are in capture scratch after the swap.
+            self.history.checkpoint(
+                i,
+                &self.tracks[i],
+                if !r.midi {
+                    EditKind::Audio
+                } else {
+                    EditKind::Midi
+                },
+            );
+            self.history.state = self.record_before;
+        }
+        if !r.midi {
+            self.clear_slice_voices(i);
+        }
         let t = &mut self.tracks[i];
-        if t.kind == Kind::Audio {
+        if !r.repeating {
+            t.origin = r.start;
+        }
+        if !r.midi {
+            if keep_length {
+                self.capture_features
+                    .retain_tail_onsets(&t.features, captured_frames);
+            }
             std::mem::swap(&mut t.audio, &mut self.capture_audio);
             std::mem::swap(&mut t.features, &mut self.capture_features);
             t.audio_frames = frames;
             t.source_frames = frames;
+            t.source_ticks = length;
+            t.audio_sequence = false;
+            t.audio_player.reset();
+            t.events.clear();
             t.chops.divide(frames);
-            t.chop_undo = None;
             t.wave_view = (0, 0);
         } else {
             for (note, &velocity) in self.capture_velocities.iter().enumerate() {
                 if velocity > 0 && self.capture_events.len() < MAX_EVENTS {
                     self.capture_events.push(Event {
-                        tick: length - 1,
+                        slice: t.kind == Kind::Audio
+                            && t.audio_target == crate::audio::RecordTarget::Chop,
+                        tick: captured_length - 1,
                         note: note as u8,
                         velocity: 0,
                         on: false,
                     });
                 }
             }
+            self.capture_events.retain(|event| event.tick < length);
             self.capture_events.sort_unstable_by_key(|e| (e.tick, e.on));
             std::mem::swap(&mut t.events, &mut self.capture_events);
-            t.audio_frames = 0;
+            if t.kind == Kind::Audio {
+                t.audio_sequence = true;
+            } else {
+                t.audio_frames = 0;
+            }
             // Generated/Undo ownership must not resurrect the previous recorded take.
             if t.kind == Kind::Drum {
-                t.generated_sounds &= !r.touched;
+                if !r.repeating && r.mode == RecordMode::Replace {
+                    t.generated_sounds = 0;
+                } else {
+                    t.generated_sounds &= !r.touched;
+                }
                 t.generated = t.generated_sounds != 0;
             }
         }
-        t.pattern_undo = false;
+        if !self.record_history_committed {
+            if !r.midi {
+                std::mem::swap(&mut self.capture_audio, &mut self.history.audio);
+                std::mem::swap(&mut self.capture_features, &mut self.history.features);
+            } else {
+                std::mem::swap(&mut self.capture_events, &mut self.history.events);
+            }
+            self.record_history_committed = true;
+        }
         t.length_ticks = length;
         t.playing = self.running;
         t.cursor = t
@@ -193,6 +396,7 @@ impl Engine {
         t.last_phase = u64::MAX;
         t.revision += 1;
         if r.stop_after_cycle || !self.running {
+            let next = self.next_record.take();
             self.recorder = None;
             self.capture_events.clear();
             self.capture_velocities = [0; 128];
@@ -202,11 +406,23 @@ impl Engine {
                     v.release();
                 }
             }
+            for v in &mut self.slice_voices {
+                if v.track == i && v.sampler.is_some_and(|s| s.source != 1) {
+                    v.release = true;
+                }
+            }
+            if let Some(next) = next.filter(|_| self.running) {
+                if let Err(error) = self.start_loop_record(next, Some(end)) {
+                    self.error = Some(error);
+                }
+                self.loop_revision = self.loop_revision.wrapping_add(1);
+            }
         } else {
             r.start = end;
             r.end = Some(end + length);
             r.repeating = true;
             r.finish_started = false;
+            r.notes_started = false;
             r.mode = t.record_mode;
             r.touched = 0;
             if t.kind == Kind::Drum {
@@ -220,12 +436,25 @@ impl Engine {
         let Some(mut r) = self.recorder else {
             return;
         };
+        self.begin_capture_notes(&mut r);
+        if !r.midi
+            && r.repeating
+            && r.mode == RecordMode::Overdub
+            && self.tracks[r.track].kind == Kind::Audio
+        {
+            let stop = (self.capture_prepared + 64).min(self.tracks[r.track].audio_frames);
+            if stop > self.capture_prepared {
+                self.capture_audio[self.capture_prepared..stop]
+                    .copy_from_slice(&self.tracks[r.track].audio[self.capture_prepared..stop]);
+                self.capture_prepared = stop;
+            }
+        }
         let end = r.end.unwrap_or(r.limit);
         if self.clock.tick() >= end && !r.finish_started {
             r.finish_started = true;
             self.recorder = Some(r);
         }
-        let latency = if self.tracks[r.track].kind == Kind::Audio && !r.resample {
+        let latency = if !r.midi && !r.resample {
             self.latency_in
         } else {
             0
@@ -239,7 +468,7 @@ impl Engine {
         let Some(r) = self.recorder else {
             return;
         };
-        if !r.resample && self.tracks[r.track].kind == Kind::Audio {
+        if !r.resample && !r.midi {
             self.capture_frame(r, frame, input);
         }
     }
@@ -272,8 +501,12 @@ impl Engine {
             Frame::ZERO
         };
         self.capture_audio[pos] = x;
-        self.capture_features.feed(x, self.clock.rate);
-        if !r.repeating {
+        if r.repeating && r.mode == RecordMode::Overdub {
+            self.capture_features.feed_at(pos, x, self.clock.rate);
+        } else {
+            self.capture_features.feed(x, self.clock.rate);
+        }
+        if !r.repeating && !r.preserve_on_cancel {
             self.tracks[r.track].audio_frames = pos + 1;
         }
         self.recorded_frames += 1;

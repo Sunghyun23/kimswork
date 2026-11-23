@@ -10,18 +10,22 @@ pub struct Track {
     pub kit: Box<crate::bank::DrumKit>,
     pub record_mode: RecordMode,
     pub source_frames: usize,
+    pub source_ticks: u64,
+    pub audio_sequence: bool,
+    pub audio_settings: crate::audio::Settings,
+    pub audio_target: crate::audio::RecordTarget,
+    audio_player: crate::audio::LoopPlayer,
     pub features: Box<crate::features::Features>,
     pub wave_view: (u32, u32),
-    chop_undo: Option<crate::chop::Chops>,
+    last_chord: ([u8; 5], usize),
     pub chops: crate::chop::Chops,
     pub generated: bool,
     pub generated_sounds: u16,
     last_generated_sound: Option<usize>,
     pub pattern: crate::music::PatternConfig,
     pub chord: crate::music::ChordConfig,
-    previous_events: Vec<Event>,
-    previous_clip: (u64, u64, bool, bool, u16),
-    pattern_undo: bool,
+    pub chord_mode: bool,
+    pub xpm_step: [u32; 16],
     pub kind: Kind,
     pub name: String,
     pub mix: Mix,
@@ -54,18 +58,22 @@ impl Track {
             kit: Box::new(crate::bank::DrumKit::default()),
             record_mode: RecordMode::Replace,
             source_frames: 0,
+            source_ticks: 0,
+            audio_sequence: false,
+            audio_settings: crate::audio::Settings::default(),
+            audio_target: crate::audio::RecordTarget::Input,
+            audio_player: crate::audio::LoopPlayer::default(),
             features: Box::new(crate::features::Features::default()),
             wave_view: (0, 0),
-            chop_undo: None,
+            last_chord: ([0; 5], 0),
             chops: crate::chop::Chops::default(),
             generated: false,
             generated_sounds: 0,
             last_generated_sound: None,
             pattern: crate::music::PatternConfig::default(),
             chord: crate::music::ChordConfig::default(),
-            previous_events: Vec::with_capacity(MAX_EVENTS),
-            previous_clip: (0, 0, false, false, 0),
-            pattern_undo: false,
+            chord_mode: false,
+            xpm_step: [0; 16],
             kind: Kind::Audio,
             name: format!("TRACK {:02}", index + 1),
             mix: Mix::default(),
@@ -93,6 +101,54 @@ impl Track {
             revision: 0,
         }
     }
+    // File worker only: keep full recording capacity and MAX_EVENTS after copying.
+    fn duplicate_stopped(&self, capacity: usize, index: usize) -> Self {
+        let mut out = Self::new(capacity, index);
+        out.kit = self.kit.clone();
+        out.features = self.features.clone();
+        out.name = self.name.clone();
+        let frames = self
+            .source_frames
+            .max(self.audio_frames)
+            .min(self.audio.len());
+        out.audio[..frames].copy_from_slice(&self.audio[..frames]);
+        out.events.extend_from_slice(&self.events);
+        macro_rules! copy {($($f:ident),*)=>{$(out.$f=self.$f;)*};}
+        copy!(
+            record_mode,
+            source_frames,
+            source_ticks,
+            origin,
+            audio_sequence,
+            audio_settings,
+            audio_target,
+            wave_view,
+            chops,
+            generated,
+            generated_sounds,
+            pattern,
+            chord,
+            chord_mode,
+            kind,
+            mix,
+            synth,
+            drums,
+            fx,
+            route,
+            output,
+            main_gain,
+            usb_gain,
+            length_ticks,
+            audio_frames
+        );
+        out.gain = out.mix.level;
+        out.pan_current = out.mix.pan;
+        out.sound_gain = out.drums.map(|d| d.mix.level);
+        out
+    }
+    pub(crate) fn reset_audio_player(&mut self) {
+        self.audio_player.reset();
+    }
     pub fn empty(&self) -> bool {
         self.length_ticks == 0
     }
@@ -106,12 +162,17 @@ impl Track {
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Recorder {
+    pub midi: bool,
+    pub preserve_on_cancel: bool,
+    pub previous_origin: u64,
+    pub previous_playing: bool,
     pub track: usize,
     pub start: u64,
     pub end: Option<u64>,
     pub limit: u64,
     pub resample: bool,
     pub finish_started: bool,
+    pub notes_started: bool,
     pub repeating: bool,
     pub stop_after_cycle: bool,
     pub mode: RecordMode,
@@ -119,7 +180,13 @@ pub struct Recorder {
 }
 #[derive(Clone, Copy, Debug)]
 pub enum Command {
+    AudioTarget(usize, crate::audio::RecordTarget),
+    AudioSettings(usize, crate::audio::Settings),
+    Undo,
+    Redo,
+    HardwareVolume(f32),
     Sidechain(crate::motion::Sidechain),
+    SidechainHeld(bool),
     MasterBypass {
         slot: usize,
         bypass: bool,
@@ -167,6 +234,13 @@ pub enum Command {
     },
     SliceGate(usize),
     ResetSlices(usize),
+    ChainAppend(usize),
+    ChainRemove(usize),
+    ChainRepeats(usize, u8),
+    ChainRepeat(bool),
+    ChainToggle,
+    ChainClear,
+    LoopRecord(usize),
     GenerateDrumPart {
         track: usize,
         sound: usize,
@@ -182,6 +256,7 @@ pub enum Command {
         velocity: u8,
         on: bool,
     },
+    ChordMode(usize, bool),
     ChordValue {
         track: usize,
         index: u8,
@@ -282,11 +357,23 @@ struct HeldChord {
     notes: [u8; 5],
     len: usize,
 }
+#[path = "history.rs"]
+mod history;
+use history::{ClipState, EditKind, History};
 #[path = "recording.rs"]
 mod recording;
 
 pub struct Engine {
+    history: History,
+    record_before: Option<ClipState>,
+    record_history_committed: bool,
+    pub chain: crate::chain::Chain,
+    pub loop_revision: u64,
+    input_preview: [crate::features::Peak; 128],
+    input_preview_head: usize,
+    input_preview_count: u32,
     capture_audio: Vec<Frame>,
+    capture_prepared: usize,
     capture_features: Box<crate::features::Features>,
     capture_events: Vec<Event>,
     capture_velocities: [u8; 128],
@@ -299,9 +386,12 @@ pub struct Engine {
     pub running: bool,
     pub preroll: u8,
     pub recorder: Option<Recorder>,
+    pub next_record: Option<usize>,
     pub latency_in: u32,
     pub master: f32,
     pub master_gain: f32,
+    pub hardware_volume: f32,
+    pub hardware_gain: f32,
     pub master_meter: Frame,
     pub usb_output: Frame,
     pub usb_meter: Frame,
@@ -332,10 +422,22 @@ pub struct Engine {
     open_notes: [[bool; 128]; 16],
 }
 impl Engine {
+    pub fn new_project(rate: u32, frames_per_track: usize) -> Self {
+        Self::new(rate, DEFAULT_BPM, frames_per_track)
+    }
     pub fn new(rate: u32, bpm: f64, frames_per_track: usize) -> Self {
         let rate = rate.clamp(8000, 96000);
         Self {
+            history: History::new(frames_per_track),
+            record_before: None,
+            record_history_committed: false,
+            chain: crate::chain::Chain::default(),
+            loop_revision: 0,
+            input_preview: [crate::features::Peak::default(); 128],
+            input_preview_head: 0,
+            input_preview_count: 0,
             capture_audio: vec![Frame::ZERO; frames_per_track],
+            capture_prepared: 0,
             capture_features: Box::new(crate::features::Features::default()),
             capture_events: Vec::with_capacity(MAX_EVENTS),
             capture_velocities: [0; 128],
@@ -348,9 +450,12 @@ impl Engine {
             running: false,
             preroll: 1,
             recorder: None,
+            next_record: None,
             latency_in: 0,
             master: 0.8,
             master_gain: 0.8,
+            hardware_volume: 1.,
+            hardware_gain: 1.,
             master_meter: Frame::ZERO,
             usb_output: Frame::ZERO,
             usb_meter: Frame::ZERO,
@@ -387,7 +492,7 @@ impl Engine {
         result
     }
     fn valid_track(i: usize) -> Result<usize, Error> {
-        if i < 16 {
+        if i < ACTIVE_TRACKS {
             Ok(i)
         } else {
             Err(Error::InvalidTrack)
@@ -399,6 +504,27 @@ impl Engine {
             1 => 32 + slot,
             _ => 34 + usize::from(target - 2),
         }
+    }
+    pub fn saved_texture(&self) -> crate::motion::Texture {
+        let mut texture = self.texture;
+        for slot in 0..2 {
+            if self.held_fx & Self::fx_bit(1, 0, slot) != 0 {
+                texture.master_bypass[slot] = true;
+            }
+        }
+        for slot in 0..5 {
+            if self.held_fx & (1u64 << (36 + slot)) != 0 {
+                texture.enabled[slot] = false;
+            }
+        }
+        texture
+    }
+    pub fn saved_sidechain(&self) -> crate::motion::Sidechain {
+        let mut c = self.sidechain;
+        if self.held_fx & (1u64 << 41) != 0 {
+            c.enabled = false;
+        }
+        c
     }
     pub fn release_temporary_fx(&mut self) {
         for track in 0..16 {
@@ -415,6 +541,14 @@ impl Engine {
             if self.held_fx & Self::fx_bit(slot as u8 + 2, 0, 0) != 0 {
                 self.bus_fx[slot].effect = Effect::Off
             }
+        }
+        for slot in 0..5 {
+            if self.held_fx & (1u64 << (36 + slot)) != 0 {
+                self.texture.enabled[slot] = false;
+            }
+        }
+        if self.held_fx & (1u64 << 41) != 0 {
+            self.sidechain.enabled = false;
         }
         self.held_fx = 0;
     }
@@ -460,12 +594,60 @@ impl Engine {
         }
     }
     fn apply(&mut self, c: Command) -> Result<(), Error> {
+        // Clip-edit checkpoints must not replace an in-flight recording's history.
+        if self.recorder.is_some()
+            && matches!(
+                c,
+                Command::ChopApply(_)
+                    | Command::SplitSlice { .. }
+                    | Command::DeleteSlice { .. }
+                    | Command::ResetSlices(_)
+                    | Command::SliceValue { .. }
+                    | Command::Edit { .. }
+                    | Command::GenerateDrumPart { .. }
+            )
+        {
+            return Err(Error::Busy);
+        }
         match c {
+            Command::AudioTarget(i, target) => {
+                Self::valid_track(i)?;
+                if self.tracks[i].kind != Kind::Audio {
+                    return Err(Error::WrongKind);
+                }
+                if self.recorder.is_some_and(|r| r.track == i) {
+                    return Err(Error::Busy);
+                }
+                self.release_track(i);
+                self.tracks[i].audio_target = target;
+            }
+            Command::AudioSettings(i, settings) => {
+                Self::valid_track(i)?;
+                if !settings.valid() {
+                    return Err(Error::InvalidValue);
+                }
+                self.tracks[i].audio_settings = settings;
+            }
+            Command::Undo => self.swap_history(false)?,
+            Command::Redo => self.swap_history(true)?,
+            Command::HardwareVolume(value) => {
+                if !value.is_finite() || !(0.0..=1.0).contains(&value) {
+                    return Err(Error::InvalidValue);
+                }
+                self.hardware_volume = value;
+            }
             Command::MasterBypass { slot, bypass } => {
                 if slot >= 2 {
                     return Err(Error::InvalidValue);
                 }
                 self.texture.master_bypass[slot] = bypass;
+            }
+            Command::SidechainHeld(held) => {
+                if held {
+                    self.held_fx |= 1u64 << 41;
+                } else {
+                    self.held_fx &= !(1u64 << 41);
+                }
             }
             Command::Sidechain(cfg) => {
                 if !cfg.valid() {
@@ -474,10 +656,24 @@ impl Engine {
                 self.sidechain = cfg;
             }
             Command::TextureValue { slot, index, value } => {
-                if slot >= 5 || index > 3 || !value.is_finite() || !(0.0..=1.0).contains(&value) {
+                if slot >= 5 || index > 7 || !value.is_finite() || !(0.0..=1.0).contains(&value) {
                     return Err(Error::InvalidValue);
                 }
-                if index == 3 {
+                if index == 7 {
+                    let bit = 1u64 << (36 + slot);
+                    if value >= 0.5 {
+                        self.held_fx |= bit;
+                    } else {
+                        self.held_fx &= !bit;
+                    }
+                } else if index >= 4 {
+                    let m = &mut self.texture.modulation[slot];
+                    match index {
+                        4 => m.sync = value >= 0.5,
+                        5 => m.division = (value * 15.99) as u8,
+                        _ => m.shape = (value * 5.99) as u8,
+                    }
+                } else if index == 3 {
                     self.texture.enabled[slot] = value >= 0.5
                 } else {
                     self.texture.params[slot][index as usize] = value;
@@ -517,17 +713,21 @@ impl Engine {
                 ) {
                     return Err(Error::Capacity);
                 }
-                t.chop_undo = Some(t.chops);
+                self.history.checkpoint(track, t, EditKind::ChopMidi);
+                let old = t.chops;
                 t.chops = c;
+                Self::remap_slices(t, old);
+                self.clear_slice_voices(track);
             }
             Command::ChopUndo(track) => {
                 Self::valid_track(track)?;
-                let t = &mut self.tracks[track];
-                let old = t.chop_undo.take().ok_or(Error::NoContent)?;
-                if !old.valid(t.source_frames) {
-                    return Err(Error::InvalidValue);
+                if self.history.target != Some(track)
+                    || self.history.undone
+                    || !matches!(self.history.kind, EditKind::Chop | EditKind::ChopMidi)
+                {
+                    return Err(Error::NoContent);
                 }
-                t.chops = old;
+                self.swap_history(false)?;
             }
             Command::ChopOption {
                 track,
@@ -555,8 +755,11 @@ impl Engine {
                 if !c.split(pad, at) {
                     return Err(Error::InvalidValue);
                 }
-                t.chop_undo = Some(t.chops);
+                self.history.checkpoint(track, t, EditKind::ChopMidi);
+                let old = t.chops;
                 t.chops = c;
+                Self::remap_slices(t, old);
+                self.clear_slice_voices(track);
             }
             Command::DeleteSlice { track, pad } => {
                 Self::valid_track(track)?;
@@ -565,8 +768,11 @@ impl Engine {
                 if !c.delete(pad) {
                     return Err(Error::InvalidValue);
                 }
-                t.chop_undo = Some(t.chops);
+                self.history.checkpoint(track, t, EditKind::ChopMidi);
+                let old = t.chops;
                 t.chops = c;
+                Self::remap_slices(t, old);
+                self.clear_slice_voices(track);
             }
 
             Command::ResetSlices(track) => {
@@ -575,12 +781,15 @@ impl Engine {
                 if t.kind != Kind::Audio || t.audio_frames == 0 {
                     return Err(Error::NoContent);
                 }
+                self.history.checkpoint(track, t, EditKind::ChopMidi);
                 t.source_frames = t.source_frames.min(t.audio_frames);
                 if t.source_frames == 0 {
                     t.source_frames = t.audio_frames
                 }
-                t.chop_undo = Some(t.chops);
+                let old = t.chops;
                 t.chops.divide(t.source_frames);
+                Self::remap_slices(t, old);
+                self.clear_slice_voices(track);
             }
             Command::SliceGate(track) => {
                 Self::valid_track(track)?;
@@ -593,7 +802,7 @@ impl Engine {
                 value,
             } => {
                 Self::valid_track(track)?;
-                if pad >= 16 || !value.is_finite() || !(0.0..=1.0).contains(&value) {
+                if pad >= 16 || index > 2 || !value.is_finite() || !(0.0..=1.0).contains(&value) {
                     return Err(Error::InvalidValue);
                 }
                 let t = &mut self.tracks[track];
@@ -603,7 +812,7 @@ impl Engine {
                 if pad >= usize::from(t.chops.count) {
                     return Err(Error::NoContent);
                 }
-                t.chop_undo = Some(t.chops);
+                self.history.checkpoint(track, t, EditKind::Chop);
                 if index < 2 {
                     t.chops.mode = crate::chop::Mode::Manual;
                     t.chops.pending = false;
@@ -683,6 +892,7 @@ impl Engine {
                         release: false,
                         env: 1.,
                         age: self.age,
+                        sampler: None,
                     };
                 }
             }
@@ -697,27 +907,16 @@ impl Engine {
             }
             Command::UndoPattern(track) => {
                 Self::valid_track(track)?;
-                if self.recorder.is_some_and(|r| r.track == track) {
-                    return Err(Error::Busy);
-                }
-                let t = &mut self.tracks[track];
-                if !t.pattern_undo {
+                if self.history.target != Some(track)
+                    || self.history.undone
+                    || self.history.kind != EditKind::Midi
+                {
                     return Err(Error::NoContent);
                 }
-                std::mem::swap(&mut t.events, &mut t.previous_events);
-                (
-                    t.length_ticks,
-                    t.origin,
-                    t.playing,
-                    t.generated,
-                    t.generated_sounds,
-                ) = t.previous_clip;
-                t.pattern_undo = false;
-                let phase = t.phase(self.clock.tick());
-                t.cursor = t.events.partition_point(|e| e.tick < phase);
-                t.last_phase = phase;
-                t.revision += 1;
-                self.release_track(track);
+                self.swap_history(false)?;
+            }
+            Command::ChordMode(track, enabled) => {
+                self.tracks[Self::valid_track(track)?].chord_mode = enabled;
             }
             Command::ChordValue {
                 track,
@@ -735,9 +934,11 @@ impl Engine {
                     2 => cfg.color = value.round().clamp(0., 2.) as u8,
                     3 => cfg.octave = value.round().clamp(-2., 2.) as i8,
                     4 => cfg.open = value >= 0.5,
+                    5 => cfg.smooth = value >= 0.5,
                     _ => return Err(Error::InvalidValue),
                 }
                 self.tracks[track].chord = cfg;
+                self.tracks[track].last_chord = ([0; 5], 0);
             }
             Command::Chord {
                 track,
@@ -758,7 +959,17 @@ impl Engine {
                     if self.tracks[track].kind != Kind::Synth {
                         return Err(Error::WrongKind);
                     }
-                    let (notes, len) = self.tracks[track].chord.notes(pad);
+                    let t = &mut self.tracks[track];
+                    let (mut notes, len) = t.chord.notes(pad);
+                    if t.chord.smooth {
+                        notes = crate::music::smooth_voicing(
+                            notes,
+                            len,
+                            t.last_chord.0,
+                            t.last_chord.1,
+                        );
+                    }
+                    t.last_chord = (notes, len);
                     self.held_chords[pad] = HeldChord { track, notes, len };
                     for note in &notes[..len] {
                         self.live_note(track, *note, velocity, true, 100 + pad as u16);
@@ -791,14 +1002,17 @@ impl Engine {
                 index,
                 value,
             } => {
-                if !value.is_finite() || !(0.0..=1.0).contains(&value) || index > 2 {
+                if !value.is_finite() || !(0.0..=1.0).contains(&value) || index > 5 {
                     return Err(Error::InvalidValue);
                 }
                 let fx = self.effect_mut(target, track, slot)?;
                 match index {
                     0 => fx.a = value,
                     1 => fx.b = value,
-                    _ => fx.mix = value,
+                    2 => fx.mix = value,
+                    3 => fx.modulation.sync = value >= 0.5,
+                    4 => fx.modulation.division = (value * 15.99) as u8,
+                    _ => fx.modulation.shape = (value * 5.99) as u8,
                 }
             }
             Command::SynthValue {
@@ -840,6 +1054,8 @@ impl Engine {
                     25 => synth.lfo_filter = value,
                     26 => synth.lfo_volume = value,
                     27 => synth.lfo_pan = value,
+                    28 => synth.lfo_sync = value >= 0.5,
+                    29 => synth.lfo_division = value.round().clamp(0., 15.) as u8,
                     _ => return Err(Error::InvalidValue),
                 }
                 if !synth.valid() {
@@ -908,8 +1124,100 @@ impl Engine {
                 if !self.tracks[i].empty() || self.recorder.is_some_and(|r| r.track == i) {
                     return Err(Error::NotEmpty);
                 }
+                if self.tracks[i].kind != k {
+                    self.history.invalidate(i);
+                }
                 self.release_track(i);
                 self.tracks[i].kind = k
+            }
+            Command::ChainAppend(track) => {
+                Self::valid_track(track)?;
+                if self.tracks[track].empty() {
+                    return Err(Error::NoContent);
+                }
+                let index = usize::from(self.chain.config.len);
+                if index >= 16 {
+                    return Err(Error::Capacity);
+                }
+                self.chain.config.steps[index] = crate::chain::Step {
+                    track: track as u8,
+                    repeats: 1,
+                };
+                self.chain.config.len += 1;
+            }
+            Command::ChainRemove(index) => {
+                if !self.chain.remove(index) {
+                    return Err(Error::NoContent);
+                }
+            }
+            Command::ChainRepeats(index, repeats) => {
+                if index >= usize::from(self.chain.config.len) || !(1..=16).contains(&repeats) {
+                    return Err(Error::InvalidValue);
+                }
+                self.chain.config.steps[index].repeats = repeats;
+            }
+            Command::ChainRepeat(repeat) => self.chain.config.repeat = repeat,
+            Command::ChainToggle => {
+                if self.chain.running {
+                    let change = self.chain.stop();
+                    self.apply_chain_change(change);
+                } else {
+                    if self.chain.config.len == 0
+                        || self.chain.config.steps[..usize::from(self.chain.config.len)]
+                            .iter()
+                            .any(|step| self.tracks[usize::from(step.track)].empty())
+                    {
+                        return Err(Error::NoContent);
+                    }
+                    if self
+                        .recorder
+                        .is_some_and(|r| self.chain.config.members() & (1 << r.track) != 0)
+                        || self
+                            .next_record
+                            .is_some_and(|i| self.chain.config.members() & (1 << i) != 0)
+                    {
+                        return Err(Error::Busy);
+                    }
+                    self.chain
+                        .start(self.clock.bar_at_or_after(self.clock.tick()));
+                    self.running = true;
+                }
+            }
+            Command::ChainClear => {
+                let change = self.chain.stop();
+                self.apply_chain_change(change);
+                self.chain.config = crate::chain::Config::default();
+            }
+            Command::LoopRecord(i) => {
+                let i = Self::valid_track(i)?;
+                if self.chain_protects(i) {
+                    return Err(Error::Busy);
+                }
+                self.loop_revision = self.loop_revision.wrapping_add(1);
+                if let Some(mut r) = self.recorder {
+                    if i != r.track {
+                        self.check_record_capacity(i)?;
+                        if self.clock.tick() < r.start {
+                            let start = r.start;
+                            self.cancel_capture();
+                            self.start_loop_record(i, Some(start))?;
+                        } else {
+                            r.end = Some(self.clock.next_bar().min(r.limit).max(r.start + 4 * PPQ));
+                            r.stop_after_cycle = true;
+                            self.next_record = Some(i);
+                            self.recorder = Some(r);
+                        }
+                    } else if self.clock.tick() < r.start {
+                        self.cancel_capture();
+                    } else {
+                        self.next_record = None;
+                        r.end = Some(self.clock.next_bar().min(r.limit).max(r.start + 4 * PPQ));
+                        r.stop_after_cycle = true;
+                        self.recorder = Some(r);
+                    }
+                } else {
+                    self.start_loop_record(i, None)?;
+                }
             }
             Command::Record(i) | Command::Resample(i) => {
                 let i = Self::valid_track(i)?;
@@ -923,6 +1231,9 @@ impl Engine {
                 let i = Self::valid_track(i)?;
                 self.selected = i;
                 if !select {
+                    if self.chain_protects(i) {
+                        return Err(Error::Busy);
+                    }
                     if self.recorder.is_some_and(|r| r.track == i) {
                         self.close_record()?;
                     } else if self.tracks[i].empty() {
@@ -933,6 +1244,11 @@ impl Engine {
                             self.release_track(i)
                         } else {
                             self.running = true;
+                            for v in &mut self.slice_voices {
+                                if v.track == i && v.sampler.is_some_and(|s| s.source == 1) {
+                                    v.release = true;
+                                }
+                            }
                             self.tracks[i].cursor = 0;
                             self.tracks[i].last_phase = u64::MAX;
                         }
@@ -941,6 +1257,8 @@ impl Engine {
             }
             Command::CancelRecord => self.cancel_capture(),
             Command::Stop => {
+                let change = self.chain.stop();
+                self.apply_chain_change(change);
                 if let Some(mut r) = self.recorder {
                     if r.finish_started {
                         r.stop_after_cycle = true;
@@ -957,8 +1275,13 @@ impl Engine {
             }
             Command::PlayAll => {
                 self.running = true;
-                for t in &mut self.tracks {
-                    if !t.empty() {
+                let managed = if self.chain.running {
+                    self.chain.members | self.chain.config.members()
+                } else {
+                    0
+                };
+                for (i, t) in self.tracks.iter_mut().take(ACTIVE_TRACKS).enumerate() {
+                    if !t.empty() && managed & (1 << i) == 0 {
                         t.playing = true;
                         t.cursor = 0;
                         t.last_phase = u64::MAX
@@ -967,20 +1290,28 @@ impl Engine {
             }
             Command::Clear(i) => {
                 let i = Self::valid_track(i)?;
-                if self.recorder.is_some_and(|r| r.track == i) {
-                    self.recorder = None
+                if self.chain_protects(i) {
+                    return Err(Error::Busy);
                 }
+                if self.recorder.is_some() {
+                    return Err(Error::Busy);
+                }
+                if self.tracks[i].empty() {
+                    return Err(Error::NoContent);
+                }
+                self.checkpoint_clear(i);
+                self.clear_slice_voices(i);
                 self.release_track(i);
                 let t = &mut self.tracks[i];
                 t.playing = false;
                 t.generated = false;
                 t.generated_sounds = 0;
-                t.pattern_undo = false;
                 t.length_ticks = 0;
                 t.audio_frames = 0;
                 t.source_frames = 0;
+                t.source_ticks = 0;
+                t.audio_sequence = false;
                 t.chops = crate::chop::Chops::default();
-                t.chop_undo = None;
                 t.wave_view = (0, 0);
                 *t.features = crate::features::Features::default();
                 t.events.clear();
@@ -990,10 +1321,27 @@ impl Engine {
                 if !b.is_finite() || !(40.0..=240.0).contains(&b) {
                     return Err(Error::InvalidValue);
                 }
-                if self.recorder.is_some() || self.tracks.iter().any(|t| !t.empty()) {
+                if self.running
+                    || self.recorder.is_some()
+                    || self.tracks.iter().take(ACTIVE_TRACKS).any(|t| {
+                        t.kind == Kind::Audio
+                            && !t.empty()
+                            && !t.audio_sequence
+                            && !t.audio_settings.warp
+                    })
+                {
                     return Err(Error::TempoFrozen);
                 }
-                self.clock.bpm = b
+                if b != self.clock.bpm && self.history.kind == EditKind::Audio {
+                    self.history.target = None;
+                }
+                let tick = self.clock.tick();
+                self.clock.bpm = b;
+                self.clock.frame = self.clock.frame_at(tick);
+                for track in &mut self.tracks {
+                    track.cursor = 0;
+                    track.last_phase = u64::MAX;
+                }
             }
             Command::Preroll(n) => {
                 if n > 2 {
@@ -1063,9 +1411,23 @@ impl Engine {
                 if note > 127 || velocity > 127 {
                     return Err(Error::InvalidValue);
                 }
-                if self.tracks[track].kind == Kind::Audio {
-                    return Err(Error::WrongKind);
+                if self.tracks[track].kind == Kind::Audio
+                    && (self.tracks[track].audio_frames == 0 || self.tracks[track].empty())
+                {
+                    return Err(Error::NoContent);
                 }
+                let note = if self.tracks[track].kind == Kind::Audio
+                    && self.tracks[track].audio_target == crate::audio::RecordTarget::Chop
+                    && source >= 256
+                {
+                    if (48..64).contains(&note) {
+                        note - 48
+                    } else {
+                        note
+                    }
+                } else {
+                    note
+                };
                 self.live_note(track, note, velocity, on, source);
             }
             Command::SetFx { track, slot, fx } => {
@@ -1117,16 +1479,26 @@ impl Engine {
             } => {
                 let track = Self::valid_track(track)?;
                 let t = &mut self.tracks[track];
-                if index >= t.events.len() || !t.events[index].on || note > 127 || velocity > 127 {
+                if index >= t.events.len()
+                    || !t.events[index].on
+                    || note > 127
+                    || velocity > 127
+                    || (t.events[index].slice && note >= t.chops.count)
+                {
                     return Err(Error::InvalidValue);
                 }
+                if self.recorder.is_some() || self.chain_protects(track) {
+                    return Err(Error::Busy);
+                }
+                let t = &mut self.tracks[track];
+                self.history.checkpoint(track, t, EditKind::Midi);
                 let old = t.events[index];
                 let end = t
                     .events
                     .iter()
                     .enumerate()
                     .skip(index + 1)
-                    .find(|(_, e)| !e.on && e.note == old.note)
+                    .find(|(_, e)| !e.on && e.note == old.note && e.slice == old.slice)
                     .map(|(i, _)| i);
                 t.events[index].note = note;
                 t.events[index].velocity = velocity;
@@ -1154,6 +1526,9 @@ impl Engine {
     }
     fn generate_drum_part(&mut self, track: usize, sound: usize) -> Result<(), Error> {
         Self::valid_track(track)?;
+        if self.chain_protects(track) {
+            return Err(Error::Busy);
+        }
         if sound >= 16 {
             return Err(Error::InvalidValue);
         }
@@ -1165,11 +1540,6 @@ impl Engine {
             return Err(Error::Busy);
         }
         if !t.empty() && !t.length_ticks.is_multiple_of(4 * PPQ) {
-            return Err(Error::NotEmpty);
-        }
-        if t.generated_sounds & (1 << sound) == 0
-            && t.events.iter().any(|e| usize::from(e.note) % 16 == sound)
-        {
             return Err(Error::NotEmpty);
         }
         let cfg = crate::music::next_config(t.pattern, sound);
@@ -1193,16 +1563,10 @@ impl Engine {
         let now = self.clock.tick();
         let was_running = self.running;
         let t = &mut self.tracks[track];
-        t.previous_events.clear();
-        t.previous_events.extend_from_slice(&t.events);
-        t.previous_clip = (
-            t.length_ticks,
-            t.origin,
-            t.playing,
-            t.generated,
-            t.generated_sounds,
-        );
-        t.pattern_undo = true;
+        if self.recorder.is_some() {
+            return Err(Error::Busy);
+        }
+        self.history.checkpoint(track, t, EditKind::Midi);
         t.last_generated_sound = Some(sound);
         if t.empty() {
             t.origin = if was_running {
@@ -1223,12 +1587,14 @@ impl Engine {
                 let base = bar as u64 * 4 * PPQ;
                 let tick = base + crate::music::event_tick(hit.tick);
                 t.events.push(Event {
+                    slice: false,
                     tick,
                     note: hit.sound,
                     velocity: hit.velocity,
                     on: true,
                 });
                 t.events.push(Event {
+                    slice: false,
                     tick: (tick + crate::music::event_tick(hit.gate)).min(base + 4 * PPQ - 1),
                     note: hit.sound,
                     velocity: 0,
@@ -1244,8 +1610,47 @@ impl Engine {
         self.running = true;
         Ok(())
     }
+    pub fn visible_audio(&self, i: usize) -> (&crate::features::Features, usize) {
+        if self.tracks[i].kind == Kind::Audio
+            && self
+                .recorder
+                .is_some_and(|r| r.track == i && !r.midi && self.clock.tick() >= r.start)
+        {
+            (&self.capture_features, self.capture_features.frames)
+        } else {
+            let t = &self.tracks[i];
+            (
+                &t.features,
+                if t.source_frames > 0 {
+                    t.source_frames
+                } else {
+                    t.audio_frames
+                },
+            )
+        }
+    }
+    pub fn input_preview_peak(&self, index: usize) -> crate::features::Peak {
+        self.input_preview[(self.input_preview_head + 1 + index) % 128]
+    }
+    pub fn active_note_mask(&self, track: usize) -> [u64; 2] {
+        let mut notes = [0u64; 2];
+        for voice in &self.voices {
+            if voice.active && voice.track == track {
+                notes[usize::from(voice.note) / 64] |= 1u64 << (voice.note % 64);
+            }
+        }
+        for v in &self.slice_voices {
+            if v.active
+                && v.track == track
+                && let Some(s) = v.sampler
+            {
+                notes[usize::from(s.note) / 64] |= 1u64 << (s.note % 64);
+            }
+        }
+        notes
+    }
     pub fn visible_events(&self, i: usize) -> &[Event] {
-        if self.recorder.is_some_and(|r| r.track == i) && self.tracks[i].kind != Kind::Audio {
+        if self.recorder.is_some_and(|r| r.track == i && r.midi) {
             &self.capture_events
         } else {
             &self.tracks[i].events
@@ -1303,6 +1708,18 @@ impl Engine {
         self.open_notes[i] = [false; 128]
     }
     fn note(&mut self, track: usize, note: u8, velocity: u8, on: bool, source: u16) {
+        if self.tracks[track].kind == Kind::Audio {
+            self.sample_note(
+                track,
+                note,
+                velocity,
+                on,
+                source,
+                self.tracks[track].audio_target == crate::audio::RecordTarget::Chop,
+            );
+            return;
+        }
+
         if !on || velocity == 0 {
             for v in &mut self.voices {
                 if v.active && v.track == track && v.note == note && v.source == source {
@@ -1316,12 +1733,78 @@ impl Engine {
         } else {
             None
         };
-        if drum == Some(2) {
+        let native = drum.and_then(|d| self.tracks[track].kit.xpm.as_ref().map(|x| x.meta.pads[d]));
+        if let Some(meta) = native {
+            for v in &mut self.voices {
+                if v.track == track
+                    && let Some(other) = v.drum
+                {
+                    let group =
+                        self.tracks[track].kit.xpm.as_ref().unwrap().meta.pads[other].mute_group;
+                    if (meta.mono && Some(other) == drum)
+                        || (meta.mute_group > 0 && meta.mute_group == group)
+                        || meta.mute_targets.contains(&(other as u8 + 1))
+                    {
+                        v.active = false;
+                    }
+                }
+            }
+        } else if drum == Some(2) {
             for v in &mut self.voices {
                 if v.track == track && v.drum == Some(3) {
                     v.active = false;
                 }
             }
+        }
+        let mut triggers = [(0usize, 0usize); 5];
+        let mut count = 0;
+        if let Some(d) = drum {
+            for layer in 0..2 {
+                if !self.tracks[track].drums[d].layers[layer].enabled {
+                    continue;
+                }
+                if layer == 0
+                    && let Some(meta) = native.filter(|m| m.count > 0)
+                {
+                    let state = &mut self.tracks[track].xpm_step[d];
+                    let selected = match meta.mode {
+                        0 => {
+                            let zone = *state as usize % usize::from(meta.count);
+                            *state = state.wrapping_add(1);
+                            1u8 << zone
+                        }
+                        2 => {
+                            if *state == 0 {
+                                *state = 0x9e3779b9u32 ^ (d as u32 * 0x10203);
+                            }
+                            *state ^= *state << 13;
+                            *state ^= *state >> 17;
+                            *state ^= *state << 5;
+                            1u8 << (*state as usize % usize::from(meta.count))
+                        }
+                        _ => {
+                            let mut mask = 0;
+                            for z in 0..usize::from(meta.count) {
+                                if (meta.ranges[z][0]..=meta.ranges[z][1]).contains(&velocity) {
+                                    mask |= 1 << z;
+                                }
+                            }
+                            mask
+                        }
+                    };
+                    for zone in 0..usize::from(meta.count) {
+                        if selected & (1 << zone) != 0 {
+                            triggers[count] = (0, zone);
+                            count += 1;
+                        }
+                    }
+                } else {
+                    triggers[count] = (layer, 0);
+                    count += 1;
+                }
+            }
+        } else {
+            count = 1;
         }
         let settings = drum.map(|d| self.tracks[track].drums[d]);
         let earliest = settings.map_or(0., |d| {
@@ -1331,10 +1814,7 @@ impl Engine {
                 .map(|l| l.shift)
                 .fold(0., f32::min)
         });
-        for layer in 0..if drum.is_some() { 2 } else { 1 } {
-            if settings.is_some_and(|d| !d.layers[layer].enabled) {
-                continue;
-            }
+        for &(layer, zone) in &triggers[..count] {
             let i = self
                 .voices
                 .iter()
@@ -1352,7 +1832,11 @@ impl Engine {
             self.voices[i].start(
                 track,
                 note,
-                velocity,
+                native.map_or(velocity, |m| {
+                    ((1. - m.sensitivity) * 127. + m.sensitivity * f32::from(velocity))
+                        .round()
+                        .clamp(1., 127.) as u8
+                }),
                 source,
                 drum,
                 self.age,
@@ -1360,30 +1844,191 @@ impl Engine {
                 tune,
             );
             self.voices[i].layer = layer;
+            self.voices[i].xpm_zone = zone;
+            self.voices[i].pcm_gate = native.is_some_and(|m| m.gate);
             self.voices[i].delay_frames = settings.map_or(0, |d| {
                 ((d.layers[layer].shift - earliest) * self.clock.rate as f32 / 1000.).round() as u32
             });
         }
     }
 
+    fn sample_note(
+        &mut self,
+        track: usize,
+        note: u8,
+        velocity: u8,
+        on: bool,
+        source: u16,
+        chop: bool,
+    ) {
+        if !on || velocity == 0 {
+            for v in &mut self.slice_voices {
+                if v.active
+                    && v.track == track
+                    && v.sampler
+                        .is_some_and(|s| s.note == note && s.source == source && s.slice == chop)
+                {
+                    v.release = true;
+                }
+            }
+            return;
+        }
+        let t = &self.tracks[track];
+        if t.audio_frames == 0 {
+            return;
+        }
+        let frames = if t.source_frames > 0 {
+            t.source_frames
+        } else {
+            t.audio_frames
+        };
+        let (start, end, level, played_note) = if chop {
+            if note >= t.chops.count {
+                return;
+            }
+            let slice = t.chops.slices[usize::from(note)];
+            (
+                slice.start as usize,
+                slice.end as usize,
+                slice.level,
+                t.audio_settings.root,
+            )
+        } else {
+            (0, frames, 1., note)
+        };
+        if start >= end || end > frames {
+            return;
+        }
+        // Repeated note-on replaces only the same live/playback owner.
+        for v in &mut self.slice_voices {
+            if v.track == track
+                && v.sampler
+                    .is_some_and(|s| s.note == note && s.source == source && s.slice == chop)
+            {
+                v.active = false;
+            }
+        }
+        let slot = self
+            .slice_voices
+            .iter()
+            .position(|v| !v.active)
+            .unwrap_or_else(|| {
+                self.slice_voices
+                    .iter()
+                    .enumerate()
+                    .min_by_key(|(_, v)| v.age)
+                    .unwrap()
+                    .0
+            });
+        self.age += 1;
+        let mut voice = crate::audio::Voice::new(played_note, source, t.audio_settings);
+        voice.note = note;
+        voice.slice = chop;
+        voice.set_played_note(played_note, t.audio_settings);
+        self.slice_voices[slot] = crate::chop::SliceVoice {
+            active: true,
+            track,
+            pad: if chop {
+                usize::from(note)
+            } else {
+                usize::from(note.saturating_sub(48)) % 16
+            },
+            start,
+            end,
+            at: start,
+            velocity: f32::from(velocity) / 127. * level,
+            gate: true,
+            release: false,
+            env: 1.,
+            age: self.age,
+            sampler: Some(voice),
+        };
+    }
     fn live_note(&mut self, i: usize, note: u8, velocity: u8, on: bool, source: u16) {
         // MIDI commands may arrive on the exact frame of a wrap, before process().
-        if self.tracks[i].kind != Kind::Audio && self.recorder.is_some_and(|r| r.track == i) {
+        if self.recorder.is_some_and(|r| r.track == i && r.midi) {
             self.process_capture(Frame::ZERO);
         }
         self.note(i, note, velocity, on, source);
         self.capture_note(i, note, velocity, on);
     }
 
+    fn remap_slices(t: &mut Track, old: crate::chop::Chops) {
+        let count = usize::from(t.chops.count).min(16);
+        let mut map = [0u8; 16];
+        for (i, to) in map.iter_mut().enumerate() {
+            let start = old.slices[i].start;
+            *to = t.chops.slices[..count]
+                .iter()
+                .position(|s| start >= s.start && start < s.end)
+                .unwrap_or_else(|| {
+                    t.chops.slices[..count]
+                        .iter()
+                        .enumerate()
+                        .min_by_key(|(_, s)| s.start.abs_diff(start))
+                        .map_or(0, |(n, _)| n)
+                }) as u8;
+        }
+        for event in &mut t.events {
+            if event.slice {
+                event.note = map[usize::from(event.note).min(15)];
+            }
+        }
+        t.revision = t.revision.wrapping_add(1);
+    }
+    fn chain_protects(&self, track: usize) -> bool {
+        self.chain.running && (self.chain.members | self.chain.config.members()) & (1 << track) != 0
+    }
+    fn apply_chain_change(&mut self, change: crate::chain::Change) {
+        let (members, next) = match change {
+            crate::chain::Change::Activate {
+                track,
+                members,
+                origin,
+            } => {
+                self.tracks[track].origin = origin;
+                (members, Some(track))
+            }
+            crate::chain::Change::Stop { members } => (members, None),
+        };
+        for track in 0..16 {
+            if members & (1 << track) != 0 {
+                self.tracks[track].playing = false;
+                self.release_track(track);
+            }
+        }
+        if let Some(track) = next {
+            let t = &mut self.tracks[track];
+            t.playing = true;
+            t.cursor = 0;
+            t.last_phase = u64::MAX;
+        }
+    }
     pub fn process(&mut self, input: Frame) -> Frame {
         let mut profile = crate::qa::dsp_start(|| self.active_voices());
         let tick = self.clock.tick();
         let rate = self.clock.rate as f32;
+        let peak = &mut self.input_preview[self.input_preview_head];
+        peak.min = peak.min.min(input.l.min(input.r));
+        peak.max = peak.max.max(input.l.max(input.r));
+        self.input_preview_count += 1;
+        if self.input_preview_count >= self.clock.rate / 512 {
+            self.input_preview_count = 0;
+            self.input_preview_head = (self.input_preview_head + 1) % 128;
+            self.input_preview[self.input_preview_head] = crate::features::Peak::default();
+        }
         self.process_capture(input);
+        if self.running && self.chain.running {
+            let tracks = &self.tracks;
+            if let Some(change) = self.chain.tick(tick, |track| tracks[track].length_ticks) {
+                self.apply_chain_change(change);
+            }
+        }
         if self.running {
-            for i in 0..16 {
+            for i in 0..ACTIVE_TRACKS {
                 if self.tracks[i].playing
-                    && self.tracks[i].kind != Kind::Audio
+                    && tick >= self.tracks[i].origin
+                    && (self.tracks[i].kind != Kind::Audio || self.tracks[i].audio_sequence)
                     && !self.tracks[i].empty()
                 {
                     let phase = self.tracks[i].phase(tick);
@@ -1391,6 +2036,11 @@ impl Engine {
                         for v in &mut self.voices {
                             if v.track == i && v.source == 1 {
                                 v.release()
+                            }
+                        }
+                        for v in &mut self.slice_voices {
+                            if v.track == i && v.sampler.is_some_and(|s| s.source == 1) {
+                                v.release = true;
                             }
                         }
                         self.tracks[i].cursor = 0
@@ -1405,11 +2055,15 @@ impl Engine {
                             r.track == i
                                 && tick >= r.start
                                 && r.mode == RecordMode::Replace
-                                && (self.tracks[i].kind == Kind::Synth
+                                && (self.tracks[i].kind != Kind::Drum
                                     || r.touched & (1 << (e.note % 16)) != 0)
                         });
                         if !suppressed {
-                            self.note(i, e.note, e.velocity, e.on, 1)
+                            if self.tracks[i].kind == Kind::Audio {
+                                self.sample_note(i, e.note, e.velocity, e.on, 1, e.slice);
+                            } else {
+                                self.note(i, e.note, e.velocity, e.on, 1)
+                            }
                         }
                     }
                     self.tracks[i].last_phase = phase;
@@ -1424,14 +2078,43 @@ impl Engine {
                     voice.active = false;
                     continue;
                 }
-                let sample = voice.sample(&t.audio[..t.audio_frames], self.clock.rate);
+                let sample = if let Some(sampler) = &mut voice.sampler {
+                    if voice.release {
+                        voice.env = (voice.env - 1. / (self.clock.rate as f32 * 0.005)).max(0.);
+                        if voice.env <= 0. {
+                            voice.active = false;
+                        }
+                    }
+                    let settings = t.audio_settings;
+                    let source_frames = t.source_frames.max(1);
+                    let ticks = ((if t.source_ticks > 0 {
+                        t.source_ticks
+                    } else {
+                        t.length_ticks
+                    }) as f64
+                        * (voice.end - voice.start) as f64
+                        / source_frames as f64)
+                        .round()
+                        .max(1.) as u64;
+                    sampler
+                        .sample(
+                            &t.audio[voice.start..voice.end],
+                            settings,
+                            ticks,
+                            self.clock.bpm,
+                            self.clock.rate,
+                        )
+                        .gain(voice.velocity * voice.env)
+                } else {
+                    voice.sample(&t.audio[..t.audio_frames], self.clock.rate)
+                };
                 signals[voice.track] = signals[voice.track].combine(sample);
             }
         }
 
         let mut drum_delay = [Frame::ZERO; 16];
         let mut drum_room = [Frame::ZERO; 16];
-        for t in &mut self.tracks {
+        for t in self.tracks.iter_mut().take(ACTIVE_TRACKS) {
             if t.kind != Kind::Drum {
                 continue;
             }
@@ -1459,12 +2142,20 @@ impl Engine {
                     }
                     layer_gain = if cfg.enabled { cfg.level } else { 0. };
                 }
-                let mut sample =
-                    if let Some(d) = v.drum.filter(|d| !t.kit.clip(*d, v.layer).is_empty()) {
-                        v.sample_pcm(t.kit.clip(d, v.layer), rate, adjusted)
+                let mut sample = if let Some(d) = v
+                    .drum
+                    .filter(|d| !t.kit.voice_clip(*d, v.layer, v.xpm_zone).is_empty())
+                {
+                    v.sample_pcm(t.kit.voice_clip(d, v.layer, v.xpm_zone), rate, adjusted)
+                } else {
+                    Frame::mono(if t.synth.lfo_sync {
+                        let mut config = t.synth;
+                        config.lfo_rate = config.effective_lfo_rate(self.clock.bpm as f32);
+                        v.sample(rate, &config, adjusted)
                     } else {
-                        Frame::mono(v.sample(rate, &t.synth, adjusted))
-                    };
+                        v.sample(rate, &t.synth, adjusted)
+                    })
+                };
                 sample = v.apply_layer_gain(sample, layer_gain);
                 if let Some(d) = v.drum {
                     let anysolo = t.drums.iter().any(|s| s.mix.solo);
@@ -1485,7 +2176,7 @@ impl Engine {
             }
         }
         crate::qa::dsp_mark(&mut profile, 1);
-        let solo = self.tracks.iter().any(|t| t.mix.solo);
+        let solo = self.tracks.iter().take(ACTIVE_TRACKS).any(|t| t.mix.solo);
         let mut sum = Frame::ZERO;
         let split = self.separate_usb;
         let mut usb_sum = Frame::ZERO;
@@ -1495,30 +2186,41 @@ impl Engine {
         let mut buses = [Frame::ZERO; 2];
         let mut ds = Frame::ZERO;
         let mut rs = Frame::ZERO;
-        for (i, signal) in signals.iter_mut().enumerate() {
-            let t = &self.tracks[i];
+        for (i, signal) in signals.iter_mut().take(ACTIVE_TRACKS).enumerate() {
+            let t = &mut self.tracks[i];
             if self.running
                 && t.playing
+                && tick >= t.origin
                 && t.kind == Kind::Audio
+                && !t.audio_sequence
+                && !self.recorder.is_some_and(|r| {
+                    r.track == i && r.midi && r.mode == RecordMode::Replace && tick >= r.start
+                })
                 && t.audio_frames > 0
                 && !t.empty()
             {
-                let pos = t.phase(tick) as f64 / t.length_ticks as f64 * t.audio_frames as f64;
-                let j = pos.floor() as usize % t.audio_frames;
-                let k = (j + 1) % t.audio_frames;
-                let f = pos.fract() as f32;
-                let edge = (j.min(t.audio_frames - 1 - j) as f32 / (rate * 0.002)).min(1.);
-                *signal = signal.combine(
-                    t.audio[j]
-                        .gain(1. - f)
-                        .combine(t.audio[k].gain(f))
-                        .gain(edge),
-                );
+                let phase = t.phase(tick) as f64 / t.length_ticks as f64 * t.audio_frames as f64;
+                *signal = signal.combine(t.audio_player.sample(
+                    &t.audio[..t.audio_frames],
+                    t.audio_settings,
+                    crate::audio::LoopTime {
+                        frame: self.clock.frame,
+                        origin: t.origin,
+                        phase,
+                        ticks: if t.source_ticks > 0 {
+                            t.source_ticks
+                        } else {
+                            t.length_ticks
+                        },
+                        bpm: self.clock.bpm,
+                        rate: self.clock.rate,
+                    },
+                ));
             }
         }
         let source = usize::from(self.sidechain.source);
         let st = &self.tracks[source];
-        let audible = !st.mix.mute && (!solo || st.mix.solo);
+        let audible = source < ACTIVE_TRACKS && !st.mix.mute && (!solo || st.mix.solo);
         let detector = if !audible {
             0.
         } else {
@@ -1532,7 +2234,7 @@ impl Engine {
         let duck_gain = self
             .duck
             .sample(detector, self.sidechain, rate, self.clock.bpm as f32);
-        for (i, signal) in signals.iter().enumerate() {
+        for (i, signal) in signals.iter().take(ACTIVE_TRACKS).enumerate() {
             let t = &mut self.tracks[i];
             let target = if t.mix.mute || (solo && !t.mix.solo) {
                 0.
@@ -1555,8 +2257,11 @@ impl Engine {
             let mut mix = t.mix;
             if t.kind == Kind::Synth && t.synth.lfo_pan > 0. {
                 let pan = (mix.pan
-                    + t.pan_lfo.sample(rate, t.synth.lfo_rate, t.synth.lfo_shape)
-                        * t.synth.lfo_pan)
+                    + t.pan_lfo.sample(
+                        rate,
+                        t.synth.effective_lfo_rate(self.clock.bpm as f32),
+                        t.synth.lfo_shape,
+                    ) * t.synth.lfo_pan)
                     .clamp(-1., 1.);
                 t.pan_current += (pan - t.pan_current) * 0.004;
                 mix.pan = t.pan_current;
@@ -1635,7 +2340,8 @@ impl Engine {
         self.master_duck_gain += (master_target - self.master_duck_gain) * 0.004;
         sum = sum.gain(self.master_duck_gain);
         self.master_gain += (self.master - self.master_gain) * 0.002;
-        sum = sum.gain(self.master_gain);
+        self.hardware_gain += (self.hardware_volume - self.hardware_gain) * 0.002;
+        sum = sum.gain(self.master_gain * self.hardware_gain);
         sum = Frame {
             l: sum.l.clamp(-0.98, 0.98),
             r: sum.r.clamp(-0.98, 0.98),
@@ -1655,7 +2361,7 @@ impl Engine {
                 self.bus_fx,
                 self.performance,
                 self.master_fx,
-                self.master_gain,
+                self.master_gain * self.hardware_gain,
                 &mut self.texture_usb,
                 self.texture,
                 self.master_duck_gain,
@@ -1679,6 +2385,94 @@ impl Engine {
         }
         sum
     }
+    /// File-worker operation only, while holding exclusive runtime ownership.
+    /// Refuse occupied targets and running audio; no background source can be lost.
+    pub fn transfer_track_stopped(
+        &mut self,
+        source: usize,
+        target: usize,
+        moving: bool,
+    ) -> Result<(), Error> {
+        Self::valid_track(source)?;
+        Self::valid_track(target)?;
+        if !self.is_idle() || self.chain.running || self.held_fx != 0 {
+            return Err(Error::Busy);
+        }
+        if source == target {
+            return Err(Error::InvalidValue);
+        }
+        let from = &self.tracks[source];
+        let to = &self.tracks[target];
+        if from.empty() && from.source_frames == 0 && from.kit.bytes() == 0 {
+            return Err(Error::NoContent);
+        }
+        if !to.empty()
+            || to.source_frames > 0
+            || to.audio_frames > 0
+            || !to.events.is_empty()
+            || to.kit.bytes() > 0
+        {
+            return Err(Error::InvalidValue);
+        }
+        if from.source_frames.max(from.audio_frames) > to.audio.len() {
+            return Err(Error::Capacity);
+        }
+        if !moving
+            && self.tracks.iter().map(|t| t.kit.bytes()).sum::<usize>() + from.kit.bytes()
+                > crate::bank::SESSION_KIT_BYTES
+        {
+            return Err(Error::Capacity);
+        }
+        if moving {
+            self.tracks.swap(source, target);
+            self.track_fx.swap(source, target);
+            self.remap_track_references(source, target);
+            self.history.kind = EditKind::TrackMove;
+        } else {
+            let copied = from.duplicate_stopped(to.audio.len(), target);
+            let old = std::mem::replace(&mut self.tracks[target], copied);
+            self.track_fx[target] = std::array::from_fn(|_| FxState::new(self.clock.rate));
+            self.history.track = Some(Box::new(old)); // Reclaims previous full-track history on worker.
+            self.history.kind = EditKind::TrackCopy;
+        }
+        self.history.target = Some(target);
+        self.history.peer = Some(source);
+        self.history.undone = false;
+        self.history.state = Some(ClipState::read(&self.tracks[target]));
+        self.history.events.clear();
+        for i in [source, target] {
+            let t = &mut self.tracks[i];
+            t.playing = false;
+            t.reset_audio_player();
+            t.revision = t.revision.wrapping_add(1);
+        }
+        self.loop_revision = self.loop_revision.wrapping_add(1);
+        Ok(())
+    }
+    fn remap_track_references(&mut self, a: usize, b: usize) {
+        let swap = |n: u8| {
+            if n as usize == a {
+                b as u8
+            } else if n as usize == b {
+                a as u8
+            } else {
+                n
+            }
+        };
+        for step in &mut self.chain.config.steps[..self.chain.config.len as usize] {
+            step.track = swap(step.track);
+        }
+        self.sidechain.source = swap(self.sidechain.source);
+        let a_set = self.sidechain.mask & (1 << a) != 0;
+        let b_set = self.sidechain.mask & (1 << b) != 0;
+        self.sidechain.mask &= !((1 << a) | (1 << b));
+        if a_set {
+            self.sidechain.mask |= 1 << b;
+        }
+        if b_set {
+            self.sidechain.mask |= 1 << a;
+        }
+    }
     pub fn is_idle(&self) -> bool {
         !self.running
             && self.recorder.is_none()
@@ -1696,7 +2490,7 @@ impl Engine {
         self.release_temporary_fx();
     }
     pub fn reset_chop_history(&mut self, track: usize) {
-        self.tracks[track].chop_undo = None;
+        self.history.invalidate(track);
     }
     pub fn clear_slice_voices(&mut self, track: usize) {
         for voice in &mut self.slice_voices {

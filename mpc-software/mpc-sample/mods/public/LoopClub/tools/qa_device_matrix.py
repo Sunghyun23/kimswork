@@ -27,7 +27,18 @@ class QA:
         self.event(kind='pad',index=index,on=True,velocity=84,shift=shift,erase=erase);time.sleep(hold)
         self.event(kind='pad',index=index,on=False,velocity=0,shift=shift,erase=erase)
     def knob(self,index,value,shift=False):self.event(kind='knob',index=16+index,value=value,shift=shift)
-    def select(self,index):self.button(6);self.pad(index);self.wait(lambda s:s['words'][3]==index)
+    def select(self,index):
+        self.button(6)
+        s=state()
+        assert s['words'][9]==0,'Finish recording before selecting a QA track'
+        current=s['words'][3];count=s.get('active_tracks',16)
+        delta=(index-current)%count
+        if delta>count//2:delta-=count
+        for _ in range(abs(delta)):
+            current=(current+(1 if delta>0 else -1))%count
+            self.event(kind='encoder',delta=1 if delta>0 else -1)
+            self.wait(lambda s:s['words'][3]==current)
+        self.wait(lambda s:s['words'][3]==index)
     def setup(self):self.button(6);self.button(111,True);self.wait(lambda s:s['page']==7)
     def kind(self,index,kind):self.select(index);self.setup();self.pad(kind);self.wait(lambda s:s['words'][16+index*12]&255==kind)
     def capture(self,name):

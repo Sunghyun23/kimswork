@@ -45,19 +45,21 @@ fn part_generation_preserves_other_drums_and_mix() {
     );
 }
 #[test]
-fn recorded_part_is_protected_while_new_parts_can_be_added() {
+fn recorded_part_can_be_generated_then_undone_without_touching_other_parts() {
     let mut e = core();
     let t = &mut e.tracks[0];
     t.kind = Kind::Drum;
     t.length_ticks = 4 * PPQ;
     t.events.extend([
         Event {
+            slice: false,
             tick: PPQ,
             note: 1,
             velocity: 87,
             on: true,
         },
         Event {
+            slice: false,
             tick: PPQ + 10,
             note: 1,
             velocity: 0,
@@ -65,10 +67,11 @@ fn recorded_part_is_protected_while_new_parts_can_be_added() {
         },
     ]);
     let original = t.events.clone();
-    assert_eq!(
-        e.command(Command::GenerateDrumPart { track: 0, sound: 1 }),
-        Err(Error::NotEmpty)
-    );
+    e.command(Command::GenerateDrumPart { track: 0, sound: 1 })
+        .unwrap();
+    assert_ne!(e.tracks[0].events, original);
+    e.command(Command::UndoDrumPart { track: 0, sound: 1 })
+        .unwrap();
     assert_eq!(e.tracks[0].events, original);
     e.command(Command::GenerateDrumPart { track: 0, sound: 0 })
         .unwrap();
@@ -125,6 +128,8 @@ fn drum_shortcut_is_in_drum_play_not_main() {
         e.command(c).unwrap();
     });
     assert!(e.tracks[0].empty());
+    assert!(e.recorder.is_some());
+    e.command(Command::Stop).unwrap();
     ui.page = Page::Play;
     ui.pad(1, true, 80, true, false, &Snapshot::capture(&e), |c| {
         e.command(c).unwrap();
@@ -264,12 +269,14 @@ fn new_generated_part_repeats_inside_existing_three_bar_loop() {
     t.length_ticks = 12 * PPQ;
     t.events.extend([
         Event {
+            slice: false,
             tick: PPQ,
             note: 1,
             velocity: 90,
             on: true,
         },
         Event {
+            slice: false,
             tick: PPQ + 20,
             note: 1,
             velocity: 0,

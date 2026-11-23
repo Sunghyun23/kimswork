@@ -28,3 +28,13 @@ pub mod output_mirror;
 mod qa_persist;
 
 mod usb_bus;
+
+pub mod input_hw;
+
+pub mod chain;
+
+mod midi_input;
+
+pub mod audio;
+
+pub mod xpm;

@@ -1,0 +1,39 @@
+{
+  "version": "0.3.0",
+  "date": "2026-11-22T23:55:31.578248+00:00",
+  "scope": "local MPC Sample candidate; public 0.1.0 unchanged",
+  "normal_sha256": "2c70c0a376bcbab04385f45385e89475bd5fdf751383217f8892db69e010a69b",
+  "native_tests": {
+    "debug": 186,
+    "release": 186
+  },
+  "strict_clippy": [
+    "host all-targets",
+    "aarch64 lib"
+  ],
+  "arm64_build": "PASS",
+  "device_checks": {
+    "real_coremidi_input_before_rec": true,
+    "loop_screen_and_chord_pad_role_rec_end": true,
+    "drum_record_role_16_sounds": true,
+    "real_usb_audio_live_and_recorded": true,
+    "mute_without_recording_or_selection_change": true,
+    "chain_two_repeats_switch_and_background_continues": true,
+    "direct_mode_sound_and_record_mode_shortcuts": true,
+    "chain_remove_and_track16_selection": true
+  },
+  "owner_project_restore": "all 16 backing track slots compared after normal runtime restoration",
+  "screenshots": "active DRM framebuffer captured on MPC Sample, private QA evidence under build/qa-device/sixteen-modes-0.3.0",
+  "limits": [
+    "Remote queued pad/button checks do not certify the physical SDK input path.",
+    "Real CoreMIDI notes and stereo USB audio were tested; calibrated LINE/MIC and latest power-cycle were not.",
+    "USB currently exposes stereo; individual multichannel drum stems are not implemented.",
+    "Dense FX/voice CPU headroom remains limited."
+  ],
+  "sd_persistence": {
+    "persisted": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20,
+    "runtime_sha256": "2c70c0a376bcbab04385f45385e89475bd5fdf751383217f8892db69e010a69b"
+  }
+}

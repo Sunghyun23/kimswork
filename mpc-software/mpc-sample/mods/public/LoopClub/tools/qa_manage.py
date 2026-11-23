@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """USB runtime updates/restart; explicit --persist updates only verified own SD boot, with backup. No firmware or owner-project writes."""
-import argparse,hashlib,json,time,urllib.request
+import argparse,hashlib,json,time,urllib.request,struct
 from pathlib import Path
 BASE='http://192.168.155.1:8091'
 def request(path,body=None,extra=None):
@@ -9,6 +9,18 @@ def request(path,body=None,extra=None):
     req=urllib.request.Request(BASE+path,data=body,headers=headers)
     with urllib.request.urlopen(req,timeout=35) as response:
         return json.loads(response.read(256*1024))
+def own_screen_ready(raw):
+    """The native loading overlay is not an interactive Loop Club page."""
+    if len(raw)<54 or raw[:2]!=b'BM':return False
+    offset=struct.unpack_from('<I',raw,10)[0]
+    width,height=struct.unpack_from('<ii',raw,18)
+    bits=struct.unpack_from('<H',raw,28)[0]
+    if width!=320 or abs(height)!=240 or bits not in (24,32):return False
+    stride=((width*bits+31)//32)*4
+    row=60 if height<0 else 239-60
+    point=offset+row*stride+bits//8
+    return raw[point:point+3]==bytes((0x20,0x26,0x14))
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--persist',action='store_true',help='Persist verified current runtime only to recognized direct Loop Club autorun, preserving entire old boot')
@@ -32,13 +44,13 @@ def main():
         print(json.dumps(status,indent=2))
         if result.get('result')!='restarted':raise RuntimeError(result.get('error','No restart completion record'))
         if expected is not None and result.get('runtime_sha256')!=expected:raise RuntimeError('Restarted runtime differs from candidate')
-        deadline=time.monotonic()+20
+        deadline=time.monotonic()+60
         while True:
             try:
                 with urllib.request.urlopen('http://192.168.155.1:8090/status.json',timeout=2)as response:app=json.loads(response.read(65536))
                 if app.get('pid')==result.get('app_pid') and app.get('paint_count',0)>0 and len(app.get('words',[]))>1 and app['words'][1]>=8000:
                     with urllib.request.urlopen('http://192.168.155.1:8090/screen.bmp',timeout=2)as response:
-                        if response.read(2)==b'BM':break
+                        if own_screen_ready(response.read(512*1024)):break
             except (OSError,ValueError):pass
             if time.monotonic()>deadline:raise RuntimeError('App HTTP returned but engine/display did not become ready')
             time.sleep(.2)

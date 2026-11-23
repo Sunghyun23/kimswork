@@ -1,0 +1,57 @@
+{
+  "version": "0.5.0",
+  "date": "2026-11-23T02:24:23.273085+00:00",
+  "scope": "local MPC Sample candidate; no public release/site changes",
+  "normal_sha256": "6d5e6d647b1d7ce27fba586aa3226c3bb4a48eb4ee4928eec7e4259ca14f4146",
+  "project_format": 4,
+  "native_tests": {
+    "debug": 216,
+    "release": 216
+  },
+  "strict_clippy": [
+    "host all-targets PASS",
+    "ARM64 lib PASS"
+  ],
+  "arm64_build": "normal and isolated QA PASS",
+  "device_checks": {
+    "recorded_synth_undo_redo_usb_audio": {
+      "recorded_notes": 6,
+      "playing_peak": 0.1866217404603958,
+      "undo_peak": 0.0,
+      "redo_peak": 0.1866217404603958
+    },
+    "overdub_keeps_old_notes_undo_redo": true,
+    "undo_from_another_track_preserves_selection": true,
+    "pattern_generation_undo_redo_from_play_page": true,
+    "history_not_serialized_on_project_load": true
+  },
+  "owner_restore": "all 16 owner track slots compared after normal runtime restoration",
+  "sd_persistence": {
+    "runtime_and_boot_sha256_match": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20
+  },
+  "screenshots": "actual active DRM captures inspected; private build/qa-device/undo-0.5.0",
+  "history_policy": {
+    "depth": 1,
+    "shared_across_tracks": true,
+    "saved_in_project": false,
+    "pcm_allocation": "one recording-sized buffer, allocated at engine construction; constant-time buffer rotation at commit",
+    "callback_allocations": "zero in instrumented record/undo/redo/clear tests",
+    "scope": [
+      "completed Audio/Synth/Drum recordings",
+      "continuous recording gesture",
+      "drum generation",
+      "MIDI note editing",
+      "clear",
+      "applied/manual chop editing"
+    ]
+  },
+  "limits": [
+    "Remote controller checks do not certify physical SHIFT/minus/plus input delivery.",
+    "One last clip edit only; sound/mix/FX edits and sample import are outside history.",
+    "History clears on project load/restart; no partial-take REDO.",
+    "Power-cycle, analog audio jacks and long-duration worst-case CPU were not certified in this change.",
+    "SAMPLE REC and SEQ REC still share the loop recording command."
+  ]
+}

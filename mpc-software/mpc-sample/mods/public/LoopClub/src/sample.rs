@@ -158,7 +158,10 @@ impl ImportJob {
         t.wave_view = (0, 0);
         t.audio_frames = self.frames;
         t.source_frames = self.source_frames;
+        t.audio_sequence = false;
+        t.reset_audio_player();
         t.length_ticks = self.ticks;
+        t.source_ticks = self.ticks;
         t.origin = 0;
         t.playing = false;
         t.events.clear();
@@ -186,14 +189,22 @@ pub struct Browser {
     pub root: PathBuf,
     pub current: PathBuf,
     pub view: BrowserView,
+    programs: bool,
 }
 impl Browser {
     pub fn open(root: &Path) -> io::Result<Self> {
+        Self::open_kind(root, false)
+    }
+    pub fn open_programs(root: &Path) -> io::Result<Self> {
+        Self::open_kind(root, true)
+    }
+    fn open_kind(root: &Path, programs: bool) -> io::Result<Self> {
         let root = root.canonicalize()?;
         let mut b = Self {
             current: root.clone(),
             root,
             view: BrowserView::default(),
+            programs,
         };
         b.refresh()?;
         Ok(b)
@@ -214,9 +225,9 @@ impl Browser {
             }
             let dir = file_type.is_dir();
             if !dir
-                && !path
-                    .extension()
-                    .is_some_and(|v| v.eq_ignore_ascii_case("wav"))
+                && !path.extension().is_some_and(|v| {
+                    v.eq_ignore_ascii_case(if self.programs { "xpm" } else { "wav" })
+                })
             {
                 continue;
             }

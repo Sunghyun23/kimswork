@@ -1,0 +1,100 @@
+{
+  "version": "0.7.0",
+  "status": "local device installed; public0.1.0 unchanged",
+  "runtime_and_sd_sha256": "366d8f60cf9c7e35bed5de002d91c630b8f1073af53ab9ff039551cb366cd815",
+  "pid": 17891,
+  "normal_start_page": 0,
+  "owner_16_tracks_restored": true,
+  "automated": {
+    "full_debug_passes": 256,
+    "full_release_passes": 256,
+    "subsequent_boundary_tests": 15,
+    "subsequent_realtime_allocation_tests": 12,
+    "subsequent_view_tests": 10,
+    "strict_host_clippy": "PASS",
+    "strict_arm64_clippy": "PASS",
+    "normal_and_isolated_arm64": "PASS",
+    "canonical_sdk_clean": true
+  },
+  "device": {
+    "control_scope": "queued remote controls; actual firmware DRM, USB MIDI and stereo USB audio",
+    "groups": [
+      {
+        "case": "input_and_wav_browser",
+        "result": "PASS",
+        "seconds": 7.059
+      },
+      {
+        "case": "chromatic_hold_capture_history_midi",
+        "result": "PASS",
+        "seconds": 10.967
+      },
+      {
+        "case": "chop_capture_mixed_overdub",
+        "result": "PASS",
+        "seconds": 13.583
+      },
+      {
+        "case": "warp_and_audio",
+        "result": "PASS",
+        "seconds": 10.098
+      },
+      {
+        "case": "project_recall",
+        "result": "PASS",
+        "seconds": 1.643
+      }
+    ],
+    "audio_measurements": {
+      "input_pcm_frames": 88200,
+      "held_octave_repeats_after_source_end_and_release": {
+        "peak": 0.03748030215501785,
+        "crossing_hz": 440.85378718615937,
+        "finite": true
+      },
+      "release_quiet": {
+        "peak": 0.0,
+        "crossing_hz": 0.0,
+        "finite": true
+      },
+      "chromatic_capture_and_undo_redo": true,
+      "actual_usb_midi_sampler_note_off": true,
+      "chop_record_and_cross_mode_overdub": true,
+      "warp_octave_at_88_bpm": {
+        "peak": 0.03748004138469696,
+        "crossing_hz": 440.15022543168766,
+        "finite": true
+      },
+      "four_warp_voices_timing": {
+        "before": {
+          "blocks": 14814,
+          "max_deadline_pct": 77.8583,
+          "overrun_blocks": 0,
+          "p99_deadline_pct_upper": 25.0,
+          "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+        },
+        "after": {
+          "blocks": 16529,
+          "max_deadline_pct": 77.8583,
+          "overrun_blocks": 0,
+          "p99_deadline_pct_upper": 30.0,
+          "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+        },
+        "audio": {
+          "peak": 0.14399616420269012,
+          "crossing_hz": 336.3502737893967,
+          "finite": true
+        }
+      },
+      "v5_save_load_pcm_sequence_settings": true
+    }
+  },
+  "limits": [
+    "Physical SHIFT/pads/DATA, analog LINE/MIC signal and latest power-cycle acceptance are not newly certified.",
+    "Actual WAV picker UI and host WAV decode/import/performance roundtrip passed; selecting a supplied WAV file on the physical device was not part of this pass.",
+    "Warp uses bounded waveform-aligned overlap/add; only sine pitch/duration and four simultaneous live voices were measured, not arbitrary musical/transient stretch quality or worst-case CPU.",
+    "Earlier development runs included preparation/scheduling deadline crossings; final measured run does not certify unlimited CPU headroom.",
+    "Project format5 is readable by0.7.0; older1\u20134 read in the new app, but old apps reject5.",
+    "Only own direct Loop Club boot files updated with backup/readback; no firmware, private bank or owner clip writes from isolated tests."
+  ]
+}

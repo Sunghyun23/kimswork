@@ -154,9 +154,18 @@ pub fn publish(
     for file in old_hashes.keys() {
         fs::copy(old.join(file), incoming.join(file)).map_err(error)?;
     }
+    let notice = include_str!("roxmltree-license.txt");
+    let license_path = incoming.join("SDK-LICENSE");
+    let mut licenses = fs::read_to_string(&license_path).unwrap_or_default();
+    if !licenses.contains("roxmltree 0.21.1") {
+        licenses.push_str("\n\n");
+        licenses.push_str(notice);
+        fs::write(&license_path, licenses).map_err(error)?;
+    }
     fs::write(incoming.join("loop-club.so"), runtime_bytes).map_err(error)?;
     fs::write(incoming.join("autorun.sh"), script).map_err(error)?;
     meta["library_sha256"] = expected.into();
+    meta["version"] = env!("CARGO_PKG_VERSION").into();
     meta["sdk_build_patch_sha256"] = option_env!("LOOP_CLUB_SDK_PATCH")
         .map(serde_json::Value::from)
         .unwrap_or(serde_json::Value::Null);

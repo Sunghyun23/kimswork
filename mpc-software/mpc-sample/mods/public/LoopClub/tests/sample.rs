@@ -113,3 +113,54 @@ fn background_picker_loads_the_selected_wav() {
     r.with_engine(|s| assert_eq!(s.as_ref().unwrap().tracks[0].source_frames, 1000));
     std::fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn wav_browser_first_turn_scaled_input_and_selected_file_roundtrip() {
+    use loop_club::{
+        browser_device::{self, BrowserUi, FileWorker},
+        device::normalize_encoder,
+    };
+    let root = std::env::temp_dir().join(format!("lc-wave-cursor-{}", std::process::id()));
+    std::fs::create_dir_all(&root).unwrap();
+    for (i, name) in ["a", "b", "c", "d"].iter().enumerate() {
+        wav(
+            &root.join(format!("{name}.wav")),
+            8000,
+            800 + i as u32 * 100,
+        );
+    }
+    let r = Runtime::default();
+    assert!(
+        r.initialize(Box::new(Engine::new(8000, 240., 16000)))
+            .is_ok()
+    );
+    r.active.store(true, Ordering::Release);
+    r.output(&mut [0; 128], 2, 8000);
+    browser_device::initialize();
+    let mut worker = FileWorker::with_root(Some(root.clone()), 8000, 16000);
+    let mut ui = BrowserUi::default();
+    ui.start(0);
+    worker.tick(&r);
+    // Data can arrive after the worker completes but before a separate UI refresh.
+    ui.encoder(normalize_encoder(128));
+    assert_eq!(ui.row, 1);
+    assert_eq!(ui.total(), 4);
+    ui.button(54);
+    assert_eq!(ui.row, 2);
+    ui.button(55);
+    assert_eq!(ui.row, 1);
+    ui.button_with_shift(54, true);
+    assert_eq!(ui.row, 3);
+    ui.button(55);
+    assert_eq!(ui.row, 2);
+    ui.button(13);
+    worker.tick(&r);
+    r.output(&mut [0; 128], 2, 8000);
+    assert_eq!(worker.tick(&r), Some(true));
+    r.with_engine(|e| {
+        let t = &e.as_ref().unwrap().tracks[0];
+        assert_eq!(t.source_frames, 1000);
+        assert_eq!(t.name, "c");
+    });
+    std::fs::remove_dir_all(root).unwrap();
+}

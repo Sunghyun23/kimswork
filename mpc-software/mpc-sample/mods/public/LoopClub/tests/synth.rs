@@ -379,7 +379,7 @@ fn all_lfo_targets_at_extremes_are_finite_and_pages_save_independent_depths() {
     let s = e.tracks[0].synth;
     assert_eq!(s.lfo_pitch, 100.);
     assert_eq!(s.lfo_filter, 2.);
-    assert_eq!(s.lfo_volume, 0.5);
+    assert_eq!(s.lfo_volume, 0.);
     assert_eq!(s.lfo_shape, 2);
     assert_eq!(
         serde_json::to_value(s).unwrap(),

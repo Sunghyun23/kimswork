@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--qa',action='store_true',help='Separate USB-only screen/input QA package; existing normal package is retained')
     parser.add_argument('--firmware-prefix-sha256', help='Optional independently measured first-4KiB hash; defaults to explicitly labelled pinned upstream reference')
     args = parser.parse_args()
+    version=json.loads((PROJECT/"plugin.json").read_text())["version"]
+    if not re.fullmatch(r"\d+\.\d+\.\d+",version):parser.error("Invalid product version")
     if args.public and args.qa:parser.error("Public packages cannot include the USB QA agent")
     reference = re.search(r'--firmware-sha256 ([a-f0-9]{64})', (SDK/'docs/22-build-and-install.md').read_text()).group(1)
     expected = args.firmware_prefix_sha256 or reference
@@ -84,25 +86,25 @@ systemctl show ac50.service --property=MainPID --property=ActiveState --property
     data['value0']['scripts'][0]['message'] = 'Start Loop Club? The app will restart. Save your work first.'
     (stage/'autorun.json').write_text(json.dumps(data,indent=2)+'\n')
     (stage/'autorun.check').write_text(hashlib.sha256((stage/'autorun.json').read_bytes()+(stage/'autorun.sh').read_bytes()+SALT).hexdigest())
-    (stage/'sampleboot.txt').write_text('Loop Club USB QA5\n'if args.qa else'Loop Club 0.1.0 - development\n')
+    (stage/'sampleboot.txt').write_text('Loop Club USB QA5\n'if args.qa else f'Loop Club {version} - development\n')
     shutil.copy2(PROJECT/'LICENSE',stage/'LICENSE')
-    shutil.copy2(SDK/'LICENSE',stage/'SDK-LICENSE')
-    metadata = {'product':'Loop Club','version':'0.1.0','status':'local development candidate; hardware unverified','firmware':'1.3.0.12','expected_app_first_4KiB_sha256':expected,'hash_source':'caller supplied; measurement not independently verified by packager' if args.firmware_prefix_sha256 else 'pinned SDK upstream reference; NOT measured on connected device','library_sha256':lib_hash,'device_installed':False,'screen_capture':'none; host previews only','persistent_data':'<card>/LoopClub/Projects/Session.lcproj'}
+    (stage/'SDK-LICENSE').write_text((SDK/'LICENSE').read_text()+'\n\n'+(PROJECT/'src/roxmltree-license.txt').read_text())
+    metadata = {'product':'Loop Club','version':version,'status':'local development candidate; hardware unverified','firmware':'1.3.0.12','expected_app_first_4KiB_sha256':expected,'hash_source':'caller supplied; measurement not independently verified by packager' if args.firmware_prefix_sha256 else 'pinned SDK upstream reference; NOT measured on connected device','library_sha256':lib_hash,'device_installed':False,'screen_capture':'none; host previews only','persistent_data':'<card>/LoopClub/Projects/Session.lcproj'}
     metadata['boot_mode']='direct' if args.direct else 'sampleboot-compatible'
     metadata['qa_agent_sha256']=agent_hash
     metadata['usb_qa_enabled']=args.qa
     metadata['qa_variant']='qa5'if args.qa else None
     metadata['usb_qa_address']='http://192.168.155.1:8090'if args.qa else None
     (stage/'compatibility.json').write_text(json.dumps(metadata,indent=2)+'\n')
-    (stage/'INSTALL.txt').write_text('LOCAL DEVELOPMENT CANDIDATE - NOT DEVICE VERIFIED\n\nBack up existing autorun and projects. Do not replace an existing autorun blindly.\nWith SampleBoot, place this entire autorun folder at autorun/mods/Loop Club 0.1.0/.\nOtherwise place the entire autorun at the SD root only after preserving any existing one.\nLaunch from a saved/stopped or empty native project. Press SAMPLE if the native page appears first.\nLoop Club opens its LOOP view over the Sample page. SHIFT+DATA opens PROJECT.\nThe script checks the app prefix hash before preloading; SDK verifies its full hook fingerprints.\nThis local package does not prove hardware compatibility.\nProjects are saved only while stopped, at <card>/LoopClub/Projects/Session.lcproj.\nTo return to stock after testing, power off, remove/rename the card autorun, and power on.\nRecovery procedure follows upstream and is not yet physically verified here.\n')
-    dest=PROJECT/('dist/loop-club-0.1.0-sample-usb-qa.zip'if args.qa else'dist/loop-club-0.1.0-sample-development.zip')
+    (stage/'INSTALL.txt').write_text((PROJECT/'docs/public-install.txt').read_text())
+    dest=PROJECT/(f'dist/loop-club-{version}-sample-usb-qa.zip'if args.qa else f'dist/loop-club-{version}-sample-development.zip')
     if args.direct:dest=dest.with_name(dest.stem+'-direct.zip')
     if args.public:
-        dest=PROJECT/'dist/loop-club-0.1.0-mpc-sample.zip'
+        dest=PROJECT/f'dist/loop-club-{version}-mpc-sample.zip'
         if (stage/'loop-club-qa-agent').exists():raise RuntimeError('QA agent in public payload')
         metadata.update(status='public preview; actual MPC Sample 1.3.0.12 remote UI and USB audio tested; physical controls and power-cycle acceptance pending',screen_capture='actual active DRM; see public verification notes',usb_qa_enabled=False,qa_variant=None,usb_qa_address=None)
         (stage/'compatibility.json').write_text(json.dumps(metadata,indent=2)+'\n')
-        (stage/'sampleboot.txt').write_text('Loop Club 0.1.0 Preview\n')
+        (stage/'sampleboot.txt').write_text(f'Loop Club {version} Preview\n')
         (stage/'INSTALL.txt').write_text((PROJECT/'docs/public-install.txt').read_text())
     dest.parent.mkdir(exist_ok=True)
     with zipfile.ZipFile(dest,'w',zipfile.ZIP_DEFLATED)as archive:

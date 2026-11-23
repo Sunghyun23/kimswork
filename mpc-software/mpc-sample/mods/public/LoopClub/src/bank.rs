@@ -9,13 +9,14 @@ use std::{
 };
 pub const SESSION_KIT_BYTES: usize = 256 * 1024 * 1024;
 pub const KIT_BYTES: usize = 64 * 1024 * 1024;
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct DrumKit {
     pub name: String,
     pub id: String,
     pub clips: [Vec<Frame>; 16],
     pub secondary: [Vec<Frame>; 16],
     pub names: [[String; 2]; 16],
+    pub xpm: Option<Box<crate::xpm::Data>>,
 }
 #[derive(Serialize, Deserialize)]
 pub struct Record {
@@ -79,7 +80,19 @@ impl DrumKit {
             .iter()
             .chain(self.secondary.iter())
             .map(|c| c.len() * 8)
-            .sum()
+            .sum::<usize>()
+            + self.xpm.as_ref().map_or(0, |x| x.bytes())
+    }
+    pub fn voice_clip(&self, sound: usize, layer: usize, zone: usize) -> &[Frame] {
+        if layer == 0 && zone > 0 {
+            self.xpm
+                .as_ref()
+                .and_then(|x| x.extra.get(sound))
+                .and_then(|v| v.get(zone - 1))
+                .map_or(&[], Vec::as_slice)
+        } else {
+            self.clip(sound, layer)
+        }
     }
     pub fn clip(&self, sound: usize, layer: usize) -> &[Frame] {
         if layer == 0 {
@@ -192,6 +205,7 @@ impl Bank {
         let tmp = TempWav::write(&bytes)?;
         let pcm = crate::sample::decode(&tmp.0, rate, rate as usize * 16)?;
         let mut kit = Box::<DrumKit>::default();
+        kit.xpm = Some(Box::new(crate::xpm::Data::default()));
         kit.clips[0] = pcm;
         kit.names[0][0] = sample_name(&record.name);
         Ok(Box::new(KitJob {
@@ -320,7 +334,17 @@ impl KitJob {
                 self.error = Some(Error::InvalidValue);
                 return;
             }
-            e.tracks[self.track].kit.bytes() - e.tracks[self.track].kit.clip(sound, layer).len() * 8
+            e.tracks[self.track].kit.bytes()
+                - e.tracks[self.track].kit.clip(sound, layer).len() * 8
+                - if layer == 0 {
+                    e.tracks[self.track]
+                        .kit
+                        .xpm
+                        .as_ref()
+                        .map_or(0, |x| x.pad_bytes(sound))
+                } else {
+                    0
+                }
                 + self.kit.clips[0].len() * 8
         } else {
             self.kit.bytes()
@@ -337,6 +361,17 @@ impl KitJob {
         }
         let t = &mut e.tracks[self.track];
         if let Some((sound, layer)) = self.target {
+            if layer == 0
+                && let Some(old) = &mut t.kit.xpm
+            {
+                let Some(garbage) = &mut self.kit.xpm else {
+                    self.error = Some(Error::InvalidValue);
+                    e.error = self.error;
+                    return;
+                };
+                std::mem::swap(&mut old.extra[sound], &mut garbage.extra[sound]);
+                old.meta.pads[sound].count = 0;
+            }
             let clip = if layer == 0 {
                 &mut t.kit.clips[sound]
             } else {
@@ -351,6 +386,7 @@ impl KitJob {
         } else {
             std::mem::swap(&mut t.kit, &mut self.kit);
             t.drums = self.drums;
+            t.xpm_step = [0; 16];
             t.sound_gain = t.drums.map(|d| d.mix.level);
         }
         t.revision += 1;

@@ -111,6 +111,40 @@ impl Features {
         }
         self.frames += 1;
     }
+    pub fn begin_overdub(&mut self, previous: &Self) {
+        *self = previous.clone();
+        self.onset_count = 0;
+        self.fast = 0.;
+        self.slow = 0.;
+        self.ready = true;
+        self.last = 0;
+        self.active_onset = None;
+    }
+    pub fn feed_at(&mut self, index: usize, frame: Frame, rate: u32) {
+        let total = self.frames;
+        self.frames = index;
+        self.feed(frame, rate);
+        self.frames = self.frames.max(total);
+    }
+    pub fn retain_tail_onsets(&mut self, previous: &Self, cut: usize) {
+        for onset in &previous.onsets[..previous.onset_count] {
+            if (onset.frame as usize) < cut {
+                continue;
+            }
+            if self.onset_count < 128 {
+                self.onsets[self.onset_count] = *onset;
+                self.onset_count += 1;
+            } else if let Some((i, old)) = self
+                .onsets
+                .iter()
+                .enumerate()
+                .min_by(|(_, a), (_, b)| a.strength.total_cmp(&b.strength))
+                && onset.strength > old.strength
+            {
+                self.onsets[i] = *onset;
+            }
+        }
+    }
     pub fn window(&self, start: usize, end: usize) -> Peak {
         if self.frames == 0 || start >= end || start >= self.frames {
             return Peak::default();

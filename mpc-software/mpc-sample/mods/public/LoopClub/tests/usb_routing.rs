@@ -103,3 +103,54 @@ fn route_editor_changes_only_selected_track_output() {
     });
     assert_eq!(e.tracks[1].output, OutputTarget::Main);
 }
+
+#[test]
+fn hardware_volume_scales_main_and_usb_without_rewriting_saved_master() {
+    for target in [OutputTarget::Main, OutputTarget::Usb, OutputTarget::Both] {
+        let mut e = engine(target);
+        e.tracks[0].kit.clips[0] = vec![Frame::mono(0.3); 8000];
+        e.command(Command::HardwareVolume(0.)).unwrap();
+        for _ in 0..6000 {
+            e.process(Frame::ZERO);
+        }
+        let quiet = e.process(Frame::ZERO);
+        assert!(quiet.peak() < 1e-6 && e.usb_output.peak() < 1e-6);
+        assert_eq!(e.master, 0.8);
+        e.command(Command::HardwareVolume(0.75)).unwrap();
+        e.command(Command::Note {
+            track: 0,
+            note: 0,
+            velocity: 127,
+            on: true,
+            source: 2,
+        })
+        .unwrap();
+        let (mut main, mut usb) = (0_f32, 0_f32);
+        for _ in 0..3000 {
+            main = main.max(e.process(Frame::ZERO).peak());
+            usb = usb.max(e.usb_output.peak());
+        }
+        match target {
+            OutputTarget::Main => assert!(main > 0.01 && usb == 0.),
+            OutputTarget::Usb => assert!(main == 0. && usb > 0.01),
+            OutputTarget::Both => assert!(main > 0.01 && usb > 0.01),
+        }
+    }
+}
+#[test]
+fn project_replacement_preserves_live_hardware_volume_and_selected_track() {
+    let p = std::env::temp_dir().join(format!("lc-live-volume-{}.lcproj", std::process::id()));
+    let mut saved = Engine::new(8000, 88., 8000);
+    saved.master = 0.6;
+    project::save(&saved, &p).unwrap();
+    let mut live = Engine::new(8000, 88., 8000);
+    live.hardware_volume = 0.2;
+    live.hardware_gain = 0.21;
+    live.selected = 7;
+    let restored = project::load_for_replacement(&p, 8000, 8000, &live).unwrap();
+    assert_eq!(restored.hardware_volume, 0.2);
+    assert_eq!(restored.hardware_gain, 0.21);
+    assert_eq!(restored.master, 0.6);
+    assert_eq!(restored.selected, 7);
+    std::fs::remove_file(p).unwrap();
+}

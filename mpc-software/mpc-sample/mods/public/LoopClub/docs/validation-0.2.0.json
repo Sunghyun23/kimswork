@@ -1,0 +1,31 @@
+{
+  "product": "Loop Club",
+  "version": "0.2.0",
+  "status": "local device candidate; public release unchanged",
+  "active_tracks": 8,
+  "project_backing_slots": 16,
+  "instrument_pads": 16,
+  "default_bpm": 100,
+  "sha256": "d304c944e42d17b46250d3dc892ad05cbbb0a492b5f2b93eb31865dac451f63a",
+  "validation": {
+    "debug_tests": 173,
+    "release_tests": 173,
+    "strict_clippy": "host and aarch64 PASS",
+    "arm64_build": "PASS",
+    "actual_device": "split UI, eight-track boundary/wrap, REC/count-in, sixteen note pads, drum generation/Undo, eight-track and sixteen-sound mixers, original project preservation, USB input audio",
+    "sd": "runtime and persisted library SHA match; prior boot retained",
+    "input_sources": "LINE/MIC/USBhardware readback, MICspeaker off and restore across app restart; USBaudio capture",
+    "smooth_chord": "recorded repeatedC7in nearby voicing without two-octave jump",
+    "sync": "LFO/PAN straight/dotted/triplet controls verified",
+    "ui_readiness": "actual custom screen required, stock loading overlay rejected",
+    "physical_data": "pending latest gating acceptance"
+  },
+  "limitations": [
+    "LINE/MICcalibrated signal listening not performed",
+    "hardware power-cycle not performed",
+    "first64MIDIevents displayed",
+    "16backing slots retained; no halved PCM allocation claim",
+    "USBstereo only"
+  ],
+  "publication": "not published"
+}

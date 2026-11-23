@@ -234,6 +234,7 @@ pub struct SliceVoice {
     pub release: bool,
     pub env: f32,
     pub age: u64,
+    pub sampler: Option<crate::audio::Voice>,
 }
 impl SliceVoice {
     pub fn sample(&mut self, audio: &[Frame], rate: u32) -> Frame {

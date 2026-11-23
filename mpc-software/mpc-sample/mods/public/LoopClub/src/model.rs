@@ -1,5 +1,8 @@
+pub const ACTIVE_TRACKS: usize = 16;
+// Sixteen backing slots remain in project files to preserve older sessions.
 use serde::{Deserialize, Serialize};
 pub const TRACKS: usize = 16;
+pub const DEFAULT_BPM: f64 = 100.;
 pub const SOUNDS: usize = 16;
 pub const PPQ: u64 = 1 << 24;
 #[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PartialEq)]
@@ -55,6 +58,7 @@ pub enum Page {
     Output,
     Sidechain,
     Texture,
+    FxSettings,
 }
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Status {
@@ -136,6 +140,8 @@ impl Mix {
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Synth {
+    pub lfo_sync: bool,
+    pub lfo_division: u8,
     pub lfo_rate: f32,
     pub lfo_shape: u8,
     pub lfo_pitch: f32,
@@ -168,6 +174,8 @@ pub struct Synth {
 impl Default for Synth {
     fn default() -> Self {
         Self {
+            lfo_sync: false,
+            lfo_division: 7,
             lfo_rate: 1.,
             lfo_shape: 0,
             lfo_pitch: 0.,
@@ -210,7 +218,8 @@ impl Synth {
         }
     }
     pub fn valid(&self) -> bool {
-        self.lfo_pan.is_finite()
+        usize::from(self.lfo_division) < SYNC_LABELS.len()
+            && self.lfo_pan.is_finite()
             && (0.0..=1.0).contains(&self.lfo_pan)
             && self.lfo_shape < 6
             && self.lfo_rate.is_finite()
@@ -330,6 +339,8 @@ impl Drum {
 }
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Event {
+    #[serde(default)]
+    pub slice: bool,
     pub tick: u64,
     pub note: u8,
     pub velocity: u8,
@@ -350,9 +361,38 @@ pub enum Effect {
     DubEcho,
     Crush,
     Wobble,
+    Tremolo,
+    AutoPan,
+    AutoFilter,
+}
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[serde(default)]
+pub struct FxMod {
+    pub sync: bool,
+    pub division: u8,
+    pub shape: u8,
+}
+impl Default for FxMod {
+    fn default() -> Self {
+        Self {
+            sync: false,
+            division: 7,
+            shape: 0,
+        }
+    }
+}
+impl Effect {
+    pub fn modulated(self) -> bool {
+        matches!(
+            self,
+            Self::Wobble | Self::Tremolo | Self::AutoPan | Self::AutoFilter
+        )
+    }
 }
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Fx {
+    #[serde(default)]
+    pub modulation: FxMod,
     pub effect: Effect,
     pub a: f32,
     pub b: f32,
@@ -361,6 +401,7 @@ pub struct Fx {
 impl Default for Fx {
     fn default() -> Self {
         Self {
+            modulation: FxMod::default(),
             effect: Effect::Off,
             a: 0.5,
             b: 0.5,
@@ -369,10 +410,28 @@ impl Default for Fx {
     }
 }
 impl Fx {
+    pub fn rate_hz(&self, bpm: f32) -> f32 {
+        if self.modulation.sync {
+            bpm / 60. / SYNC_BEATS[usize::from(self.modulation.division.min(15))]
+        } else if self.effect == Effect::Wobble {
+            0.2 + self.a * 4.
+        } else {
+            0.05 * 400_f32.powf(self.a)
+        }
+    }
+    pub fn rate_label(&self) -> String {
+        if self.modulation.sync {
+            SYNC_LABELS[usize::from(self.modulation.division.min(15))].into()
+        } else {
+            format!("{:.2} Hz", self.rate_hz(100.))
+        }
+    }
     pub fn valid(&self) -> bool {
-        [self.a, self.b, self.mix]
-            .iter()
-            .all(|x| x.is_finite() && (0.0..=1.0).contains(x))
+        self.modulation.division < 16
+            && self.modulation.shape < 6
+            && [self.a, self.b, self.mix]
+                .iter()
+                .all(|x| x.is_finite() && (0.0..=1.0).contains(x))
     }
 }
 pub const DRUM_NAMES: [&str; 16] = [
@@ -390,6 +449,9 @@ pub enum Error {
     TempoFrozen,
     WrongKind,
     InputUnavailable,
+    NoUndo,
+    NoRedo,
+    ResampleFirst,
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Pickup {
@@ -430,4 +492,43 @@ pub enum RecordMode {
     #[default]
     Replace,
     Overdub,
+}
+
+pub const SYNC_LABELS: [&str; 16] = [
+    "1 BAR", "1/2", "1/2D", "1/2T", "1/4", "1/4D", "1/4T", "1/8", "1/8D", "1/8T", "1/16", "1/16D",
+    "1/16T", "1/32", "1/32D", "1/32T",
+];
+pub const SYNC_BEATS: [f32; 16] = [
+    4.,
+    2.,
+    3.,
+    4. / 3.,
+    1.,
+    1.5,
+    2. / 3.,
+    0.5,
+    0.75,
+    1. / 3.,
+    0.25,
+    0.375,
+    1. / 6.,
+    0.125,
+    0.1875,
+    1. / 12.,
+];
+impl Synth {
+    pub fn effective_lfo_rate(&self, bpm: f32) -> f32 {
+        if self.lfo_sync {
+            bpm / (60. * SYNC_BEATS[usize::from(self.lfo_division).min(15)])
+        } else {
+            self.lfo_rate
+        }
+    }
+    pub fn lfo_rate_label(&self) -> String {
+        if self.lfo_sync {
+            SYNC_LABELS[usize::from(self.lfo_division).min(15)].into()
+        } else {
+            format!("{:.2} Hz", self.lfo_rate)
+        }
+    }
 }

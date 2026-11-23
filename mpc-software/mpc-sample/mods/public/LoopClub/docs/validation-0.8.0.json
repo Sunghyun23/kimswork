@@ -1,0 +1,51 @@
+{
+  "version": "0.8.0",
+  "date": "2026-11-23",
+  "scope": "local runtime/SD; no public release",
+  "native": {
+    "full_debug": 277,
+    "full_release": 277,
+    "supplemental_xpm_debug": 7,
+    "supplemental_xpm_release": 7,
+    "distinct_tests": 278,
+    "strict_host_all_targets_clippy": "PASS",
+    "strict_arm64_lib_clippy": "PASS",
+    "normal_and_isolated_arm64": "PASS",
+    "callback_xpm_allocation_and_free_count": 0
+  },
+  "device": {
+    "file_bank_and_pad_position": true,
+    "four_zone_usb_peaks": [
+      0.01722225733101368,
+      0.05166676640510559,
+      0.08611128479242325,
+      0.12055579572916031
+    ],
+    "project6_embedded_recall": true,
+    "missing_sample_keeps_kit": true,
+    "bank_back_and_h_position": true,
+    "native_lcbank_browser_preserved": true
+  },
+  "owner_16_tracks_restored": true,
+  "private_read_only_program_audit": {
+    "pads": 16,
+    "zones": 18,
+    "bytes": 9959312,
+    "payload_copied": false
+  },
+  "runtime_sha256": "2e4bfc6822ff80d984dbf0dbcb8959bc25f813325298807d6645ce0568611c71",
+  "limits": [
+    "Remote controller events and actual DRM captures, not physical controls acceptance",
+    "MPC native FX/filter envelopes/Warp not reproduced",
+    "32 Synth/Drum voices shared; four layered zones consume four voices",
+    "No new analog-input or power-cycle certification",
+    "Original commercial XPM/WAV not included in public assets"
+  ],
+  "sd": {
+    "persisted": true,
+    "runtime_matches_sd": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20,
+    "dependency_license_updated": true
+  }
+}

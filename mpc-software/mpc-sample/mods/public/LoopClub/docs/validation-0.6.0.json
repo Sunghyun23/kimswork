@@ -1,0 +1,54 @@
+{
+  "version": "0.6.0",
+  "date": "2026-11-23T02:49:13.055160+00:00",
+  "scope": "local MPC Sample candidate; no public release/site changes",
+  "normal_sha256": "4a7bbad8617cf54cf22534637bc08312f540b62da7d92cb75cb99424bcc3a5e6",
+  "native_tests": {
+    "debug": 225,
+    "release": 225
+  },
+  "strict_clippy": [
+    "host all-targets PASS",
+    "ARM64 lib PASS"
+  ],
+  "arm64_build": "normal and isolated QA PASS",
+  "device_checks": {
+    "plain_pad_plays_without_starting_capture": true,
+    "shift_pad_handoff_no_second_preroll_and_midi_follow": {
+      "usb_peak": 0.1559421867132187,
+      "synth_events": 6,
+      "drum_events": 4
+    },
+    "same_shift_pad_finishes_and_normal_pad_still_plays": true,
+    "count_in_retarget_keeps_original_start": true,
+    "latest_target_replaces_queue_and_stop_clears_it": true,
+    "undo_cancels_capture_and_queued_target": true,
+    "mute_mode_preserved": true
+  },
+  "owner_restore": "all 16 owner track slots compared after normal runtime restoration",
+  "sd_persistence": {
+    "runtime_and_boot_sha256_match": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20
+  },
+  "host_cases": [
+    "Audio/Synth/Drum handoff in all nine source combinations",
+    "normal pads play before/during/after recording",
+    "next target does not change performance ownership before boundary",
+    "only first recording uses count-in",
+    "count-in retarget preserves original start",
+    "OVERDUB retains full clip length during partial-bar handoff",
+    "latest pending target replaces earlier target",
+    "STOP and UNDO clear pending handoff",
+    "capacity/invalid-target rejection preserves active capture",
+    "capture handoff has zero allocations/deallocations in instrumented callback tests"
+  ],
+  "screenshots": "actual active DRM inspected; private build/qa-device/shift-record-0.6.0",
+  "limits": [
+    "Remote controller checks do not certify physical SHIFT/pad/REC delivery.",
+    "No new analog-input or hardware power-cycle certification.",
+    "Latest worst-case/long-duration CPU performance not certified.",
+    "Always-play applies to normal LOOP; MUTE and CHAIN retain their specialized pad roles.",
+    "Project format4 unchanged; recording history remains one volatile last clip edit."
+  ]
+}

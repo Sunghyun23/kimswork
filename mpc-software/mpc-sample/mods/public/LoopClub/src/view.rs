@@ -110,30 +110,61 @@ fn status(n: u64) -> &'static str {
 pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     p.rect(0, 0, 320, 240, BG);
     let heading = match ui.page {
-        Page::Loop => "Loop Club".to_owned(),
+        Page::Loop if ui.loop_edit => "Loop Club / EDIT".into(),
+        Page::Loop => format!(
+            "Loop Club / {}",
+            ["LOOP", "MUTE", "CHAIN"][usize::from(ui.loop_mode.min(2))]
+        ),
         Page::Play => format!(
             "{} {:02}",
             match s.track_kind(ui.selected) {
-                Kind::Synth => "SYNTH",
-                Kind::Drum => "DRUMS",
-                Kind::Audio => "AUDIO",
+                Kind::Synth => "SYNTH PLAY",
+                Kind::Drum => "DRUM PLAY",
+                Kind::Audio => "SAMPLE SOUND",
             },
             ui.selected + 1
         ),
-        Page::Grid => "NOTE GRID".to_owned(),
+        Page::Grid => if !s.note_view(ui.selected) {
+            "AUDIO WAVEFORM"
+        } else {
+            "NOTE GRID"
+        }
+        .to_owned(),
         Page::Mix => "TRACK MIX".to_owned(),
         Page::KitMix => "DRUM MIX".to_owned(),
-        Page::TrackFx => "TRACK FX".to_owned(),
-        Page::MasterFx => {
-            ["PERFORM FX", "BUS A FX", "BUS B FX"][ui.master_target.min(2) as usize].to_owned()
+        Page::FxSettings => "FX SETTINGS".to_owned(),
+        Page::TrackFx => format!(
+            "T{:02} / {}",
+            ui.selected + 1,
+            effect_name(crate::ui::FX_PADS[ui.fx_focus.min(crate::ui::FX_PADS.len() - 1)])
+        ),
+        Page::MasterFx => format!(
+            "{} / {}",
+            ["MASTER", "BUS A", "BUS B"][ui.master_target.min(2) as usize],
+            effect_name(crate::ui::FX_PADS[ui.fx_focus.min(crate::ui::FX_PADS.len() - 1)])
+        ),
+        Page::Setup => if ui.input_view {
+            "INPUT SOURCE"
+        } else {
+            "PROJECT"
         }
-        Page::Setup => "PROJECT".to_owned(),
+        .to_owned(),
         Page::Chop => "CHOP".to_owned(),
         Page::Source => "TRACK SOURCE".to_owned(),
         Page::Output => "OUTPUT".to_owned(),
         Page::DrumSound => "DRUM SOUND".to_owned(),
         Page::Sidechain => "SIDECHAIN".to_owned(),
-        Page::Texture => "MASTER FX".to_owned(),
+        Page::Texture => format!(
+            "MASTER / {}",
+            if ui.texture_slot < 5 {
+                crate::motion::TEXTURES[ui.texture_slot]
+            } else if ui.texture_slot == 5 {
+                "DUCK"
+            } else {
+                ui.quick_fx(s)
+                    .map_or("FX", |(_, _, fx)| effect_name(fx.effect))
+            }
+        ),
     };
     p.text(7, 2, 165, 23, 20., INK, &heading);
     p.text(
@@ -142,12 +173,27 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         133,
         19,
         15.,
-        GOLD,
-        &format!(
-            "{:.0} BPM {}",
-            s.bpm(),
-            if s.words[4] & 1 != 0 { "RUN" } else { "STOP" }
-        ),
+        if s.level(16) == 0. || f32::from_bits(s.words[1043] as u32) == 0. {
+            RED
+        } else {
+            GOLD
+        },
+        &if s.level(16) == 0. {
+            "MASTER MUTED".into()
+        } else if f32::from_bits(s.words[1043] as u32) == 0. {
+            "MAIN VOL MUTED".into()
+        } else if matches!(ui.page, Page::MasterFx | Page::Texture | Page::Sidechain)
+            || (ui.page == Page::FxSettings
+                && ui.fx_edit.is_some_and(|e| e.texture || e.target != 0))
+        {
+            format!("{:.0} BPM M{:.0}%", s.bpm(), s.level(16) * 100.)
+        } else {
+            format!(
+                "{:.0} BPM {}",
+                s.bpm(),
+                if s.words[4] & 1 != 0 { "RUN" } else { "STOP" }
+            )
+        },
     );
     let fx = [
         Page::Mix,
@@ -195,7 +241,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         tabs[1] = if ui.chord_modes[ui.selected] {
             "CHORD >"
         } else {
-            "NOTES >"
+            "CHROMATIC >"
         };
     }
     if matches!(ui.page, Page::Loop | Page::Play) {
@@ -205,8 +251,63 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             "OVERDUB"
         };
     }
+    if ui.page == Page::Play && s.track_kind(ui.selected) == Kind::Audio {
+        tabs[0] = match s.audio_target(ui.selected) {
+            crate::audio::RecordTarget::Input => "REC: INPUT >",
+            crate::audio::RecordTarget::Chromatic => "REC: CHROM >",
+            crate::audio::RecordTarget::Chop => "REC: CHOP >",
+        };
+        tabs[1] = "CHOP EDIT";
+    }
+    if ui.page == Page::Loop && ui.shift_view {
+        tabs = ["LOOP", "MUTE", "CHAIN"];
+    }
+    if ui.page == Page::Loop && ui.loop_edit {
+        tabs = ["COPY", "DELETE", "MOVE"];
+    }
+    if ui.page == Page::Play && s.track_kind(ui.selected) == Kind::Synth && ui.shift_view {
+        if ui.synth_page >= 6 {
+            tabs[2] = if s.synth().lfo_sync {
+                "SYNC ON"
+            } else {
+                "SYNC OFF"
+            };
+        }
+        if ui.chord_modes[ui.selected] {
+            tabs[1] = if s.chord().smooth {
+                "SMOOTH ON"
+            } else {
+                "SMOOTH OFF"
+            };
+        }
+    }
+    if ui.page == Page::Setup && ui.input_view {
+        tabs = ["BACK", "SELECT", "LOOP"];
+    }
+    if ui.page == Page::FxSettings {
+        let fx = ui.edited_fx(s);
+        tabs = [
+            "BACK",
+            if fx.effect.modulated() {
+                "SHAPE >"
+            } else {
+                "--"
+            },
+            if fx.effect.modulated() {
+                if fx.modulation.sync {
+                    "SYNC ON"
+                } else {
+                    "SYNC OFF"
+                }
+            } else {
+                "--"
+            },
+        ];
+    }
     for (i, title) in tabs.iter().enumerate() {
-        let active = if ui.page == Page::Loop {
+        let active = if ui.page == Page::Loop && ui.loop_edit {
+            i == ui.edit_operation as usize
+        } else if ui.page == Page::Loop {
             i == 2 && s.words[16 + ui.selected * 12] & (1 << 18) != 0
         } else if ui.page == Page::Source {
             false
@@ -242,7 +343,13 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             title,
         );
     }
+    if matches!(ui.page, Page::TrackFx | Page::MasterFx | Page::Texture) {
+        fx_quick_panel(ui, s, p);
+    }
+    let recording_view = s.words[9] == ui.selected as u64 + 1
+        && matches!(ui.page, Page::Play | Page::DrumSound | Page::Grid);
     match ui.page {
+        Page::FxSettings => fx_settings_panel(ui, s, p),
         Page::Sidechain => sidechain_panel(ui, s, p),
         Page::Texture => texture_panel(ui, s, p),
         Page::Output => output_panel(ui, s, p),
@@ -314,6 +421,38 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 );
             }
         }
+        Page::Setup if ui.input_view => {
+            for (i, name) in crate::input_hw::LABELS.iter().enumerate() {
+                let x = 5 + i as i32 * 105;
+                let active = crate::input_hw::selected() as usize == i;
+                p.rect(x, 75, 100, 88, if active { GOLD } else { PANEL });
+                p.text(
+                    x + 4,
+                    79,
+                    92,
+                    20,
+                    14.,
+                    if active { BG } else { DIM },
+                    &format!("PAD {}", i + 1),
+                );
+                p.text(x + 4, 105, 92, 24, 19., if active { BG } else { INK }, name);
+                p.text(
+                    x + 4,
+                    137,
+                    92,
+                    20,
+                    14.,
+                    if active { BG } else { GOLD },
+                    if active {
+                        "ACTIVE"
+                    } else if ui.input_choice == i {
+                        "SELECT >"
+                    } else {
+                        ""
+                    },
+                );
+            }
+        }
         Page::Source => {
             label(
                 p,
@@ -332,10 +471,47 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             .enumerate()
             {
                 let x = 5 + i as i32 * 105;
-                p.rect(x, 86, 100, 88, PANEL);
-                p.text(x + 4, 91, 92, 20, 14., GOLD, &format!("PAD {}", i + 1));
-                p.text(x + 4, 116, 92, 24, 19., INK, name);
-                p.text(x + 4, 145, 92, 18, 12., DIM, detail);
+                p.rect(x, 80, 100, 66, PANEL);
+                p.text(x + 4, 81, 92, 18, 14., GOLD, &format!("PAD {}", i + 1));
+                p.text(x + 4, 100, 92, 24, 19., INK, name);
+                p.text(x + 4, 126, 92, 18, 12., DIM, detail);
+            }
+            if s.track_kind(ui.selected) == Kind::Audio {
+                for (i, target) in [
+                    crate::audio::RecordTarget::Input,
+                    crate::audio::RecordTarget::Chromatic,
+                    crate::audio::RecordTarget::Chop,
+                ]
+                .into_iter()
+                .enumerate()
+                {
+                    let x = 5 + i as i32 * 105;
+                    let selected = s.audio_target(ui.selected) == target;
+                    p.rect(x, 152, 100, 44, if selected { GOLD } else { PANEL });
+                    p.text(
+                        x + 4,
+                        153,
+                        92,
+                        18,
+                        13.,
+                        if selected { BG } else { DIM },
+                        &format!("PAD {} / REC", i + 5),
+                    );
+                    p.text(
+                        x + 4,
+                        173,
+                        92,
+                        20,
+                        15.,
+                        if selected { BG } else { INK },
+                        target.name(),
+                    );
+                }
+            }
+            if s.track_kind(ui.selected) == Kind::Drum {
+                p.rect(5, 152, 310, 44, PANEL);
+                p.text(12, 153, 296, 18, 14., GOLD, "PAD 5 / IMPORT XPM");
+                p.text(12, 174, 296, 19, 15., INK, "CHOOSE FILE > BANK > 16 PADS");
             }
         }
         Page::DrumSound => {
@@ -392,128 +568,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 );
             }
         }
-        Page::Loop => {
-            let b = 16 + ui.selected * 12;
-            let recording = s.words[9] == ui.selected as u64 + 1;
-            let length = if recording && s.words[11] > s.words[10] {
-                s.words[11] - s.words[10]
-            } else {
-                s.words[b + 4]
-            };
-            let kind = match s.track_kind(ui.selected) {
-                Kind::Audio => "AUDIO",
-                Kind::Synth => "SYNTH",
-                Kind::Drum => "DRUM",
-            };
-            p.rect(5, 53, 310, 49, PANEL);
-            p.text(
-                10,
-                54,
-                200,
-                21,
-                17.,
-                GOLD,
-                &format!("{:02} {} / {}", ui.selected + 1, kind, status(s.words[b])),
-            );
-            p.text(
-                218,
-                54,
-                90,
-                21,
-                17.,
-                GOLD,
-                &if length > 0 {
-                    format!("{:.0} BAR", length as f64 / (4 * PPQ) as f64)
-                } else {
-                    "FREE".into()
-                },
-            );
-            let action = if s.words[9] != 0 && !recording {
-                format!("REC BUSY: TRACK {:02}", s.words[9])
-            } else if recording && s.words[8] < s.words[10] {
-                format!(
-                    "COUNT-IN: {} BEATS",
-                    (s.words[10] - s.words[8]).div_ceil(PPQ)
-                )
-            } else if recording && s.words[12] & 2 != 0 {
-                "REC ENDS AT LOOP END".into()
-            } else if recording && s.words[12] & 1 != 0 {
-                "LOOP REC / REC: FINISH".into()
-            } else if recording {
-                "REC: SET LOOP LENGTH".into()
-            } else {
-                "REC: START / SHIFT+PAD: PLAY".into()
-            };
-            p.text(
-                10,
-                77,
-                298,
-                20,
-                18.,
-                if recording { RED } else { INK },
-                if s.words[7] != 0 {
-                    view_error(s.words[7], ui.page)
-                } else if !ui.notice.is_empty() {
-                    ui.notice
-                } else {
-                    &action
-                },
-            );
-            let phase = if recording {
-                s.words[8].saturating_sub(s.words[10])
-            } else {
-                s.words[b + 5]
-            };
-            let span = length.max(4 * PPQ);
-            p.rect(10, 98, 298, 2, BG);
-            p.rect(
-                10,
-                98,
-                ((phase % span) as f64 / span as f64 * 298.) as i32,
-                2,
-                GOLD,
-            );
-            for pad in 0..16 {
-                let bb = 16 + pad * 12;
-                let x = 5 + (pad % 4) as i32 * 79;
-                let y = 108 + (3 - pad / 4) as i32 * 22;
-                let active = pad == ui.selected;
-                let rec = matches!((s.words[bb] >> 8) & 255, 2..=4);
-                p.rect(
-                    x,
-                    y,
-                    74,
-                    20,
-                    if rec {
-                        RED
-                    } else if active {
-                        GOLD
-                    } else {
-                        PANEL
-                    },
-                );
-                p.text(
-                    x + 3,
-                    y + 1,
-                    68,
-                    19,
-                    18.,
-                    if active || rec { BG } else { INK },
-                    &format!(
-                        "{:02} {}",
-                        pad + 1,
-                        match (s.words[bb] >> 8) & 255 {
-                            0 => "--",
-                            2 => "WAIT",
-                            3 | 4 => "REC",
-                            5 => "PLAY",
-                            6 => "STOP",
-                            _ => "ARM",
-                        }
-                    ),
-                );
-            }
-        }
+        Page::Loop => loop_workspace(ui, s, p),
         Page::Mix => {
             p.text(
                 7,
@@ -533,7 +588,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 GOLD,
                 &format!("{:.0}%", s.mix(ui.selected).level * 100.),
             );
-            for pad in 0..16 {
+            for pad in 0..ACTIVE_TRACKS {
                 let b = 16 + pad * 12;
                 let m = s.mix(pad);
                 let name = s.name(pad);
@@ -571,7 +626,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                     format!("{:02} {name}", pad + 1)
                 };
                 let _ = subtitle;
-                mixer_cell(p, pad, &title, pad == ui.selected, m.level, m.mute, m.solo);
+                track_mixer_cell(p, pad, &title, pad == ui.selected, m.level, m.mute, m.solo);
             }
         }
         Page::KitMix => {
@@ -601,128 +656,43 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         Page::Play if s.track_kind(ui.selected) == Kind::Synth && ui.synth_page > 0 => {
             synth_panel(ui, s, p);
         }
-        Page::Play => {
-            for pad in 0..16 {
-                let drum = s.track_kind(ui.selected) == Kind::Drum;
-                let title = if drum {
-                    DRUM_NAMES[pad].to_owned()
-                } else if ui.chord_modes[ui.selected] {
-                    s.chord().label(pad)
-                } else {
-                    const N: [&str; 12] = [
-                        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-                    ];
-                    format!("{}{}", N[pad % 12], 3 + pad / 12)
-                };
-                cell(
-                    p,
-                    pad,
-                    &title,
-                    &if drum && s.words[787] & (1 << pad) != 0 {
-                        format!("{:02} SAMPLE", pad + 1)
-                    } else if drum && s.words[481] & (1 << pad) != 0 {
-                        format!("{:02} AUTO", pad + 1)
-                    } else {
-                        format!("PAD {:02}", pad + 1)
-                    },
-                    ui.held[pad].is_some() || ui.held_chords[pad].is_some(),
-                    None,
-                    DIM,
-                )
-            }
-        }
+        Page::Play => loop_workspace(ui, s, p),
         Page::TrackFx | Page::MasterFx => {
-            let mut names = [
-                "FILTER",
-                "ISOLATE",
-                "REPEAT",
-                "REVERSE",
-                "TAPE STOP",
-                "DUB ECHO",
-                "CRUSH",
-                "WOBBLE",
-                "SLOT 1",
-                "SLOT 2",
-                "LATCH",
-                "FX OFF",
-                "DRY",
-                "BUS A",
-                "BUS B",
-                "SETUP",
-            ];
             let target = if ui.page == Page::MasterFx {
                 ui.master_target + 1
             } else {
                 0
             };
-            if ui.shift_view {
-                names[0] = "DRIVE";
-                names[1] = "COMP";
-                names[2] = "LOFI";
-                names[3] = "FILTER";
-            }
-            names[10] = if ui.latch { "TOGGLE" } else { "HOLD" };
-            if target >= 2 {
-                names[9] = "ONE SLOT";
-            }
-            if target != 0 {
-                names[12] = "MASTER";
-            }
             let count = if target >= 2 { 1 } else { 2 };
-            for (pad, name) in names.iter().enumerate() {
-                cell(
-                    p,
-                    pad,
-                    name,
-                    if pad < 8 {
-                        let effect = if ui.shift_view {
-                            [
-                                Effect::Drive,
-                                Effect::Compressor,
-                                Effect::LoFi,
-                                Effect::Filter,
-                                Effect::TapeStop,
-                                Effect::DubEcho,
-                                Effect::Crush,
-                                Effect::Wobble,
-                            ][pad]
+            for pad in 0..16 {
+                if let Some(&effect) = crate::ui::FX_PADS.get(pad) {
+                    let slot = (0..count).find(|slot| {
+                        s.fx(fx_base(target, *slot)).effect == effect
+                            && (target != 1 || !s.texture().master_bypass[*slot])
+                    });
+                    let state = slot.map_or(
+                        if ui.fx_refused == Some(pad)
+                            && !(0..count).any(|i| s.fx(fx_base(target, i)).effect == Effect::Off)
+                        {
+                            "FULL"
                         } else {
-                            crate::ui::PERFORMANCE[pad]
-                        };
-                        if (0..count).any(|i| s.fx(fx_base(target, i)).effect == effect) {
-                            "ON"
-                        } else if ui.latch {
                             "OFF"
-                        } else {
-                            "HOLD"
-                        }
-                    } else if pad == 8 || pad == 9 {
-                        effect_name(s.fx(fx_base(target, pad - 8)).effect)
-                    } else {
-                        ""
-                    },
-                    (pad == 8 + ui.fx_slot)
-                        || (pad == 10 && ui.latch)
-                        || (pad < 8 && {
-                            let effect = if ui.shift_view {
-                                [
-                                    Effect::Drive,
-                                    Effect::Compressor,
-                                    Effect::LoFi,
-                                    Effect::Filter,
-                                    Effect::TapeStop,
-                                    Effect::DubEcho,
-                                    Effect::Crush,
-                                    Effect::Wobble,
-                                ][pad]
+                        },
+                        |slot| {
+                            if ui.fx_is_held(target, slot) {
+                                "HOLD"
                             } else {
-                                crate::ui::PERFORMANCE[pad]
-                            };
-                            (0..count).any(|i| s.fx(fx_base(target, i)).effect == effect)
-                        }),
-                    None,
-                    DIM,
-                )
+                                "LATCH"
+                            }
+                        },
+                    );
+                    fx_cell(p, pad, effect_name(effect), state, slot.is_some());
+                    if ui.fx_focus == pad {
+                        fx_focus(p, pad);
+                    }
+                } else {
+                    fx_cell(p, pad, "", "", false);
+                }
             }
         }
         Page::Setup => {
@@ -757,73 +727,37 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             }
         }
         Page::Grid => {
-            let x = 27;
-            let y = 53;
-            let width = 286;
-            let height = 128;
-            for i in 0..=16 {
-                let xx = x + i * width / 16;
-                p.rect(xx, y, 1, height, if i % 4 == 0 { DIM } else { PANEL });
-            }
-            for row in 0..=8 {
-                p.rect(x, y + row * 16, width, 1, PANEL)
-            }
-            let start = ui.grid_bar * 4 * PPQ;
-            let drum = s.track_kind(ui.selected) == Kind::Drum;
-            let center = if drum {
-                ui.sound as i32
+            if !s.note_view(ui.selected) {
+                audio_timeline(s, p);
             } else {
-                (s.words[353 + ui.grid_event.min(63) * 2] & 255) as i32
-            };
-            for row in 0..8 {
-                let n = (center + 3 - row).clamp(0, 127);
-                label(p, 2, y + row * 16, 25, DIM, &n.to_string());
-            }
-            let count = s.words[16 + ui.selected * 12 + 6].min(64) as usize;
-            for i in 0..count {
-                let tick = s.words[352 + i * 2];
-                let flags = s.words[353 + i * 2];
-                if flags & (1 << 16) == 0 || tick < start || tick >= start + 4 * PPQ {
-                    continue;
-                }
-                let note = (flags & 255) as i32;
-                let row = center + 3 - note;
-                if !(0..8).contains(&row) {
-                    continue;
-                }
-                let off = ((i + 1)..count)
-                    .find(|j| {
-                        let f = s.words[353 + j * 2];
-                        f & (1 << 16) == 0 && f & 255 == flags & 255
-                    })
-                    .map_or(tick + PPQ / 4, |j| s.words[352 + j * 2]);
-                let xx = x + ((tick - start) as f64 / (4 * PPQ) as f64 * f64::from(width)) as i32;
-                let len = ((off.saturating_sub(tick)) as f64 / (4 * PPQ) as f64 * f64::from(width))
-                    as i32;
-                p.rect(
-                    xx,
-                    y + row * 16 + 3,
-                    len.max(2).min(x + width - xx),
-                    10,
-                    if i == ui.grid_event { GOLD } else { DIM },
-                );
-            }
-            let b = 16 + ui.selected * 12;
-            let playhead = if s.words[9] == ui.selected as u64 + 1 && s.words[8] >= s.words[10] {
-                Some(s.words[8] - s.words[10])
-            } else if (s.words[b] >> 8) & 255 == 5 && s.words[4] & 1 != 0 {
-                Some(s.words[b + 5])
-            } else {
-                None
-            };
-            if let Some(tick) = playhead
-                && tick >= start
-                && tick < start + 4 * PPQ
-            {
-                let xx = x + ((tick - start) as f64 / (4 * PPQ) as f64 * f64::from(width)) as i32;
-                p.rect(xx, y, 1, height, GOLD);
+                note_timeline(ui, s, p);
             }
         }
+    }
+    if ui.page == Page::Source {
+        let message = if s.words[7] != 0 {
+            view_error(s.words[7], ui.page)
+        } else if !ui.notice.is_empty() {
+            ui.notice
+        } else {
+            "B3: LOAD / SAMPLE: LOOP"
+        };
+        p.text(
+            6,
+            207,
+            308,
+            22,
+            14.,
+            if s.words[7] != 0 { RED } else { DIM },
+            message,
+        );
+        return;
+    }
+    if matches!(
+        ui.page,
+        Page::TrackFx | Page::MasterFx | Page::Texture | Page::FxSettings
+    ) {
+        return;
     }
     let title = match ui.page {
         Page::Loop => "LOOP",
@@ -840,6 +774,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         Page::DrumSound => "LAYERS",
         Page::Sidechain => "SIDECHAIN",
         Page::Texture => "TEXTURE",
+        Page::FxSettings => "FX SETTINGS",
     };
     let fx_target = if ui.page == Page::MasterFx {
         ui.master_target + 1
@@ -848,6 +783,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     };
     let current_fx = s.fx(fx_base(fx_target, ui.fx_slot));
     let controls = match ui.page {
+        Page::Loop if ui.loop_mode == 2 => "K1 REPEATS  K2 REPEAT   K3 --",
         Page::Sidechain => "K1 DUCK     K2 RELEASE  K3 SENSE",
         Page::Texture => match ui.texture_slot {
             0 => "K1 GRAIN    K2 TONE     K3 MIX",
@@ -875,8 +811,9 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         Page::Chop => "K1 START    K2 END      K3 LEVEL",
         Page::Play if s.track_kind(ui.selected) == Kind::Synth && ui.synth_page > 0 => {
             match ui.synth_page {
+                7 if ui.shift_view => "K1 PAN     K2 VOL DEPTH K3 RATE",
                 7 => "K1 PAN     K2 PAN DEPTH K3 RATE",
-                6 if ui.shift_view => "K1 SHAPE   K2 PITCH    K3 VOLUME",
+                6 if ui.shift_view => "K1 SHAPE   K2 PITCH    K3 FILTER",
                 6 => "K1 RATE    K2 PITCH    K3 FILTER",
                 1 | 2 if ui.shift_view => "K1 WAVE    K2 FINE      K3 LEVEL",
                 1 | 2 => "K1 WAVE    K2 TUNE      K3 LEVEL",
@@ -894,10 +831,15 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             }
         }
 
+        Page::Grid if !s.note_view(ui.selected) => "AUDIO WAVEFORM / SOUND: CHOP",
         Page::Grid => "K1 PITCH   K2 LENGTH   K3 VELOCITY",
         Page::Play if s.track_kind(ui.selected) == Kind::Drum => "K1 TUNE    K2 DECAY     K3 LEVEL",
+        Page::Play if s.track_kind(ui.selected) == Kind::Audio => {
+            "K1 ROOT     K2 TUNE      K3 WARP"
+        }
         Page::Play if ui.shift_view => "K1 WAVE    K2 DETUNE    K3 OCTAVE",
         Page::Play => "K1 CUTOFF   K2 ATTACK   K3 RELEASE",
+        Page::Setup if ui.input_view => "INPUT SOURCE / DATA: SELECT",
         Page::Setup => "K1 BPM    K2 COUNT-IN    ERASE+CLEAR",
         Page::TrackFx | Page::MasterFx => fx_controls(current_fx.effect),
         _ => "K1 PAN     K2 DELAY     K3 REVERB",
@@ -927,6 +869,21 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         }
     }
     let values: [String; 3] = match ui.page {
+        Page::Loop if ui.loop_mode == 2 => {
+            let c = s.chain_config();
+            [
+                if c.len > 0 {
+                    format!(
+                        "{}x",
+                        c.steps[ui.chain_step.min(usize::from(c.len) - 1)].repeats
+                    )
+                } else {
+                    "--".into()
+                },
+                if c.repeat { "ON".into() } else { "OFF".into() },
+                String::new(),
+            ]
+        }
         Page::Sidechain => {
             let c = s.sidechain();
             [
@@ -1032,21 +989,24 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             match ui.synth_page {
                 7 => [
                     format!("{:+.0}", s.mix(ui.selected).pan * 100.),
-                    format!("{:.0}%", t.lfo_pan * 100.),
-                    format!("{:.2} Hz", t.lfo_rate),
+                    format!(
+                        "{:.0}%",
+                        if ui.shift_view {
+                            t.lfo_volume
+                        } else {
+                            t.lfo_pan
+                        } * 100.
+                    ),
+                    t.lfo_rate_label(),
                 ],
                 6 => [
                     if ui.shift_view {
                         crate::synth::LFO_SHAPES[usize::from(t.lfo_shape)].into()
                     } else {
-                        format!("{:.2} Hz", t.lfo_rate)
+                        t.lfo_rate_label()
                     },
                     format!("{:.0} ct", t.lfo_pitch),
-                    if ui.shift_view {
-                        format!("{:.0}%", t.lfo_volume * 100.)
-                    } else {
-                        format!("{:.2} oct", t.lfo_filter)
-                    },
+                    format!("{:.2} oct", t.lfo_filter),
                 ],
                 1 | 2 => {
                     let second = ui.synth_page == 2;
@@ -1117,6 +1077,14 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 format!("{:.0}%", s.drum(ui.sound).level * 100.),
             ]
         }
+        Page::Play if s.track_kind(ui.selected) == Kind::Audio => {
+            let a = s.audio_settings();
+            [
+                format!("MIDI {}", a.root),
+                format!("{:+.0} st", a.tune),
+                if a.warp { "ON".into() } else { "OFF".into() },
+            ]
+        }
         Page::Play if ui.shift_view => {
             let t = s.synth();
             [
@@ -1145,6 +1113,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 format!("{:.0}%", m.room * 100.),
             ]
         }
+        Page::Setup if ui.input_view => [String::new(), String::new(), String::new()],
         Page::Setup => [
             format!("{:.0}", s.bpm()),
             format!("{} bar", (s.words[4] >> 8) & 255),
@@ -1155,7 +1124,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     for (i, value) in values.iter().enumerate() {
         p.text(9 + i as i32 * 105, 217, 92, 21, 19., GOLD, value);
     }
-    let target = if ui.page == Page::MasterFx {
+    let target = if matches!(ui.page, Page::MasterFx | Page::Texture | Page::Sidechain) {
         "MASTER"
     } else if ui.page == Page::KitMix {
         "SOUND"
@@ -1165,11 +1134,13 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     let level = if ui.page == Page::KitMix {
         s.drum(ui.sound).level
     } else {
-        s.level(if ui.page == Page::MasterFx {
-            16
-        } else {
-            ui.selected
-        })
+        s.level(
+            if matches!(ui.page, Page::MasterFx | Page::Texture | Page::Sidechain) {
+                16
+            } else {
+                ui.selected
+            },
+        )
     };
     let err = view_error(s.words[7], ui.page);
     let footer = if ui.page == Page::Texture && err.is_empty() {
@@ -1179,9 +1150,9 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             "SHIFT+B2: {} / DATA PUSH: FX",
             if s.sidechain().sync { "SYNC" } else { "FREE" }
         )
-    } else if ui.page == Page::DrumSound && err.is_empty() {
+    } else if ui.page == Page::DrumSound && !recording_view && err.is_empty() {
         if ui.notice.is_empty() {
-            "DATA: SAMPLE / +/-: DETAIL".into()
+            "SHIFT+PAD: RANDOM / DATA: SAMPLE".into()
         } else {
             ui.notice.into()
         }
@@ -1206,7 +1177,12 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         )
     } else if !err.is_empty() {
         err.to_owned()
-    } else if s.words[9] != 0 && matches!(ui.page, Page::Loop | Page::Play) {
+    } else if s.words[9] != 0
+        && matches!(
+            ui.page,
+            Page::Loop | Page::Play | Page::DrumSound | Page::Grid
+        )
+    {
         let track = (s.words[9] - 1) as usize;
         let active_mode = (s.words[12] >> 2) & 1;
         let pending_mode = (s.words[16 + track * 12] >> 18) & 1;
@@ -1223,11 +1199,41 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         }
     } else if ui.page == Page::Play
         && s.track_kind(ui.selected) == Kind::Synth
+        && ui.synth_page >= 6
+    {
+        format!(
+            "SHIFT+B3: SYNC {}",
+            if s.synth().lfo_sync { "ON" } else { "OFF" }
+        )
+    } else if ui.page == Page::Play
+        && s.track_kind(ui.selected) == Kind::Synth
+        && ui.chord_modes[ui.selected]
+    {
+        format!(
+            "SHIFT+B2: SMOOTH {}",
+            if s.chord().smooth { "ON" } else { "OFF" }
+        )
+    } else if ui.page == Page::Play
+        && s.track_kind(ui.selected) == Kind::Synth
         && ui.synth_page == 0
     {
         "+/-: SYNTH EDIT / PADS: PLAY".to_owned()
     } else if !ui.notice.is_empty() {
         ui.notice.to_owned()
+    } else if ui.page == Page::Setup && ui.input_view {
+        if crate::input_hw::pending() {
+            "SWITCHING INPUT...".into()
+        } else {
+            match crate::input_hw::result() {
+                1 => "INPUT READY / DATA: SELECT",
+                2 => "INPUT SWITCH FAILED",
+                3 => "INPUT ACTIVE / SAVE FAILED",
+                _ => "PAD 1 LINE / 2 MIC / 3 USB",
+            }
+            .into()
+        }
+    } else if ui.page == Page::Setup {
+        "K1 TEMPO / SHIFT+SAMPLE: INPUT".into()
     } else if ui.page == Page::Output {
         "USB STEREO / MASTER FX ON BOTH".into()
     } else if ui.page == Page::Mix {
@@ -1241,9 +1247,13 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             "{} / DATA: TEXTURE > SIDECHAIN",
             ["MASTER", "BUS A", "BUS B"][ui.master_target.min(2) as usize]
         )
+    } else if ui.page == Page::Grid && !s.note_view(ui.selected) {
+        format!("AUDIO {:02} / SAMPLE: BACK", ui.selected + 1)
     } else if ui.page == Page::Grid {
         format!("BAR {} / DATA: NOTE / +/-: BAR", ui.grid_bar + 1)
-    } else if ui.page == Page::Play && s.track_kind(ui.selected) == Kind::Drum {
+    } else if (ui.page == Page::Play || (ui.page == Page::Loop && ui.loop_mode == 0))
+        && s.track_kind(ui.selected) == Kind::Drum
+    {
         let rhythm = s.words[509].min(23) as usize;
         format!(
             "{:02} {} / {} {}",
@@ -1264,7 +1274,10 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             if ui.pickup.picked { "" } else { "PICKUP" }
         )
     };
-    if ui.page != Page::Loop {
+    if ui.page != Page::Loop
+        && !(ui.page == Page::Play
+            && (s.track_kind(ui.selected) != Kind::Synth || ui.synth_page == 0))
+    {
         p.text(
             6,
             if matches!(ui.page, Page::Mix | Page::KitMix) {
@@ -1289,7 +1302,9 @@ fn fx_controls(effect: Effect) -> &'static str {
         Effect::Reverse => "K1 LENGTH   K2 TONE     K3 MIX",
         Effect::TapeStop => "K1 TIME     K2 TONE     K3 MIX",
         Effect::DubEcho => "K1 DIV      K2 FEEDBACK K3 MIX",
-        Effect::Wobble => "K1 RATE     K2 DEPTH    K3 MIX",
+        Effect::Wobble | Effect::Tremolo | Effect::AutoPan | Effect::AutoFilter => {
+            "K1 RATE     K2 DEPTH    K3 MIX"
+        }
         Effect::LoFi | Effect::Crush => "K1 RATE     K2 BITS     K3 MIX",
         Effect::Isolator => "K1 LOW      K2 HIGH     K3 MIX",
         Effect::Drive => "K1 DRIVE    K2 TONE     K3 MIX",
@@ -1314,7 +1329,7 @@ fn synth_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         295,
         GOLD,
         &format!(
-            "-  {}  {}/8  +",
+            "-  {}  {}/{}  +",
             [
                 "PLAY",
                 "OSC 1",
@@ -1323,9 +1338,10 @@ fn synth_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 "AMP ADSR",
                 "FILTER ADSR",
                 "LFO",
-                "PAN / LFO"
+                "LEGACY MOD"
             ][usize::from(page)],
-            page + 1
+            page + 1,
+            crate::ui::synth_page_count(s)
         ),
     );
     if page == 7 {
@@ -1348,7 +1364,16 @@ fn synth_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             22,
             18.,
             INK,
-            &format!("LFO {:.0}%  /  {:.2} Hz", t.lfo_pan * 100., t.lfo_rate),
+            &format!("LFO {:.0}% / {}", t.lfo_pan * 100., t.lfo_rate_label()),
+        );
+        p.text(
+            16,
+            162,
+            280,
+            18,
+            15.,
+            DIM,
+            &format!("LEGACY VOLUME {:.0}%", t.lfo_volume * 100.),
         );
     } else if page == 6 {
         for (i, (name, value)) in [
@@ -1356,10 +1381,9 @@ fn synth_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 "SHAPE",
                 crate::synth::LFO_SHAPES[usize::from(t.lfo_shape)].to_owned(),
             ),
-            ("RATE", format!("{:.2} Hz", t.lfo_rate)),
+            ("RATE", t.lfo_rate_label()),
             ("PITCH DEPTH", format!("{:.0} ct", t.lfo_pitch)),
             ("FILTER DEPTH", format!("{:.2} oct", t.lfo_filter)),
-            ("VOLUME DEPTH", format!("{:.0}%", t.lfo_volume * 100.)),
         ]
         .iter()
         .enumerate()
@@ -1454,9 +1478,12 @@ fn view_error(code: u64, page: Page) -> &'static str {
         3 => "RECORDER BUSY",
         4 => "TRACK NOT EMPTY",
         5 => "NO CONTENT",
+        10 => "NOTHING TO UNDO",
+        11 => "NOTHING TO REDO",
+        12 => "RESAMPLE BEFORE INPUT OVERDUB",
         6 if page == Page::Chop => "MAX 16 SLICES - USE A LONGER GRID",
         6 => "CAPACITY LIMIT",
-        7 => "CLEAR LOOPS TO CHANGE BPM",
+        7 => "STOP / AUDIO LOOPS LOCK BPM",
         8 => "CHOOSE SYNTH OR DRUM",
         _ => "NO INPUT - CHECK SOURCE",
     }
@@ -1555,7 +1582,7 @@ fn sidechain_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         ][usize::from(c.mode)],
     );
     if c.mode == 1 {
-        for i in 0..16 {
+        for i in 0..ACTIVE_TRACKS {
             let x = 8 + (i % 8) as i32 * 38;
             let y = 108 + (i / 8) as i32 * 27;
             let on = c.mask & (1 << i) != 0 && i != usize::from(c.source);
@@ -1584,60 +1611,747 @@ fn sidechain_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     );
     let _ = ui;
 }
+fn fx_quick_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
+    let (names, values) = if ui.page == Page::Texture && ui.texture_slot < 5 {
+        let slot = ui.texture_slot;
+        let v = s.texture().params[slot];
+        let names = [
+            ["GRAIN", "TONE", "MIX"],
+            ["DRIVE", "TONE", "MIX"],
+            ["SQUEEZE", "RELEASE", "MIX"],
+            ["RATE", "DEPTH", "MIX"],
+            ["DIVISION", "FEEDBACK", "MIX"],
+        ][slot];
+        let mut values = v.map(|x| format!("{:.0}%", x * 100.));
+        if slot == 2 {
+            values[1] = format!("{:.0}ms", (0.04 + v[1] * 0.8) * 1000.);
+        }
+        if slot == 3 {
+            values[0] = if s.texture().modulation[3].sync {
+                SYNC_LABELS[usize::from(s.texture().modulation[3].division.min(15))].into()
+            } else {
+                format!("{:.2}Hz", 0.2 + v[0] * 4.)
+            };
+        }
+        if slot == 4 {
+            values[0] = ["1/16", "1/8", "1/8D", "1/4"][(v[0] * 3.99) as usize].into();
+        }
+        (names, values)
+    } else if ui.page == Page::Texture && ui.texture_slot == 5 {
+        let c = s.sidechain();
+        (
+            ["DUCK", "RELEASE", "SENSE"],
+            [
+                format!("{:.0}%", c.depth * 100.),
+                format!("{:.0}ms", c.release_seconds(s.bpm() as f32) * 1000.),
+                format!("{:.0}%", (1. - (c.threshold - 0.01) / 0.49) * 100.),
+            ],
+        )
+    } else if let Some((_, _, fx)) = ui.quick_fx(s) {
+        let names = match fx.effect {
+            Effect::Filter => ["CUTOFF", "RESO", "MIX"],
+            Effect::Isolator => ["LOW", "HIGH", "MIX"],
+            Effect::Repeat => ["DIVISION", "SMOOTH", "MIX"],
+            Effect::Reverse | Effect::TapeStop => ["TIME", "TONE", "MIX"],
+            Effect::DubEcho => ["DIVISION", "FEEDBACK", "MIX"],
+            Effect::LoFi | Effect::Crush => ["RATE", "BITS", "MIX"],
+            Effect::Drive => ["DRIVE", "TONE", "MIX"],
+            Effect::Compressor => ["THRESHOLD", "RATIO", "MIX"],
+            _ => ["RATE", "DEPTH", "MIX"],
+        };
+        let mut values = [
+            format!("{:.0}%", fx.a * 100.),
+            format!("{:.0}%", fx.b * 100.),
+            format!("{:.0}%", fx.mix * 100.),
+        ];
+        if fx.effect.modulated() {
+            values[0] = fx.rate_label();
+        }
+        if fx.effect == Effect::Repeat {
+            values[0] = ["1/32", "1/16", "1/8", "1/4"][(fx.a * 3.99) as usize].into();
+        }
+        if fx.effect == Effect::DubEcho {
+            values[0] = ["1/16", "1/8", "1/8D", "1/4"][(fx.a * 3.99) as usize].into();
+        }
+        if fx.effect == Effect::Reverse {
+            values[0] = format!("{:.0}ms", (0.08 + fx.a * 0.8) * 1000.);
+        }
+        if fx.effect == Effect::TapeStop {
+            values[0] = format!("{:.0}ms", (0.15 + fx.a * 2.) * 1000.);
+        }
+        (names, values)
+    } else {
+        (
+            ["RELEASE FX", "NO SLOT", "--"],
+            ["--".into(), "--".into(), "--".into()],
+        )
+    };
+    for i in 0..3 {
+        let x = 5 + i as i32 * 105;
+        p.rect(x, 53, 100, 43, PANEL);
+        p.text(
+            x + 3,
+            54,
+            94,
+            17,
+            14.,
+            DIM,
+            &format!("K{} {}", i + 1, names[i]),
+        );
+        p.text(x + 3, 73, 94, 21, 18., GOLD, &values[i]);
+    }
+}
+fn fx_cell(p: &mut impl Painter, pad: usize, title: &str, state: &str, on: bool) {
+    let x = 5 + (pad % 4) as i32 * 79;
+    let y = 103 + (3 - pad / 4) as i32 * 34;
+    p.rect(x, y, 74, 32, if on { GOLD } else { PANEL });
+    if title.is_empty() {
+        return;
+    }
+    p.text(x + 3, y + 1, 68, 17, 15., if on { BG } else { INK }, title);
+    p.text(x + 3, y + 17, 68, 14, 14., if on { BG } else { DIM }, state);
+}
+fn fx_focus(p: &mut impl Painter, pad: usize) {
+    let x = 5 + (pad % 4) as i32 * 79;
+    let y = 103 + (3 - pad / 4) as i32 * 34;
+    p.rect(x + 3, y + 1, 68, 1, INK);
+}
+fn fx_settings_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
+    let fx = ui.edited_fx(s);
+    let title = if fx.effect == Effect::AutoFilter {
+        "AUTO FILTER"
+    } else {
+        effect_name(fx.effect)
+    };
+    p.text(8, 55, 205, 25, 21., GOLD, title);
+    if let Some(edit) = ui.fx_edit {
+        p.text(
+            220,
+            55,
+            92,
+            25,
+            17.,
+            INK,
+            &if edit.texture || edit.target != 0 {
+                "MASTER".into()
+            } else {
+                format!("TRACK {:02}", edit.track + 1)
+            },
+        );
+    }
+    let names = if let Some(edit) = ui.fx_edit {
+        if edit.texture {
+            match edit.slot {
+                0 => ["GRAIN", "TONE", "MIX"],
+                1 => ["DRIVE", "TONE", "MIX"],
+                2 => ["AMOUNT", "RELEASE", "MIX"],
+                3 => ["RATE", "DEPTH", "MIX"],
+                _ => ["DIVISION", "FEEDBACK", "MIX"],
+            }
+        } else {
+            match fx.effect {
+                Effect::Filter => ["CUTOFF", "RESONANCE", "MIX"],
+                Effect::Compressor => ["THRESHOLD", "RATIO", "MIX"],
+                Effect::Repeat => ["DIVISION", "SMOOTH", "MIX"],
+                Effect::Reverse | Effect::TapeStop => ["LENGTH", "TONE", "MIX"],
+                Effect::DubEcho => ["DIVISION", "FEEDBACK", "MIX"],
+                Effect::LoFi | Effect::Crush => ["RATE", "BITS", "MIX"],
+                Effect::Isolator => ["LOW", "HIGH", "MIX"],
+                Effect::Drive => ["DRIVE", "TONE", "MIX"],
+                _ => ["RATE", "DEPTH", "MIX"],
+            }
+        }
+    } else {
+        ["CONTROL A", "CONTROL B", "MIX"]
+    };
+    let shape = crate::synth::LFO_SHAPES[usize::from(fx.modulation.shape.min(5))];
+    let rows = if fx.effect.modulated() {
+        [
+            ("RATE", fx.rate_label()),
+            ("DEPTH", format!("{:.0}%", fx.b * 100.)),
+            ("SHAPE", shape.into()),
+            ("MIX", format!("{:.0}%", fx.mix * 100.)),
+        ]
+    } else {
+        [
+            (names[0], format!("{:.0}%", fx.a * 100.)),
+            (names[1], format!("{:.0}%", fx.b * 100.)),
+            ("MIX", format!("{:.0}%", fx.mix * 100.)),
+            ("", String::new()),
+        ]
+    };
+    for (i, (name, value)) in rows.iter().enumerate() {
+        let y = 86 + i as i32 * 24;
+        p.text(10, y, 119, 22, 17., DIM, name);
+        p.text(134, y, 177, 22, 19., INK, value);
+    }
+    let labels = names.map(str::to_owned);
+    let values = if fx.effect.modulated() {
+        [
+            fx.rate_label(),
+            format!("{:.0}%", fx.b * 100.),
+            format!("{:.0}%", fx.mix * 100.),
+        ]
+    } else {
+        [
+            format!("{:.0}%", fx.a * 100.),
+            format!("{:.0}%", fx.b * 100.),
+            format!("{:.0}%", fx.mix * 100.),
+        ]
+    };
+    for i in 0..3 {
+        let x = 5 + i as i32 * 105;
+        p.rect(x, 200, 100, 39, PANEL);
+        p.text(
+            x + 4,
+            201,
+            92,
+            17,
+            14.,
+            INK,
+            &format!("K{} {}", i + 1, labels[i]),
+        );
+        p.text(x + 4, 219, 92, 19, 17., GOLD, &values[i]);
+    }
+    p.text(8, 182, 303, 16, 14., DIM, "DATA: BACK / B2 SHAPE / B3 SYNC");
+}
 fn texture_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     let t = s.texture();
     for pad in 0..16 {
-        let title: String;
-        let mut sub = String::new();
-        let mut on = false;
-        if pad < 5 {
-            title = crate::motion::TEXTURES[pad].into();
-            on = t.enabled[pad];
-            sub = if on { "ON" } else { "OFF" }.into();
-        } else if pad == 5 {
-            title = "DUCK".into();
-            on = s.sidechain().enabled && s.sidechain().depth > 0.;
-            sub = if on { "ON" } else { "OFF" }.into();
-        } else if pad == 6 || pad == 7 {
-            let slot = pad - 6;
-            let fx = s.fx(fx_base(1, slot));
-            title = effect_name(if fx.effect == Effect::Off {
-                if slot == 0 {
-                    Effect::Filter
-                } else {
-                    Effect::Repeat
+        let (name, on) = match pad {
+            0..=4 => (crate::motion::TEXTURES[pad], t.enabled[pad]),
+            5 => ("DUCK", s.sidechain().enabled && s.sidechain().depth > 0.),
+            6 | 7 => {
+                let slot = pad - 6;
+                let fx = s.fx(fx_base(1, slot));
+                if matches!(
+                    fx.effect,
+                    Effect::Tremolo | Effect::AutoPan | Effect::AutoFilter
+                ) {
+                    fx_cell(p, pad, "", "", false);
+                    continue;
                 }
-            } else {
-                fx.effect
-            })
-            .into();
-            on = fx.effect != Effect::Off && !t.master_bypass[slot];
-            sub = format!("FX{} {}", slot + 1, if on { "ON" } else { "OFF" });
+                (
+                    effect_name(if fx.effect == Effect::Off {
+                        if slot == 0 {
+                            Effect::Filter
+                        } else {
+                            Effect::Repeat
+                        }
+                    } else {
+                        fx.effect
+                    }),
+                    fx.effect != Effect::Off && !t.master_bypass[slot],
+                )
+            }
+            8..=10 => {
+                let effect = [Effect::Tremolo, Effect::AutoPan, Effect::AutoFilter][pad - 8];
+                let slot =
+                    (0..2).find(|i| s.fx(fx_base(1, *i)).effect == effect && !t.master_bypass[*i]);
+                let on = slot.is_some();
+                let state = slot.map_or(
+                    "OFF",
+                    |i| if ui.fx_is_held(1, i) { "HOLD" } else { "LATCH" },
+                );
+                fx_cell(p, pad, effect_name(effect), state, on);
+                if ui.texture_slot == pad {
+                    fx_focus(p, pad);
+                }
+                continue;
+            }
+            _ => ("", false),
+        };
+        let state = if !on {
+            "OFF"
+        } else if ui.texture_held[pad] {
+            "HOLD"
         } else {
-            title = match pad {
-                8 => "PERF EDIT",
-                9 => "SC SET",
-                10 => "BUS A",
-                11 => "BUS B",
-                12 => "ALL OFF",
+            "LATCH"
+        };
+        fx_cell(p, pad, name, if name.is_empty() { "" } else { state }, on);
+        if ui.texture_slot == pad && !name.is_empty() {
+            fx_focus(p, pad);
+        }
+    }
+}
+
+fn note_timeline(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
+    let x = 27;
+    let y = 53;
+    let width = 286;
+    let height = 128;
+    for i in 0..=16 {
+        let xx = x + i * width / 16;
+        p.rect(xx, y, 1, height, if i % 4 == 0 { DIM } else { PANEL });
+    }
+    let recording = s.words[9] == ui.selected as u64 + 1;
+    let elapsed = s.words[8].saturating_sub(s.words[10]);
+    let start = if recording {
+        elapsed / (4 * PPQ) * 4 * PPQ
+    } else if matches!(ui.page, Page::Loop | Page::Play) && s.words[4] & 1 != 0 {
+        s.words[16 + ui.selected * 12 + 5] / (4 * PPQ) * (4 * PPQ)
+    } else {
+        ui.grid_bar * 4 * PPQ
+    };
+    let count = s.words[16 + ui.selected * 12 + 6].min(64) as usize;
+    let notes = (0..count).filter_map(|i| {
+        let tick = s.words[352 + i * 2];
+        let flags = s.words[353 + i * 2];
+        (flags & (1 << 16) != 0 && tick >= start && tick < start + 4 * PPQ)
+            .then_some((flags & 255) as i32)
+    });
+    let fallback = if s.track_kind(ui.selected) == Kind::Drum {
+        0
+    } else {
+        48
+    };
+    let mut low = notes.clone().min().unwrap_or(fallback);
+    let mut high = notes.max().unwrap_or(low).max(low + 7).min(127);
+    for note in 0..128 {
+        if s.words[1044 + note / 64] & (1u64 << (note % 64)) != 0 {
+            low = low.min(note as i32);
+            high = high.max(note as i32);
+        }
+    }
+
+    let rows = (high - low + 1).max(1);
+    let lane = |row: i32| y + row * height / rows;
+    for row in 0..=rows {
+        p.rect(x, lane(row), width, 1, PANEL);
+    }
+    for row in (0..rows).step_by(((rows + 7) / 8) as usize) {
+        if lane(row) + 17 <= y + height {
+            label(p, 2, lane(row), 25, DIM, &(high - row).to_string());
+        }
+    }
+    for i in 0..count {
+        let tick = s.words[352 + i * 2];
+        let flags = s.words[353 + i * 2];
+        if flags & (1 << 16) == 0 || tick < start || tick >= start + 4 * PPQ {
+            continue;
+        }
+        let note = (flags & 255) as i32;
+        let row = high - note;
+        if !(0..rows).contains(&row) {
+            continue;
+        }
+        let off = ((i + 1)..count)
+            .find(|j| {
+                let f = s.words[353 + j * 2];
+                f & (1 << 16) == 0 && f & 255 == flags & 255 && f & (1 << 24) == flags & (1 << 24)
+            })
+            .map_or(tick + PPQ / 4, |j| s.words[352 + j * 2]);
+        let xx = x + ((tick - start) as f64 / (4 * PPQ) as f64 * f64::from(width)) as i32;
+        let len = ((off.saturating_sub(tick)) as f64 / (4 * PPQ) as f64 * f64::from(width)) as i32;
+        p.rect(
+            xx,
+            lane(row) + 1,
+            len.max(2).min(x + width - xx),
+            (lane(row + 1) - lane(row) - 1).max(1),
+            if i == ui.grid_event { GOLD } else { DIM },
+        );
+    }
+    for note in 0..128 {
+        if s.words[1044 + note / 64] & (1u64 << (note % 64)) != 0 {
+            let row = high - note as i32;
+            if (0..rows).contains(&row) {
+                p.rect(
+                    x + width - 6,
+                    lane(row) + 1,
+                    5,
+                    (lane(row + 1) - lane(row) - 1).max(1),
+                    RED,
+                );
+            }
+        }
+    }
+    let b = 16 + ui.selected * 12;
+    let playhead = if s.words[9] == ui.selected as u64 + 1 && s.words[8] >= s.words[10] {
+        Some(s.words[8] - s.words[10])
+    } else if (s.words[b] >> 8) & 255 == 5 && s.words[4] & 1 != 0 {
+        Some(s.words[b + 5])
+    } else {
+        None
+    };
+    if let Some(tick) = playhead
+        && tick >= start
+        && tick < start + 4 * PPQ
+    {
+        let xx = x + ((tick - start) as f64 / (4 * PPQ) as f64 * f64::from(width)) as i32;
+        p.rect(xx, y, 1, height, GOLD);
+    }
+}
+
+fn audio_timeline(s: &Snapshot, p: &mut impl Painter) {
+    p.rect(5, 53, 310, 128, PANEL);
+    p.rect(5, 117, 310, 1, DIM);
+    for i in 0..256 {
+        let v = s.words[512 + i];
+        let lo = f32::from_bits(v as u32).clamp(-1., 1.);
+        let hi = f32::from_bits((v >> 32) as u32).clamp(-1., 1.);
+        let x = 5 + i as i32 * 310 / 256;
+        let right = 5 + (i + 1) as i32 * 310 / 256;
+        let top = 117 - (hi * 62.) as i32;
+        let bottom = 117 - (lo * 62.) as i32;
+        p.rect(x, top, (right - x).max(1), (bottom - top).max(1), GOLD);
+    }
+    if s.words[770] == 0 {
+        label(p, 12, 58, 290, INK, "REC TO CAPTURE AUDIO");
+    }
+    let b = 16 + s.words[3] as usize * 12;
+    if s.words[b + 4] > 0 && s.words[4] & 1 != 0 && s.words[9] != s.words[3] + 1 {
+        let pos = s.words[b + 5] as f64 / s.words[b + 4] as f64 * s.words[770] as f64;
+        let start = s.words[768] as f64;
+        let end = s.words[769] as f64;
+        if end > start && pos >= start && pos < end {
+            p.rect(
+                5 + ((pos - start) / (end - start) * 310.) as i32,
+                53,
+                1,
+                128,
+                RED,
+            );
+        }
+    }
+}
+
+/// Scale the full source timeline into a bounded overview, omitting tiny axis text.
+struct TimelinePreview<'a, P: Painter> {
+    p: &'a mut P,
+    x: i32,
+    y: i32,
+    w: i32,
+    h: i32,
+}
+impl<P: Painter> Painter for TimelinePreview<'_, P> {
+    fn rect(&mut self, x: i32, y: i32, w: i32, h: i32, color: u32) {
+        let left = self.x + x * self.w / 320;
+        let top = self.y + (y - 53).max(0) * self.h / 129;
+        let right = (self.x + (x + w) * self.w / 320).min(self.x + self.w);
+        let bottom = (self.y
+            + ((y + h - 53).max(0) * self.h / 129).max((y - 53).max(0) * self.h / 129 + 1))
+        .min(self.y + self.h);
+        if right > left && bottom > top {
+            self.p.rect(left, top, right - left, bottom - top, color);
+        }
+    }
+    fn text(&mut self, _: i32, _: i32, _: i32, _: i32, _: f32, _: u32, _: &str) {}
+}
+fn loop_workspace(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
+    let b = 16 + ui.selected * 12;
+    let recording = s.words[9] == ui.selected as u64 + 1;
+    let chord_label = if (ui.page == Page::Play || (ui.page == Page::Loop && ui.loop_mode == 0))
+        && s.track_kind(ui.selected) == Kind::Synth
+        && ui.chord_modes[ui.selected]
+    {
+        Some(s.chord().label(ui.sound))
+    } else {
+        None
+    };
+    let kind = if ui.page == Page::Loop && ui.loop_edit {
+        match s.track_kind(ui.selected) {
+            Kind::Audio => "AUDIO",
+            Kind::Synth => "SYNTH",
+            Kind::Drum => "DRUM",
+        }
+    } else if let Some(label) = &chord_label {
+        label.as_str()
+    } else if (ui.page == Page::Play || (ui.page == Page::Loop && ui.loop_mode == 0))
+        && s.track_kind(ui.selected) == Kind::Drum
+    {
+        DRUM_NAMES[ui.sound]
+    } else {
+        match s.track_kind(ui.selected) {
+            Kind::Audio => s.audio_target(ui.selected).name(),
+            Kind::Synth => "SYNTH",
+            Kind::Drum => "DRUM",
+        }
+    };
+    p.text(
+        7,
+        51,
+        217,
+        20,
+        17.,
+        GOLD,
+        &format!("{:02} {} / {}", ui.selected + 1, kind, status(s.words[b])),
+    );
+    let length = if recording && s.words[12] & 1 == 0 {
+        s.words[11].saturating_sub(s.words[10])
+    } else {
+        s.words[b + 4]
+    };
+    p.text(
+        232,
+        51,
+        81,
+        20,
+        17.,
+        INK,
+        &if length > 0 {
+            format!("{:.0} BAR", length as f64 / (4 * PPQ) as f64)
+        } else {
+            "FREE".into()
+        },
+    );
+    p.rect(5, 73, 310, 28, PANEL);
+    let mut preview = TimelinePreview {
+        p,
+        x: 5,
+        y: 73,
+        w: 310,
+        h: 28,
+    };
+    if s.track_kind(ui.selected) == Kind::Audio
+        && (ui.page == Page::Play || !s.note_view(ui.selected))
+    {
+        if s.words[770] == 0 && !recording {
+            input_timeline(s, &mut preview);
+        } else {
+            audio_timeline(s, &mut preview);
+        }
+    } else {
+        note_timeline(ui, s, &mut preview);
+    }
+    let role = if ui.page == Page::Loop && ui.loop_mode == 0 {
+        match s.track_kind(ui.selected) {
+            Kind::Audio => match s.audio_target(ui.selected) {
+                crate::audio::RecordTarget::Input => "REC: INPUT",
+                crate::audio::RecordTarget::Chromatic => "REC: CHROMATIC",
+                crate::audio::RecordTarget::Chop => "REC: CHOP",
+            },
+            Kind::Drum => "DRUM PADS",
+            Kind::Synth => {
+                if ui.chord_modes[ui.selected] {
+                    "CHORD PADS"
+                } else {
+                    "CHROMATIC PADS"
+                }
+            }
+        }
+    } else if ui.page == Page::Loop {
+        "PAD: PLAY / SHIFT+PAD: REC"
+    } else if s.track_kind(ui.selected) == Kind::Audio {
+        if s.audio_target(ui.selected) == crate::audio::RecordTarget::Chop {
+            "PADS: CHOP / HOLD TO LOOP"
+        } else {
+            "PADS: CHROMATIC / HOLD TO LOOP"
+        }
+    } else {
+        "16 PADS: PLAY"
+    };
+    let message = if s.words[7] != 0 {
+        view_error(s.words[7], ui.page).to_owned()
+    } else if !ui.notice.is_empty() {
+        ui.notice.into()
+    } else if recording && (s.words[12] >> 8) & 255 != 0 {
+        format!(
+            "{:02} REC > {:02} NEXT",
+            ui.selected + 1,
+            (s.words[12] >> 8) & 255
+        )
+    } else if recording && s.words[8] < s.words[10] {
+        format!(
+            "PRE {} BEATS / {}",
+            (s.words[10] - s.words[8]).div_ceil(PPQ),
+            role
+        )
+    } else if recording {
+        format!(
+            "{} / {}",
+            if s.words[12] & 2 != 0 {
+                "REC ENDING"
+            } else {
+                "SHIFT+PAD: END"
+            },
+            role
+        )
+    } else if ui.loop_edit {
+        match ui.edit_source {
+            Some(source) if ui.edit_operation == 1 => {
+                format!("PAD {:02} AGAIN: DELETE", source + 1)
+            }
+            Some(source) => format!("{:02} > EMPTY PAD / DATA: EXIT", source + 1),
+            None => "PAD: SOURCE / DATA: EXIT".into(),
+        }
+    } else if ui.loop_mode == 1 {
+        "PAD: MUTE / SAMPLE: LOOP".into()
+    } else if ui.loop_mode == 2 {
+        let c = s.chain_config();
+        if s.chain_running() {
+            let index = ((s.words[1048] >> 16) & 255) as usize;
+            let remaining = (s.words[1048] >> 24) & 255;
+            let next = if index + 1 < usize::from(c.len) {
+                Some(index + 1)
+            } else if c.repeat && c.len > 0 {
+                Some(0)
+            } else {
+                None
+            };
+            format!(
+                "STEP {} / {}x / NEXT {}",
+                index + 1,
+                remaining,
+                next.map_or("END".into(), |i| format!("{:02}", c.steps[i].track + 1))
+            )
+        } else if c.len > 0 {
+            let i = ui.chain_step.min(usize::from(c.len) - 1);
+            format!(
+                "STEP {}/{}: LOOP {:02} / {}x",
+                i + 1,
+                c.len,
+                c.steps[i].track + 1,
+                c.steps[i].repeats
+            )
+        } else {
+            "PAD ADD / DATA PUSH: START".into()
+        }
+    } else if ui.page == Page::Loop && ui.shift_view {
+        "SHIFT+LOOP: COPY / DELETE / MOVE".into()
+    } else if ui.page == Page::Loop {
+        "SHIFT+PAD: START / END REC".into()
+    } else {
+        role.into()
+    };
+    p.text(
+        6,
+        103,
+        308,
+        16,
+        14.,
+        if recording { RED } else { DIM },
+        &message,
+    );
+    for i in 0..ACTIVE_TRACKS {
+        let base = 16 + i * 12;
+        let x = 5 + (i % 4) as i32 * 79;
+        let y = 120 + (ACTIVE_TRACKS / 4 - 1 - i / 4) as i32 * 19;
+        let rec = matches!((s.words[base] >> 8) & 255, 2..=4);
+        let chain = s.chain_config();
+        let selected = if ui.loop_mode == 2 && chain.len > 0 {
+            i == usize::from(chain.steps[ui.chain_step.min(usize::from(chain.len) - 1)].track)
+        } else {
+            i == ui.selected
+        };
+        let bg = if ui.loop_edit && ui.edit_source == Some(i) {
+            GOLD
+        } else if rec {
+            RED
+        } else if selected {
+            GOLD
+        } else {
+            PANEL
+        };
+        let ink = if rec || selected { BG } else { INK };
+        p.rect(x, y, 74, 18, bg);
+        let label = if rec {
+            if s.words[base] >> 8 & 255 == 2 {
+                "PRE"
+            } else {
+                "REC"
+            }
+        } else if s.mix(i).mute {
+            "MUTE"
+        } else if ui.loop_mode == 2
+            && s.chain_running()
+            && ((s.words[1048] >> 32) & 255) == i as u64 + 1
+        {
+            "CHAIN"
+        } else if ui.loop_mode == 2 && chain.members() & (1 << i) != 0 {
+            "IN"
+        } else {
+            match s.words[base] >> 8 & 255 {
+                5 => "PLAY",
+                6 => "STOP",
                 _ => "--",
             }
-            .into();
-            if pad <= 12 {
-                sub = "ACTION".into();
-            }
-        }
-        if pad < 8 && ui.texture_slot == pad {
-            sub.push_str(" <");
-        }
-        cell(
-            p,
-            pad,
-            &title,
-            &sub,
-            on,
-            None,
-            if pad >= 8 { DIM } else { GOLD },
+        };
+        p.text(
+            x + 3,
+            y,
+            69,
+            18,
+            15.,
+            ink,
+            &format!("{:02} {}", i + 1, label),
         );
+        let len = s.words[base + 4];
+        if len > 0 {
+            p.rect(
+                x + 2,
+                y + 17,
+                (s.words[base + 5].min(len) as f64 / len as f64 * 70.) as i32,
+                1,
+                ink,
+            );
+        }
+    }
+}
+fn track_mixer_cell(
+    p: &mut impl Painter,
+    pad: usize,
+    title: &str,
+    selected: bool,
+    level: f32,
+    mute: bool,
+    solo: bool,
+) {
+    if ACTIVE_TRACKS == 16 {
+        mixer_cell(p, pad, title, selected, level, mute, solo);
+        return;
+    }
+    let x = 5 + (pad % 4) as i32 * 79;
+    let y = 80 + (1 - pad / 4) as i32 * 54;
+    p.rect(x, y, 74, 50, if selected { GOLD } else { PANEL });
+    p.text(
+        x + 3,
+        y + 2,
+        68,
+        20,
+        15.,
+        if selected { BG } else { INK },
+        &title.chars().take(9).collect::<String>(),
+    );
+    p.text(
+        x + 3,
+        y + 17,
+        68,
+        17,
+        14.,
+        if selected { BG } else { DIM },
+        &format!(
+            "{:.0}%{}",
+            level * 100.,
+            if mute {
+                " M"
+            } else if solo {
+                " S"
+            } else {
+                ""
+            }
+        ),
+    );
+    p.rect(x + 3, y + 44, 68, 3, BG);
+    p.rect(
+        x + 3,
+        y + 44,
+        (level.clamp(0., 1.) * 68.) as i32,
+        3,
+        if selected { BG } else { GOLD },
+    );
+}
+
+fn input_timeline(s: &Snapshot, p: &mut impl Painter) {
+    p.rect(5, 53, 310, 128, PANEL);
+    p.rect(5, 117, 310, 1, DIM);
+    for i in 0..128 {
+        let v = s.words[1056 + i];
+        let lo = f32::from_bits(v as u32).clamp(-1., 1.);
+        let hi = f32::from_bits((v >> 32) as u32).clamp(-1., 1.);
+        let x = 5 + i as i32 * 310 / 128;
+        let right = 5 + (i + 1) as i32 * 310 / 128;
+        let y = 117 - (hi * 62.) as i32;
+        let bottom = 117 - (lo * 62.) as i32;
+        p.rect(x, y, (right - x).max(1), (bottom - y).max(1), GOLD);
     }
 }

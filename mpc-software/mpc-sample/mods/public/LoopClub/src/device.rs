@@ -13,7 +13,7 @@ use mpc_sample_sdk::{
 use std::{
     sync::{
         OnceLock,
-        atomic::{AtomicU8, Ordering},
+        atomic::{AtomicU8, AtomicU32, Ordering},
     },
     time::Duration,
 };
@@ -75,7 +75,20 @@ fn hardware_button(event: ButtonEvent) -> Flow {
     });
     Flow::Consume
 }
+static DATA_CC_PENDING: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+fn claim_data_turn(pending: &std::sync::atomic::AtomicBool, delta: i32) -> bool {
+    delta != 0 && pending.swap(false, Ordering::AcqRel)
+}
 fn hardware_cc(event: CcEvent) -> Flow {
+    // DATA CC is the firmware's input to its higher-level encoder handler.
+    // Forward it once; our independent encoder hook consumes the resulting turn.
+    if event.control == u32::from(mpc_sample_sdk::event::cc::DATA) {
+        if runtime().is_some_and(|r| r.active.load(Ordering::Acquire)) {
+            DATA_CC_PENDING.store(true, Ordering::Release);
+            crate::qa::data_cc();
+        }
+        return Flow::Forward;
+    }
     if !runtime().is_some_and(|r| r.active.load(Ordering::Acquire)) {
         return Flow::Forward;
     }
@@ -96,14 +109,28 @@ fn hardware_encoder(event: EncoderEvent) -> Flow {
     if !runtime().is_some_and(|r| r.active.load(Ordering::Acquire)) {
         return Flow::Forward;
     }
+    // The same native setter is also called while restoring project widgets.
+    // Only a turn dispatched from the physical DATA CC belongs to our UI.
+    if !claim_data_turn(&DATA_CC_PENDING, event.delta) {
+        crate::qa::native_encoder_ignored();
+        return Flow::Forward;
+    }
+    crate::qa::encoder(event.delta, true);
     queue_control(HardwareControl::Encoder {
-        delta: event.delta,
+        delta: normalize_encoder(event.delta),
         shift: mpc_sample_sdk::shift(),
     });
     Flow::Consume
 }
 static PAD_OWNED: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
 fn pad_input(event: PadEvent) -> PadResponse {
+    crate::qa::midi_input_trace(
+        2,
+        event.source as u32,
+        event.pad as u8,
+        u8::from(event.action == PadAction::Press),
+        (event.velocity.clamp(0., 1.) * 127.).round() as u8,
+    );
     let physical = mpc_sample_sdk::event::current_surface_event()
         .filter(|s| s.is_pad_event() && (0..16).contains(&s.code))
         .map_or(event.pad, |s| s.code);
@@ -153,7 +180,7 @@ fn pad_input(event: PadEvent) -> PadResponse {
         token: 0,
     }
 }
-static IO_REQUEST: AtomicU8 = AtomicU8::new(0);
+static IO_REQUEST: AtomicU32 = AtomicU32::new(0);
 static IO_STATUS: AtomicU8 = AtomicU8::new(0);
 fn runtime() -> Option<&'static Runtime> {
     RUNTIME.get().map(Box::as_ref)
@@ -163,12 +190,30 @@ fn send(c: Command) {
         r.enqueue(c)
     }
 }
+#[cfg(all(target_os = "linux", target_arch = "aarch64"))]
+pub(crate) fn sequencer_note(source: u32, note: u8, velocity: u8, on: bool) {
+    if let Some(r) = runtime() {
+        r.external_note(source, note, velocity, on);
+    }
+}
 fn note(event: &mut NoteEvent<'_>) -> Flow {
+    crate::qa::midi_input_trace(
+        1,
+        event.source as u32,
+        event.note,
+        u8::from(event.note_on) | (u8::from(event.note_off) << 1) | (u8::from(event.external) << 2),
+        event.kind,
+    );
     let Some(r) = runtime() else {
         return Flow::Forward;
     };
     if !event.external || event.note > 127 || !(event.note_on || event.note_off) {
         return Flow::Forward;
+    }
+    // Native firmware1.3.0.12 forwards only note-on to this upper hook.
+    // ALSA supplies complete note ownership; do not also play its upper replay.
+    if crate::midi_input::observed() && r.active.load(Ordering::Acquire) {
+        return Flow::Consume;
     }
     if r.external_note(
         event.source as u32,
@@ -181,10 +226,16 @@ fn note(event: &mut NoteEvent<'_>) -> Flow {
         Flow::Forward
     }
 }
+
 fn input_interleaved(samples: &[i32], channels: usize, rate: u32) {
     // The pinned Sample's measured USB input period is24, analog ADC is128.
     // SDK taps both raw readers: never append USB return to the analog timeline.
-    if channels == 0 || mpc_sample_sdk::audio::input_period() == 24 {
+    if channels == 0
+        || !crate::input_hw::accepts_period(
+            crate::input_hw::selected(),
+            mpc_sample_sdk::audio::input_period(),
+        )
+    {
         return;
     }
     if let Some(r) = runtime() {
@@ -200,7 +251,10 @@ fn input_interleaved(samples: &[i32], channels: usize, rate: u32) {
     }
 }
 fn input_planar(channels: &[&[i32]], rate: u32) {
-    if mpc_sample_sdk::audio::input_period() == 24 {
+    if !crate::input_hw::accepts_period(
+        crate::input_hw::selected(),
+        mpc_sample_sdk::audio::input_period(),
+    ) {
         return;
     }
     let Some(first) = channels.first() else {
@@ -257,7 +311,7 @@ fn worker() {
         .map(std::path::PathBuf::from)
         .filter(|p| p.is_absolute())
         .map(|path| crate::project::session_directory(&path, crate::qa::enabled()));
-    let mut initial = Engine::new(rate, 88., capacity);
+    let mut initial = Engine::new_project(rate, capacity);
     let seed = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_default()
@@ -287,15 +341,46 @@ fn worker() {
             let _ = std::fs::write(dir.join("startup.json"), bytes);
         }
     }
+    let mut input = crate::input_hw::InputWorker::new(dir.as_deref());
     let mut files = crate::browser_device::FileWorker::new(rate, capacity);
     loop {
         std::thread::sleep(Duration::from_millis(20));
         crate::qa::tick();
+        input.tick(r.active.load(Ordering::Acquire));
         if let Some(ok) = files.tick(r) {
             IO_STATUS.store(if ok { 5 } else { 4 }, Ordering::Release);
         }
         let action = IO_REQUEST.swap(0, Ordering::AcqRel);
         if action == 0 {
+            continue;
+        }
+        if action & 4 != 0 {
+            let source = ((action >> 4) & 15) as usize;
+            let target = ((action >> 8) & 15) as usize;
+            let moving = action & (1 << 12) != 0;
+            let result = r.with_engine(|slot| {
+                let Some(e) = slot.as_mut() else { return 4 };
+                let status = match e.transfer_track_stopped(source, target, moving) {
+                    Ok(()) => {
+                        if moving {
+                            7
+                        } else {
+                            6
+                        }
+                    }
+                    Err(Error::Busy) => 3,
+                    Err(Error::NoContent) => 9,
+                    Err(Error::Capacity) => 10,
+                    Err(_) => 8,
+                };
+                r.snapshot.publish(&Snapshot::capture(e));
+                status
+            });
+            if let Some(status) = result {
+                IO_STATUS.store(status, Ordering::Release);
+            } else {
+                let _ = IO_REQUEST.compare_exchange(0, action, Ordering::AcqRel, Ordering::Relaxed);
+            }
             continue;
         }
         let Some(dir) = dir.as_ref() else {
@@ -331,9 +416,8 @@ fn worker() {
                     4
                 }
             } else {
-                match crate::project::load(&path, rate, capacity) {
-                    Ok(mut loaded) => {
-                        loaded.selected = e.selected;
+                match crate::project::load_for_replacement(&path, rate, capacity, e) {
+                    Ok(loaded) => {
                         **e = loaded;
                         2
                     }
@@ -358,11 +442,25 @@ pub struct LoopClub {
 }
 impl LoopClub {
     fn control_cc(&mut self, event: CcEvent, shift: bool) -> Flow {
+        if event.control == u32::from(mpc_sample_sdk::event::cc::DATA) {
+            return Flow::Forward;
+        }
         if !self.ui.active {
             return Flow::Forward;
         }
         self.refresh();
-        if self.browser.open && event.control != 19 {
+        if event.control == 19 {
+            // Our signal is added after the stock mix: keep native volume for
+            // that mix, and control our injected signal independently of the
+            // project master fader. `low` is not the current knob value.
+            send(Command::HardwareVolume(normalize_cc(
+                event.value,
+                event.low,
+                event.range,
+            )));
+            return Flow::Forward;
+        }
+        if self.browser.open {
             return Flow::Consume;
         }
         self.ui.shift_view = shift;
@@ -396,7 +494,7 @@ impl LoopClub {
         }
         if self.ui.page == Page::Play
             && self.ui.synth_page == 0
-            && self.snapshot.track_kind(self.ui.selected) != Kind::Drum
+            && self.snapshot.track_kind(self.ui.selected) == Kind::Synth
             && shift
             && (16..=18).contains(&event.control)
         {
@@ -417,10 +515,6 @@ impl LoopClub {
                 .ui
                 .knob((event.control - 16) as usize, value, &self.snapshot, send),
             20 => self.ui.fader(value, &self.snapshot, send),
-            19 => {
-                send(Command::Master(value));
-                return Flow::Forward;
-            }
             _ => {}
         }
         Flow::Consume
@@ -429,6 +523,8 @@ impl LoopClub {
         if let Some(s) = runtime().and_then(|r| r.snapshot.read()) {
             self.snapshot = s;
         }
+        self.ui.sync_chord_modes(&self.snapshot);
+        self.ui.sync_loop_role(&self.snapshot);
         if self.ui.page == Page::Chop {
             let count = ((self.snapshot.words[506] >> 16) & 255).clamp(1, 16) as usize;
             self.ui.chop_slice = self.ui.chop_slice.min(count - 1);
@@ -452,6 +548,11 @@ impl LoopClub {
                 1 => "SESSION SAVED",
                 2 => "SESSION LOADED",
                 3 => "STOP / RELEASE NOTES FIRST",
+                6 => "COPIED / SHIFT -: UNDO",
+                7 => "MOVED / SHIFT -: UNDO",
+                8 => "DESTINATION HAS CONTENT",
+                9 => "SOURCE HAS NO CONTENT",
+                10 => "KIT MEMORY LIMIT",
                 5 if self.browser.target.is_some() => "LAYER SAMPLE LOADED",
                 5 if self.snapshot.track_kind(self.ui.selected) == Kind::Drum => "KIT LOADED",
                 5 => "SAMPLE LOADED",
@@ -475,6 +576,38 @@ impl LoopClub {
     }
     fn action(&mut self, action: Action) {
         match action {
+            Action::Transfer {
+                source,
+                target,
+                moving,
+            } => {
+                let request =
+                    4 | ((source as u32) << 4) | ((target as u32) << 8) | (u32::from(moving) << 12);
+                self.ui.notice = if IO_REQUEST
+                    .compare_exchange(0, request, Ordering::AcqRel, Ordering::Relaxed)
+                    .is_ok()
+                {
+                    "LOOP EDIT WORKING..."
+                } else {
+                    "PROJECT BUSY"
+                };
+            }
+            Action::InputSource(source) => {
+                if self.snapshot.words[9] != 0 || self.snapshot.words[4] & 1 != 0 {
+                    self.ui.notice = "STOP BEFORE CHANGING INPUT";
+                } else if !crate::input_hw::request(source) {
+                    self.ui.notice = "INPUT SWITCH BUSY";
+                } else {
+                    self.ui.notice = "";
+                }
+            }
+            Action::BrowseXpm => {
+                if self.snapshot.track_kind(self.ui.selected) != Kind::Drum {
+                    self.ui.notice = "SELECT A DRUM TRACK FIRST";
+                } else {
+                    self.browser.start_xpm(self.ui.selected);
+                }
+            }
             Action::Browse => {
                 if self.ui.page == Page::DrumSound {
                     self.browser
@@ -488,6 +621,8 @@ impl LoopClub {
                     self.browser.start(self.ui.selected)
                 } else if self.snapshot.track_kind(self.ui.selected) == Kind::Drum {
                     self.browser.start_kind(self.ui.selected, true);
+                } else if self.snapshot.track_kind(self.ui.selected) == Kind::Audio {
+                    self.ui.notice = "USE EMPTY AUDIO TRACK";
                 } else {
                     self.ui.notice = "SELECT AUDIO OR DRUM TRACK";
                 }
@@ -570,17 +705,61 @@ impl Mod for LoopClub {
             return Flow::Consume;
         }
         self.refresh();
+        if event.shift && matches!(event.code, 54 | 55) {
+            send(if event.code == 55 {
+                Command::Undo
+            } else {
+                Command::Redo
+            });
+            self.ui.notice = if event.code == 55 { "UNDO" } else { "REDO" };
+            return Flow::Consume;
+        }
         if self.browser.open {
             if event.code == 81 {
                 send(Command::Stop)
             } else {
-                self.browser.button(event.code)
+                self.browser.button_with_shift(event.code, event.shift)
             }
             return Flow::Consume;
         }
+        if self.ui.page == Page::Setup && self.ui.input_view {
+            match event.code {
+                12 => {
+                    self.ui.input_view = false;
+                    return Flow::Consume;
+                }
+                13 | 111 => {
+                    self.action(Action::InputSource(self.ui.input_choice as u8));
+                    return Flow::Consume;
+                }
+                14 => {
+                    self.ui.navigate(Page::Loop, &self.snapshot);
+                    return Flow::Consume;
+                }
+                _ => {}
+            }
+        }
         match event.code {
+            6 if event.shift => {
+                self.ui.navigate(Page::Setup, &self.snapshot);
+                self.ui.input_view = true;
+                self.ui.input_choice = usize::from(crate::input_hw::selected());
+            }
             14 if self.ui.page == Page::Source => self.action(Action::Browse),
             13 if self.ui.page == Page::Loop
+                && !event.shift
+                && !self.ui.loop_edit
+                && self.ui.loop_mode != 2
+                && self.snapshot.track_kind(self.ui.selected) == Kind::Audio
+                && self.snapshot.words[9] == self.ui.selected as u64 + 1
+                && self.snapshot.words[12] & (1 << 4) == 0 =>
+            {
+                self.ui.notice = "AUDIO REC / SHIFT+PAD: END";
+            }
+            13 if self.ui.page == Page::Loop
+                && !event.shift
+                && !self.ui.loop_edit
+                && self.ui.loop_mode != 2
                 && self.snapshot.track_kind(self.ui.selected) == Kind::Audio
                 && self.snapshot.words[16 + self.ui.selected * 12 + 11] == 0 =>
             {
@@ -592,9 +771,26 @@ impl Mod for LoopClub {
                 &self.snapshot,
                 send,
             ),
-            6 | 74 => self.ui.navigate(Page::Loop, &self.snapshot),
+            74 if event.shift => {
+                if self.snapshot.words[9] != 0 || self.snapshot.words[4] & 1 != 0 {
+                    self.ui.notice = "STOP BEFORE LOOP EDIT";
+                } else {
+                    self.ui.navigate(Page::Loop, &self.snapshot);
+                    self.ui.loop_mode = 0;
+                    self.ui.loop_edit = true;
+                    self.ui.edit_source = None;
+                    self.ui.notice = "";
+                }
+            }
+            6 | 74 => {
+                self.ui.loop_edit = false;
+                self.ui.edit_source = None;
+                self.ui.loop_mode = 0;
+                self.ui.navigate(Page::Loop, &self.snapshot);
+            }
             7 => self.ui.navigate(Page::Grid, &self.snapshot),
             40 => self.ui.navigate(Page::Play, &self.snapshot),
+            36 if event.shift => self.action(Action::BrowseXpm),
             36 => self.action(Action::Browse),
             75 => {
                 if event.shift {
@@ -606,7 +802,19 @@ impl Mod for LoopClub {
             1 => self.ui.navigate(Page::Mix, &self.snapshot),
             0 => self.ui.navigate(Page::TrackFx, &self.snapshot),
             111 => {
-                if matches!(
+                if self.ui.page == Page::Loop && self.ui.loop_edit && !event.shift {
+                    self.ui.loop_edit = false;
+                    self.ui.edit_source = None;
+                    self.ui.notice = "";
+                } else if matches!(
+                    self.ui.page,
+                    Page::TrackFx | Page::MasterFx | Page::Texture | Page::FxSettings
+                ) && !event.shift
+                {
+                    self.ui.open_fx_settings(&self.snapshot);
+                } else if self.ui.page == Page::Loop && self.ui.loop_mode == 2 && !event.shift {
+                    send(Command::ChainToggle);
+                } else if matches!(
                     self.ui.page,
                     Page::MasterFx | Page::Texture | Page::Sidechain
                 ) && !event.shift
@@ -647,7 +855,29 @@ impl Mod for LoopClub {
             }
             81 => send(Command::Stop),
             82 => send(Command::PlayAll),
-            73 | 80 => send(Command::Record(self.ui.selected)),
+            73 | 80 => {
+                if self.ui.loop_edit {
+                    self.ui.notice = "EXIT EDIT BEFORE RECORDING";
+                    return Flow::Consume;
+                }
+                if crate::input_hw::pending() {
+                    self.ui.notice = "WAIT FOR INPUT SWITCH";
+                    return Flow::Consume;
+                }
+                let track = if self.snapshot.words[9] > 0 {
+                    (self.snapshot.words[9] - 1) as usize
+                } else {
+                    self.ui.selected
+                };
+                if self.snapshot.words[9] == 0 && self.ui.page == Page::Loop {
+                    self.ui.loop_mode = 0;
+                    self.ui.loop_perform = true;
+                    self.ui.loop_record_seen = false;
+                    self.ui.loop_play_track = track;
+                    self.ui.loop_start_revision = self.snapshot.words[1047];
+                }
+                send(Command::LoopRecord(track));
+            }
             54 => {
                 if self.ui.page == Page::DrumSound {
                     self.ui.layer_detail = !self.ui.layer_detail;
@@ -660,7 +890,8 @@ impl Mod for LoopClub {
                 } else if self.ui.page == Page::Play
                     && self.snapshot.track_kind(self.ui.selected) == Kind::Synth
                 {
-                    self.ui.synth_page = (self.ui.synth_page + 1) % 8;
+                    self.ui.synth_page =
+                        (self.ui.synth_page + 1) % crate::ui::synth_page_count(&self.snapshot);
                 } else if self.ui.page == Page::Grid {
                     self.ui.grid_bar = self.ui.grid_bar.saturating_add(1).min(4095)
                 } else {
@@ -682,7 +913,8 @@ impl Mod for LoopClub {
                 } else if self.ui.page == Page::Play
                     && self.snapshot.track_kind(self.ui.selected) == Kind::Synth
                 {
-                    self.ui.synth_page = (self.ui.synth_page + 7) % 8;
+                    let pages = crate::ui::synth_page_count(&self.snapshot);
+                    self.ui.synth_page = (self.ui.synth_page + pages - 1) % pages;
                 } else if self.ui.page == Page::Grid {
                     self.ui.grid_bar = self.ui.grid_bar.saturating_sub(1)
                 } else {
@@ -698,12 +930,14 @@ impl Mod for LoopClub {
             return Flow::Forward;
         }
         self.refresh();
+        crate::qa::encoder(event.delta, false);
+        let delta = normalize_encoder(event.delta);
         if self.browser.open {
-            self.browser.encoder(event.delta);
+            self.browser.encoder(delta);
             return Flow::Consume;
         }
         self.ui.shift_view = mpc_sample_sdk::shift();
-        self.ui.encoder(event.delta, &self.snapshot, send);
+        self.ui.encoder(delta, &self.snapshot, send);
         Flow::Consume
     }
     fn on_cc(&mut self, event: CcEvent) -> Flow {
@@ -860,6 +1094,7 @@ impl Mod for LoopClub {
                 }
             }
         }
+        crate::qa::browser(self.browser.open, self.browser.row, self.browser.total());
         crate::qa::paint(&self.ui, &self.snapshot, self.browser.open);
         if let Some(events) = PAD_EVENTS.get() {
             for _ in 0..256 {
@@ -902,11 +1137,223 @@ impl Mod for LoopClub {
 #[cfg(all(target_os = "linux", target_arch = "aarch64"))]
 mpc_sample_sdk::export_mod!(LoopClub);
 
-/// Follow the pinned SDK's documented CC geometry, not an assumed MIDI range.
-pub fn normalize_cc(raw: u32, value: f32, range: f32) -> f32 {
-    if range.is_finite() && range > 0. && value.is_finite() {
-        (value / range).clamp(0., 1.)
+/// Normalize the current raw CC value; `low` is not the current control value.
+pub fn normalize_cc(raw: u32, _low: f32, range: f32) -> f32 {
+    let scale = if range.is_finite() && range > 1. {
+        range
     } else {
-        raw.min(127) as f32 / 127.
+        127.
+    };
+    (raw as f32 / scale).clamp(0., 1.)
+}
+
+/// Firmware deltas may be accelerated or scaled. One hardware event moves one
+/// logical detent, avoiding modulo-list-length cancellation (e.g.128 %4 ==0).
+pub fn normalize_encoder(delta: i32) -> i32 {
+    delta.signum()
+}
+
+#[cfg(test)]
+mod regression_tests {
+    use super::*;
+    #[test]
+    fn audio_sampler_recording_allows_sound_entry_but_unfinished_pcm_does_not() {
+        for midi in [false, true] {
+            let mut app = LoopClub::default();
+            app.ui.active = true;
+            app.snapshot.words[9] = 1;
+            app.snapshot.words[12] = if midi { 1 << 4 } else { 0 };
+            app.snapshot.words[20] = 4 * PPQ;
+            app.snapshot.words[27] = 8000;
+            app.on_button(ButtonEvent {
+                event: 0,
+                bytes: [0; 16],
+                code: 13,
+                value: 127,
+                pressed: true,
+                shift: false,
+                erase: false,
+                surface: 0,
+            });
+            assert_eq!(app.ui.page, if midi { Page::Play } else { Page::Loop });
+        }
+    }
+    #[test]
+    fn browse_on_a_filled_audio_track_explains_the_empty_track_requirement() {
+        let mut app = LoopClub::default();
+        app.snapshot.words[20] = 4 * PPQ;
+        app.action(Action::Browse);
+        assert!(!app.browser.open);
+        assert_eq!(app.ui.notice, "USE EMPTY AUDIO TRACK");
+    }
+    #[test]
+    fn shifted_minus_plus_never_select_tracks_or_change_editor_pages() {
+        for page in [
+            Page::Loop,
+            Page::Play,
+            Page::Grid,
+            Page::Chop,
+            Page::DrumSound,
+            Page::Texture,
+        ] {
+            let mut ui = LoopClub::default();
+            ui.ui.active = true;
+            ui.ui.page = page;
+            ui.ui.selected = 3;
+            ui.ui.synth_page = 2;
+            for code in [55, 54] {
+                ui.on_button(ButtonEvent {
+                    event: 0,
+                    bytes: [0; 16],
+                    code,
+                    value: 127,
+                    pressed: true,
+                    shift: true,
+                    erase: false,
+                    surface: 0,
+                });
+                assert_eq!(ui.ui.selected, 3);
+                assert_eq!(ui.ui.page, page);
+                assert_eq!(ui.ui.synth_page, 2);
+                assert_eq!(ui.ui.notice, if code == 55 { "UNDO" } else { "REDO" });
+            }
+        }
+    }
+    #[test]
+    fn native_widget_restore_is_not_a_physical_data_turn() {
+        let pending = std::sync::atomic::AtomicBool::new(false);
+        assert!(!claim_data_turn(&pending, 7));
+        pending.store(true, Ordering::Release);
+        assert!(!claim_data_turn(&pending, 0));
+        assert!(claim_data_turn(&pending, 1));
+        assert!(!claim_data_turn(&pending, 1));
+        pending.store(true, Ordering::Release);
+        assert!(claim_data_turn(&pending, -1));
+    }
+    #[test]
+    fn rec_from_loop_keeps_screen_and_switches_pad_role_only() {
+        let mut ui = LoopClub::default();
+        ui.ui.active = true;
+        ui.snapshot.words[16] = Kind::Synth as u64;
+        ui.ui.page = Page::Loop;
+        ui.ui.synth_page = 4;
+        assert_eq!(
+            ui.on_button(ButtonEvent {
+                event: 0,
+                bytes: [0; 16],
+                code: 73,
+                value: 127,
+                pressed: true,
+                shift: false,
+                erase: false,
+                surface: 0
+            }),
+            Flow::Consume
+        );
+        assert_eq!(ui.ui.page, Page::Loop);
+        assert!(ui.ui.loop_perform);
+        assert_eq!(ui.ui.synth_page, 4);
+    }
+    #[test]
+    fn data_cc_reaches_native_encoder_dispatch_even_with_browser_open() {
+        let mut ui = LoopClub::default();
+        ui.ui.active = true;
+        ui.browser.open = true;
+        for value in [1, 63, 64, 65, 127, u32::MAX] {
+            let event = CcEvent {
+                event: 0,
+                control: 100,
+                value,
+                low: 0.,
+                range: 127.,
+            };
+            assert_eq!(hardware_cc(event), Flow::Forward);
+            assert_eq!(ui.control_cc(event, false), Flow::Forward);
+        }
+    }
+    #[test]
+    fn encoder_deltas_have_one_detent_for_all_signed_scales() {
+        for value in [1, 2, 4, 6, 16, 127, 128, 1024, 65536, i32::MAX] {
+            assert_eq!(normalize_encoder(value), 1);
+            assert_eq!(normalize_encoder(-value), -1);
+        }
+        assert_eq!(normalize_encoder(0), 0);
+        assert_eq!(normalize_encoder(i32::MIN), -1);
+    }
+    #[test]
+    fn physical_volume_preserves_project_master_and_controls_injected_audio() {
+        let r = Box::new(Runtime::default());
+        let mut e = Box::new(Engine::new(8000, 88., 8000));
+        e.tracks[0].kind = Kind::Synth;
+        assert!(r.initialize(e).is_ok());
+        assert!(RUNTIME.set(r).is_ok());
+        let r = RUNTIME.get().unwrap();
+        r.active.store(true, Ordering::Release);
+        r.enqueue(Command::Note {
+            track: 0,
+            note: 60,
+            velocity: 100,
+            on: true,
+            source: 1,
+        });
+        let mut block = [0i32; 256];
+        block.fill(0);
+        r.output(&mut block, 2, 8000);
+        let mut ui = LoopClub::default();
+        ui.ui.active = true;
+        for value in [20, 100, 127] {
+            assert_eq!(
+                ui.control_cc(
+                    CcEvent {
+                        event: 0,
+                        control: 19,
+                        value,
+                        low: 0.,
+                        range: 127.
+                    },
+                    false
+                ),
+                Flow::Forward
+            );
+            for _ in 0..10 {
+                block.fill(0);
+                r.output(&mut block, 2, 8000);
+            }
+            let s = r.snapshot.read().unwrap();
+            assert_eq!(s.level(16), 0.8);
+            assert!((f32::from_bits(s.words[1043] as u32) - value as f32 / 127.).abs() < 1e-6);
+            assert!(block.iter().any(|v| *v != 0));
+        }
+        ui.ui.page = Page::Play;
+        ui.control_cc(
+            CcEvent {
+                event: 0,
+                control: 16,
+                value: 64,
+                low: 0.,
+                range: 127.,
+            },
+            false,
+        );
+        block.fill(0);
+        r.output(&mut block, 2, 8000);
+        let s = r.snapshot.read().unwrap();
+        assert!((s.synth().cutoff - (80. * 225_f32.powf(64. / 127.))).abs() < 0.01);
+        ui.control_cc(
+            CcEvent {
+                event: 0,
+                control: 19,
+                value: 0,
+                low: 0.,
+                range: 127.,
+            },
+            false,
+        );
+        for _ in 0..100 {
+            block.fill(0);
+            r.output(&mut block, 2, 8000);
+        }
+        assert_eq!(r.snapshot.read().unwrap().level(16), 0.8);
+        assert!(block.iter().all(|v| v.abs() < 1000));
     }
 }

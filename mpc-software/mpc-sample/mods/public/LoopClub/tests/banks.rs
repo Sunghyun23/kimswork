@@ -233,3 +233,70 @@ fn bank_sample_replaces_only_selected_layer_and_roundtrips() {
     );
     std::fs::remove_dir_all(path.parent().unwrap()).unwrap();
 }
+
+#[test]
+fn bank_and_kit_cursors_load_the_exact_selected_combination() {
+    let (source, original) = fixture();
+    let root = source.parent().unwrap();
+    let folder = root.join("LoopClub/Expansions");
+    std::fs::create_dir_all(&folder).unwrap();
+    let len = u64::from_le_bytes(original[8..16].try_into().unwrap()) as usize;
+    for bank_index in 0..4 {
+        let mut manifest: Manifest = serde_json::from_slice(&original[16..16 + len]).unwrap();
+        manifest.id = format!("fixture-{bank_index}");
+        manifest.name = format!("Bank {bank_index}");
+        let sounds = manifest.kits[0].sounds;
+        let levels = manifest.kits[0].levels;
+        let tunes = manifest.kits[0].tunes;
+        manifest.kits = (0..4)
+            .map(|k| Kit {
+                name: format!("Kit {bank_index} {k}"),
+                sounds,
+                levels,
+                tunes,
+            })
+            .collect();
+        let json = serde_json::to_vec(&manifest).unwrap();
+        let mut bytes = b"LCBANK01".to_vec();
+        bytes.extend((json.len() as u64).to_le_bytes());
+        bytes.extend(json);
+        bytes.extend(&original[16 + len..]);
+        std::fs::write(folder.join(format!("bank{bank_index}.lcbank")), bytes).unwrap();
+    }
+    browser_device::initialize();
+    let r = Runtime::default();
+    let mut e = Box::new(Engine::new(8000, 240., 16000));
+    e.tracks[0].kind = Kind::Drum;
+    assert!(r.initialize(e).is_ok());
+    r.active.store(true, Ordering::Release);
+    r.output(&mut [0; 128], 2, 8000);
+    let mut worker = FileWorker::with_root(Some(root.into()), 8000, 16000);
+    let mut ui = BrowserUi::default();
+    ui.start_kind(0, true);
+    worker.tick(&r);
+    ui.encoder(loop_club::device::normalize_encoder(128));
+    assert_eq!(ui.row, 1);
+    ui.button(54);
+    assert_eq!(ui.row, 2);
+    ui.button(13);
+    worker.tick(&r);
+    ui.refresh();
+    assert_eq!(ui.row, 0);
+    assert_eq!(ui.total(), 4);
+    ui.encoder(loop_club::device::normalize_encoder(65536));
+    assert_eq!(ui.row, 1);
+    ui.button(54);
+    assert_eq!(ui.row, 2);
+    ui.button(55);
+    assert_eq!(ui.row, 1);
+    ui.button(13);
+    worker.tick(&r);
+    r.output(&mut [0; 128], 2, 8000);
+    assert_eq!(worker.tick(&r), Some(true));
+    r.with_engine(|e| {
+        let kit = &e.as_ref().unwrap().tracks[0].kit;
+        assert_eq!(kit.name, "Kit 2 1");
+        assert_eq!(kit.id, "fixture-2:1");
+    });
+    std::fs::remove_dir_all(root).unwrap();
+}

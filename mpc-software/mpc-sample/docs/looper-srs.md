@@ -1,3 +1,5 @@
+> Latest owner decision (2026-11-23): Loop Club0.2.0 has eight active loop tracks, a source timeline above a4×2loop-status board, and sixteen instrument pads. Older sixteen-slot project data is preserved as inactive compatibility storage. This supersedes historical sixteen-active-track counts below. REC still enters the recording/performance workspace directly; explicit SEQ opens the full editor. Current local device validation is in mods/public/LoopClub/docs/validation-0.2.0.json.
+
 # MPC Sample 16트랙 루퍼 — SRS 초안 0.1
 
 문서 상태: 설계 검토용. 제품명은 **Loop Club**, 제조사는 **kim**이다(2026-11-22). 아래 요구사항은 제품 구현 완료를 뜻하지 않는다.
@@ -238,3 +240,52 @@ OSC1/OSC2는 각각 Sine/Saw/Square/Triangle, Tune±24반음, Fine±100센트, L
 ## 20. LFO 확장 (2026-11-22)
 
 사용자 요청: 필터/피치/볼륨 타깃과 Saw 등을 포함한 여러 파형. 구현은 Sine/Triangle/Saw Up/Saw Down/Square/Random Hold의 LFO 한 개와 세 타깃의 독립 깊이로 구성한다. 모두 동시에 사용 가능하며 기본 깊이는0이다. SYNTH 편집7/7의 K1Rate/K2Pitch/K3Filter, SHIFT+K1Shape/SHIFT+K3Volume으로 조절하고 다섯 값을 모두 표시한다. 노트마다 위상을 재시작하며 Hz 속도다. BPM Sync는 미구현이다. 기존 음색·코드·녹음 모드와 드럼 엔진을 보존한다. 선택한 전체 트랙 볼륨은 기존 왼쪽 페이더다.
+
+
+## Latest Loop Club workflow — 2026-11-23, local 0.3.0
+
+This supersedes the earlier eight-track and REC auto-navigation decisions. All 16 loop tracks are active. A LOOP pad starts capture without changing the screen; only the pads become instrument performers. The initial trigger never also plays a note. Synth uses the CHROMATIC/CHORD setting from SOUND. REC requests bar-end capture completion and restores loop pad roles. External MIDI targets the active Synth/Drum recorder. REPLACE creates a new whole-bar length; OVERDUB preserves the existing length and untouched tail.
+
+On LOOP, SHIFT+B1/B2/B3 directly select LOOP/MUTE/CHAIN. SAMPLE returns to normal LOOP. Unshifted B1/B2/B3 always remain SOURCE/SOUND/REPLACE–OVERDUB. Recording protects the pad role against mode changes. MUTE preserves phase. CHAIN has up to 16 ordered steps, duplicate loops, 1–16 repeats and optional whole-chain repetition. Only chain members switch; independent tracks continue. DATA rotation selects a step and its sound; DATA push starts/stops the chain. K1 sets repeats, K2 whole-chain repeat, ERASE+pad removes a matching step. Current cached repeats finish before step edits apply. Save configuration; load stopped.
+
+186 Debug and 186 Release tests, host/ARM64 strict Clippy and ARM64 build passed. Isolated real Sample QA verified remote recording/mode/chain controls, actual CoreMIDI input and USB audio, then restored all 16 owner track slots. Actual DRM captures were inspected. This does not certify physical pads/buttons or latest power-cycle boot. See LoopClub/docs/validation-0.3.0.json. Public release remains 0.1.0; no new publication is implied.
+
+
+## FX pad performance — local 0.3.1, owner approved 2026-11-23
+
+FX pages contain only effect-name/state pads and the fixed top navigation. Remove utility pads (slot/HOLD selector/routing/setup/all-off), parameter cards and footer. Unassigned positions are inert blanks, not invented effects. Track/master-insert boards expose the 11 existing effects directly, with no SHIFT effect bank. Main master board keeps its five texture stages, Duck and two named custom effects.
+
+Ordinary press is immediate momentary HOLD; release disables that effect even after page/track navigation. SHIFT+press toggles per-effect LATCH; SHIFT is not an alternate-effect selector. Converting a held effect to LATCH cancels its old release owner. Render OFF/HOLD/LATCH; refused extra insert shows FULL on that pad. Keep existing DSP, saved parameters, two track-insert slots and master independent processing; do not silently replace another active effect. This entry supersedes previous default tap-toggle/optional-HOLD policy. Local build/device verification must be recorded separately from physical input acceptance.
+
+
+## Modulation FX — local 0.4.0, owner approved 2026-11-23
+
+TREMOLO, AUTO PAN and AUTO FLT are appended effect types (12–14); existing effect IDs remain unchanged. They operate on audio, synth and drums through the existing insert processing. WOBBLE retains pitch modulation and gains Sync/shape control. All use ordinary press/release HOLD and SHIFT+press LATCH. The TRACK FX board adds pads12/13/14. The main MASTER board adds pads9/10/11 using its existing two custom insert slots; do not silently expand capacity or replace another active effect. Old custom tiles occupied by dedicated modulation types become inert blanks.
+
+DATA rotation selects a visible effect without enabling it. DATA push opens FX SETTINGS; B1 or DATA returns to the same board and selected slot. K1 Rate/K2 Depth/K3 Mix; B2 Shape cycles six waveforms and B3 Sync toggles BPM divisions. Straight/dotted/triplet divisions include1bar through1/32T. Free rate values are retained when Sync changes; rate follows BPM but is not promised transport-phase locked. Settings do not turn an inactive effect on. With both slots used, an additional effect is refused visibly.
+
+SOUND retains pitch/filter LFO. New projects have seven synth pages, with no dedicated Pan/volume LFO controls. Old nonzero volume/pan LFO values remain acoustically intact and expose an eighth LEGACY MOD page (K2 Pan, SHIFT+K2 Volume) so they can be adjusted/zeroed. Do not silently rewrite saved sounds. New FX metadata has serde defaults for old projects. The MIDI/loop/record button policy and missing recording UNDO are unchanged. Physical inputs, actual USB audio, runtime/SD persistence and public release are separate verification claims.
+
+
+0.4.0 verification completed: 203 Debug + 203 Release tests, strict host/ARM64 Clippy, ARM64 normal/isolated builds. Actual remote Sample QA verifies all16sync divisions, six shapes, track/master HOLD/LATCH, fader targeting, temporary-state suppression and LATCH retention on project save/load, actual stereo USB Auto Pan and existing Wobble. Owner16trackslots restored. Runtime and SD SHA256 3252d9c511dcbbadac2a049ed8239fdeb4606e1bc75f0f66b86fe1e323dd7910 match;20boot files read back and20previous files preserved. Actual DRM screens inspected. Project v4 preserves LATCH; v1–3 remain readable, but older apps reject v4 saves. Save requires stopped transport and completed release tails. Physical controls, power-cycle and worst-case CPU remain separate: see docs/validation-0.4.0.json. No new public release/site changes.
+
+
+## Latest clip-history decision — 2026-11-23, local 0.5.0
+
+The owner approved implementing physical SHIFT+− UNDO / SHIFT++ REDO. Plain +/− keep their page/selection behavior. One shared last clip edit covers completed Audio/Synth/Drum REPLACE/OVERDUB, continuous recording as one gesture, drum generation, MIDI-grid edit, clear and applied/manual chops. It restores clip data, not instrument/mix/FX settings. Cancel an unfinished take without consuming older history; no partial-take REDO. New committed edits clear REDO. History is volatile and clears on project load/restart. Preserve current16track LOOP/MUTE/CHAIN and FX pad semantics. See LoopClub/docs/validation-0.5.0.json for native, real remote-controller/USB-audio and SD verification; physical SHIFT+key acceptance remains separate.
+
+
+## Latest always-play pad workflow — local 0.6.0, 2026-11-23
+
+Normal LOOP pads always perform the selected instrument. SHIFT+pad selects and starts recording that numbered track; SHIFT+same or REC finishes at the next bar. SHIFT+different queues the next track: current sound remains active until the boundary, then commits/loops and the next capture/performance target starts without extra count-in. Display current REC > next NEXT. Retarget initial count-in without changing its start. STOP/UNDO clear pending targets. DATA chooses the instrument while not recording; MUTE/CHAIN keep their specialized pad operations. Existing configured Synth chord/chromatic mode is preserved. Supersedes previous pad-start/temporary-performance and shifted playback-toggle behavior. See product manual and validation-0.6.0.json.
+
+
+### 2026-11-23 approved Audio record targets (local0.7.0)
+
+Audio tracks support both live LINE/MIC/USB capture and existing WAV import. Choose REC: INPUT / CHROMATIC / CHOP explicitly; never automatically infer or switch the target after capture. SHIFT+track-pad starts/counts in, SHIFT+same-track-pad requests bar-end finish; LOOP remains visible and ordinary pads perform. INPUT stores PCM, CHROMATIC stores pitched hold-loop performance and CHOP stores slice hold-loop performance, preserving the original PCM in both performance modes. Existing WAV import copies from the file into an empty Audio track without modifying it. SOURCE pads5/6/7 select the recording target; loaded Audio SOUND B1 selects REC target, B2 opens CHOP EDIT, K1Root/K2Tune/K3Warp. Save original source musical duration independently from the newly recorded performance duration, and tag chop events so changing target or overdubbing pitches cannot reinterpret old events. New format5 embeds all source/performance/settings; old formats1–4 remain readable. Bounded grain-based Warp is an initial implementation with transient/extreme-ratio limits, not a claim of commercial stretch quality.
+
+
+2026-11-23 approved/local0.8.0: Drum SOURCE pad5 or SHIFT+BROWSE imports an XPM Drum Program after explicit populated A–H bank selection, preserving16padpositions. Worker prepares up to4samplezones/velocity/cycle/random/mute/gate, retained underL1; project6embedsPCM. Keygroup/XPN/nativeMPCFX/filterenvelopes/Warp are unsupported, original files and failed imports preserve content. Local verification and limits: mods/public/LoopClub/docs/qa-0.8.0.md; no new public release.
+
+
+Latest0.9.2 user-approved FX UX: pressing a physical/remote FX pad immediately selects/activates its effect and shows contextual K1/K2/K3 values above the4×4board. No DATA focus step for basic controls. Header names the selected target/effect. Released settings stay editable while OFF. Two active effects preserve independent slot edits; refused third effects do not mutate occupied slots. Track/Perform/Texture boards all follow this. Format7 stores stopped clock and loop origins for relative alignment on save/load and copy. Release0.9.2 is a public preview with stated physical/CPU/USB limits; user-approved demo videos do not authorize bundling their commercial source banks.

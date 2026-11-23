@@ -1,0 +1,38 @@
+{
+  "version": "0.3.1",
+  "scope": "local FX performance candidate; public release unchanged",
+  "normal_sha256": "63bca0007865e63e3b5953a7cf793fadf3f02714816db4561f68ebdce6b2088e",
+  "native_tests": {
+    "debug": 190,
+    "release": 190
+  },
+  "strict_clippy": [
+    "host all-targets PASS",
+    "ARM64 lib PASS"
+  ],
+  "arm64_build": "PASS",
+  "device_checks": {
+    "two_held_effects_full_and_release_after_navigation": true,
+    "shift_latch_same_effect_and_independent_hold": true,
+    "held_to_latch_cancels_old_release": true,
+    "master_hold_latch_and_duck_release_after_navigation": true,
+    "custom_master_effects_and_unused_pads_inert": true,
+    "actual_usb_audio": {
+      "finite": true,
+      "peak": 0.24942779541015625,
+      "seconds": 8.916462585034013
+    }
+  },
+  "owner_restore": "all 16 track data slots compared after normal runtime restoration",
+  "limits": [
+    "Actual remote controller checks are not physical pad/SHIFT acceptance.",
+    "Latest hardware power-cycle not certified.",
+    "Two track insert slots retained; a third active effect is refused.",
+    "USB output remains stereo; channel expansion not implemented."
+  ],
+  "sd_persistence": {
+    "runtime_and_boot_sha256_match": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "version": "0.9.0",
+  "date": "2026-11-23",
+  "publication": "local only; public0.1.0 unchanged",
+  "native_full": {
+    "debug": 287,
+    "release": 287
+  },
+  "strict_host_and_arm64_clippy": "PASS",
+  "arm64_normal_and_qa": "PASS",
+  "main_device_cases": [
+    {
+      "case": "all_16_tracks_and_pads",
+      "result": "PASS",
+      "seconds": 36.205
+    },
+    {
+      "case": "input_and_wav_browser",
+      "result": "PASS",
+      "seconds": 8.452
+    },
+    {
+      "case": "chromatic_hold_capture_history_midi",
+      "result": "PASS",
+      "seconds": 13.114
+    },
+    {
+      "case": "chop_capture_mixed_overdub",
+      "result": "PASS",
+      "seconds": 13.509
+    },
+    {
+      "case": "warp_and_audio",
+      "result": "PASS",
+      "seconds": 10.121
+    },
+    {
+      "case": "project_recall",
+      "result": "PASS",
+      "seconds": 1.624
+    },
+    {
+      "case": "actual_wav_load_and_tune",
+      "result": "PASS",
+      "seconds": 42.685
+    },
+    {
+      "case": "chop_structure_and_recall",
+      "result": "PASS",
+      "seconds": 13.846
+    },
+    {
+      "case": "pages_and_fx",
+      "result": "PASS",
+      "seconds": 18.516
+    },
+    {
+      "case": "mixed_soak",
+      "result": "PASS",
+      "seconds": 14.775
+    },
+    {
+      "case": "input_and_owned_transport",
+      "result": "PASS",
+      "seconds": 7.215
+    },
+    {
+      "case": "loop_edit_mute_chain",
+      "result": "PASS",
+      "seconds": 15.945
+    }
+  ],
+  "device_details": {
+    "all_16_record_targets_and_all_16_performance_pads": true,
+    "unfinished_input_cannot_audition_stale_pcm": true,
+    "input_pcm_frames": 88200,
+    "held_octave_repeats_after_source_end_and_release": {
+      "peak": 0.03748030215501785,
+      "crossing_hz": 440.85378718615937,
+      "finite": true
+    },
+    "release_quiet": {
+      "peak": 0.0,
+      "crossing_hz": 0.0,
+      "finite": true
+    },
+    "chromatic_capture_and_undo_redo": true,
+    "actual_usb_midi_sampler_note_off": true,
+    "chop_record_and_cross_mode_overdub": true,
+    "warp_octave_at_88_bpm": {
+      "peak": 0.03748020902276039,
+      "crossing_hz": 439.73771350532246,
+      "finite": true
+    },
+    "four_warp_voices_timing": {
+      "before": {
+        "blocks": 28423,
+        "max_deadline_pct": 54.3139,
+        "overrun_blocks": 0,
+        "p99_deadline_pct_upper": 25.0,
+        "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+      },
+      "after": {
+        "blocks": 30141,
+        "max_deadline_pct": 54.3139,
+        "overrun_blocks": 0,
+        "p99_deadline_pct_upper": 30.0,
+        "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+      },
+      "audio": {
+        "peak": 0.14932338893413544,
+        "crossing_hz": 328.00411314946126,
+        "finite": true
+      }
+    },
+    "v6_save_load_pcm_sequence_settings": true,
+    "wav_loads": [
+      {
+        "name": "QA Mono 220.wav",
+        "source_frames": 11025,
+        "source_sha256_before_after": "79c6205a1c8b8f21b4ac7886684c442da8d31163300528f00759bd6e1aaabdff",
+        "held_audio": {
+          "peak": 0.09149323403835297,
+          "crossing_hz": 219.92947166346715,
+          "finite": true
+        },
+        "raw_loop_tune_hz": 439.2430278884462,
+        "silence_fraction": 0.9060384114583333
+      },
+      {
+        "name": "QA Stereo 330.wav",
+        "source_frames": 11024,
+        "source_sha256_before_after": "c4c1b6780c0eb7c0816d220fa9495ffff6734e581085b5b855a50f3f3966c801",
+        "held_audio": {
+          "peak": 0.09150548279285431,
+          "crossing_hz": 332.19472498122025,
+          "finite": true
+        },
+        "raw_loop_tune_hz": 656.1785519869352,
+        "silence_fraction": 0.9087824417372882
+      }
+    ],
+    "invalid_wav_rejected_without_content": true,
+    "real_chop_reduce_undo_redo_save_load": true,
+    "all_page_contexts_and_fx_hold_latch_capacity": true,
+    "mixed_warp_synth_fx_soak": [
+      {
+        "sampler_voices": 4,
+        "synth_voices": 8,
+        "peak": 0.31014829874038696,
+        "longest_near_zero_frames": 0,
+        "before_timing": {
+          "blocks": 57991,
+          "max_deadline_pct": 60.7552,
+          "overrun_blocks": 0,
+          "p99_deadline_pct_upper": 40.0,
+          "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+        },
+        "after_timing": {
+          "blocks": 59547,
+          "max_deadline_pct": 62.0414,
+          "overrun_blocks": 0,
+          "p99_deadline_pct_upper": 50.0,
+          "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+        }
+      },
+      {
+        "sampler_voices": 8,
+        "synth_voices": 16,
+        "peak": 0.48086434602737427,
+        "longest_near_zero_frames": 0,
+        "before_timing": {
+          "blocks": 60035,
+          "max_deadline_pct": 93.2832,
+          "overrun_blocks": 0,
+          "p99_deadline_pct_upper": 50.0,
+          "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+        },
+        "after_timing": {
+          "blocks": 61590,
+          "max_deadline_pct": 93.2832,
+          "overrun_blocks": 0,
+          "p99_deadline_pct_upper": 65.0,
+          "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+        }
+      }
+    ],
+    "input_selection_and_owned_seq_transport": {
+      "source_readbacks": [
+        {
+          "pending": false,
+          "result": 1,
+          "selected": 0
+        },
+        {
+          "pending": false,
+          "result": 1,
+          "selected": 1
+        },
+        {
+          "pending": false,
+          "result": 1,
+          "selected": 2
+        }
+      ],
+      "queued_seq_presses": 20,
+      "scope": "real codec readback and synthetic owned hardware route; no physical button or analog signal claim"
+    },
+    "loop_copy_move_delete_undo_redo_and_refusals": true,
+    "mute_and_chain_start_stop": true
+  },
+  "supplemental_xpm_and_audio_copy": {
+    "copied_audio_source_and_events_project_recall": true,
+    "file_bank_and_pad_position": true,
+    "four_zone_usb_peaks": [
+      0.01722225733101368,
+      0.05166676640510559,
+      0.08611128479242325,
+      0.12055579572916031
+    ],
+    "project6_embedded_recall": true,
+    "copied_xpm_kit_project_recall": true,
+    "missing_sample_keeps_kit": true,
+    "bank_back_and_h_position": true,
+    "native_lcbank_browser_preserved": true
+  },
+  "final_build_regressions": {
+    "dormant_xpm_synth_audio_drum_project6_recall": true,
+    "xpm_whole_track_copy_move_undo_redo": true,
+    "final_audio_move_delete_undo_redo": true
+  },
+  "runtime_and_sd_sha256": "363f98cc778d88a75ec05e7626b3b17c826b762a45897d196de91c95c60278c0",
+  "sd": {
+    "files_readback_verified": 20,
+    "old_files_preserved": 20
+  },
+  "owner_16_tracks_restored": true,
+  "left_in_stopped_loop": true,
+  "limitations": [
+    "Physical controls/calibrated LINE-MIC/power-cycle not newly certified",
+    "Measured8Warp+16Synth window, not maximum-load guarantee",
+    "MPC native XPM FX/envelopes/Warp not imported",
+    "Grid displays first64events; single volatile latest-edit history"
+  ]
+}

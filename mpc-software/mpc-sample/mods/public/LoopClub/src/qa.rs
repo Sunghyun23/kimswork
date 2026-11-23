@@ -67,6 +67,37 @@ impl Input {
 static INPUT: OnceLock<Queue<Input, 64>> = OnceLock::new();
 static STATE: OnceLock<crate::runtime::AtomicSnapshot> = OnceLock::new();
 static BUTTONS: AtomicU64 = AtomicU64::new(0);
+static DATA_CCS: AtomicU64 = AtomicU64::new(0);
+static NATIVE_ENCODERS: AtomicU64 = AtomicU64::new(0);
+pub fn data_cc() {
+    DATA_CCS.fetch_add(1, Ordering::Relaxed);
+}
+pub fn native_encoder_ignored() {
+    NATIVE_ENCODERS.fetch_add(1, Ordering::Relaxed);
+}
+static ENCODERS: AtomicU64 = AtomicU64::new(0);
+static REMOTE_ENCODERS: AtomicU64 = AtomicU64::new(0);
+static ENCODER_DELTA: std::sync::atomic::AtomicI64 = std::sync::atomic::AtomicI64::new(0);
+static BROWSER_POSITION: AtomicU64 = AtomicU64::new(0);
+pub fn encoder(delta: i32, hardware: bool) {
+    if STATE.get().is_some() {
+        if hardware {
+            ENCODERS.fetch_add(1, Ordering::Relaxed);
+        } else {
+            REMOTE_ENCODERS.fetch_add(1, Ordering::Relaxed);
+        }
+        ENCODER_DELTA.store(i64::from(delta), Ordering::Relaxed);
+    }
+}
+pub fn browser(open: bool, row: usize, total: usize) {
+    if STATE.get().is_some() {
+        BROWSER_POSITION.store(
+            u64::from(open) | (row.min(0xffffff) as u64) << 1 | (total.min(0xffffff) as u64) << 25,
+            Ordering::Relaxed,
+        );
+    }
+}
+
 static PAINTS: AtomicU64 = AtomicU64::new(0);
 static APPLIED: AtomicU64 = AtomicU64::new(0);
 static PAGE: AtomicU64 = AtomicU64::new(0);
@@ -126,6 +157,7 @@ fn output_diagnostics() -> serde_json::Value {
 }
 static AUDIO_TIME: [AtomicU64; 101] = [const { AtomicU64::new(0) }; 101];
 static AUDIO_MAX: AtomicU64 = AtomicU64::new(0);
+static AUDIO_OVERRUNS: AtomicU64 = AtomicU64::new(0);
 pub fn output_start() -> Option<Instant> {
     STATE.get().map(|_| Instant::now())
 }
@@ -138,6 +170,9 @@ pub fn output_finish(start: Option<Instant>, frames: usize, rate: u32) {
             .min(u128::from(u64::MAX)) as u64;
         AUDIO_TIME[(units / 50000).min(100) as usize].fetch_add(1, Ordering::Relaxed);
         AUDIO_MAX.fetch_max(units, Ordering::Relaxed);
+        if units > 1_000_000 {
+            AUDIO_OVERRUNS.fetch_add(1, Ordering::Relaxed);
+        }
     }
 }
 fn audio_timing() -> serde_json::Value {
@@ -160,7 +195,7 @@ fn audio_timing() -> serde_json::Value {
             break;
         }
     }
-    serde_json::json!({"scope":"actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only","blocks":total,"p99_deadline_pct_upper":p99,"max_deadline_pct":AUDIO_MAX.load(Ordering::Relaxed) as f64/10000.0})
+    serde_json::json!({"scope":"actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only","blocks":total,"overrun_blocks":AUDIO_OVERRUNS.load(Ordering::Relaxed),"p99_deadline_pct_upper":p99,"max_deadline_pct":AUDIO_MAX.load(Ordering::Relaxed) as f64/10000.0})
 }
 static PROFILE_TICKS: AtomicU64 = AtomicU64::new(0);
 static PROFILE_TIME: [AtomicU64; 12] = [const { AtomicU64::new(0) }; 12];
@@ -275,9 +310,14 @@ pub fn paint(ui: &crate::ui::Ui, s: &Snapshot, browser: bool) {
             | (u64::from(ui.synth_page) << 8)
             | (u64::from(ui.chord_modes[ui.selected]) << 16)
             | (u64::from(browser) << 17)
+            | (u64::from(ui.loop_perform) << 24)
+            | (u64::from(ui.input_view) << 28)
+            | (u64::from(ui.loop_mode) << 29)
             | ((ui.layer as u64) << 18)
             | (u64::from(ui.layer_detail) << 19)
-            | ((ui.sound as u64) << 20),
+            | ((ui.sound as u64) << 20)
+            | ((ui.texture_slot as u64) << 32)
+            | ((ui.fx_focus as u64) << 40),
         Ordering::Relaxed,
     );
     if let Some(state) = STATE.get() {
@@ -475,9 +515,43 @@ fn serve(mut stream: TcpStream) {
         }
         return;
     }
+    if first.starts_with("get /fixture-mono.wav ") || first.starts_with("get /fixture-stereo.wav ")
+    {
+        if let Some(dir) = audio_fixture_dir()
+            && let Ok(data) = std::fs::read(dir.join(if first.starts_with("get /fixture-mono") {
+                "QA Mono 220.wav"
+            } else {
+                "QA Stereo 330.wav"
+            }))
+        {
+            reply(&mut stream, "200 OK", "audio/wav", &data);
+            return;
+        }
+        reply(
+            &mut stream,
+            "404 Not Found",
+            "text/plain",
+            b"Isolated fixture unavailable",
+        );
+        return;
+    }
+    if first.starts_with("get /browser.json ") {
+        reply(
+            &mut stream,
+            "200 OK",
+            "application/json",
+            &serde_json::to_vec(&crate::browser_device::qa_browser_view()).unwrap_or_default(),
+        );
+        return;
+    }
     if first.starts_with("get /status.json ") {
         let s = STATE.get().and_then(|s| s.read()).unwrap_or_default();
-        let body=serde_json::to_vec(&serde_json::json!({"source":"active DRM framebuffer + live Loop Club state","build_id":build_id(),"ui_revision":"looper-first-layers","pid":std::process::id(),"voice_limit":crate::engine::VOICES,"sdk_patch_sha256":option_env!("LOOP_CLUB_SDK_PATCH"),"input_transport":"independent SDK callbacks + owning UI queue","physical_button_edges":PHYSICAL_COUNT.load(Ordering::Acquire).saturating_sub(REMOTE_CONTROL_EDGES.load(Ordering::Acquire)),"remote_transport_edges":REMOTE_CONTROL_EDGES.load(Ordering::Acquire),"remote_transport_consumed":REMOTE_CONTROL_FLOW.load(Ordering::Acquire)!=0,"physical_button_trace":PHYSICAL_BUTTONS.iter().map(|v|v.load(Ordering::Acquire)).collect::<Vec<_>>(),"project_storage":project_storage(),"project_io":{"sequence":IO_SEQUENCE.load(Ordering::Acquire),"result":IO_RESULT.load(Ordering::Acquire)},"output_streams":output_diagnostics(),"audio_timing":audio_timing(),"dsp_profile":dsp_profile(),"ui_position":UI_POSITION.load(Ordering::Relaxed),"surface_callbacks":SURFACES.load(Ordering::Relaxed),"last_surface_packed":LAST_SURFACE.load(Ordering::Relaxed),"capture_note":"No fbdev fallback; capture fails if active DRM readback is unavailable","remote_input_scope":"controller queue; physical SDK button transport is a separate test","paint_count":PAINTS.load(Ordering::Relaxed),"button_callbacks":BUTTONS.load(Ordering::Relaxed),"remote_button_callbacks":REMOTE_BUTTONS.load(Ordering::Relaxed),"applied":APPLIED.load(Ordering::Relaxed),"page":PAGE.load(Ordering::Relaxed),"words":s.words.to_vec()})).unwrap_or_default();
+        let body=serde_json::to_vec(&serde_json::json!({"source":"active DRM framebuffer + live Loop Club state","build_id":build_id(),"version":env!("CARGO_PKG_VERSION"),"ui_revision":"shift-pad-loop-record","pid":std::process::id(),"voice_limit":crate::engine::VOICES,"active_tracks":crate::model::ACTIVE_TRACKS,"sdk_patch_sha256":option_env!("LOOP_CLUB_SDK_PATCH"),"input_transport":"independent SDK callbacks + owning UI queue","physical_button_edges":PHYSICAL_COUNT.load(Ordering::Acquire).saturating_sub(REMOTE_CONTROL_EDGES.load(Ordering::Acquire)),"remote_transport_edges":REMOTE_CONTROL_EDGES.load(Ordering::Acquire),"remote_transport_consumed":REMOTE_CONTROL_FLOW.load(Ordering::Acquire)!=0,"physical_button_trace":PHYSICAL_BUTTONS.iter().map(|v|v.load(Ordering::Acquire)).collect::<Vec<_>>(),"project_storage":project_storage(),"project_io":{"sequence":IO_SEQUENCE.load(Ordering::Acquire),"result":IO_RESULT.load(Ordering::Acquire)},"output_streams":output_diagnostics(),"audio_timing":audio_timing(),"midi_input":midi_input_diagnostics(),"dsp_profile":dsp_profile(),"ui_position":UI_POSITION.load(Ordering::Relaxed),"input_source":{"selected":crate::input_hw::selected(),"pending":crate::input_hw::pending(),"result":crate::input_hw::result()},"encoder_input":{"data_cc_events":DATA_CCS.load(Ordering::Relaxed),"native_widget_calls":NATIVE_ENCODERS.load(Ordering::Relaxed),"hardware_events":ENCODERS.load(Ordering::Relaxed),"remote_events":REMOTE_ENCODERS.load(Ordering::Relaxed),"last_raw_delta":ENCODER_DELTA.load(Ordering::Relaxed)},"browser":{"open":BROWSER_POSITION.load(Ordering::Relaxed)&1!=0,"row":(BROWSER_POSITION.load(Ordering::Relaxed)>>1)&0xffffff,"total":(BROWSER_POSITION.load(Ordering::Relaxed)>>25)&0xffffff},"surface_callbacks":SURFACES.load(Ordering::Relaxed),"last_surface_packed":LAST_SURFACE.load(Ordering::Relaxed),"capture_note":"No fbdev fallback; capture fails if active DRM readback is unavailable","remote_input_scope":"controller queue; physical SDK button transport is a separate test","paint_count":PAINTS.load(Ordering::Relaxed),"button_callbacks":BUTTONS.load(Ordering::Relaxed),"remote_button_callbacks":REMOTE_BUTTONS.load(Ordering::Relaxed),"applied":APPLIED.load(Ordering::Relaxed),"page":PAGE.load(Ordering::Relaxed),"words":s.words.to_vec()})).unwrap_or_default();
+        reply(&mut stream, "200 OK", "application/json", &body);
+        return;
+    }
+    if first.starts_with("get /input-capabilities.json ") {
+        let body = serde_json::to_vec(&serde_json::json!({"hardware":crate::input_hw::inspect(),"state":crate::input_hw::status()})).unwrap_or_default();
         reply(&mut stream, "200 OK", "application/json", &body);
         return;
     }
@@ -606,9 +680,10 @@ pub fn start() {
     }
     log(
         "startup.json",
-        serde_json::json!({"build":build_id(),"pid":std::process::id(),"voice_limit":crate::engine::VOICES,"sdk_patch_sha256":option_env!("LOOP_CLUB_SDK_PATCH"),"input_transport":"independent SDK callbacks + owning UI queue","physical_button_edges":PHYSICAL_COUNT.load(Ordering::Acquire).saturating_sub(REMOTE_CONTROL_EDGES.load(Ordering::Acquire)),"remote_transport_edges":REMOTE_CONTROL_EDGES.load(Ordering::Acquire),"remote_transport_consumed":REMOTE_CONTROL_FLOW.load(Ordering::Acquire)!=0,"physical_button_trace":PHYSICAL_BUTTONS.iter().map(|v|v.load(Ordering::Acquire)).collect::<Vec<_>>(),"project_storage":project_storage(),"project_io":{"sequence":IO_SEQUENCE.load(Ordering::Acquire),"result":IO_RESULT.load(Ordering::Acquire)},"output_streams":output_diagnostics(),"audio_timing":audio_timing(),"dsp_profile":dsp_profile(),"ui_position":UI_POSITION.load(Ordering::Relaxed),"qa_env":std::env::var("LOOP_CLUB_QA").ok(),"card_dir_present":std::env::var_os("LOOP_CLUB_CARD_DIR").is_some(),"state":"start requested"}),
+        serde_json::json!({"build":build_id(),"pid":std::process::id(),"voice_limit":crate::engine::VOICES,"active_tracks":crate::model::ACTIVE_TRACKS,"sdk_patch_sha256":option_env!("LOOP_CLUB_SDK_PATCH"),"input_transport":"independent SDK callbacks + owning UI queue","physical_button_edges":PHYSICAL_COUNT.load(Ordering::Acquire).saturating_sub(REMOTE_CONTROL_EDGES.load(Ordering::Acquire)),"remote_transport_edges":REMOTE_CONTROL_EDGES.load(Ordering::Acquire),"remote_transport_consumed":REMOTE_CONTROL_FLOW.load(Ordering::Acquire)!=0,"physical_button_trace":PHYSICAL_BUTTONS.iter().map(|v|v.load(Ordering::Acquire)).collect::<Vec<_>>(),"project_storage":project_storage(),"project_io":{"sequence":IO_SEQUENCE.load(Ordering::Acquire),"result":IO_RESULT.load(Ordering::Acquire)},"output_streams":output_diagnostics(),"audio_timing":audio_timing(),"midi_input":midi_input_diagnostics(),"dsp_profile":dsp_profile(),"ui_position":UI_POSITION.load(Ordering::Relaxed),"qa_env":std::env::var("LOOP_CLUB_QA").ok(),"card_dir_present":std::env::var_os("LOOP_CLUB_CARD_DIR").is_some(),"state":"start requested"}),
     );
     let spawn=std::thread::Builder::new().name("loopclub-usb-qa".into()).spawn(||{
+        if let Some(dir)=audio_fixture_dir() && let Err(e)=write_audio_fixtures(&dir) {log("fixture-error.json",serde_json::json!({"error":e.to_string()}));}
         for attempt in 0..120 {
             match TcpListener::bind((Ipv4Addr::new(192,168,155,1),8090)){
                 Ok(listener)=>{log("network.json",serde_json::json!({"state":"listening","address":"192.168.155.1:8090","attempt":attempt}));for stream in listener.incoming().flatten(){serve(stream);}return;}
@@ -622,6 +697,178 @@ pub fn start() {
             serde_json::json!({"state":"thread failed","error":error.to_string()}),
         );
     }
+}
+// Bounded input diagnostics for actual USB MIDI note-off routing; no callback I/O.
+static MIDI_TRACE_COUNT: AtomicU64 = AtomicU64::new(0);
+static MIDI_TRACE: [AtomicU64; 32] = [const { AtomicU64::new(0) }; 32];
+pub fn midi_input_trace(path: u8, source: u32, note: u8, flags: u8, value: u8) {
+    if STATE.get().is_none() {
+        return;
+    }
+    let packed = u64::from(source)
+        | (u64::from(note) << 32)
+        | (u64::from(flags) << 40)
+        | (u64::from(value) << 48)
+        | (u64::from(path) << 56);
+    let at = MIDI_TRACE_COUNT.fetch_add(1, Ordering::Relaxed) as usize % 32;
+    MIDI_TRACE[at].store(packed, Ordering::Release);
+}
+fn midi_input_diagnostics() -> serde_json::Value {
+    serde_json::json!({"count": MIDI_TRACE_COUNT.load(Ordering::Acquire), "ring": MIDI_TRACE.iter().map(|a| a.load(Ordering::Acquire)).collect::<Vec<_>>()})
+}
+
+fn audio_fixture_dir() -> Option<std::path::PathBuf> {
+    let session = option_env!("LOOP_CLUB_QA_SESSION")?;
+    if !session.starts_with("deep-audio-") {
+        return None;
+    }
+    let base = std::path::PathBuf::from(std::env::var_os("LOOP_CLUB_DATA_DIR")?);
+    base.is_absolute()
+        .then(|| crate::project::session_directory(&base, true).join("Fixtures"))
+}
+// Generated diagnostic tones only, confined to an explicitly isolated QA session.
+fn write_audio_fixtures(dir: &std::path::Path) -> std::io::Result<()> {
+    use std::io::Write;
+    std::fs::create_dir_all(dir)?;
+    for (name, rate, channels) in [
+        ("QA Mono 220.wav", 44100u32, 1u16),
+        ("QA Stereo 330.wav", 22050u32, 2u16),
+    ] {
+        let frames = rate / 4;
+        let length = frames * u32::from(channels) * 2;
+        let mut data = Vec::with_capacity(length as usize + 44);
+        data.extend(b"RIFF");
+        data.extend((length + 36).to_le_bytes());
+        data.extend(b"WAVEfmt ");
+        data.extend(16u32.to_le_bytes());
+        data.extend(1u16.to_le_bytes());
+        data.extend(channels.to_le_bytes());
+        data.extend(rate.to_le_bytes());
+        data.extend((rate * u32::from(channels) * 2).to_le_bytes());
+        data.extend((channels * 2).to_le_bytes());
+        data.extend(16u16.to_le_bytes());
+        data.extend(b"data");
+        data.extend(length.to_le_bytes());
+        for i in 0..frames {
+            for c in 0..channels {
+                let hz = if channels == 1 {
+                    220.
+                } else if c == 0 {
+                    330.
+                } else {
+                    440.
+                };
+                let x = ((f64::from(i) * std::f64::consts::TAU * hz / f64::from(rate)).sin()
+                    * 8000.) as i16;
+                data.extend(x.to_le_bytes());
+            }
+        }
+        let path = dir.join(name);
+        match std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)
+        {
+            Ok(mut f) => {
+                f.write_all(&data)?;
+                f.sync_all()?;
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
+                if std::fs::read(&path)? != data {
+                    return Err(std::io::Error::other(
+                        "Existing QA fixture differs; not overwritten",
+                    ));
+                }
+            }
+            Err(e) => return Err(e),
+        }
+    }
+    let layer = |n: usize| {
+        format!(
+            "<Layer number=\"{n}\"><SampleName>QA Mono 220</SampleName><VelStart>{}</VelStart><VelEnd>{}</VelEnd></Layer>",
+            (n - 1) * 32,
+            n * 32 - 1
+        )
+    };
+    let layers = (1..=4).map(layer).collect::<String>();
+    let xml = format!(
+        "<MPCVObject><Program type=\"Drum\"><ProgramName>QA Generated XPM</ProgramName><Instruments><Instrument number=\"1\"><Layers><Layer number=\"1\"><SampleName>QA Mono 220</SampleName></Layer></Layers></Instrument><Instrument number=\"18\"><Layers>{layers}</Layers></Instrument><Instrument number=\"128\"><Layers><Layer number=\"1\"><SampleName>QA Stereo 330</SampleName></Layer></Layers></Instrument></Instruments></Program></MPCVObject>"
+    );
+    let broken_xml = "<MPCVObject><Program type=\"Drum\"><ProgramName>QA Missing XPM</ProgramName><Instruments><Instrument number=\"1\"><Layers><Layer number=\"1\"><SampleName>Intentionally Missing QA Sample</SampleName></Layer></Layers></Instrument></Instruments></Program></MPCVObject>";
+    for (name, data) in [
+        ("QA Banks.xpm", xml.as_bytes()),
+        ("QA Missing.xpm", broken_xml.as_bytes()),
+    ] {
+        let path = dir.join(name);
+        match std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)
+        {
+            Ok(mut f) => {
+                f.write_all(data)?;
+                f.sync_all()?;
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
+                if std::fs::read(&path)? != data {
+                    return Err(std::io::Error::other(
+                        "Existing QA XPM differs; not overwritten",
+                    ));
+                }
+            }
+            Err(e) => return Err(e),
+        }
+    }
+    let broken = dir.join("QA Broken.wav");
+    match std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&broken)
+    {
+        Ok(mut f) => {
+            f.write_all(b"RIFF\x00\x00\x00\x00WAVE")?;
+            f.sync_all()?;
+        }
+        Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
+            if std::fs::read(&broken)? != b"RIFF\x00\x00\x00\x00WAVE" {
+                return Err(std::io::Error::other(
+                    "Existing broken fixture differs; not overwritten",
+                ));
+            }
+        }
+        Err(e) => return Err(e),
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+#[test]
+fn audio_fixtures_decode_and_never_overwrite_different_existing_data() {
+    let dir = std::env::temp_dir().join(format!(
+        "lc-qa-fixtures-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    write_audio_fixtures(&dir).unwrap();
+    for name in ["QA Mono 220.wav", "QA Stereo 330.wav"] {
+        assert_eq!(
+            crate::sample::decode(&dir.join(name), 44100, 44100)
+                .unwrap()
+                .len(),
+            if name.contains("Mono") { 11025 } else { 11024 }
+        );
+    }
+    assert!(crate::sample::decode(&dir.join("QA Broken.wav"), 44100, 44100).is_err());
+    std::fs::write(dir.join("QA Mono 220.wav"), b"different").unwrap();
+    assert!(write_audio_fixtures(&dir).is_err());
+    assert_eq!(
+        std::fs::read(dir.join("QA Mono 220.wav")).unwrap(),
+        b"different"
+    );
+    std::fs::remove_dir_all(dir).unwrap();
 }
 #[cfg(test)]
 mod tests {
