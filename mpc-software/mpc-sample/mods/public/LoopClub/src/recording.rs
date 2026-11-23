@@ -156,6 +156,7 @@ impl Engine {
             stop_after_cycle: resample,
             mode: self.tracks[i].record_mode,
             touched: 0,
+            edited_pads: 0,
         });
         self.prepare_take();
         Ok(())
@@ -501,6 +502,7 @@ impl Engine {
             r.notes_started = false;
             r.mode = t.record_mode;
             r.touched = 0;
+            r.edited_pads = 0;
             if t.kind == Kind::Drum {
                 self.capture_velocities = [0; 128];
             }

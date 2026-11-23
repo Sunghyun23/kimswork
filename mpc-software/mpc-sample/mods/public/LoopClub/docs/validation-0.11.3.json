@@ -1,0 +1,47 @@
+{
+  "version": "0.11.3",
+  "status": "local candidate; public remains0.11.2",
+  "native_debug_tests": 359,
+  "focused_release_tests": 53,
+  "host_all_targets_clippy": "PASS",
+  "arm64_qa_and_normal_builds": "PASS",
+  "package_launcher_cases": 8,
+  "actual_device": {
+    "generation_without_record_or_auto_play": true,
+    "drum_erase_copy_undo_occupied_done": true,
+    "loop_edit_toggle_exit": true,
+    "drum_record_pad_does_not_generate_and_capture_erase_cancels": true,
+    "chop_note_edit_preserves_source_regions": true,
+    "chop_capture_erase_cancel_restores_notes": true,
+    "down_cut_usb": {
+      "reverse_peak": 0.13678620755672455,
+      "return_peak": 0.0,
+      "release_forward_peak": 0.13670441508293152
+    },
+    "bidirectional_option_preserved": true,
+    "down_cut_gesture_recording": true,
+    "format10_down_cut_recall": true
+  },
+  "exact_zip_sha256": "7f6e9b969b3d748166663b6c741e01d14670f0114040cb2f8ec17537d4921ed6",
+  "exact_library_sha256": "df89d849c8f97e330f5595e054ff6a49eba3dcf2997d2d1b0cca1bf895ed3e1f",
+  "scope": "Actual MPC Sample1.3.0.12 injected independent button callback, controller pads, DRM and USB audio; physical finger/power-cycle acceptance separate",
+  "discovered_and_fixed": "deck::read rem_euclid(negative tiny head,len) rounded to len=11025, producing bounds panic/ABRT; wrap endpoint to zero before cubic indexing. Exact regression added.",
+  "project_format": 10,
+  "reads_formats": "1-10; versions <=0.11.2 reject new format10 saves",
+  "owner_saved_files_overwritten": false,
+  "restart_authorization": "Owner explicitly approved discarding changed Drum1 session; compare restored saved baseline16tracks/BPM/input.",
+  "exact_public_library_verification": {
+    "result": "PASS",
+    "version": "0.11.3",
+    "scope": "Exact public ZIP library; actual independent callback/controller pads and DRM, not physical finger input",
+    "generation_stays_stopped": true,
+    "notes_erase_copy_undo_done": true,
+    "down_cut_and_bidirectional_switch": true,
+    "eight_wrap_return_stress_cycles_same_pid": true,
+    "release_resumes_forward": true
+  },
+  "sd_files_readback": 20,
+  "previous_boot_files_preserved": 20,
+  "runtime_sd_hash_match": true,
+  "final_runtime_version": "0.11.3"
+}

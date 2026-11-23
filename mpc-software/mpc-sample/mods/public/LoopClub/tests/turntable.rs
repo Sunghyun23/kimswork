@@ -10,6 +10,7 @@ fn core() -> Engine {
     e.preroll = 0;
     let t = &mut e.tracks[0];
     t.audio_target = RecordTarget::Turntable;
+    t.deck.reverse_cut = false;
     t.source_frames = 8000;
     t.audio_frames = 8000;
     t.source_ticks = 4 * PPQ;
@@ -29,7 +30,10 @@ fn frames(e: &mut Engine, n: usize) -> f32 {
 fn fader_direction_and_stationary_stylus_are_finite_and_silent() {
     let e = core();
     let pcm = &e.tracks[0].audio[..8000];
-    let cfg = Settings::default();
+    let cfg = Settings {
+        reverse_cut: false,
+        ..Settings::default()
+    };
     let mut d = Player::default();
     d.grab(true, Some(0.5), cfg, 8000);
     d.move_to(0.9, cfg, 240., 8000);
@@ -509,5 +513,118 @@ fn replacing_midway_through_a_long_note_clip_releases_only_its_playback_owner() 
         })
         .unwrap();
         assert!(frames(&mut e, 300) > 0.01);
+    }
+}
+
+#[test]
+fn down_cut_mutes_return_rearms_and_release_restores_forward_playback() {
+    let e = core();
+    let pcm = &e.tracks[0].audio[..8000];
+    let cfg = Settings {
+        reverse_cut: true,
+        ..Settings::default()
+    };
+    let mut d = Player::default();
+    d.grab(true, Some(0.8), cfg, 8000);
+    d.move_to(0.1, cfg, 240., 8000);
+    let mut peak = 0f32;
+    for _ in 0..400 {
+        peak = peak.max(d.sample(pcm, cfg, 8000).peak());
+    }
+    assert!(peak > 0.01 && d.rate < 0.);
+    d.move_to(0.9, cfg, 240., 8000);
+    for _ in 0..100 {
+        d.sample(pcm, cfg, 8000);
+    }
+    assert!(d.state.returning && d.rate > 0.);
+    for _ in 0..100 {
+        assert_eq!(d.sample(pcm, cfg, 8000), Frame::ZERO);
+    }
+    let recorded = d.state;
+    let mut replay = Player::default();
+    replay.restore(recorded, 0, cfg, 8000);
+    for _ in 0..100 {
+        assert_eq!(replay.sample(pcm, cfg, 8000), Frame::ZERO);
+    }
+    d.move_to(0.2, cfg, 240., 8000);
+    peak = 0.;
+    for _ in 0..300 {
+        peak = peak.max(d.sample(pcm, cfg, 8000).peak());
+    }
+    assert!(peak > 0.01 && !d.state.returning);
+    d.grab(false, None, cfg, 8000);
+    peak = 0.;
+    for _ in 0..200 {
+        peak = peak.max(d.sample(pcm, cfg, 8000).peak());
+    }
+    assert!(peak > 0.01 && d.rate > 0. && !d.state.grabbed);
+}
+#[test]
+fn legacy_and_new_tracks_default_to_bidirectional_with_optional_down_cut() {
+    let legacy: Settings = serde_json::from_str(r#"{"speed":1.0,"range":1,"slip":true}"#).unwrap();
+    assert!(!legacy.reverse_cut);
+    assert!(!Settings::default().reverse_cut);
+    let old:loop_club::deck::Control=serde_json::from_str(r#"{"head":0,"slip":0,"target":0,"anchor":0,"fader":0.5,"anchor_fader":0.5,"grabbed":true}"#).unwrap();
+    assert!(!old.returning);
+    let mut e = core();
+    e.command(Command::DeckValue(0, 3, 1.)).unwrap();
+    let mut u = Ui::default();
+    u.navigate(Page::Play, &Snapshot::capture(&e));
+    u.soft(1, true, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert!(!e.tracks[0].deck.reverse_cut);
+}
+
+#[test]
+fn project10_preserves_cut_option_and_muted_return_controls() {
+    let mut e = core();
+    e.tracks[0].deck.reverse_cut = true;
+    e.tracks[0].audio_sequence = true;
+    e.tracks[0].events.push(Event {
+        deck: Some(loop_club::deck::Control {
+            grabbed: true,
+            returning: true,
+            fader: 0.9,
+            anchor_fader: 0.1,
+            target: 1000.,
+            head: 100.,
+            ..Default::default()
+        }),
+        timing: None,
+        tick: 0,
+        note: 0,
+        velocity: 0,
+        on: false,
+        slice: false,
+    });
+    let file = std::env::temp_dir().join(format!("loop-down-cut-{}", std::process::id()));
+    let _ = std::fs::remove_file(&file);
+    loop_club::project::save(&e, &file).unwrap();
+    let loaded = loop_club::project::load(&file, 8000, 16000).unwrap();
+    std::fs::remove_file(&file).unwrap();
+    assert!(loaded.tracks[0].deck.reverse_cut);
+    assert!(loaded.tracks[0].events[0].deck.unwrap().returning);
+    assert_eq!(loaded.tracks[0].audio[..8000], e.tracks[0].audio[..8000]);
+}
+
+#[test]
+fn negative_subsample_loop_boundary_never_indexes_the_pcm_endpoint() {
+    let pcm = vec![Frame::mono(0.2); 11025];
+    let cfg = Settings::default();
+    for head in [
+        -f64::MIN_POSITIVE,
+        -f64::EPSILON,
+        -1e-14,
+        -11025. - 1e-12,
+        11025.,
+        0.,
+    ] {
+        let mut d = Player::default();
+        d.start(head);
+        d.grab(true, Some(0.5), cfg, 44100);
+        for _ in 0..1000 {
+            assert!(d.sample(&pcm, cfg, 44100).finite());
+        }
     }
 }

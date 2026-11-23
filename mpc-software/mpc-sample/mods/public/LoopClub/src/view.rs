@@ -117,63 +117,67 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     }
 
     p.rect(0, 0, 320, 240, BG);
-    let heading = match ui.page {
-        Page::Perform => "PLAY SETTINGS".to_owned(),
-        Page::Loop if ui.loop_edit => "Loop Club / EDIT".into(),
-        Page::Loop => format!(
-            "Loop Club / {}",
-            ["LOOP", "MUTE", "CHAIN"][usize::from(ui.loop_mode.min(2))]
-        ),
-        Page::Play => format!(
-            "{} {:02}",
-            match s.track_kind(ui.selected) {
-                Kind::Synth => "SYNTH PLAY",
-                Kind::Drum => "DRUM PLAY",
-                Kind::Audio => "SAMPLE SOUND",
-            },
-            ui.selected + 1
-        ),
-        Page::Grid => if !s.note_view(ui.selected) {
-            "AUDIO WAVEFORM"
-        } else {
-            "NOTE GRID"
-        }
-        .to_owned(),
-        Page::Mix => "TRACK MIX".to_owned(),
-        Page::KitMix => "DRUM MIX".to_owned(),
-        Page::FxSettings => "FX SETTINGS".to_owned(),
-        Page::TrackFx => format!(
-            "T{:02} / {}",
-            ui.selected + 1,
-            effect_name(crate::ui::FX_PADS[ui.fx_focus.min(crate::ui::FX_PADS.len() - 1)])
-        ),
-        Page::MasterFx => format!(
-            "{} / {}",
-            ["MASTER", "BUS A", "BUS B"][ui.master_target.min(2) as usize],
-            effect_name(crate::ui::FX_PADS[ui.fx_focus.min(crate::ui::FX_PADS.len() - 1)])
-        ),
-        Page::Setup => if ui.input_view {
-            "INPUT SOURCE"
-        } else {
-            "PROJECT"
-        }
-        .to_owned(),
-        Page::Chop => "CHOP".to_owned(),
-        Page::Source => "TRACK SOURCE".to_owned(),
-        Page::Output => "OUTPUT".to_owned(),
-        Page::DrumSound => "DRUM SOUND".to_owned(),
-        Page::Sidechain => "SIDECHAIN".to_owned(),
-        Page::Texture => format!(
-            "MASTER / {}",
-            if ui.texture_slot < 5 {
-                crate::motion::TEXTURES[ui.texture_slot]
-            } else if ui.texture_slot == 5 {
-                "DUCK"
+    let heading = if ui.pad_notes_edit.is_some() {
+        "PAD NOTE EDIT".to_owned()
+    } else {
+        match ui.page {
+            Page::Perform => "PLAY SETTINGS".to_owned(),
+            Page::Loop if ui.loop_edit => "Loop Club / EDIT".into(),
+            Page::Loop => format!(
+                "Loop Club / {}",
+                ["LOOP", "MUTE", "CHAIN"][usize::from(ui.loop_mode.min(2))]
+            ),
+            Page::Play => format!(
+                "{} {:02}",
+                match s.track_kind(ui.selected) {
+                    Kind::Synth => "SYNTH PLAY",
+                    Kind::Drum => "DRUM PLAY",
+                    Kind::Audio => "SAMPLE SOUND",
+                },
+                ui.selected + 1
+            ),
+            Page::Grid => if !s.note_view(ui.selected) {
+                "AUDIO WAVEFORM"
             } else {
-                ui.quick_fx(s)
-                    .map_or("FX", |(_, _, fx)| effect_name(fx.effect))
+                "NOTE GRID"
             }
-        ),
+            .to_owned(),
+            Page::Mix => "TRACK MIX".to_owned(),
+            Page::KitMix => "DRUM MIX".to_owned(),
+            Page::FxSettings => "FX SETTINGS".to_owned(),
+            Page::TrackFx => format!(
+                "T{:02} / {}",
+                ui.selected + 1,
+                effect_name(crate::ui::FX_PADS[ui.fx_focus.min(crate::ui::FX_PADS.len() - 1)])
+            ),
+            Page::MasterFx => format!(
+                "{} / {}",
+                ["MASTER", "BUS A", "BUS B"][ui.master_target.min(2) as usize],
+                effect_name(crate::ui::FX_PADS[ui.fx_focus.min(crate::ui::FX_PADS.len() - 1)])
+            ),
+            Page::Setup => if ui.input_view {
+                "INPUT SOURCE"
+            } else {
+                "PROJECT"
+            }
+            .to_owned(),
+            Page::Chop => "CHOP".to_owned(),
+            Page::Source => "TRACK SOURCE".to_owned(),
+            Page::Output => "OUTPUT".to_owned(),
+            Page::DrumSound => "DRUM SOUND".to_owned(),
+            Page::Sidechain => "SIDECHAIN".to_owned(),
+            Page::Texture => format!(
+                "MASTER / {}",
+                if ui.texture_slot < 5 {
+                    crate::motion::TEXTURES[ui.texture_slot]
+                } else if ui.texture_slot == 5 {
+                    "DUCK"
+                } else {
+                    ui.quick_fx(s)
+                        .map_or("FX", |(_, _, fx)| effect_name(fx.effect))
+                }
+            ),
+        }
     };
     p.text(7, 2, 165, 23, 20., INK, &heading);
     p.text(
@@ -346,8 +350,13 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             },
         ];
     }
+    if ui.pad_notes_edit.is_some() {
+        tabs = ["ERASE NOTES", "COPY NOTES", "DONE"];
+    }
     for (i, title) in tabs.iter().enumerate() {
-        let active = if ui.page == Page::Loop && ui.loop_edit {
+        let active = if let Some(copy) = ui.pad_notes_edit {
+            i == usize::from(copy)
+        } else if ui.page == Page::Loop && ui.loop_edit {
             i == ui.edit_operation as usize
         } else if ui.page == Page::Loop {
             i == 2 && s.words[16 + ui.selected * 12] & (1 << 18) != 0
@@ -1365,6 +1374,10 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             &footer,
         );
     }
+    if ui.loop_edit || ui.pad_notes_edit.is_some() {
+        p.rect(5, 184, 310, 15, BG);
+        p.text(5, 184, 310, 15, 13., GOLD, "ERASE/COPY: BACK | DATA: BACK");
+    }
 }
 
 fn fx_controls(effect: Effect) -> &'static str {
@@ -2245,8 +2258,8 @@ fn loop_workspace(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             Some(source) if ui.edit_operation == 1 => {
                 format!("PAD {:02} AGAIN: DELETE", source + 1)
             }
-            Some(source) => format!("{:02} > EMPTY PAD / DATA: EXIT", source + 1),
-            None => "PAD: SOURCE / DATA: EXIT".into(),
+            Some(source) => format!("{:02} > EMPTY PAD / ERASE: BACK", source + 1),
+            None => "PAD: SOURCE / ERASE: BACK".into(),
         }
     } else if ui.loop_mode == 1 {
         "PAD: MUTE / SAMPLE: LOOP".into()
@@ -2598,7 +2611,18 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     } else {
         "REPLACE"
     };
-    for (i, title) in ["TURN >", "CHOP EDIT", mode].iter().enumerate() {
+    let cut = if s.deck().reverse_cut {
+        "DOWN CUT"
+    } else {
+        "BOTH DIR"
+    };
+    let slip = if s.deck().slip { "SLIP ON" } else { "SLIP OFF" };
+    let tabs = if ui.shift_view {
+        ["TURN >", cut, slip]
+    } else {
+        ["TURN >", "CHOP EDIT", mode]
+    };
+    for (i, title) in tabs.iter().enumerate() {
         p.rect(
             5 + i as i32 * 105,
             27,
@@ -2647,7 +2671,7 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         18,
         14.,
         GOLD,
-        &format!("SAMPLE / {:02}", ui.selected + 1),
+        &format!("{:02} / {cut}", ui.selected + 1),
     );
     p.text(150, 76, 160, 20, 17., INK, &s.name(ui.selected));
     let grabbed = s.words[1191] & 2 != 0;
@@ -2656,6 +2680,8 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         "READY"
     } else if !grabbed {
         "PLAY"
+    } else if s.deck().reverse_cut && s.words[1191] & 16 != 0 {
+        "RE-ARM"
     } else if speed.abs() < 0.02 {
         "GRAB"
     } else if speed < 0. {

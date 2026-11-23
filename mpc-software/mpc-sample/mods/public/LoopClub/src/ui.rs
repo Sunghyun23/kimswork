@@ -188,7 +188,9 @@ impl Snapshot {
         s.words[1190] = pair((d.state.head.rem_euclid(n) / n) as f32, d.rate);
         s.words[1191] = u64::from(current.deck.slip)
             | (u64::from(d.state.grabbed) << 1)
-            | (u64::from(d.active) << 2);
+            | (u64::from(d.active) << 2)
+            | (u64::from(current.deck.reverse_cut) << 3)
+            | (u64::from(d.state.returning) << 4);
         s.words[1192] = pair(d.state.fader, (d.state.slip.rem_euclid(n) / n) as f32);
 
         s.words[1188] = e.swing.map_or(0, |v| {
@@ -414,6 +416,7 @@ impl Snapshot {
             speed: lo(self.words[1189]),
             range: hi(self.words[1189]) as u8,
             slip: self.words[1191] & 1 != 0,
+            reverse_cut: self.words[1191] & 8 != 0,
         }
     }
     pub fn deck_head(&self) -> f32 {
@@ -612,6 +615,8 @@ pub struct FxEdit {
 pub struct Ui {
     pub deck_held: Option<usize>,
     pub last_fader: Option<f32>,
+    pub pad_notes_edit: Option<bool>,
+    pub pad_notes_source: Option<usize>,
     pub loop_edit: bool,
     pub edit_operation: u8,
     pub edit_source: Option<usize>,
@@ -657,6 +662,8 @@ pub struct Ui {
 impl Default for Ui {
     fn default() -> Self {
         Self {
+            pad_notes_edit: None,
+            pad_notes_source: None,
             loop_edit: false,
             edit_operation: 0,
             edit_source: None,
@@ -944,11 +951,50 @@ impl Ui {
             });
         }
     }
+    pub fn pad_notes_context(&self, s: &Snapshot) -> bool {
+        let kind = s.track_kind(self.selected);
+        (matches!(self.page, Page::Play | Page::DrumSound | Page::Chop)
+            || self.page == Page::Loop
+                && (self.pad_notes_edit.is_some() || s.words[9] == self.selected as u64 + 1))
+            && (kind == Kind::Drum
+                || kind == Kind::Audio
+                    && (self.page == Page::Chop
+                        || s.audio_target(self.selected) == crate::audio::RecordTarget::Chop))
+    }
+    pub fn close_pad_notes_edit(&mut self) {
+        self.pad_notes_edit = None;
+        self.pad_notes_source = None;
+        self.notice = "";
+    }
+    pub fn pad_notes_button(&mut self, code: u32, shift: bool, s: &Snapshot) -> bool {
+        if self.pad_notes_edit.is_some() && matches!(code, 9 | 111 | 6) {
+            self.close_pad_notes_edit();
+            return code != 6;
+        }
+        if code != 9 || !self.pad_notes_context(s) {
+            return false;
+        }
+        self.pad_notes_edit = Some(shift);
+        self.pad_notes_source = None;
+        self.notice = if shift {
+            "COPY NOTES: SOURCE > EMPTY PAD"
+        } else {
+            "ERASE NOTES: PRESS PAD"
+        };
+        true
+    }
+
     /// Own ERASE/COPY only on the loop overview. A press opens the edit panel;
     /// it never clears content without the existing same-pad confirmation.
     pub fn loop_edit_button(&mut self, code: u32, shift: bool, s: &Snapshot) -> bool {
         if code != 9 || self.page != Page::Loop {
             return false;
+        }
+        if self.loop_edit {
+            self.loop_edit = false;
+            self.edit_source = None;
+            self.notice = "";
+            return true;
         }
         if s.words[9] != 0 || s.words[4] & 1 != 0 {
             self.notice = "STOP BEFORE LOOP EDIT";
@@ -967,6 +1013,7 @@ impl Ui {
     }
 
     pub fn navigate(&mut self, page: Page, s: &Snapshot) {
+        self.close_pad_notes_edit();
         self.input_view = false;
         if page != Page::Loop {
             self.loop_edit = false;
@@ -1031,6 +1078,16 @@ impl Ui {
         self.pickup.select(level)
     }
     pub fn soft(&mut self, key: usize, shift: bool, s: &Snapshot, mut send: impl FnMut(Command)) {
+        if self.pad_notes_edit.is_some() {
+            if key == 2 {
+                self.close_pad_notes_edit();
+            } else {
+                self.pad_notes_edit = Some(key == 1);
+                self.pad_notes_source = None;
+                self.notice = "";
+            }
+            return;
+        }
         if self.page == Page::Loop && self.loop_edit {
             self.edit_operation = key.min(2) as u8;
             self.edit_source = None;
@@ -1200,6 +1257,17 @@ impl Ui {
             }
         }
         if self.page == Page::Play && s.track_kind(self.selected) == Kind::Audio {
+            if key == 1
+                && shift
+                && s.audio_target(self.selected) == crate::audio::RecordTarget::Turntable
+            {
+                send(Command::DeckValue(
+                    self.selected,
+                    3,
+                    if s.deck().reverse_cut { 0. } else { 1. },
+                ));
+                return;
+            }
             if key == 0 {
                 let target = s.audio_target(self.selected);
                 let chord = target == crate::audio::RecordTarget::Chromatic
@@ -1389,6 +1457,36 @@ impl Ui {
                     ..Fx::default()
                 };
                 send(fx_command(target, track, slot, fx, false));
+            }
+            return Action::None;
+        }
+        if let Some(copy) = self.pad_notes_edit {
+            if !self.pad_notes_context(s) {
+                self.close_pad_notes_edit();
+                return Action::None;
+            }
+            self.sound = pad;
+            if copy {
+                if let Some(source) = self.pad_notes_source.take() {
+                    if source != pad {
+                        send(Command::PadNotes {
+                            track: self.selected,
+                            source: source as u8,
+                            target: Some(pad as u8),
+                        });
+                        self.notice = "";
+                    }
+                } else {
+                    self.pad_notes_source = Some(pad);
+                    self.notice = "COPY NOTES: CHOOSE EMPTY PAD";
+                }
+            } else {
+                send(Command::PadNotes {
+                    track: self.selected,
+                    source: pad as u8,
+                    target: None,
+                });
+                self.notice = "";
             }
             return Action::None;
         }
@@ -1929,6 +2027,9 @@ impl Ui {
         })
     }
     pub fn encoder(&mut self, delta: i32, s: &Snapshot, mut send: impl FnMut(Command)) {
+        if self.pad_notes_edit.is_some() {
+            return;
+        }
         if self.page == Page::Loop && self.loop_edit {
             self.edit_source = None;
         }

@@ -318,7 +318,12 @@ pub fn paint(ui: &crate::ui::Ui, s: &Snapshot, browser: bool) {
             | ((ui.sound as u64) << 20)
             | ((ui.texture_slot as u64) << 32)
             | ((ui.fx_focus as u64) << 40)
-            | (u64::from(ui.perform_section) << 48),
+            | (u64::from(ui.perform_section) << 48)
+            | (u64::from(ui.pad_notes_edit.is_some()) << 56)
+            | (u64::from(ui.pad_notes_edit == Some(true)) << 57)
+            | (u64::from(ui.loop_edit) << 58)
+            | (u64::from(ui.pad_notes_source.is_some()) << 59)
+            | ((ui.pad_notes_source.unwrap_or(0) as u64) << 60),
         Ordering::Relaxed,
     );
     if let Some(state) = STATE.get() {
@@ -534,6 +539,27 @@ fn serve(mut stream: TcpStream) {
             "text/plain",
             b"Isolated fixture unavailable",
         );
+        return;
+    }
+    if first.starts_with("get /app-journal.txt ") && option_env!("LOOP_CLUB_QA_SESSION").is_some() {
+        // USB-only QA worker: fixed, read-only unit logs; never called by audio/UI.
+        let output = std::process::Command::new("/usr/bin/journalctl")
+            .args([
+                "--unit=ac50.service",
+                "--lines=300",
+                "--no-pager",
+                "--output=short-monotonic",
+            ])
+            .output();
+        match output {
+            Ok(output) => reply(&mut stream, "200 OK", "text/plain", &output.stdout),
+            Err(error) => reply(
+                &mut stream,
+                "503 Service Unavailable",
+                "text/plain",
+                error.to_string().as_bytes(),
+            ),
+        }
         return;
     }
     if first.starts_with("get /browser.json ") {

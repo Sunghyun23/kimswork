@@ -726,3 +726,69 @@ fn full_scratch_overdub_refuses_seed_without_growing_or_mutating_completed_clip(
     assert_eq!(e.tracks[0].events.len(), loop_club::engine::MAX_EVENTS);
     assert_eq!(e.tracks[0].source_frames, 8000);
 }
+
+#[test]
+fn pad_note_erase_copy_and_capture_edits_do_not_allocate_or_free() {
+    for kind in [Kind::Drum, Kind::Audio] {
+        let mut e = Box::new(Engine::new(8000, 240., 16000));
+        e.preroll = 0;
+        let t = &mut e.tracks[0];
+        t.kind = kind;
+        t.length_ticks = 4 * PPQ;
+        if kind == Kind::Audio {
+            t.audio_frames = 800;
+            t.source_frames = 800;
+            t.chops.divide(800);
+            t.audio_target = loop_club::audio::RecordTarget::Chop;
+            t.audio_sequence = true;
+        }
+        for on in [true, false] {
+            t.events.push(Event {
+                note: 0,
+                tick: if on { 0 } else { PPQ / 4 },
+                velocity: 70,
+                on,
+                slice: kind == Kind::Audio,
+                deck: None,
+                timing: None,
+            });
+        }
+        COUNT.with(|c| c.set(0));
+        TRACK.with(|t| t.set(true));
+        for _ in 0..10 {
+            e.command(Command::PadNotes {
+                track: 0,
+                source: 0,
+                target: Some(2),
+            })
+            .unwrap();
+            e.command(Command::Undo).unwrap();
+            e.command(Command::Redo).unwrap();
+            e.command(Command::PadNotes {
+                track: 0,
+                source: 2,
+                target: None,
+            })
+            .unwrap();
+        }
+        e.command(Command::RecordMode(0, RecordMode::Overdub))
+            .unwrap();
+        e.command(Command::LoopRecord(0)).unwrap();
+        e.process(Frame::ZERO);
+        e.command(Command::PadNotes {
+            track: 0,
+            source: 0,
+            target: Some(2),
+        })
+        .unwrap();
+        e.command(Command::PadNotes {
+            track: 0,
+            source: 0,
+            target: None,
+        })
+        .unwrap();
+        e.command(Command::Undo).unwrap();
+        TRACK.with(|t| t.set(false));
+        assert_eq!(COUNT.with(Cell::get), 0);
+    }
+}

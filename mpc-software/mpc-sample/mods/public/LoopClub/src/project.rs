@@ -104,7 +104,7 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
     }
     let state = State {
         chain: engine.chain.config,
-        version: 9,
+        version: 10,
         timing_revision: 1,
         swing: engine.swing,
         transport_frame: engine.clock.frame,
@@ -237,7 +237,7 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
     f.read_exact(&mut bytes)?;
     let s: State = serde_json::from_slice(&bytes)?;
     if s.tracks.len() != 16
-        || ![1, 2, 3, 4, 5, 6, 7, 8, 9].contains(&s.version)
+        || !(1..=10).contains(&s.version)
         || s.transport_frame > u64::from(s.rate) * u64::from(u32::MAX)
         || s.rate != expected_rate
         || !s.bpm.is_finite()
@@ -467,7 +467,26 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         e.separate_usb |= t.output != OutputTarget::Both;
         dst.length_ticks = t.length_ticks;
         dst.audio_frames = t.audio_frames;
+        let mut previous_deck: Option<crate::deck::Control> = None;
         dst.events.extend(t.events.into_iter().map(|mut event| {
+            if s.version < 10
+                && let Some(mut control) = event.deck
+            {
+                control.returning = control.grabbed
+                    && previous_deck.map_or(control.fader > control.anchor_fader, |prev| {
+                        if prev.grabbed {
+                            if control.fader == prev.fader {
+                                prev.returning
+                            } else {
+                                control.fader > prev.fader
+                            }
+                        } else {
+                            false
+                        }
+                    });
+                previous_deck = Some(control);
+                event.deck = Some(control);
+            }
             let lane = event.note % 16;
             if t.kind == Kind::Drum && t.generated_sounds & (1 << lane) != 0 {
                 if s.version < 9 {

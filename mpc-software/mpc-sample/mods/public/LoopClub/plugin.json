@@ -1,7 +1,7 @@
 {
   "name": "Loop Club",
   "manufacturer": "kim",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "kind": "mpc-sample-mod",
   "license": "MIT",
   "firmware": "1.3.0.12",

@@ -741,6 +741,12 @@ impl Mod for LoopClub {
         }
         if self
             .ui
+            .pad_notes_button(event.code, event.shift, &self.snapshot)
+        {
+            return Flow::Consume;
+        }
+        if self
+            .ui
             .loop_edit_button(event.code, event.shift, &self.snapshot)
         {
             return Flow::Consume;
@@ -755,6 +761,7 @@ impl Mod for LoopClub {
             13 if self.ui.page == Page::Loop
                 && !event.shift
                 && !self.ui.loop_edit
+                && self.ui.pad_notes_edit.is_none()
                 && self.ui.loop_mode != 2
                 && self.snapshot.track_kind(self.ui.selected) == Kind::Audio
                 && self.snapshot.words[9] == self.ui.selected as u64 + 1
@@ -765,6 +772,7 @@ impl Mod for LoopClub {
             13 if self.ui.page == Page::Loop
                 && !event.shift
                 && !self.ui.loop_edit
+                && self.ui.pad_notes_edit.is_none()
                 && self.ui.loop_mode != 2
                 && self.snapshot.track_kind(self.ui.selected) == Kind::Audio
                 && self.snapshot.words[16 + self.ui.selected * 12 + 11] == 0 =>

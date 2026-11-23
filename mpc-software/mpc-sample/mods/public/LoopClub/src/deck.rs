@@ -7,6 +7,8 @@ pub struct Settings {
     pub speed: f32,
     pub range: u8,
     pub slip: bool,
+    #[serde(default)]
+    pub reverse_cut: bool,
 }
 impl Default for Settings {
     fn default() -> Self {
@@ -14,6 +16,7 @@ impl Default for Settings {
             speed: 1.,
             range: 1,
             slip: true,
+            reverse_cut: false,
         }
     }
 }
@@ -34,6 +37,8 @@ pub struct Control {
     pub fader: f32,
     pub anchor_fader: f32,
     pub grabbed: bool,
+    #[serde(default)]
+    pub returning: bool,
 }
 impl Control {
     pub fn valid(self) -> bool {
@@ -69,11 +74,13 @@ pub struct Player {
     dc_in: Frame,
     dc_out: Frame,
     attack: f32,
+    cut_gain: f32,
 }
 impl Player {
     pub fn start(&mut self, head: f64) {
         *self = Self::default();
         self.active = true;
+        self.cut_gain = 1.;
         self.state.head = head;
         self.state.slip = head;
         self.state.target = head;
@@ -85,6 +92,7 @@ impl Player {
                 self.start(0.);
             }
             self.state.grabbed = true;
+            self.state.returning = false;
             self.live = true;
             self.audition = true;
             self.state.anchor = self.state.head;
@@ -110,7 +118,11 @@ impl Player {
         if !self.live || !self.state.grabbed {
             return false;
         }
-        self.state.fader = value.clamp(0., 1.);
+        let next = value.clamp(0., 1.);
+        if next != self.state.fader {
+            self.state.returning = next > self.state.fader;
+        }
+        self.state.fader = next;
         if self.anchor_pending {
             self.state.anchor_fader = self.state.fader;
             self.anchor_pending = false;
@@ -128,6 +140,13 @@ impl Player {
         self.audition = false;
         self.anchor_pending = false;
         self.active = true;
+        if !was_active {
+            self.cut_gain = if cfg.reverse_cut && control.grabbed && control.returning {
+                0.
+            } else {
+                1.
+            };
+        }
         if !control.grabbed && prior.grabbed && was_active {
             self.fade = (rate / 250).max(1);
             self.fade_head = prior.head;
@@ -186,12 +205,22 @@ impl Player {
         if self.state.slip.abs() > pcm.len().max(1) as f64 * 1024. {
             self.state = self.state.normalized(pcm.len());
         }
-        filtered.gain(self.attack)
+        let audible = !(cfg.reverse_cut && self.state.grabbed && self.state.returning);
+        let step = 1. / (rate as f32 * 0.003).max(1.);
+        self.cut_gain = if audible {
+            (self.cut_gain + step).min(1.)
+        } else {
+            (self.cut_gain - step).max(0.)
+        };
+        filtered.gain(self.attack * self.cut_gain)
     }
 }
 fn read(pcm: &[Frame], head: f64) -> Frame {
     let n = pcm.len() as i64;
-    let pos = head.rem_euclid(n as f64);
+    let wrapped = head.rem_euclid(n as f64);
+    // rem_euclid can round a tiny negative remainder up to exactly len.
+    // Treat that endpoint as the loop start before indexing or interpolating.
+    let pos = if wrapped >= n as f64 { 0. } else { wrapped };
     let i = pos.floor() as i64;
     let f = (pos - i as f64) as f32;
     let a = pcm[(i - 1).rem_euclid(n) as usize];

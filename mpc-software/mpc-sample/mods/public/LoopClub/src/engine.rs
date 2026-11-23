@@ -191,9 +191,15 @@ pub struct Recorder {
     pub stop_after_cycle: bool,
     pub mode: RecordMode,
     pub touched: u16,
+    pub edited_pads: u16,
 }
 #[derive(Clone, Copy, Debug)]
 pub enum Command {
+    PadNotes {
+        track: usize,
+        source: u8,
+        target: Option<u8>,
+    },
     DeckGrab(usize, bool, Option<f32>),
     DeckFader(usize, f32),
     DeckValue(usize, u8, f32),
@@ -387,6 +393,8 @@ struct HeldChord {
 #[path = "history.rs"]
 mod history;
 use history::{ClipState, EditKind, History};
+#[path = "pad_notes.rs"]
+mod pad_notes;
 #[path = "recording.rs"]
 mod recording;
 
@@ -647,6 +655,11 @@ impl Engine {
             return Err(Error::Busy);
         }
         match c {
+            Command::PadNotes {
+                track,
+                source,
+                target,
+            } => self.edit_pad_notes(track, source, target)?,
             Command::PlayValue {
                 track,
                 index,
@@ -697,6 +710,7 @@ impl Engine {
                     0 => self.tracks[i].deck.speed = value.clamp(0.5, 2.),
                     1 => self.tracks[i].deck.range = value.round().clamp(0., 2.) as u8,
                     2 => self.tracks[i].deck.slip = value >= 0.5,
+                    3 => self.tracks[i].deck.reverse_cut = value >= 0.5,
                     _ => return Err(Error::InvalidValue),
                 }
             }
@@ -1812,6 +1826,7 @@ impl Engine {
         }
         let now = self.clock.tick();
         let was_running = self.running;
+        let was_playing = self.tracks[track].playing;
         let t = &mut self.tracks[track];
         if self.recorder.is_some() {
             return Err(Error::Busy);
@@ -1831,7 +1846,7 @@ impl Engine {
         t.audio_frames = 0;
         t.generated = true;
         t.generated_sounds |= 1 << sound;
-        t.playing = true;
+        t.playing = was_playing;
         for bar in 0..bars {
             for hit in &generated.hits[..generated.len] {
                 let base = bar as u64 * 4 * PPQ;
@@ -1868,7 +1883,6 @@ impl Engine {
         t.cursor = t.events.partition_point(|e| e.tick < phase);
         t.last_phase = phase;
         t.revision += 1;
-        self.running = true;
         Ok(())
     }
     pub fn visible_audio(&self, i: usize) -> (&crate::features::Features, usize) {
@@ -2495,9 +2509,12 @@ impl Engine {
                         let suppressed = self.recorder.is_some_and(|r| {
                             r.track == i
                                 && tick >= r.start
-                                && r.mode == RecordMode::Replace
-                                && (self.tracks[i].kind != Kind::Drum
-                                    || r.touched & (1 << (e.note % 16)) != 0)
+                                && ((r.mode == RecordMode::Replace
+                                    && (self.tracks[i].kind != Kind::Drum
+                                        || r.touched & (1 << (e.note % 16)) != 0))
+                                    || (e.deck.is_none()
+                                        && (self.tracks[i].kind == Kind::Drum || e.slice)
+                                        && r.edited_pads & (1 << (e.note % 16)) != 0))
                         });
                         if !suppressed {
                             if let Some(control) = e.deck {

@@ -77,3 +77,5 @@ Local0.10.0 adds audio chords, Synth Poly/Mono/Legato and Glide, timed Strum rec
 [Detailed QA and fixes](docs/qa-0.11.1.md) covers cross-mode recording, playback ownership, Swing metadata and capacity handling. Public downloads remain0.9.3. See validation-0.11.1.json for the final tested build/device/SD identity.
 
 Publication0.11.1 supersedes historical local-only status notes above: Turntable/whole-project MIDI Swing/performance controls and the detailed audit are included in the public preview. Scratch Pocket is a new actual-device video; earlier full-session/FX videos remain available at their existing0.9.3 URLs.
+
+Local0.11.3 adds Drum/CHOP MIDI-lane Erase/Copy, explicit Done/toggle exit, transport-preserving generation and optional Turntable DOWN CUT with format10 direction recall. Public release remains0.11.2 until separately published. Verification is recorded in docs/qa-0.11.3.md when complete.

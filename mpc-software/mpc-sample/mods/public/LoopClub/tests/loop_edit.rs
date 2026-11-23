@@ -177,6 +177,8 @@ fn physical_erase_copy_enters_confirmed_edit_and_shift_release_does_not_record()
     ui.pad(0, false, 0, false, false, &s, |c| commands.push(c));
     ui.pad(0, true, 90, false, false, &s, |c| commands.push(c));
     assert!(matches!(commands.last(), Some(Command::Clear(0))));
+    assert!(ui.loop_edit_button(9, false, &s));
+    assert!(!ui.loop_edit);
     assert!(ui.loop_edit_button(9, true, &s));
     assert_eq!(ui.edit_operation, 0);
     assert_eq!(ui.edit_source, None);

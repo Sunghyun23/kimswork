@@ -1,0 +1,19 @@
+# Loop Club 0.11.3 — pad-note editing, edit exit and scratch cut
+
+Owner selected MIDI notes/rhythm editing, preserving all samples and chop regions. On Drum Play/Drum Sound/Chop, ERASE/COPY opens ERASE NOTES; SHIFT+ERASE opens COPY NOTES. B1/B2 switch operation, B3 DONE exits. ERASE/COPY again toggles closed, DATA also exits. LOOP track EDIT now toggles closed on ERASE as well, retaining Copy/Delete/Move and confirmation. The exit hint stays visible. During Drum/Chop MIDI capture, edits affect the take buffer; cancel leaves the completed clip intact. Copy requires an empty lane, a released source gate and preflight capacity. Other lanes, timing, velocity, original PCM and chop boundaries remain unchanged. No callback allocation/free.
+
+Drum generation previously set running and playing true. Actual owner state showed generation/playback, not an active recorder. Preserve both transport and per-track playback; generation no longer starts playback. LOOP SHIFT+pad emits only recording; Drum SOUND SHIFT+pad emits only generation. Guards and native UI tests check both paths.
+
+Owner's final scratch choice: default bidirectional; optional DOWN CUT using SHIFT+B2. PAD1 hold grabs, down is reverse and up is forward. In DOWN CUT, up motion repositions silently with3ms gain smoothing, down remains audible. PAD1 release resumes forward. Lift/reposition/regrab establishes a fresh fader anchor. SHIFT+B3 Slip unchanged. Recorded return direction is part of the full control snapshot. Format10 persists this and reads1–9; old settings remain bidirectional. Keep backups before saving because earlier apps reject format10.
+
+## Found during actual validation
+
+Service journal proved a real bounds panic/ABRT at deck::read, not merely an HTTP disconnect: a tiny negative head modulo11025 rounded to11025, then pcm[len] was indexed. Treat the rounded endpoint as the loop start before interpolation. A regression covers negative subnormal/epsilon positions and exact positive/negative endpoints. Failed passes and raw logs remain ignored under build/qa-device/pad-notes-0.11.3. Do not count them as successful. Isolated-only, fixed-unit read-only journal diagnostics were added; they are disabled in normal/public builds.
+
+## Verified
+
+359 native Debug tests,53 focused Release tests (Pad Notes/Loop Edit/Turntable/Realtime), strict host Clippy, ARM64 builds and eight launcher fixtures pass. Final actual fresh session pad-notes-20261124-r1 passes generation stopped, Drum Erase/Copy/Undo/occupied refusal/Done, LOOP toggle, recording-only SHIFT+pad, Drum and Chop capture cancellation, Chop source preservation, both-direction option, gesture recording and format10 recall. PID guards reject restarts; DRM checks reject native overlays. USB reverse peak0.1367862, return peak0, release-forward peak0.1367044. Actual images are in design/device-0.11.3; generated original test WAV only.
+
+Owner explicitly authorized discarding the changed Drum1 state. Saved baseline16tracks/BPM/input restored without overwriting owner files. Final exact ZIP and SD readback results are appended to validation-0.11.3.json. Physical finger presses, analog input, power-cycle and maximum-load/long-session acceptance remain separate; this is not a new CPU certification. Public release/site remain0.11.2 until separately authorized publication.
+
+For reruns, build a genuinely fresh unique --qa-session, put its library at build/qa-device/pad-notes-0.11.3/qa.so, and provide the exact current runtime as --restore-library to tools/qa_pad_notes.py --execute --session ID. Record a saved-baseline.json only after authorization to discard volatile changes; never infer it from a different project. The script refuses a reused nonempty test session and mismatched restore hash. Fixtures use the existing original-tone QA folder only.

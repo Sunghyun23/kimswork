@@ -1,4 +1,4 @@
-Loop Club 0.11.1 — MPC Sample public preview — by kim
+Loop Club 0.11.3 — MPC Sample public preview — by kim
 
 MPC Sample firmware 1.3.0.12 only. SD preload mod, not MPC OS VST or firmware.
 Actual remote UI and USB audio are tested. Physical controls, calibrated
@@ -30,10 +30,10 @@ analog input, power-cycle recovery and maximum-load acceptance are pending.
    Two insert slots can be active together; a third is refused visibly.
    Turn DATA to focus an effect and push for its settings; return with B1.
    Master has texture, performance FX and individual-drum/track sidechain.
-9. Stop/release notes before SHIFT+DATA -> PROJECT -> SAVE. Project format7
+9. Stop/release notes before SHIFT+DATA -> PROJECT -> SAVE. Project format10
    includes source PCM/zones, MIDI and independent loop origins/clock for
-   relative phase recall. Formats1-6 open; they cannot contain offsets that
-   were never saved. Older Loop Club versions cannot read new format7 saves.
+   relative phase recall. Formats1-9 open; they cannot contain offsets that
+   were never saved. Older Loop Club versions cannot read new format10 saves.
    Clip deletion keeps the sound/kit; Undo history clears on load/restart.
 
 Projects: <card>/LoopClub/Projects/. Optional banks: LoopClub/Expansions/.
@@ -55,3 +55,12 @@ Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.9.3/mpc-softwar
 move the fader; K1 Speed/K2 Range/K3 Level, SHIFT+B3 Slip. Record scratch
 with SHIFT+track pad, preserving original PCM. PROJECT K3 selects MIDI
 Swing, SHIFT+K3 eighth/sixteenth grid. Format9 reads1-8; older apps reject9.
+
+0.11.3: ERASE/COPY again exits LOOP EDIT. Drum/CHOP ERASE/COPY edits
+recorded MIDI notes only. B1 ERASE NOTES / B2 COPY NOTES / B3 DONE.
+Copy requires an empty destination lane; samples and CHOP regions remain.
+Drum SOUND SHIFT+pad generates without starting playback or recording.
+LOOP SHIFT+pad only starts/ends recording. TURN defaults BOTH DIR;
+SHIFT+B2 selects optional DOWN CUT (down audible/up muted re-arm).
+PAD1 release resumes forward playback. Format10 persists return-cut
+controls, reads1-9 and preserves legacy bidirectional settings.
