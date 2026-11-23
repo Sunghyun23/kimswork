@@ -271,3 +271,12 @@ On DRUM PLAY / DRUM SOUND / CHOP, ERASE/COPY opens **ERASE NOTES**; press a pad 
 LOOP SHIFT+pad remains recording only. Drum SOUND SHIFT+pad generates the chosen lane and preserves the stopped/running state; generation no longer starts playback automatically. PLAY starts playback separately.
 
 Turntable defaults to **BOTH DIR**: hold PAD1 and move the fader up for forward / down for reverse scratch. Release PAD1 to resume forward playback; reposition the fader while released to establish the next grab anchor. On TURN, **SHIFT+B2** toggles **DOWN CUT**: down strokes sound in reverse, up strokes reposition the virtual platter silently. Both directions still move the head. The3ms cut fade affects only the scratch source; other loops continue. PAD1 release resumes forward. SHIFT+B3 retains Slip. Cut mode is set before recording; recorded return controls remain muted on replay. Old projects retain bidirectional settings. New saves use format10, read formats1–9, and are rejected by older versions; back up projects before saving from0.11.3.
+
+
+## Tap tempo and monitor metronome — local 0.11.4
+
+The physical TAP TEMPO key is measured code53 on Sample firmware1.3.0.12. Two or more ordinary taps set BPM; the rolling average uses up to four intervals, ignores contact bounce, resets after a pause and clamps to40–240BPM. Hardware arrival timestamps are captured before the UI queue. Release edges do not create taps. Existing tempo protection remains during active recording/playback and for non-Warp original PCM; the error is shown instead of changing the clip's tempo. Tap while stopped before starting a take.
+
+SHIFT+TAP TEMPO toggles the separate monitor metronome and does not also tap tempo. CLK in the tempo header and METRONOME ON/OFF confirm the setting. It clicks during playback/recording while enabled and stays silent when transport is stopped. The setting saves with the project; old projects default Off. This is an additive optional format10 field; no audio/notes are changed by toggling it.
+
+The normal one-bar count-in has four full beats. Click generation uses an explicit full count-in window and the output sample before advancing the clock; partial beats while waiting for that window are not mistaken for count-in. Two-bar and Off options remain. Count-in is independent of the regular metronome toggle. The click is added only to monitor output after track/master/resample processing so it is not printed into source PCM or a resample. Existing separate USB monitor routing is retained.

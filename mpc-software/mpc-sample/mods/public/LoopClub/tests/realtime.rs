@@ -792,3 +792,23 @@ fn pad_note_erase_copy_and_capture_edits_do_not_allocate_or_free() {
         assert_eq!(COUNT.with(Cell::get), 0);
     }
 }
+
+#[test]
+fn monitor_metronome_count_in_and_toggle_never_allocate_or_free() {
+    let mut e = Box::new(Engine::new(8000, 240., 24000));
+    e.tracks[0].kind = Kind::Synth;
+    COUNT.with(|c| c.set(0));
+    TRACK.with(|t| t.set(true));
+    e.command(Command::LoopRecord(0)).unwrap();
+    for _ in 0..9000 {
+        let _ = e.metronome_sample();
+        e.process(Frame::ZERO);
+    }
+    for _ in 0..12 {
+        e.command(Command::ToggleMetronome).unwrap();
+        let _ = e.metronome_sample();
+    }
+    e.command(Command::Stop).unwrap();
+    TRACK.with(|t| t.set(false));
+    assert_eq!(COUNT.with(Cell::get), 0);
+}

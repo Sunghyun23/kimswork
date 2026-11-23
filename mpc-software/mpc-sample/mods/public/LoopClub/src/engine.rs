@@ -192,9 +192,11 @@ pub struct Recorder {
     pub mode: RecordMode,
     pub touched: u16,
     pub edited_pads: u16,
+    pub count_in_start: Option<u64>,
 }
 #[derive(Clone, Copy, Debug)]
 pub enum Command {
+    ToggleMetronome,
     PadNotes {
         track: usize,
         source: u8,
@@ -425,6 +427,7 @@ pub struct Engine {
     pub selected: usize,
     pub running: bool,
     pub preroll: u8,
+    pub metronome: bool,
     pub recorder: Option<Recorder>,
     pub next_record: Option<usize>,
     pub latency_in: u32,
@@ -494,6 +497,7 @@ impl Engine {
             selected: 0,
             running: false,
             preroll: 1,
+            metronome: false,
             recorder: None,
             next_record: None,
             latency_in: 0,
@@ -655,6 +659,7 @@ impl Engine {
             return Err(Error::Busy);
         }
         match c {
+            Command::ToggleMetronome => self.metronome = !self.metronome,
             Command::PadNotes {
                 track,
                 source,
@@ -1885,6 +1890,38 @@ impl Engine {
         t.revision += 1;
         Ok(())
     }
+    /// Monitor-only click, called before advancing this output sample. Never
+    /// passes through inserts, source recording or the resampling bus.
+    pub fn metronome_sample(&self) -> Frame {
+        let frame = self.clock.frame;
+        let tick = self.clock.tick();
+        let count = self.recorder.and_then(|r| {
+            r.count_in_start
+                .filter(|start| tick >= *start && frame < self.clock.frame_at(r.start))
+        });
+        let origin = if let Some(start) = count {
+            start
+        } else if self.metronome && self.running {
+            0
+        } else {
+            return Frame::ZERO;
+        };
+        let beat = tick.saturating_sub(origin) / PPQ;
+        let beat_frame = self.clock.frame_at(origin + beat * PPQ);
+        let seconds = frame.saturating_sub(beat_frame) as f32 / self.clock.rate as f32;
+        if seconds >= 0.025 {
+            return Frame::ZERO;
+        }
+        let frequency = if beat.is_multiple_of(4) { 1320. } else { 880. };
+        Frame::mono(
+            (seconds * frequency * std::f32::consts::TAU).sin()
+                * (1. - seconds / 0.025)
+                * 0.08
+                * self.master_gain
+                * self.hardware_gain,
+        )
+    }
+
     pub fn visible_audio(&self, i: usize) -> (&crate::features::Features, usize) {
         if self.tracks[i].kind == Kind::Audio
             && self

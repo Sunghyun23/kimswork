@@ -142,7 +142,8 @@ impl Snapshot {
         s.words[1] = u64::from(e.clock.rate);
         s.words[2] = e.clock.bpm.to_bits();
         s.words[3] = e.selected as u64;
-        s.words[4] = u64::from(e.running) | (u64::from(e.preroll) << 8);
+        s.words[4] =
+            u64::from(e.running) | (u64::from(e.preroll) << 8) | (u64::from(e.metronome) << 16);
         s.words[5] = pair(e.master, e.master_meter.l);
         s.words[6] = pair(e.master_meter.r, 0.);
         s.words[1024] = pair(e.usb_meter.l, e.usb_meter.r);

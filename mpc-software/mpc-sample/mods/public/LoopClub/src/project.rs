@@ -82,6 +82,8 @@ struct State {
     rate: u32,
     bpm: f64,
     preroll: u8,
+    #[serde(default)]
+    metronome: bool,
     master: f32,
     performance: [Fx; 2],
     bus_fx: [Fx; 2],
@@ -111,6 +113,7 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
         rate: engine.clock.rate,
         bpm: engine.clock.bpm,
         preroll: engine.preroll,
+        metronome: engine.metronome,
         master: engine.master,
         performance: engine.performance,
         bus_fx: engine.saved_bus_fx(),
@@ -395,6 +398,7 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         e.clock.frame = s.transport_frame;
     }
     e.preroll = s.preroll;
+    e.metronome = s.metronome;
     e.chain.config = s.chain;
     e.master = s.master;
     e.master_gain = s.master;

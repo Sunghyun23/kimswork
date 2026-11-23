@@ -15,7 +15,7 @@ use std::{
         OnceLock,
         atomic::{AtomicU8, AtomicU32, Ordering},
     },
-    time::Duration,
+    time::{Duration, Instant},
 };
 static RUNTIME: OnceLock<Box<Runtime>> = OnceLock::new();
 #[derive(Clone, Copy)]
@@ -35,6 +35,7 @@ enum HardwareControl {
         pressed: bool,
         shift: bool,
         erase: bool,
+        timestamp: Instant,
     },
     Cc {
         control: u32,
@@ -72,6 +73,7 @@ fn hardware_button(event: ButtonEvent) -> Flow {
         pressed: event.pressed,
         shift: event.shift,
         erase: event.erase,
+        timestamp: Instant::now(),
     });
     Flow::Consume
 }
@@ -439,6 +441,9 @@ pub struct LoopClub {
     snapshot: Snapshot,
     armed: bool,
     exit_requested: bool,
+    button_timestamp: Option<Instant>,
+    tap_epoch: Option<Instant>,
+    tap: crate::tempo::TapTempo,
 }
 impl LoopClub {
     fn control_cc(&mut self, event: CcEvent, shift: bool) -> Flow {
@@ -694,6 +699,7 @@ impl Mod for LoopClub {
     }
     fn on_button(&mut self, event: ButtonEvent) -> Flow {
         crate::qa::button();
+        let timestamp = self.button_timestamp.take().unwrap_or_else(Instant::now);
         if !self.ui.active {
             if event.pressed && event.code == 6 {
                 self.armed = true;
@@ -705,6 +711,31 @@ impl Mod for LoopClub {
             return Flow::Consume;
         }
         self.refresh();
+        if event.code == 53 {
+            // measured TAP TEMPO physical press/release, firmware1.3.0.12
+            if event.shift {
+                self.tap.reset();
+                send(Command::ToggleMetronome);
+                self.ui.notice = if self.snapshot.words[4] & (1 << 16) == 0 {
+                    "METRONOME ON"
+                } else {
+                    "METRONOME OFF"
+                };
+            } else {
+                let epoch = *self.tap_epoch.get_or_insert(timestamp);
+                let elapsed = timestamp
+                    .checked_duration_since(epoch)
+                    .unwrap_or_default()
+                    .as_millis() as u64;
+                if let Some(bpm) = self.tap.tap(elapsed) {
+                    send(Command::Bpm(bpm));
+                    self.ui.notice = "TAP TEMPO";
+                } else {
+                    self.ui.notice = "TAP AGAIN TO SET BPM";
+                }
+            }
+            return Flow::Consume;
+        }
         if event.shift && matches!(event.code, 54 | 55) {
             send(if event.code == 55 {
                 Command::Undo
@@ -979,7 +1010,9 @@ impl Mod for LoopClub {
                         pressed,
                         shift,
                         erase,
+                        timestamp,
                     } => {
+                        self.button_timestamp = Some(timestamp);
                         self.on_button(ButtonEvent {
                             event: 0,
                             bytes: [0; 16],

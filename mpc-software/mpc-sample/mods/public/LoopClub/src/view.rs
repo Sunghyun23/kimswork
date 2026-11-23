@@ -199,12 +199,26 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             || (ui.page == Page::FxSettings
                 && ui.fx_edit.is_some_and(|e| e.texture || e.target != 0))
         {
-            format!("{:.0} BPM M{:.0}%", s.bpm(), s.level(16) * 100.)
+            format!(
+                "{:.0} BPM M{:.0}%{}",
+                s.bpm(),
+                s.level(16) * 100.,
+                if s.words[4] & (1 << 16) != 0 {
+                    " CLK"
+                } else {
+                    ""
+                }
+            )
         } else {
             format!(
-                "{:.0} BPM {}",
+                "{:.0} BPM {}{}",
                 s.bpm(),
-                if s.words[4] & 1 != 0 { "RUN" } else { "STOP" }
+                if s.words[4] & 1 != 0 { "RUN" } else { "STOP" },
+                if s.words[4] & (1 << 16) != 0 {
+                    " CLK"
+                } else {
+                    ""
+                }
             )
         },
     );
@@ -2605,7 +2619,23 @@ fn line(p: &mut impl Painter, x: i32, y: i32, ex: i32, ey: i32, color: u32) {
 fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     p.rect(0, 0, 320, 240, BG);
     p.text(7, 2, 210, 23, 18., INK, "SOUND / TURNTABLE");
-    p.text(222, 4, 93, 19, 15., GOLD, &format!("{:.0} BPM", s.bpm()));
+    p.text(
+        222,
+        4,
+        93,
+        19,
+        15.,
+        GOLD,
+        &format!(
+            "{:.0} BPM{}",
+            s.bpm(),
+            if s.words[4] & (1 << 16) != 0 {
+                " CLK"
+            } else {
+                ""
+            }
+        ),
+    );
     let mode = if s.words[16 + ui.selected * 12] & (1 << 18) != 0 {
         "OVERDUB"
     } else {

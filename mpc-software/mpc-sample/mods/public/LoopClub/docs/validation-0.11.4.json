@@ -1,0 +1,33 @@
+{
+  "version": "0.11.4",
+  "native_full_debug_suite": 367,
+  "additional_debug_tempo_cases": 2,
+  "final_tempo_debug_tests": 9,
+  "final_release_tempo_recording_realtime_shift_tests": 47,
+  "host_all_targets_clippy": "PASS",
+  "arm64_qa_build": "PASS",
+  "physical_button_identification": {
+    "button": "TAP TEMPO",
+    "code": 53,
+    "before_edges": 100,
+    "after_edges": 102,
+    "scope": "Owner pressed once on installed0.11.3; confirms code, not new feature acceptance"
+  },
+  "native_verified": [
+    "one-bar4fullcountclicks at40/88/100/240BPM and varied start phases",
+    "off0/two-bar8clicks",
+    "metronome toggle/play/stop",
+    "monitor click excluded from zero-input Audio PCM",
+    "metronome project recall and tempo guard",
+    "tap averaging/bounce/long pause/boundary jitter",
+    "no callback allocation/free"
+  ],
+  "device_installed": false,
+  "sd_changed": false,
+  "device_verification": "PENDING explicit current volatile-session discard/restart approval",
+  "current_installed_version": "0.11.3",
+  "public_release": "0.11.2",
+  "normal_arm64_build": "PASS",
+  "package_launcher_cases": 8,
+  "local_zip_sha256": "40ea7cfc0ff7cec98604c13a390521f1969b93e70be762af4aa108fcfe80eff4"
+}

@@ -1,4 +1,4 @@
-Loop Club 0.11.3 — MPC Sample public preview — by kim
+Loop Club 0.11.4 — MPC Sample public preview — by kim
 
 MPC Sample firmware 1.3.0.12 only. SD preload mod, not MPC OS VST or firmware.
 Actual remote UI and USB audio are tested. Physical controls, calibrated
@@ -64,3 +64,9 @@ LOOP SHIFT+pad only starts/ends recording. TURN defaults BOTH DIR;
 SHIFT+B2 selects optional DOWN CUT (down audible/up muted re-arm).
 PAD1 release resumes forward playback. Format10 persists return-cut
 controls, reads1-9 and preserves legacy bidirectional settings.
+
+0.11.4: TAP TEMPO sets BPM from two or more taps (four-interval average,
+40-240 BPM). SHIFT+TAP TEMPO toggles monitor metronome; CLK indicates On.
+One-bar count-in emits four complete beats, independently of the regular
+metronome setting. Click is monitor-only, not source PCM/resampled audio.
+Existing recording/playback/non-Warp PCM tempo protections remain.

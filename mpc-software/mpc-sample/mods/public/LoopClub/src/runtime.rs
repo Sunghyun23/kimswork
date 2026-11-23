@@ -416,33 +416,11 @@ impl Runtime {
                     self.output_mirror.push(Frame::ZERO);
                     continue;
                 }
+                let click = e.metronome_sample();
                 let mut s = e.process(input.unwrap_or(Frame::ZERO));
                 let mut usb = e.usb_output;
-                if let Some(r) = e.recorder
-                    && e.clock.tick() < r.start
-                {
-                    let tick = e.clock.tick();
-                    let phase = tick % PPQ;
-                    let seconds = phase as f32 / PPQ as f32 * 60. / e.clock.bpm as f32;
-                    if seconds < 0.025 {
-                        let frequency = if (tick / PPQ).is_multiple_of(4) {
-                            1320.
-                        } else {
-                            880.
-                        };
-                        let click = Frame::mono(
-                            (seconds * frequency * std::f32::consts::TAU).sin()
-                                * (1. - seconds / 0.025)
-                                * 0.08
-                                * e.master_gain
-                                * e.hardware_gain,
-                        );
-                        s = s.combine(click);
-                        if !e.separate_usb {
-                            usb = usb.combine(click);
-                        }
-                    }
-                }
+                s = s.combine(click);
+                if !e.separate_usb { usb = usb.combine(click); }
                 self.output_mirror.push(usb);
                 for (ch, dst) in chunk.iter_mut().enumerate().take(2) {
                     let x = if channels == 1 {

@@ -1,0 +1,11 @@
+# Loop Club 0.11.4 — Tap Tempo / metronome / count-in
+
+Owner requests four count-in clicks, ordinary TAP TEMPO for tempo and SHIFT+TAP for metronome. Physical code53 was confirmed by an owner press on0.11.3 (physical edge count100→102, press/release). New feature acceptance is separate from code identification.
+
+Implementation: bounded up-to-four-interval estimator, enqueue-time monotonic hardware timestamps, bounce rejection, long-pause reset,40–240BPM clamp with boundary-jitter margin. Modifier tap only toggles the monitor flag and resets the estimator; release does nothing. Tap retains existing protected-tempo refusal, not unsafe source retiming. CLK/ON-OFF shows state and the optional serde-default flag saves with format10; old projects Off. No audio/event reinterpretation.
+
+Count-in has an explicit full start window. One bar has4complete beats, two bars8, Off0. Click sampled before process advances the output frame, then added to monitor after resample/source capture and inserts; it is not printed into PCM/resample. Normal metronome works during running/recording and is silent stopped. Count-in stays audible independently of its switch; normal enabled ticks can continue before a quantized count-in window. Handoff/running overdub does not introduce a second count-in.
+
+Native validation:367-case full Debug suite plus two added focused tempo cases, nine final tempo cases and47 focused Release cases (tempo/realtime/recording/shift), strict host Clippy and ARM64 QA build pass. WAV-level native tests count full pulses at multiple BPM/start phases and verify recorded zero PCM excludes clicks. Realtime allocation/free guard passes. Local ZIP/build verification is appended to validation-0.11.4.json once complete.
+
+Hardware/SD install and actual USB verification are pending explicit consent to discard the current cleared tracks1/2 and PrerollOff state, which differs from saved baseline. Do not claim0.11.4 installed or actual USB/physical behavior passed until recorded. Current installed0.11.3/public0.11.2 remain. The prepared isolated tool must use a fresh tempo-count-20261124-r1 session and restore the known saved owner baseline only after approval. No owner project file has been overwritten.

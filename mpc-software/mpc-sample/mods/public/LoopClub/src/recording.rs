@@ -52,6 +52,8 @@ impl Engine {
                 r.start = start;
                 r.end = None;
                 r.repeating = false;
+                r.count_in_start = (at.is_none() && self.preroll > 0)
+                    .then(|| start.saturating_sub(u64::from(self.preroll) * 4 * PPQ));
             }
             self.prepare_take();
         }
@@ -114,6 +116,9 @@ impl Engine {
         if bars == 0 || !midi && existing && t.length_ticks > bars * 4 * PPQ {
             return Err(Error::Capacity);
         }
+        let count_in_start =
+            (at.is_none() && self.preroll > 0 && !(existing && self.running && t.playing))
+                .then(|| start.saturating_sub(u64::from(self.preroll) * 4 * PPQ));
         let length = t.length_ticks;
         self.record_before = Some(ClipState::read(t));
         self.record_history_committed = false;
@@ -157,6 +162,7 @@ impl Engine {
             mode: self.tracks[i].record_mode,
             touched: 0,
             edited_pads: 0,
+            count_in_start,
         });
         self.prepare_take();
         Ok(())
@@ -503,6 +509,7 @@ impl Engine {
             r.mode = t.record_mode;
             r.touched = 0;
             r.edited_pads = 0;
+            r.count_in_start = None;
             if t.kind == Kind::Drum {
                 self.capture_velocities = [0; 128];
             }
