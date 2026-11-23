@@ -1,0 +1,9 @@
+# Loop Club 0.11.2 — ERASE/COPY entry
+
+The owner reported that SHIFT+LOOP does not enter edit mode. It used raw code74 without physical acceptance. Replace that shortcut with the SDK-documented ERASE/COPY key9 on LOOP: ERASE opens DELETE; SHIFT+ERASE opens COPY. Releasing modifiers leaves the edit panel open. B1/B2/B3 choose COPY/DELETE/MOVE. DATA or SAMPLE exits. Pressing the entry button never deletes content.
+
+Existing same-pad delete confirmation, empty destination protection, worker-side whole-track copy/move, latest-edit Undo/Redo and stopped-transport guards remain. ERASE outside LOOP retains existing instrument edit behavior. Shifted recording pads are edit locations while EDIT is open and cannot arm recording.
+
+Validation: 347 native Debug tests, eight focused Release edit tests, strict all-target host Clippy, ARM64 QA/public builds and eight package launcher cases. Actual Sample injected independent hardware callback and controller pads verify copy, confirmed delete, Undo/Redo, move, occupied destination refusal, running refusal, exit, and Drum pattern undo. Active DRM captures are in design/device-0.11.2. These checks exercise the hardware callback queue but are not physical finger-press acceptance. The saved owner project is restored without overwriting its files. The first restart lost unsaved Audio track3/4 content that was present before QA; the mismatch was detected and reported. The owner then explicitly approved continuing installation/restarts from the current saved baseline. Subsequent QA compares against that saved baseline.
+
+0.11.1 is already published and remains immutable. This patch does not change scratch DSP, source files or project format9. Scratch Pocket was recorded on0.11.1; its published video and earlier0.9.3 full/FX videos remain unchanged.

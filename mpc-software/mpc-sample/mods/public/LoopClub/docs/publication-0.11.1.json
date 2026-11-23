@@ -1,0 +1,32 @@
+{
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.11.1",
+  "release_id": 455542947,
+  "source_commit": "4e9540dde3520e254f7c643167f0882caeee0715",
+  "assets": [
+    {
+      "name": "loop-club-0.11.1-mpc-sample.zip",
+      "size": 773485,
+      "digest": "sha256:2f5bea71eeac98b94347fd683634bd1164a13a491b00ced25c9f7d68056731d3",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.11.1/loop-club-0.11.1-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.11.1-mpc-sample.zip.sha256",
+      "size": 98,
+      "digest": "sha256:1cc9ea5c8753e3637a74d75c3d74efc27fb92127cc7c0907198b3b45c4983750",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.11.1/loop-club-0.11.1-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "loop-club-scratch-pocket-mpc.mp4",
+      "size": 2800812,
+      "digest": "sha256:a4c086006b25c4db82c0497d34dfc3649eab7bda3af40986022c99859b12356c",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.11.1/loop-club-scratch-pocket-mpc.mp4"
+    },
+    {
+      "name": "SHA256SUMS-0.11.1.txt",
+      "size": 302,
+      "digest": "sha256:d20ac2204506b6a4fe01f063da3043257b9204888f8be79a54e4a12106356f4c",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.11.1/SHA256SUMS-0.11.1.txt"
+    }
+  ],
+  "old_videos_changed": false
+}

@@ -2282,9 +2282,9 @@ fn loop_workspace(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         }
     } else if ui.page == Page::Loop && ui.shift_view {
         if crate::ui::melodic_pad_octave(s, ui.selected) {
-            format!("K1: OCT {:+} / SHIFT+LOOP: EDIT", s.play_settings().octave)
+            format!("K1: OCT {:+} / SHIFT+ERASE: COPY", s.play_settings().octave)
         } else {
-            "SHIFT+LOOP: COPY / DELETE / MOVE".into()
+            "ERASE: DELETE / SHIFT+ERASE: COPY".into()
         }
     } else if ui.page == Page::Loop {
         if crate::ui::melodic_pad_octave(s, ui.selected) {

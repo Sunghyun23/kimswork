@@ -162,3 +162,57 @@ fn loop_edit_pads_choose_then_transfer_or_confirm_delete_without_performing() {
         panic!("must refuse while playing")
     });
 }
+
+#[test]
+fn physical_erase_copy_enters_confirmed_edit_and_shift_release_does_not_record() {
+    let e = core();
+    let s = Snapshot::capture(&e);
+    let mut ui = Ui::default();
+    assert!(ui.loop_edit_button(9, false, &s));
+    assert!(ui.loop_edit);
+    assert_eq!(ui.edit_operation, 1);
+    let mut commands = Vec::new();
+    ui.pad(0, true, 90, false, true, &s, |c| commands.push(c));
+    assert!(!commands.iter().any(|c| matches!(c, Command::Clear(_))));
+    ui.pad(0, false, 0, false, false, &s, |c| commands.push(c));
+    ui.pad(0, true, 90, false, false, &s, |c| commands.push(c));
+    assert!(matches!(commands.last(), Some(Command::Clear(0))));
+    assert!(ui.loop_edit_button(9, true, &s));
+    assert_eq!(ui.edit_operation, 0);
+    assert_eq!(ui.edit_source, None);
+    ui.pad(0, true, 90, false, false, &s, |c| commands.push(c));
+    assert_eq!(
+        ui.pad(1, true, 90, false, false, &s, |c| commands.push(c)),
+        Action::Transfer {
+            source: 0,
+            target: 1,
+            moving: false
+        }
+    );
+    assert!(
+        !commands
+            .iter()
+            .any(|c| matches!(c, Command::LoopRecord(_) | Command::Note { .. }))
+    );
+}
+
+#[test]
+fn erase_copy_refuses_transport_and_recording_and_leaves_sound_erase_alone() {
+    let mut e = core();
+    let mut ui = Ui::default();
+    let mut s = Snapshot::capture(&e);
+    ui.navigate(Page::Play, &s);
+    assert!(!ui.loop_edit_button(9, false, &s));
+    assert!(!ui.loop_edit);
+    ui.navigate(Page::Loop, &s);
+    assert!(!ui.loop_edit_button(74, true, &s));
+    e.command(Command::PlayAll).unwrap();
+    s = Snapshot::capture(&e);
+    assert!(ui.loop_edit_button(9, false, &s));
+    assert!(!ui.loop_edit);
+    assert_eq!(ui.notice, "STOP BEFORE LOOP EDIT");
+    s.words[4] = 0;
+    s.words[9] = 1;
+    assert!(ui.loop_edit_button(9, true, &s));
+    assert!(!ui.loop_edit);
+}

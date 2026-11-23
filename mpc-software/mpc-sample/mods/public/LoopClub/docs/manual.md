@@ -209,7 +209,7 @@ Save the project after importing: project **format 9** embeds all imported WAV z
 
 ## Copy, delete and move from LOOP
 
-Stop transport and release played notes/held FX. Press **SHIFT+LOOP** to keep the 4×4 loop overview and open **COPY / DELETE / MOVE** on B1/B2/B3. Pads now select edit locations and do not play notes or arm recording. Press DATA, LOOP or SAMPLE to leave edit mode. REC refuses while EDIT is open. The usual plain-pad performance and SHIFT+pad recording resume on exit.
+Stop transport and release played notes/held FX. On LOOP, press the physical **ERASE/COPY** button to open **DELETE**, or **SHIFT+ERASE/COPY** to open **COPY**. The 4×4 overview stays visible; B1 COPY / B2 DELETE / B3 MOVE can switch the operation. Releasing ERASE or SHIFT leaves EDIT open. Pads now select edit locations and do not play notes or arm recording. Press DATA, LOOP or SAMPLE to leave edit mode. REC refuses while EDIT is open. The usual plain-pad performance and SHIFT+pad recording resume on exit.
 
 - **COPY (B1):** press the source track pad, then an empty destination pad. Copy includes audio/MIDI, chops, sampler recording target/Warp, instrument/kit/velocity layers, mixer, routing and FX settings. The original stays intact. Copies do not share mutable sample buffers. Current held FX and effect tails are not copied.
 - **DELETE (B2):** press the loop pad, then the same pad again to confirm. Another pad changes the confirmation target. Delete clears the recorded loop/performance, preserving the instrument/kit and sound settings for another take.

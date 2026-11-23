@@ -739,6 +739,12 @@ impl Mod for LoopClub {
                 _ => {}
             }
         }
+        if self
+            .ui
+            .loop_edit_button(event.code, event.shift, &self.snapshot)
+        {
+            return Flow::Consume;
+        }
         match event.code {
             6 if event.shift => {
                 self.ui.navigate(Page::Setup, &self.snapshot);
@@ -771,17 +777,6 @@ impl Mod for LoopClub {
                 &self.snapshot,
                 send,
             ),
-            74 if event.shift => {
-                if self.snapshot.words[9] != 0 || self.snapshot.words[4] & 1 != 0 {
-                    self.ui.notice = "STOP BEFORE LOOP EDIT";
-                } else {
-                    self.ui.navigate(Page::Loop, &self.snapshot);
-                    self.ui.loop_mode = 0;
-                    self.ui.loop_edit = true;
-                    self.ui.edit_source = None;
-                    self.ui.notice = "";
-                }
-            }
             6 | 74 => {
                 self.ui.loop_edit = false;
                 self.ui.edit_source = None;

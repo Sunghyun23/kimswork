@@ -1,0 +1,34 @@
+{
+  "version": "0.11.2",
+  "native_debug_tests": 347,
+  "focused_release_edit_tests": 8,
+  "host_all_targets_clippy": "PASS",
+  "arm64_qa_build": "PASS",
+  "arm64_public_build": "PASS",
+  "public_package_launcher_cases": 8,
+  "actual_device": {
+    "version": "0.11.2",
+    "result": "PASS",
+    "scope": "Actual Sample: injected independent button callback, controller pads and active DRM; not a physical finger press",
+    "cases": [
+      "SHIFT+ERASE copy with independent content",
+      "ERASE delete requires confirmation",
+      "delete undo/redo",
+      "move and occupied target protection",
+      "running refusal",
+      "SAMPLE exits edit",
+      "Drum SHIFT+ERASE+pad generation undo retained"
+    ],
+    "remote_transport_edges": 14
+  },
+  "exact_public_library_smoke": "PASS: Turntable directions/release, Swing, independent callback ERASE/COPY, delete confirmation, Undo/Redo",
+  "public_zip_sha256": "af9805f516317c1a50ad010b4934ea67590001b1d74002ac69c78198adcbb5f4",
+  "public_library_sha256": "d6a356c5c08498dcc22930fd614fdff03fe00137cfea25e677527578c159cb7d",
+  "runtime_sd_match": true,
+  "sd_files_readback": 20,
+  "previous_boot_files_preserved": 20,
+  "owner_saved_files_overwritten": false,
+  "initial_unsaved_content_loss": "Unsaved Audio tracks3/4 were lost on the first restart; reported to owner, who explicitly approved continuing from current saved state. Subsequent16-track saved-baseline/BPM/input comparisons pass.",
+  "physical_finger_acceptance": false,
+  "previous_audio_cpu_limits": "0.11.1 audit applies; no new CPU optimization or worst-case certification"
+}

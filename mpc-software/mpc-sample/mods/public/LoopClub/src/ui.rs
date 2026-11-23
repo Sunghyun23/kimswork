@@ -944,6 +944,28 @@ impl Ui {
             });
         }
     }
+    /// Own ERASE/COPY only on the loop overview. A press opens the edit panel;
+    /// it never clears content without the existing same-pad confirmation.
+    pub fn loop_edit_button(&mut self, code: u32, shift: bool, s: &Snapshot) -> bool {
+        if code != 9 || self.page != Page::Loop {
+            return false;
+        }
+        if s.words[9] != 0 || s.words[4] & 1 != 0 {
+            self.notice = "STOP BEFORE LOOP EDIT";
+            return true;
+        }
+        self.loop_mode = 0;
+        self.loop_edit = true;
+        self.edit_operation = if shift { 0 } else { 1 };
+        self.edit_source = None;
+        self.notice = if shift {
+            "COPY: SOURCE THEN EMPTY PAD"
+        } else {
+            "DELETE: PRESS SAME PAD TWICE"
+        };
+        true
+    }
+
     pub fn navigate(&mut self, page: Page, s: &Snapshot) {
         self.input_view = false;
         if page != Page::Loop {
