@@ -12,6 +12,8 @@ use std::{
 #[derive(Serialize, Deserialize)]
 struct TrackState {
     #[serde(default)]
+    deck: crate::deck::Settings,
+    #[serde(default)]
     origin: u64,
     #[serde(default)]
     kit_frames: [usize; 16],
@@ -51,6 +53,8 @@ struct TrackState {
     chord: crate::music::ChordConfig,
     #[serde(default)]
     chord_mode: bool,
+    #[serde(default)]
+    play: crate::performance::Settings,
     kind: Kind,
     name: String,
     mix: Mix,
@@ -66,6 +70,10 @@ struct TrackState {
 }
 #[derive(Serialize, Deserialize)]
 struct State {
+    #[serde(default)]
+    timing_revision: u8,
+    #[serde(default)]
+    swing: Option<crate::swing::Basis>,
     #[serde(default)]
     transport_frame: u64,
     #[serde(default)]
@@ -96,7 +104,9 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
     }
     let state = State {
         chain: engine.chain.config,
-        version: 7,
+        version: 9,
+        timing_revision: 1,
+        swing: engine.swing,
         transport_frame: engine.clock.frame,
         rate: engine.clock.rate,
         bpm: engine.clock.bpm,
@@ -111,6 +121,7 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
             .map(|i| {
                 let t = &engine.tracks[i];
                 TrackState {
+                    deck: t.deck,
                     origin: t.origin,
                     kit_frames: t.kit.clips.each_ref().map(Vec::len),
                     xpm: t.kit.xpm.as_ref().map(|x| x.meta),
@@ -133,6 +144,7 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
                     pattern: t.pattern,
                     chord: t.chord,
                     chord_mode: t.chord_mode,
+                    play: t.play,
                     kind: t.kind,
                     name: t.name.clone(),
                     mix: t.mix,
@@ -225,12 +237,14 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
     f.read_exact(&mut bytes)?;
     let s: State = serde_json::from_slice(&bytes)?;
     if s.tracks.len() != 16
-        || ![1, 2, 3, 4, 5, 6, 7].contains(&s.version)
+        || ![1, 2, 3, 4, 5, 6, 7, 8, 9].contains(&s.version)
         || s.transport_frame > u64::from(s.rate) * u64::from(u32::MAX)
         || s.rate != expected_rate
         || !s.bpm.is_finite()
         || !(40.0..=240.0).contains(&s.bpm)
         || s.preroll > 2
+        || s.timing_revision > 1
+        || s.swing.is_some_and(|v| !v.valid())
         || !s.chain.valid()
         || !s.master.is_finite()
         || !(0.0..=1.0).contains(&s.master)
@@ -307,7 +321,12 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         total = total
             .checked_add(frames as u64 * 8)
             .ok_or_else(|| invalid("Kit file size overflow"))?;
-        if !t.pattern.valid() || !t.chord.valid() || t.generated && t.kind != Kind::Drum {
+        if !t.deck.valid()
+            || !t.pattern.valid()
+            || !t.chord.valid()
+            || !t.play.valid()
+            || t.generated && t.kind != Kind::Drum
+        {
             return Err(invalid("Invalid musical mode"));
         }
         if t.name.len() > 32
@@ -352,7 +371,10 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         }
         if t.events.windows(2).any(|e| e[0].tick > e[1].tick)
             || t.events.iter().any(|e| {
-                e.note > 127
+                e.deck.is_some_and(|d| {
+                    !d.valid() || t.kind != Kind::Audio || !t.audio_sequence || e.slice
+                }) || e.timing.is_some_and(|v| !v.valid())
+                    || e.note > 127
                     || e.velocity > 127
                     || e.tick >= t.length_ticks
                     || (e.slice && (t.kind != Kind::Audio || e.note >= t.chops.count))
@@ -368,6 +390,7 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         return Err(invalid("Truncated or trailing project data"));
     }
     let mut e = Engine::new(expected_rate, s.bpm, capacity);
+    e.swing = s.swing;
     if s.version >= 7 {
         e.clock.frame = s.transport_frame;
     }
@@ -391,9 +414,11 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         let dst = &mut e.tracks[i];
         dst.generated = t.generated;
         dst.generated_sounds = t.generated_sounds;
+        dst.deck = t.deck;
         dst.pattern = t.pattern;
         dst.chord = t.chord;
         dst.chord_mode = t.chord_mode;
+        dst.play = t.play;
         dst.audio_settings = t.audio_settings;
         dst.audio_target = t.audio_target;
         dst.source_ticks = if t.kind == Kind::Audio && t.source_ticks == 0 {
@@ -442,7 +467,29 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         e.separate_usb |= t.output != OutputTarget::Both;
         dst.length_ticks = t.length_ticks;
         dst.audio_frames = t.audio_frames;
-        dst.events.extend(t.events);
+        dst.events.extend(t.events.into_iter().map(|mut event| {
+            let lane = event.note % 16;
+            if t.kind == Kind::Drum && t.generated_sounds & (1 << lane) != 0 {
+                if s.version < 9 {
+                    event.timing = crate::music::swing_basis(t.pattern, lane);
+                }
+                if s.timing_revision == 0 {
+                    if lane == 3 {
+                        event.timing = None;
+                    } else if matches!(lane, 12 | 14)
+                        && (event.timing.is_none() || s.version < 9)
+                        && t.pattern.swing > 50.
+                    {
+                        // Original ride/bell generation used only quarter/eighth grids.
+                        event.timing = Some(crate::swing::Basis {
+                            amount: t.pattern.swing,
+                            sixteenth: false,
+                        });
+                    }
+                }
+            }
+            event
+        }));
         for (index, frame) in dst.audio[..dst.audio_frames].iter_mut().enumerate() {
             let mut sample = [0; 8];
             f.read_exact(&mut sample)?;

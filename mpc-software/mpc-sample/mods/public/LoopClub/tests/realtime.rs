@@ -587,3 +587,142 @@ fn full_track_copy_move_undo_redo_swap_without_callback_allocation_or_free() {
     TRACK.with(|t| t.set(false));
     assert_eq!(COUNT.with(Cell::get), 0);
 }
+#[test]
+fn mono_glide_strum_and_trigger_commands_do_not_allocate_or_free() {
+    let mut e = Box::new(Engine::new(8000, 240., 16000));
+    e.tracks[0].kind = Kind::Synth;
+    e.tracks[0].play.voice = 2;
+    e.tracks[0].play.glide_ms = 200.;
+    e.tracks[1].kind = Kind::Synth;
+    e.tracks[1].chord.strum_ms = 20.;
+    COUNT.with(|c| c.set(0));
+    TRACK.with(|t| t.set(true));
+    for i in 0..16 {
+        e.command(Command::Note {
+            track: 0,
+            note: 48 + i,
+            velocity: 90,
+            on: true,
+            source: 2 + i as u16,
+        })
+        .unwrap();
+        for _ in 0..64 {
+            e.process(Frame::ZERO);
+        }
+        e.command(Command::Note {
+            track: 0,
+            note: 48 + i,
+            velocity: 0,
+            on: false,
+            source: 2 + i as u16,
+        })
+        .unwrap();
+    }
+    e.command(Command::Chord {
+        track: 1,
+        pad: 0,
+        velocity: 90,
+        on: true,
+    })
+    .unwrap();
+    for _ in 0..500 {
+        e.process(Frame::ZERO);
+    }
+    e.command(Command::Chord {
+        track: 1,
+        pad: 0,
+        velocity: 0,
+        on: false,
+    })
+    .unwrap();
+    e.command(Command::PlayValue {
+        track: 0,
+        index: 2,
+        value: 2.,
+    })
+    .unwrap();
+    e.command(Command::Stop).unwrap();
+    TRACK.with(|t| t.set(false));
+    assert_eq!(COUNT.with(Cell::get), 0);
+}
+#[test]
+fn swing_reschedule_and_turntable_capture_never_allocate_or_free() {
+    let mut e = Engine::new(8000, 240., 16000);
+    e.preroll = 0;
+    let t = &mut e.tracks[0];
+    t.source_frames = 8000;
+    t.audio_frames = 8000;
+    t.source_ticks = 4 * PPQ;
+    t.length_ticks = 4 * PPQ;
+    t.audio_target = loop_club::audio::RecordTarget::Turntable;
+    t.audio[..8000].fill(Frame::mono(0.2));
+    e.tracks[1].kind = Kind::Drum;
+    COUNT.with(|c| c.set(0));
+    TRACK.with(|t| t.set(true));
+    e.command(Command::Swing(Some(loop_club::swing::Basis {
+        amount: 66.,
+        sixteenth: false,
+    })))
+    .unwrap();
+    e.command(Command::GenerateDrumPart { track: 1, sound: 2 })
+        .unwrap();
+    e.process(Frame::ZERO);
+    e.command(Command::Stop).unwrap();
+    e.command(Command::LoopRecord(0)).unwrap();
+    e.process(Frame::ZERO);
+    e.command(Command::DeckGrab(0, true, Some(0.5))).unwrap();
+    for n in 0..200 {
+        e.command(Command::DeckFader(0, (n % 50) as f32 / 50.))
+            .unwrap();
+        for _ in 0..20 {
+            e.process(Frame::ZERO);
+        }
+    }
+    e.command(Command::DeckGrab(0, false, None)).unwrap();
+    e.command(Command::LoopRecord(0)).unwrap();
+    for _ in 0..8100 {
+        e.process(Frame::ZERO);
+    }
+    e.command(Command::Stop).unwrap();
+    let _ = loop_club::ui::Snapshot::capture(&e);
+    e.command(Command::Undo).unwrap();
+    e.command(Command::Redo).unwrap();
+    TRACK.with(|t| t.set(false));
+    assert_eq!(COUNT.with(Cell::get), 0);
+}
+
+#[test]
+fn full_scratch_overdub_refuses_seed_without_growing_or_mutating_completed_clip() {
+    let mut e = Engine::new(8000, 240., 16000);
+    e.preroll = 0;
+    let t = &mut e.tracks[0];
+    t.source_frames = 8000;
+    t.audio_frames = 8000;
+    t.source_ticks = 4 * PPQ;
+    t.length_ticks = 4 * PPQ;
+    t.audio_sequence = true;
+    t.audio_target = loop_club::audio::RecordTarget::Turntable;
+    t.record_mode = RecordMode::Overdub;
+    for tick in 0..loop_club::engine::MAX_EVENTS {
+        t.events.push(Event {
+            deck: Some(Default::default()),
+            timing: None,
+            slice: false,
+            tick: tick as u64,
+            note: 0,
+            velocity: 0,
+            on: false,
+        });
+    }
+    e.command(Command::DeckGrab(0, true, Some(0.5))).unwrap();
+    COUNT.with(|c| c.set(0));
+    TRACK.with(|t| t.set(true));
+    e.command(Command::LoopRecord(0)).unwrap();
+    e.process(Frame::ZERO);
+    TRACK.with(|t| t.set(false));
+    assert_eq!(COUNT.with(Cell::get), 0);
+    assert!(e.recorder.is_none());
+    assert_eq!(e.error, Some(Error::Capacity));
+    assert_eq!(e.tracks[0].events.len(), loop_club::engine::MAX_EVENTS);
+    assert_eq!(e.tracks[0].source_frames, 8000);
+}

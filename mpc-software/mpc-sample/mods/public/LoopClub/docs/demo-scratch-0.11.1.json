@@ -1,0 +1,17 @@
+{
+  "source": "Original on-device synth resample; actual MPC Sample DRM + USB output",
+  "duration_seconds": 51.82693877551021,
+  "frames": 315,
+  "raw_peak": 0.24785815179347992,
+  "raw_rms": 0.021519625559449196,
+  "linear_gain": 2.5,
+  "decode_errors": 0,
+  "mp4_bytes": 2800812,
+  "sha256": "a4c086006b25c4db82c0497d34dfc3649eab7bda3af40986022c99859b12356c",
+  "owner_restored": true,
+  "actual_bpm": 88.0,
+  "swing": 58,
+  "chord": "Dm9",
+  "kit": "Original procedural drums",
+  "scratch_events": 11
+}

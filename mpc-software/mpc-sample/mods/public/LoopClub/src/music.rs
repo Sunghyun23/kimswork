@@ -314,6 +314,8 @@ pub fn event_tick(tick: u32) -> u64 {
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 #[serde(default)]
 pub struct ChordConfig {
+    pub strum_ms: f32,
+    pub strum_direction: u8,
     pub smooth: bool,
     pub key: u8,
     pub scale: u8,
@@ -324,6 +326,8 @@ pub struct ChordConfig {
 impl Default for ChordConfig {
     fn default() -> Self {
         Self {
+            strum_ms: 0.,
+            strum_direction: 0,
             smooth: true,
             key: 0,
             scale: 0,
@@ -335,7 +339,13 @@ impl Default for ChordConfig {
 }
 impl ChordConfig {
     pub fn valid(&self) -> bool {
-        self.key < 12 && self.scale < 3 && self.color < 3 && (-2..=2).contains(&self.octave)
+        self.strum_ms.is_finite()
+            && (0.0..=80.).contains(&self.strum_ms)
+            && self.strum_direction < 3
+            && self.key < 12
+            && self.scale < 3
+            && self.color < 3
+            && (-2..=2).contains(&self.octave)
     }
     pub fn notes(&self, pad: usize) -> ([u8; 5], usize) {
         let mut notes = [0; 5];
@@ -519,4 +529,16 @@ pub fn smooth_voicing(
         }
     }
     best
+}
+
+/// Generator swing is baked only into straight hats. Store its basis once so
+/// global Swing replaces it instead of adding another delay.
+pub fn swing_basis(config: PatternConfig, sound: u8) -> Option<crate::swing::Basis> {
+    if config.swing == 50. || !matches!(sound, 2 | 12 | 14) || config.rhythm / 3 >= 3 {
+        return None;
+    }
+    Some(crate::swing::Basis {
+        amount: config.swing,
+        sixteenth: config.rhythm / 3 >= 2,
+    })
 }

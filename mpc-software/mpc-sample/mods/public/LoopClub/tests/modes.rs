@@ -52,6 +52,8 @@ fn recorded_part_can_be_generated_then_undone_without_touching_other_parts() {
     t.length_ticks = 4 * PPQ;
     t.events.extend([
         Event {
+            deck: None,
+            timing: None,
             slice: false,
             tick: PPQ,
             note: 1,
@@ -59,6 +61,8 @@ fn recorded_part_can_be_generated_then_undone_without_touching_other_parts() {
             on: true,
         },
         Event {
+            deck: None,
+            timing: None,
             slice: false,
             tick: PPQ + 10,
             note: 1,
@@ -269,6 +273,8 @@ fn new_generated_part_repeats_inside_existing_three_bar_loop() {
     t.length_ticks = 12 * PPQ;
     t.events.extend([
         Event {
+            deck: None,
+            timing: None,
             slice: false,
             tick: PPQ,
             note: 1,
@@ -276,6 +282,8 @@ fn new_generated_part_repeats_inside_existing_three_bar_loop() {
             on: true,
         },
         Event {
+            deck: None,
+            timing: None,
             slice: false,
             tick: PPQ + 20,
             note: 1,

@@ -1,0 +1,81 @@
+{
+  "version": "0.11.0",
+  "status": "local candidate; public release and site remain0.9.3",
+  "date": "2026-11-23",
+  "native": {
+    "test-debug": 334,
+    "test-release": 334
+  },
+  "strict_clippy": [
+    "host/all-targets",
+    "aarch64/lib"
+  ],
+  "builds": [
+    "ARM64 normal",
+    "ARM64 isolated QA"
+  ],
+  "normal_library_sha256": "d73658134db8bd6e31b4ca7b064c0f67f3bd0f347bf6902e62ddca8299f0e42c",
+  "project_format": 9,
+  "older_readable_formats": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "device": "MPC Sample firmware1.3.0.12",
+  "evidence_scope": "actual active DRM, queued remote controller and stereo USB audio; NOT physical pad/fader or power-cycle certification",
+  "device_tests": {
+    "forward_scratch_usb_peak": 0.13678620755672455,
+    "reverse_scratch_usb_peak": 0.13822005689144135,
+    "held_stationary_usb_peak": 0.0,
+    "slip_release_usb_peak": 0.13670441508293152,
+    "fader_volume_isolation_and_release_after_navigation": "PASS",
+    "live_swing_all_midi_controls_and_original_events": {
+      "swing_percent": 75.0,
+      "sixteenth": true,
+      "peak": 0.1226486787199974
+    },
+    "recording_undo_redo_and_replay": {
+      "control_events": 5,
+      "source_frames": 11025,
+      "usb_peak": 0.2703852355480194
+    },
+    "noop_overdub_preserves_gestures": "PASS",
+    "punch_overdub_and_replay": {
+      "control_events": 8,
+      "source_frames": 11025,
+      "usb_peak": 0.26318973302841187
+    },
+    "format9_swing_and_deck_recall": "PASS"
+  },
+  "owner_preservation": "Original16track contents, BPM and stopped LOOP compared after restoring normal runtime; owner project not saved or overwritten.",
+  "remaining_limits": [
+    "Physical pads/fader/SHIFT acceptance",
+    "Power-cycle and recovery",
+    "Analog inputs and worst-case16-deck CPU",
+    "8MiB project metadata and4096events per clip",
+    "Mixed sampler MIDI and Deck Overdub refused; resample or explicit Replace required"
+  ],
+  "source_of_evidence": "build/qa-device/turntable-swing-0.11.0/ (local logs, captures, owner-state comparisons; excluded from public packages)",
+  "public_actual_images": "design/device-0.11.0/ (generated QA tone only)",
+  "actual_callback_window": {
+    "blocks": 15807,
+    "max_deadline_pct": 73.678,
+    "overrun_blocks": 0,
+    "p99_deadline_pct_upper": 35.0,
+    "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+  },
+  "actual_callback_window_note": "QA workload only; not a worst-case16-deck or physical-input CPU guarantee",
+  "remote_harness_note": "Initial harness reads preceded the updated CC snapshot; assertions now wait for the requested value/rate. Final isolated pass completed.",
+  "sd": {
+    "persisted": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20,
+    "runtime_sha256": "d73658134db8bd6e31b4ca7b064c0f67f3bd0f347bf6902e62ddca8299f0e42c"
+  },
+  "final_state": "normal0.11.0, owner session, stopped LOOP; runtime/SD hashes match"
+}

@@ -59,6 +59,7 @@ pub enum Page {
     Sidechain,
     Texture,
     FxSettings,
+    Perform,
 }
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Status {
@@ -339,6 +340,10 @@ impl Drum {
 }
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Event {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub deck: Option<crate::deck::Control>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timing: Option<crate::swing::Basis>,
     #[serde(default)]
     pub slice: bool,
     pub tick: u64,

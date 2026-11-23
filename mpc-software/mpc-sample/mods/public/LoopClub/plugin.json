@@ -1,10 +1,10 @@
 {
   "name": "Loop Club",
   "manufacturer": "kim",
-  "version": "0.9.3",
+  "version": "0.11.1",
   "kind": "mpc-sample-mod",
   "license": "MIT",
   "firmware": "1.3.0.12",
   "sdk": "mpc-sample-sdk@0.7.3",
-  "status": "public preview; actual remote UI/USB verified; physical, power-cycle and maximum-load acceptance pending"
+  "status": "public preview; actual remote UI/USB verified; physical controls and power-cycle acceptance pending"
 }

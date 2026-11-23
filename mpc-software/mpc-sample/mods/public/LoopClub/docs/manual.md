@@ -1,6 +1,6 @@
 # Loop Club manual
 
-Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.9.3 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
+Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.11.1 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
 
 ## Start with the loop
 
@@ -114,7 +114,7 @@ MIX -> press DATA -> OUTPUT. Pads1/2/3 or K1 choose MAIN / USB / MAIN+USB for th
 
 ## Save and compatibility
 
-Stop transport and wait for release tails before saving. SHIFT+DATA opens PROJECT; pad8 SAVE / pad9 LOAD. A save preserves a previous-session copy and replaces the new file atomically. On launch, the last project is restored stopped, starting at LOOP. Project format7 retains loop origins and the stopped transport frame, source PCM, imported zones, MIDI, master LATCH/bypass and sound settings. Formats1–6 remain readable; they cannot restore alignment offsets that their version never stored. Older Loop Club versions cannot read new format7 saves. Copy the project/previous-session backup before upgrading. Loading starts stopped. New legacy fields retain safe defaults.
+Stop transport and wait for release tails before saving. SHIFT+DATA opens PROJECT; pad8 SAVE / pad9 LOAD. A save preserves a previous-session copy and replaces the new file atomically. On launch, the last project is restored stopped, starting at LOOP. Project format9 retains loop origins and the stopped transport frame, source PCM, imported zones, MIDI, master LATCH/bypass and sound settings. Formats1–8 remain readable; they cannot restore alignment offsets that their version never stored. Older Loop Club versions cannot read new format9 saves. Copy the project/previous-session backup before upgrading. Loading starts stopped. New legacy fields retain safe defaults.
 
 32voices are shared across tracks/layers. Up to4096MIDI events per track; GRID currently displays the first64. CPU headroom varies with polyphony/effects; actual QA recorded isolated scheduling-inclusive peaks above one callback deadline. Save regularly. Physical control operation, calibrated mic/line latency, latest power-cycle boot/recovery and long-duration stability need further acceptance. Do not describe automated remote inputs as physical pad tests.
 
@@ -205,7 +205,7 @@ Up to four original sample zones per pad are retained with their velocity ranges
 
 Sample trim, reverse, tuning, layer/program gain and pan are prepared in the file worker. Native MPC inserts, filters/envelopes, Warp and plugin instruments are not executed or reproduced; this is a sample-program import, not identical MPC program playback. The bank chooser warns about FX/Warp when enabled in the source. Loop Club's own sound controls and FX remain available.
 
-Save the project after importing: project **format 7** embeds all imported WAV zones, so project recall does not require the original XPM/WAV files. Versions 1–6 remain readable; older Loop Club versions cannot open new format7 projects. Limits: 16 seconds per decoded/tuned zone, 64 MiB per kit and 256 MiB total kit PCM across tracks. Only the selected bank's WAV data is decoded. Personal commercial expansions remain personal and are never bundled in public packages.
+Save the project after importing: project **format 9** embeds all imported WAV zones, so project recall does not require the original XPM/WAV files. Versions 1–8 remain readable; older Loop Club versions cannot open new format9 projects. Limits: 16 seconds per decoded/tuned zone, 64 MiB per kit and 256 MiB total kit PCM across tracks. Only the selected bank's WAV data is decoded. Personal commercial expansions remain personal and are never bundled in public packages.
 
 ## Copy, delete and move from LOOP
 
@@ -230,3 +230,35 @@ Save/load preserves the stopped transport frame and each independent loop origin
 ## Direct FX controls in 0.9.3
 
 Press any track/performance FX pad and its controls appear immediately below the pad board. The header names the selected effect; K1/K2 edit its parameters and K3 edits Mix. Master texture pads show their matching controls, including Duck depth/recovery/sensitivity. Press/release still means HOLD; SHIFT+press still means LATCH. After release, editing the stored slot values does not switch the effect back on. With two effects, the last pressed pad receives edits; a refused third effect cannot change either occupied insert. DATA remains optional for advanced modulation Shape/Sync. Original artwork/colors and the4×4physical-pad mapping are retained.
+
+
+## Turntable scratch
+
+1. In LOOP, DATA selects an empty Audio track. B1 SOURCE and pad1 choose Audio if needed.
+2. BROWSE opens the sample browser. DATA chooses a WAV or folder; B2 OPEN/LOAD (or DATA push) opens it. B3 BACK closes the browser. Loading refuses an occupied target; original PCM is not silently replaced.
+3. B2 SOUND opens the loaded Audio source. B1 cycles INPUT → CHROMATIC → CHORD → CHOP → TURN.
+4. Hold PAD1 and move the left fader forward/backward. Holding the fader still settles to silence. Release PAD1 to resume playback; STOP ends audition.
+
+The TURN display shows the real platter position, direction, waveform and Slip state. Bottom K1 is Speed0.50–2.00x, K2 is fader Range½ /1 /2beats, K3 is track Level. SHIFT+B3 toggles Slip. Slip On returns to an independent advancing playhead; Off resumes from the scratched position. The first fader value establishes its anchor if none has been received. Other pads are unused here. In MIX and other pages the fader retains its usual volume/pickup role.
+
+Scratch follows this signal order: original PCM → scratch → track FX/mixer/sends → master FX → output. Downstream effects can retain their tails when scratch motion stops. Turntable is a source performance, not a post-master effect; Root/Tune/Warp and note Gate/One Shot do not change the Deck's Grab behavior.
+
+SHIFT+track pad records a gesture from LOOP, retaining the screen; the same shifted pad or REC finishes at the bar. PAD1/fader perform during capture. REPLACE records a new scratch loop without overwriting PCM. OVERDUB changes only grabbed regions and retains untouched gestures. Same-tick moves coalesce; limits are128grab regions/4096events per take. A limit cancellation preserves the completed clip and reports Capacity. Set Speed/Range/Slip before capture; this records fader/Grab motion, not parameter automation.
+
+Mixed Deck/note Overdub is refused in both directions. Choose explicit Replace or resample first. Cancel/Undo restores the previous clip and transport. A new non-Deck take releases the old automated Deck; manual audition is independently owned. When not recording, GRID follows the saved clip identity, even if the next input target changes. During recording it follows the active capture type.
+
+## Global MIDI Swing
+
+SHIFT+DATA from LOOP opens PROJECT: K1 BPM / K2 Count-in / K3 Swing50–75%.50% is straight. SHIFT+K3 chooses eighth/sixteenth subdivisions. Swing applies to Synth, Drum and Audio CHROMATIC/CHORD/CHOP loops together. Original audio/Warp, effect clocks and recorded Deck gestures are unchanged.
+
+Original event timestamps/velocities are retained; playback uses a separate schedule. Existing generated Swing is replaced rather than doubled. Closed hats, ride and bell use the correct baked basis; the dedicated open-hat motif stays straight until global Swing is applied. Older/new projects begin AS REC to preserve stored timing until K3 is used. Finish capture before changing Swing. Live held owners remain independent when sequenced playback is reseeked. The MIDI grid shows original source timestamps.
+
+## Chords, voice and trigger settings
+
+Audio SOUND includes CHORD between CHROMATIC and CHOP; chord notes are recorded over the unchanged source PCM. SOUND or DRUM SOUND → SHIFT+B1 opens PLAY SETTINGS. B1 returns and B2 cycles the relevant sections; B3 switches NOTES/CHORD and SHIFT+B3 controls smooth voicing for melodic sources.
+
+Synth VOICE: K1 Poly/Mono/Legato, K2 Glide0–2000ms, K3 Strum0–80ms per note; SHIFT+K3 Up/Down/Alternate. Mono retriggers envelopes; Legato retains them only across overlapping melody notes. The newest held melody has priority and releasing it returns to the earlier owner. Chord groups remain polyphonic. CHORD: Key/Scale/Color; shifted controls expose chord octave, voicing and Strum.
+
+TRIGGER provides Gate/One Shot on all note-based sources. Synth One Shot has a bounded10–8000ms Shot Gate then ADSR Release. Audio One Shot ends at its source endpoint; Gate repeats while held. Drum KIT preserves imported gate metadata; explicit Gate/One Shot overrides it. STOP cancels held/pending work. LOOP SHIFT+K1 sets pad-performance octave−2…+2 for Synth/Audio notes/chords; actual pitches are recorded without transposing playback again. CHOP/drum identities are unchanged.
+
+Format9 adds these settings, per-event Swing basis and Deck gestures; timing_revision1 repairs older generator metadata without rewriting source ticks. Formats1–8 remain readable, and older apps reject format9 saves.345Debug/345Release plus actual remote/USB checks are recorded separately from outstanding physical/power-cycle/analog/worst-case load acceptance.

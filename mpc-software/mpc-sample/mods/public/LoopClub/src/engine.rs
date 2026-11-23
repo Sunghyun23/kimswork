@@ -7,6 +7,10 @@ pub const MAX_EVENTS: usize = 4096;
 // Measured Sample1.3.0.12 budget:32shared voices;64exceeded steady deadlines.
 pub const VOICES: usize = 32;
 pub struct Track {
+    pub deck: crate::deck::Settings,
+    schedule: Vec<Event>,
+    schedule_revision: u64,
+    schedule_swing: Option<crate::swing::Basis>,
     pub kit: Box<crate::bank::DrumKit>,
     pub record_mode: RecordMode,
     pub source_frames: usize,
@@ -25,6 +29,8 @@ pub struct Track {
     pub pattern: crate::music::PatternConfig,
     pub chord: crate::music::ChordConfig,
     pub chord_mode: bool,
+    pub play: crate::performance::Settings,
+    strum_reverse: bool,
     pub xpm_step: [u32; 16],
     pub kind: Kind,
     pub name: String,
@@ -55,6 +61,10 @@ pub struct Track {
 impl Track {
     fn new(capacity: usize, index: usize) -> Self {
         Self {
+            deck: crate::deck::Settings::default(),
+            schedule: Vec::with_capacity(MAX_EVENTS),
+            schedule_revision: u64::MAX,
+            schedule_swing: None,
             kit: Box::new(crate::bank::DrumKit::default()),
             record_mode: RecordMode::Replace,
             source_frames: 0,
@@ -73,6 +83,8 @@ impl Track {
             pattern: crate::music::PatternConfig::default(),
             chord: crate::music::ChordConfig::default(),
             chord_mode: false,
+            play: crate::performance::Settings::default(),
+            strum_reverse: false,
             xpm_step: [0; 16],
             kind: Kind::Audio,
             name: format!("TRACK {:02}", index + 1),
@@ -115,6 +127,7 @@ impl Track {
         out.events.extend_from_slice(&self.events);
         macro_rules! copy {($($f:ident),*)=>{$(out.$f=self.$f;)*};}
         copy!(
+            deck,
             record_mode,
             source_frames,
             source_ticks,
@@ -129,6 +142,7 @@ impl Track {
             pattern,
             chord,
             chord_mode,
+            play,
             kind,
             mix,
             synth,
@@ -180,6 +194,15 @@ pub struct Recorder {
 }
 #[derive(Clone, Copy, Debug)]
 pub enum Command {
+    DeckGrab(usize, bool, Option<f32>),
+    DeckFader(usize, f32),
+    DeckValue(usize, u8, f32),
+    Swing(Option<crate::swing::Basis>),
+    PlayValue {
+        track: usize,
+        index: u8,
+        value: f32,
+    },
     AudioTarget(usize, crate::audio::RecordTarget),
     AudioSettings(usize, crate::audio::Settings),
     Undo,
@@ -356,6 +379,10 @@ struct HeldChord {
     track: usize,
     notes: [u8; 5],
     len: usize,
+    next: usize,
+    velocity: u8,
+    step: u32,
+    countdown: u32,
 }
 #[path = "history.rs"]
 mod history;
@@ -364,6 +391,9 @@ use history::{ClipState, EditKind, History};
 mod recording;
 
 pub struct Engine {
+    pub decks: Box<[crate::deck::Player; 16]>,
+    deck_spans: Box<crate::deck::Spans>,
+    pub swing: Option<crate::swing::Basis>,
     history: History,
     record_before: Option<ClipState>,
     record_history_committed: bool,
@@ -378,6 +408,8 @@ pub struct Engine {
     capture_events: Vec<Event>,
     capture_velocities: [u8; 128],
     held_chords: [HeldChord; 16],
+    pending_chords: u16,
+    mono: Box<[crate::performance::Mono; 16]>,
     slice_voices: [crate::chop::SliceVoice; 16],
     held_fx: u64,
     pub clock: Clock,
@@ -428,6 +460,9 @@ impl Engine {
     pub fn new(rate: u32, bpm: f64, frames_per_track: usize) -> Self {
         let rate = rate.clamp(8000, 96000);
         Self {
+            decks: Box::new([crate::deck::Player::default(); 16]),
+            deck_spans: Box::default(),
+            swing: None,
             history: History::new(frames_per_track),
             record_before: None,
             record_history_committed: false,
@@ -442,6 +477,8 @@ impl Engine {
             capture_events: Vec::with_capacity(MAX_EVENTS),
             capture_velocities: [0; 128],
             held_chords: [HeldChord::default(); 16],
+            pending_chords: 0,
+            mono: Box::new([crate::performance::Mono::default(); 16]),
             slice_voices: [crate::chop::SliceVoice::default(); 16],
             held_fx: 0,
             clock: Clock::new(rate, bpm),
@@ -610,6 +647,102 @@ impl Engine {
             return Err(Error::Busy);
         }
         match c {
+            Command::PlayValue {
+                track,
+                index,
+                value,
+            } => {
+                Self::valid_track(track)?;
+                if !value.is_finite() {
+                    return Err(Error::InvalidValue);
+                }
+                let mut cfg = self.tracks[track].play;
+                match index {
+                    0 => cfg.voice = value.round().clamp(0., 2.) as u8,
+                    1 => cfg.glide_ms = value,
+                    2 => cfg.trigger = value.round().clamp(0., 2.) as u8,
+                    3 => cfg.shot_ms = value,
+                    4 => cfg.octave = value.round().clamp(-2., 2.) as i8,
+                    _ => return Err(Error::InvalidValue),
+                }
+                if !cfg.valid() {
+                    return Err(Error::InvalidValue);
+                }
+                if (cfg.voice != self.tracks[track].play.voice
+                    || cfg.trigger != self.tracks[track].play.trigger)
+                    && self.recorder.is_some_and(|r| r.track == track)
+                {
+                    return Err(Error::Busy);
+                }
+                if cfg.voice != self.tracks[track].play.voice
+                    || cfg.trigger != self.tracks[track].play.trigger
+                {
+                    self.release_track(track);
+                    self.kill_track_voices(track);
+                }
+                if cfg.octave != self.tracks[track].play.octave {
+                    self.tracks[track].last_chord = ([0; 5], 0);
+                }
+                self.tracks[track].play = cfg;
+            }
+            Command::DeckValue(i, index, value) => {
+                Self::valid_track(i)?;
+                if self.recorder.is_some_and(|r| r.track == i) {
+                    return Err(Error::Busy);
+                }
+                if !value.is_finite() || self.tracks[i].kind != Kind::Audio {
+                    return Err(Error::InvalidValue);
+                }
+                match index {
+                    0 => self.tracks[i].deck.speed = value.clamp(0.5, 2.),
+                    1 => self.tracks[i].deck.range = value.round().clamp(0., 2.) as u8,
+                    2 => self.tracks[i].deck.slip = value >= 0.5,
+                    _ => return Err(Error::InvalidValue),
+                }
+            }
+            Command::DeckGrab(i, on, fader) => {
+                Self::valid_track(i)?;
+                if fader.is_some_and(|f| !f.is_finite() || !(0.0..=1.0).contains(&f)) {
+                    return Err(Error::InvalidValue);
+                }
+                if on
+                    && (self.tracks[i].kind != Kind::Audio
+                        || self.tracks[i].audio_target != crate::audio::RecordTarget::Turntable
+                        || self.tracks[i].source_frames == 0)
+                {
+                    return Err(Error::NoContent);
+                }
+                if self.recorder.is_some_and(|r| r.track == i && r.midi) {
+                    let overflows = self.event_overflows;
+                    self.process_capture(Frame::ZERO);
+                    if self.event_overflows != overflows && self.recorder.is_none() {
+                        return Err(Error::Capacity);
+                    }
+                }
+                self.decks[i].grab(on, fader, self.tracks[i].deck, self.clock.rate);
+                self.capture_deck(i)?;
+            }
+            Command::DeckFader(i, value) => {
+                Self::valid_track(i)?;
+                if !value.is_finite() || !(0.0..=1.0).contains(&value) {
+                    return Err(Error::InvalidValue);
+                }
+                if self.recorder.is_some_and(|r| r.track == i && r.midi) {
+                    let overflows = self.event_overflows;
+                    self.process_capture(Frame::ZERO);
+                    if self.event_overflows != overflows && self.recorder.is_none() {
+                        return Err(Error::Capacity);
+                    }
+                }
+                if self.decks[i].move_to(
+                    value,
+                    self.tracks[i].deck,
+                    self.clock.bpm,
+                    self.clock.rate,
+                ) {
+                    self.capture_deck(i)?;
+                }
+            }
             Command::AudioTarget(i, target) => {
                 Self::valid_track(i)?;
                 if self.tracks[i].kind != Kind::Audio {
@@ -620,6 +753,9 @@ impl Engine {
                 }
                 self.release_track(i);
                 self.tracks[i].audio_target = target;
+                if target != crate::audio::RecordTarget::Chromatic {
+                    self.tracks[i].chord_mode = false;
+                }
             }
             Command::AudioSettings(i, settings) => {
                 Self::valid_track(i)?;
@@ -888,7 +1024,11 @@ impl Engine {
                         end: slice.end as usize,
                         at: slice.start as usize,
                         velocity: f32::from(velocity) / 127. * slice.level,
-                        gate: t.chops.gate,
+                        gate: match t.play.trigger {
+                            1 => true,
+                            2 => false,
+                            _ => t.chops.gate,
+                        },
                         release: false,
                         env: 1.,
                         age: self.age,
@@ -916,7 +1056,22 @@ impl Engine {
                 self.swap_history(false)?;
             }
             Command::ChordMode(track, enabled) => {
-                self.tracks[Self::valid_track(track)?].chord_mode = enabled;
+                Self::valid_track(track)?;
+                if enabled
+                    && (self.tracks[track].kind == Kind::Drum
+                        || self.tracks[track].kind == Kind::Audio
+                            && self.tracks[track].audio_target
+                                != crate::audio::RecordTarget::Chromatic)
+                {
+                    return Err(Error::WrongKind);
+                }
+                if self.recorder.is_some_and(|r| r.track == track) {
+                    return Err(Error::Busy);
+                }
+                if self.tracks[track].chord_mode != enabled {
+                    self.release_track(track);
+                }
+                self.tracks[track].chord_mode = enabled;
             }
             Command::ChordValue {
                 track,
@@ -935,10 +1090,17 @@ impl Engine {
                     3 => cfg.octave = value.round().clamp(-2., 2.) as i8,
                     4 => cfg.open = value >= 0.5,
                     5 => cfg.smooth = value >= 0.5,
+                    6 => cfg.strum_ms = value,
+                    7 => cfg.strum_direction = value.round().clamp(0., 2.) as u8,
                     _ => return Err(Error::InvalidValue),
                 }
+                if !cfg.valid() {
+                    return Err(Error::InvalidValue);
+                }
                 self.tracks[track].chord = cfg;
-                self.tracks[track].last_chord = ([0; 5], 0);
+                if index <= 5 {
+                    self.tracks[track].last_chord = ([0; 5], 0);
+                }
             }
             Command::Chord {
                 track,
@@ -950,17 +1112,40 @@ impl Engine {
                 if pad >= 16 || velocity > 127 {
                     return Err(Error::InvalidValue);
                 }
+                let on = on && velocity > 0;
+                if on
+                    && (self.tracks[track].kind == Kind::Drum
+                        || self.tracks[track].kind == Kind::Audio
+                            && self.tracks[track].audio_target
+                                != crate::audio::RecordTarget::Chromatic)
+                {
+                    return Err(Error::WrongKind);
+                }
                 let previous = self.held_chords[pad];
-                self.held_chords[pad].len = 0;
-                for note in &previous.notes[..previous.len] {
-                    self.live_note(previous.track, *note, 0, false, 100 + pad as u16);
+                // One Shot keeps its already-triggered phrase after physical release.
+                if !on && self.tracks[previous.track].play.trigger == 2 {
+                    return Ok(());
+                }
+                self.pending_chords &= !(1 << pad);
+                self.held_chords[pad] = HeldChord::default();
+                for note in &previous.notes[..previous.next] {
+                    self.live_note(previous.track, *note, 0, false, 0x4000 + pad as u16);
                 }
                 if on && velocity > 0 {
-                    if self.tracks[track].kind != Kind::Synth {
-                        return Err(Error::WrongKind);
-                    }
                     let t = &mut self.tracks[track];
                     let (mut notes, len) = t.chord.notes(pad);
+                    if len > 0 {
+                        let mut shift = i16::from(t.play.octave) * 12;
+                        while i16::from(notes[len - 1]) + shift > 127 {
+                            shift -= 12;
+                        }
+                        while i16::from(notes[0]) + shift < 0 {
+                            shift += 12;
+                        }
+                        for note in &mut notes[..len] {
+                            *note = (i16::from(*note) + shift) as u8;
+                        }
+                    }
                     if t.chord.smooth {
                         notes = crate::music::smooth_voicing(
                             notes,
@@ -970,9 +1155,28 @@ impl Engine {
                         );
                     }
                     t.last_chord = (notes, len);
-                    self.held_chords[pad] = HeldChord { track, notes, len };
-                    for note in &notes[..len] {
-                        self.live_note(track, *note, velocity, true, 100 + pad as u16);
+                    if t.chord.strum_direction == 1
+                        || t.chord.strum_direction == 2 && t.strum_reverse
+                    {
+                        notes[..len].reverse();
+                    }
+                    t.strum_reverse = !t.strum_reverse;
+                    let step = (t.chord.strum_ms * self.clock.rate as f32 / 1000.).round() as u32;
+                    let next = if step == 0 { len } else { len.min(1) };
+                    self.held_chords[pad] = HeldChord {
+                        track,
+                        notes,
+                        len,
+                        next,
+                        velocity,
+                        step,
+                        countdown: step,
+                    };
+                    for note in &notes[..next] {
+                        self.live_note(track, *note, velocity, true, 0x4000 + pad as u16);
+                    }
+                    if next < len {
+                        self.pending_chords |= 1 << pad;
                     }
                 }
             }
@@ -1317,6 +1521,48 @@ impl Engine {
                 t.events.clear();
                 t.revision += 1;
             }
+            Command::Swing(value) => {
+                if value.is_some_and(|v| !v.valid()) {
+                    return Err(Error::InvalidValue);
+                }
+                if self.recorder.is_some() {
+                    return Err(Error::Busy);
+                }
+                if self.swing != value {
+                    self.swing = value;
+                    // Only sequenced owners are released; live notes remain owned by their input.
+                    for m in self.mono.iter_mut() {
+                        m.release_source(1);
+                    }
+                    for v in &mut self.voices {
+                        if v.source == 1 {
+                            let cfg = self.tracks[v.track].play;
+                            if cfg.voice > 0
+                                && v.drum.is_none()
+                                && let Some(n) = self.mono[v.track].latest()
+                            {
+                                v.retarget(
+                                    n.note,
+                                    n.velocity,
+                                    n.source,
+                                    self.tracks[v.track].synth,
+                                    cfg.glide_ms,
+                                    self.clock.rate,
+                                    cfg.voice == 2,
+                                );
+                                v.configure_trigger(cfg, self.clock.rate);
+                            } else {
+                                v.release();
+                            }
+                        }
+                    }
+                    for v in &mut self.slice_voices {
+                        if v.sampler.is_some_and(|s| s.source == 1) {
+                            v.release = true;
+                        }
+                    }
+                }
+            }
             Command::Bpm(b) => {
                 if !b.is_finite() || !(40.0..=240.0).contains(&b) {
                     return Err(Error::InvalidValue);
@@ -1480,6 +1726,7 @@ impl Engine {
                 let track = Self::valid_track(track)?;
                 let t = &mut self.tracks[track];
                 if index >= t.events.len()
+                    || t.events[index].deck.is_some()
                     || !t.events[index].on
                     || note > 127
                     || velocity > 127
@@ -1542,7 +1789,10 @@ impl Engine {
         if !t.empty() && !t.length_ticks.is_multiple_of(4 * PPQ) {
             return Err(Error::NotEmpty);
         }
-        let cfg = crate::music::next_config(t.pattern, sound);
+        let mut cfg = crate::music::next_config(t.pattern, sound);
+        if self.swing.is_some() {
+            cfg.swing = 50.;
+        }
         let generated = crate::music::generate_sound(cfg, self.clock.bpm, sound as u8);
         if generated.len == 0 {
             return Err(Error::InvalidValue);
@@ -1587,6 +1837,8 @@ impl Engine {
                 let base = bar as u64 * 4 * PPQ;
                 let tick = base + crate::music::event_tick(hit.tick);
                 t.events.push(Event {
+                    deck: None,
+                    timing: crate::music::swing_basis(cfg, hit.sound),
                     slice: false,
                     tick,
                     note: hit.sound,
@@ -1594,8 +1846,17 @@ impl Engine {
                     on: true,
                 });
                 t.events.push(Event {
+                    deck: None,
+                    timing: crate::music::swing_basis(cfg, hit.sound),
                     slice: false,
-                    tick: (tick + crate::music::event_tick(hit.gate)).min(base + 4 * PPQ - 1),
+                    tick: {
+                        let basis = crate::music::swing_basis(cfg, hit.sound);
+                        let straight = basis.map_or(tick, |b| b.warp(tick, true));
+                        let end = straight + crate::music::event_tick(hit.gate);
+                        basis
+                            .map_or(end, |b| b.warp(end, false))
+                            .min(base + 4 * PPQ - 1)
+                    },
                     note: hit.sound,
                     velocity: 0,
                     on: false,
@@ -1689,7 +1950,39 @@ impl Engine {
             }
         }
     }
+    fn release_sequence_for_recording(&mut self, i: usize) {
+        self.mono[i].release_source(1);
+        let cfg = self.tracks[i].play;
+        for v in &mut self.voices {
+            if v.track == i && v.source == 1 {
+                if cfg.voice > 0
+                    && v.drum.is_none()
+                    && let Some(n) = self.mono[i].latest()
+                {
+                    v.retarget(
+                        n.note,
+                        n.velocity,
+                        n.source,
+                        self.tracks[i].synth,
+                        cfg.glide_ms,
+                        self.clock.rate,
+                        cfg.voice == 2,
+                    );
+                    v.configure_trigger(cfg, self.clock.rate);
+                } else {
+                    v.release();
+                }
+            }
+        }
+        for v in &mut self.slice_voices {
+            if v.track == i && v.sampler.is_some_and(|s| s.source == 1) {
+                v.release = true;
+            }
+        }
+    }
     fn release_track(&mut self, i: usize) {
+        self.decks[i] = crate::deck::Player::default();
+        self.mono[i] = crate::performance::Mono::default();
         for voice in &mut self.slice_voices {
             if voice.track == i {
                 voice.release = true;
@@ -1705,9 +1998,71 @@ impl Engine {
                 v.release()
             }
         }
+        self.pending_chords &= self
+            .held_chords
+            .iter()
+            .enumerate()
+            .filter(|(_, h)| h.len > 0)
+            .fold(0, |bits, (p, _)| bits | (1 << p));
         self.open_notes[i] = [false; 128]
     }
     fn note(&mut self, track: usize, note: u8, velocity: u8, on: bool, source: u16) {
+        if self.tracks[track].kind == Kind::Synth
+            && self.tracks[track].play.voice > 0
+            && !self.tracks[track].chord_mode
+            && !(0x4000..0x4010).contains(&source)
+        {
+            self.mono_note(track, note, velocity, on, source);
+        } else {
+            self.poly_note(track, note, velocity, on, source);
+        }
+    }
+    fn mono_note(&mut self, track: usize, note: u8, velocity: u8, on: bool, source: u16) {
+        let on = on && velocity > 0;
+        let previous = self.mono[track].latest();
+        if on && velocity > 0 {
+            self.age += 1;
+            self.mono[track].press(note, source, velocity, self.age);
+        } else {
+            self.mono[track].release(note, source);
+        }
+        let next = self.mono[track].latest();
+        if !on && previous.map(|n| (n.note, n.source)) != Some((note, source)) {
+            return;
+        }
+        let slot = self.voices.iter().position(|v| {
+            v.active
+                && v.track == track
+                && v.drum.is_none()
+                && !(0x4000..0x4010).contains(&v.source)
+        });
+        if let Some(n) = next {
+            let cfg = self.tracks[track].play;
+            if let Some(slot) = slot {
+                let overlap = previous.is_some();
+                let glide = if cfg.voice == 1 || overlap {
+                    cfg.glide_ms
+                } else {
+                    0.
+                };
+                self.voices[slot].retarget(
+                    n.note,
+                    n.velocity,
+                    n.source,
+                    self.tracks[track].synth,
+                    glide,
+                    self.clock.rate,
+                    cfg.voice == 2 && overlap,
+                );
+                self.voices[slot].configure_trigger(cfg, self.clock.rate);
+            } else {
+                self.poly_note(track, n.note, n.velocity, true, n.source);
+            }
+        } else if let Some(slot) = slot {
+            self.voices[slot].note_off();
+        }
+    }
+    fn poly_note(&mut self, track: usize, note: u8, velocity: u8, on: bool, source: u16) {
         if self.tracks[track].kind == Kind::Audio {
             self.sample_note(
                 track,
@@ -1723,7 +2078,7 @@ impl Engine {
         if !on || velocity == 0 {
             for v in &mut self.voices {
                 if v.active && v.track == track && v.note == note && v.source == source {
-                    v.release()
+                    v.note_off()
                 }
             }
             return;
@@ -1845,7 +2200,12 @@ impl Engine {
             );
             self.voices[i].layer = layer;
             self.voices[i].xpm_zone = zone;
-            self.voices[i].pcm_gate = native.is_some_and(|m| m.gate);
+            self.voices[i].pcm_gate = match self.tracks[track].play.trigger {
+                1 => true,
+                2 => false,
+                _ => native.is_some_and(|m| m.gate),
+            };
+            self.voices[i].configure_trigger(self.tracks[track].play, self.clock.rate);
             self.voices[i].delay_frames = settings.map_or(0, |d| {
                 ((d.layers[layer].shift - earliest) * self.clock.rate as f32 / 1000.).round() as u32
             });
@@ -1867,6 +2227,7 @@ impl Engine {
                     && v.track == track
                     && v.sampler
                         .is_some_and(|s| s.note == note && s.source == source && s.slice == chop)
+                    && v.gate
                 {
                     v.release = true;
                 }
@@ -1924,6 +2285,7 @@ impl Engine {
         let mut voice = crate::audio::Voice::new(played_note, source, t.audio_settings);
         voice.note = note;
         voice.slice = chop;
+        voice.one_shot = t.play.trigger == 2;
         voice.set_played_note(played_note, t.audio_settings);
         self.slice_voices[slot] = crate::chop::SliceVoice {
             active: true,
@@ -1937,7 +2299,7 @@ impl Engine {
             end,
             at: start,
             velocity: f32::from(velocity) / 127. * level,
-            gate: true,
+            gate: t.play.trigger != 2,
             release: false,
             env: 1.,
             age: self.age,
@@ -1945,6 +2307,11 @@ impl Engine {
         };
     }
     fn live_note(&mut self, i: usize, note: u8, velocity: u8, on: bool, source: u16) {
+        if self.tracks[i].kind == Kind::Audio
+            && self.tracks[i].audio_target == crate::audio::RecordTarget::Turntable
+        {
+            return;
+        }
         // MIDI commands may arrive on the exact frame of a wrap, before process().
         if self.recorder.is_some_and(|r| r.track == i && r.midi) {
             self.process_capture(Frame::ZERO);
@@ -2004,6 +2371,37 @@ impl Engine {
             t.last_phase = u64::MAX;
         }
     }
+    fn refresh_schedule(&mut self, i: usize, tick: u64) {
+        let t = &mut self.tracks[i];
+        if t.schedule_revision == t.revision && t.schedule_swing == self.swing {
+            return;
+        }
+        let changed_swing = t.schedule_swing != self.swing;
+        t.schedule.clear();
+        t.schedule.extend(
+            t.events
+                .iter()
+                .map(|&e| self.swing.map_or(e, |s| s.event(e, t.length_ticks))),
+        );
+        if !t
+            .schedule
+            .windows(2)
+            .all(|w| (w[0].tick, w[0].on) <= (w[1].tick, w[1].on))
+        {
+            t.schedule.sort_unstable_by_key(|e| (e.tick, e.on));
+        }
+        t.schedule_revision = t.revision;
+        t.schedule_swing = self.swing;
+        // A timing edit must not replay notes already passed in this cycle.
+        if changed_swing || t.last_phase != u64::MAX {
+            let phase = t.phase(tick);
+            t.cursor = t.schedule.partition_point(|e| e.tick < phase);
+            t.last_phase = phase;
+        }
+        if t.events.first().is_some_and(|e| e.deck.is_some()) && !self.decks[i].active {
+            t.cursor = 0;
+        }
+    }
     pub fn process(&mut self, input: Frame) -> Frame {
         let mut profile = crate::qa::dsp_start(|| self.active_voices());
         let tick = self.clock.tick();
@@ -2018,6 +2416,27 @@ impl Engine {
             self.input_preview[self.input_preview_head] = crate::features::Peak::default();
         }
         self.process_capture(input);
+        if self.pending_chords != 0 {
+            for pad in 0..16 {
+                if self.pending_chords & (1 << pad) == 0 {
+                    continue;
+                }
+                let h = &mut self.held_chords[pad];
+                if h.countdown > 0 {
+                    h.countdown -= 1;
+                    continue;
+                }
+                if h.countdown == 0 {
+                    let (track, note, velocity) = (h.track, h.notes[h.next], h.velocity);
+                    h.next += 1;
+                    h.countdown = h.step.saturating_sub(1);
+                    if h.next >= h.len {
+                        self.pending_chords &= !(1 << pad);
+                    }
+                    self.live_note(track, note, velocity, true, 0x4000 + pad as u16);
+                }
+            }
+        }
         if self.running && self.chain.running {
             let tracks = &self.tracks;
             if let Some(change) = self.chain.tick(tick, |track| tracks[track].length_ticks) {
@@ -2031,8 +2450,30 @@ impl Engine {
                     && (self.tracks[i].kind != Kind::Audio || self.tracks[i].audio_sequence)
                     && !self.tracks[i].empty()
                 {
+                    self.refresh_schedule(i, tick);
                     let phase = self.tracks[i].phase(tick);
                     if phase < self.tracks[i].last_phase {
+                        let was = self.mono[i].latest();
+                        self.mono[i].release_source(1);
+                        if was.is_some_and(|n| n.source == 1)
+                            && let Some(n) = self.mono[i].latest()
+                            && let Some(v) = self
+                                .voices
+                                .iter_mut()
+                                .find(|v| v.active && v.track == i && v.drum.is_none())
+                        {
+                            let cfg = self.tracks[i].play;
+                            v.retarget(
+                                n.note,
+                                n.velocity,
+                                n.source,
+                                self.tracks[i].synth,
+                                cfg.glide_ms,
+                                self.clock.rate,
+                                cfg.voice == 2,
+                            );
+                            v.configure_trigger(cfg, self.clock.rate);
+                        }
                         for v in &mut self.voices {
                             if v.track == i && v.source == 1 {
                                 v.release()
@@ -2045,8 +2486,8 @@ impl Engine {
                         }
                         self.tracks[i].cursor = 0
                     }
-                    while self.tracks[i].cursor < self.tracks[i].events.len() {
-                        let e = self.tracks[i].events[self.tracks[i].cursor];
+                    while self.tracks[i].cursor < self.tracks[i].schedule.len() {
+                        let e = self.tracks[i].schedule[self.tracks[i].cursor];
                         if e.tick > phase {
                             break;
                         }
@@ -2059,7 +2500,20 @@ impl Engine {
                                     || r.touched & (1 << (e.note % 16)) != 0)
                         });
                         if !suppressed {
-                            if self.tracks[i].kind == Kind::Audio {
+                            if let Some(control) = e.deck {
+                                if !self.decks[i].live {
+                                    let elapsed = self
+                                        .clock
+                                        .frame_at(phase)
+                                        .saturating_sub(self.clock.frame_at(e.tick));
+                                    self.decks[i].restore(
+                                        control,
+                                        elapsed,
+                                        self.tracks[i].deck,
+                                        self.clock.rate,
+                                    );
+                                }
+                            } else if self.tracks[i].kind == Kind::Audio {
                                 self.sample_note(i, e.note, e.velocity, e.on, 1, e.slice);
                             } else {
                                 self.note(i, e.note, e.velocity, e.on, 1)
@@ -2096,7 +2550,7 @@ impl Engine {
                         / source_frames as f64)
                         .round()
                         .max(1.) as u64;
-                    sampler
+                    let out = sampler
                         .sample(
                             &t.audio[voice.start..voice.end],
                             settings,
@@ -2104,7 +2558,11 @@ impl Engine {
                             self.clock.bpm,
                             self.clock.rate,
                         )
-                        .gain(voice.velocity * voice.env)
+                        .gain(voice.velocity * voice.env);
+                    if sampler.finished {
+                        voice.active = false;
+                    }
+                    out
                 } else {
                     voice.sample(&t.audio[..t.audio_frames], self.clock.rate)
                 };
@@ -2112,6 +2570,40 @@ impl Engine {
             }
         }
 
+        for (i, signal) in signals.iter_mut().enumerate() {
+            let t = &self.tracks[i];
+            let replacing = self.recorder.is_some_and(|r| {
+                r.track == i
+                    && tick >= r.start
+                    && r.mode == RecordMode::Replace
+                    && !(r.midi && t.audio_target == crate::audio::RecordTarget::Turntable)
+            });
+            if !self.decks[i].live
+                && (replacing
+                    || (!self.decks[i].audition
+                        && (!self.running || !t.playing || tick < t.origin)))
+            {
+                self.decks[i] = crate::deck::Player::default();
+            }
+            let raw = !replacing
+                && self.running
+                && t.playing
+                && tick >= t.origin
+                && !t.audio_sequence
+                && t.audio_target == crate::audio::RecordTarget::Turntable
+                && !t.empty();
+            if raw && !self.decks[i].active {
+                self.decks[i]
+                    .start(self.clock.frame_at(t.phase(tick)) as f64 * f64::from(t.deck.speed));
+            }
+            if t.kind == Kind::Audio && t.source_frames > 0 {
+                *signal = signal.combine(self.decks[i].sample(
+                    &t.audio[..t.source_frames],
+                    t.deck,
+                    self.clock.rate,
+                ));
+            }
+        }
         let mut drum_delay = [Frame::ZERO; 16];
         let mut drum_room = [Frame::ZERO; 16];
         for t in self.tracks.iter_mut().take(ACTIVE_TRACKS) {
@@ -2193,6 +2685,7 @@ impl Engine {
                 && tick >= t.origin
                 && t.kind == Kind::Audio
                 && !t.audio_sequence
+                && t.audio_target != crate::audio::RecordTarget::Turntable
                 && !self.recorder.is_some_and(|r| {
                     r.track == i && r.midi && r.mode == RecordMode::Replace && tick >= r.start
                 })
@@ -2475,11 +2968,14 @@ impl Engine {
     }
     pub fn is_idle(&self) -> bool {
         !self.running
+            && !self.decks.iter().any(|d| d.active)
+            && self.pending_chords == 0
             && self.recorder.is_none()
             && self.active_voices() == 0
             && !self.slice_voices.iter().any(|v| v.active)
     }
     pub fn emergency_silence(&mut self) {
+        self.decks.fill(crate::deck::Player::default());
         for voice in &mut self.voices {
             voice.active = false;
         }
@@ -2487,6 +2983,8 @@ impl Engine {
             voice.active = false;
         }
         self.held_chords = [HeldChord::default(); 16];
+        self.pending_chords = 0;
+        self.mono.fill(crate::performance::Mono::default());
         self.release_temporary_fx();
     }
     pub fn reset_chop_history(&mut self, track: usize) {

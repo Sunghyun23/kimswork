@@ -197,6 +197,8 @@ fn project_round_trip_and_failed_load_do_not_mutate_source() {
     e.tracks[1].kind = Kind::Synth;
     e.tracks[1].length_ticks = 8 * PPQ;
     e.tracks[1].events.push(Event {
+        deck: None,
+        timing: None,
         slice: false,
         tick: 42,
         note: 65,
@@ -316,6 +318,8 @@ fn default_project_is100bpm_and_stopped_midi_tempo_change_preserves_events() {
     e.tracks[0].kind = Kind::Synth;
     e.tracks[0].length_ticks = 4 * PPQ;
     e.tracks[0].events.push(Event {
+        deck: None,
+        timing: None,
         slice: false,
         tick: 0,
         note: 60,
@@ -398,6 +402,8 @@ fn loop_replace_resets_length_and_cancel_preserves_previous_clip() {
     e.tracks[0].kind = Kind::Synth;
     e.tracks[0].length_ticks = 16 * PPQ;
     let original = Event {
+        deck: None,
+        timing: None,
         slice: false,
         tick: 0,
         note: 60,

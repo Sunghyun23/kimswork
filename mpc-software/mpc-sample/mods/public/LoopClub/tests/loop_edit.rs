@@ -9,6 +9,8 @@ fn core() -> Engine {
     t.kind = Kind::Synth;
     t.length_ticks = 4 * PPQ;
     t.events.push(Event {
+        deck: None,
+        timing: None,
         tick: 0,
         note: 60,
         velocity: 90,
@@ -16,6 +18,8 @@ fn core() -> Engine {
         slice: false,
     });
     t.events.push(Event {
+        deck: None,
+        timing: None,
         tick: PPQ,
         note: 60,
         velocity: 0,

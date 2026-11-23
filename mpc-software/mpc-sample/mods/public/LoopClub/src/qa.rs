@@ -317,7 +317,8 @@ pub fn paint(ui: &crate::ui::Ui, s: &Snapshot, browser: bool) {
             | (u64::from(ui.layer_detail) << 19)
             | ((ui.sound as u64) << 20)
             | ((ui.texture_slot as u64) << 32)
-            | ((ui.fx_focus as u64) << 40),
+            | ((ui.fx_focus as u64) << 40)
+            | (u64::from(ui.perform_section) << 48),
         Ordering::Relaxed,
     );
     if let Some(state) = STATE.get() {

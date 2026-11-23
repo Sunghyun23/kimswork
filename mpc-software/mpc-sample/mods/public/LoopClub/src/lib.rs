@@ -7,10 +7,12 @@ pub mod engine;
 pub mod features;
 pub mod model;
 pub mod music;
+pub mod performance;
 pub mod project;
 pub mod queue;
 pub mod runtime;
 pub mod sample;
+pub mod swing;
 pub mod ui;
 pub mod view;
 
@@ -36,5 +38,6 @@ pub mod chain;
 mod midi_input;
 
 pub mod audio;
+pub mod deck;
 
 pub mod xpm;

@@ -3,7 +3,7 @@ use crate::{
     engine::{Command, Engine},
     model::*,
 };
-pub const WORDS: usize = 1184;
+pub const WORDS: usize = 1193;
 #[derive(Clone, Copy)]
 pub struct Snapshot {
     pub words: [u64; WORDS],
@@ -61,6 +61,7 @@ impl Snapshot {
         match (self.words[16 + i * 12] >> 21) & 3 {
             1 => crate::audio::RecordTarget::Chromatic,
             2 => crate::audio::RecordTarget::Chop,
+            3 => crate::audio::RecordTarget::Turntable,
             _ => crate::audio::RecordTarget::Input,
         }
     }
@@ -68,9 +69,14 @@ impl Snapshot {
         self.words[16 + i * 12] & (1 << 20) != 0
     }
     pub fn note_view(&self, i: usize) -> bool {
-        self.track_kind(i) != Kind::Audio
-            || self.audio_sequence(i)
-            || (self.words[9] == i as u64 + 1 && self.words[12] & (1 << 4) != 0)
+        if self.track_kind(i) != Kind::Audio {
+            return true;
+        }
+        if self.words[9] == i as u64 + 1 {
+            return self.words[12] & (1 << 4) != 0
+                && self.audio_target(i) != crate::audio::RecordTarget::Turntable;
+        }
+        self.audio_sequence(i) && self.words[16 + i * 12] & (1 << 23) == 0
     }
 
     pub fn chain_config(&self) -> crate::chain::Config {
@@ -170,6 +176,28 @@ impl Snapshot {
             let peak = e.input_preview_peak(i);
             s.words[1056 + i] = pair(peak.min, peak.max);
         }
+        let current = &e.tracks[e.selected];
+        s.words[1184] = pair(current.play.glide_ms, current.play.shot_ms);
+        s.words[1185] = u64::from(current.play.voice)
+            | (u64::from(current.play.trigger) << 8)
+            | ((current.play.octave as u8 as u64) << 16);
+        s.words[1187] = e.active_voices() as u64;
+        s.words[1189] = pair(current.deck.speed, f32::from(current.deck.range));
+        let d = e.decks[e.selected];
+        let n = current.source_frames.max(1) as f64;
+        s.words[1190] = pair((d.state.head.rem_euclid(n) / n) as f32, d.rate);
+        s.words[1191] = u64::from(current.deck.slip)
+            | (u64::from(d.state.grabbed) << 1)
+            | (u64::from(d.active) << 2);
+        s.words[1192] = pair(d.state.fader, (d.state.slip.rem_euclid(n) / n) as f32);
+
+        s.words[1188] = e.swing.map_or(0, |v| {
+            u64::from(v.amount.to_bits()) | (u64::from(v.sixteenth) << 32) | (1 << 33)
+        });
+        s.words[1186] = pair(
+            current.chord.strum_ms,
+            f32::from(current.chord.strum_direction),
+        );
         s.words[1046] = e.history_status();
         s.words[1047] = e.loop_revision;
         s.words[1055] = u64::from(e.is_idle());
@@ -217,7 +245,8 @@ impl Snapshot {
                 | ((t.record_mode as u64) << 18)
                 | (u64::from(t.chord_mode) << 19)
                 | (u64::from(t.audio_sequence) << 20)
-                | ((t.audio_target as u64) << 21);
+                | ((t.audio_target as u64) << 21)
+                | (u64::from(t.events.first().is_some_and(|e| e.deck.is_some())) << 23);
             s.words[b + 1] = pair(t.mix.level, t.mix.pan);
             s.words[b + 2] = pair(t.mix.delay, t.mix.room);
             s.words[b + 3] = pair(t.meter, t.gain);
@@ -380,9 +409,39 @@ impl Snapshot {
             level: f32::from_bits((self.words[498 + i / 2] >> ((i % 2) * 32)) as u32),
         }
     }
+    pub fn deck(&self) -> crate::deck::Settings {
+        crate::deck::Settings {
+            speed: lo(self.words[1189]),
+            range: hi(self.words[1189]) as u8,
+            slip: self.words[1191] & 1 != 0,
+        }
+    }
+    pub fn deck_head(&self) -> f32 {
+        lo(self.words[1190])
+    }
+    pub fn deck_rate(&self) -> f32 {
+        hi(self.words[1190])
+    }
+    pub fn swing(&self) -> Option<crate::swing::Basis> {
+        (self.words[1188] & (1 << 33) != 0).then(|| crate::swing::Basis {
+            amount: f32::from_bits(self.words[1188] as u32),
+            sixteenth: self.words[1188] & (1 << 32) != 0,
+        })
+    }
+    pub fn play_settings(&self) -> crate::performance::Settings {
+        crate::performance::Settings {
+            voice: self.words[1185] as u8,
+            octave: (self.words[1185] >> 16) as u8 as i8,
+            trigger: (self.words[1185] >> 8) as u8,
+            glide_ms: lo(self.words[1184]),
+            shot_ms: hi(self.words[1184]),
+        }
+    }
     pub fn chord(&self) -> crate::music::ChordConfig {
         let v = self.words[480];
         crate::music::ChordConfig {
+            strum_ms: lo(self.words[1186]),
+            strum_direction: hi(self.words[1186]) as u8,
             smooth: self.words[480] & (1 << 33) != 0,
             key: v as u8,
             scale: (v >> 8) as u8,
@@ -551,6 +610,8 @@ pub struct FxEdit {
     pub texture: bool,
 }
 pub struct Ui {
+    pub deck_held: Option<usize>,
+    pub last_fader: Option<f32>,
     pub loop_edit: bool,
     pub edit_operation: u8,
     pub edit_source: Option<usize>,
@@ -570,6 +631,7 @@ pub struct Ui {
     pub fx_refused: Option<usize>,
     pub layer: usize,
     pub layer_detail: bool,
+    pub perform_section: u8,
     pub chop_slice: usize,
     pub chop_cursor: u32,
     pub chop_zoom: u8,
@@ -606,9 +668,12 @@ impl Default for Ui {
             fx_refused: None,
             layer: 0,
             layer_detail: false,
+            perform_section: 0,
             chop_slice: 0,
             chop_cursor: 0,
             chop_zoom: 0,
+            deck_held: None,
+            last_fader: None,
             held_slices: [None; 16],
             chord_modes: [false; 16],
             held_chords: [None; 16],
@@ -920,6 +985,13 @@ impl Ui {
         if page == Page::DrumSound && self.page != page {
             self.layer_detail = false;
         }
+        if page == Page::Perform && self.page != page {
+            self.perform_section = match s.track_kind(self.selected) {
+                Kind::Synth => 0,
+                Kind::Audio => 1,
+                Kind::Drum => 2,
+            };
+        }
         self.page = page;
         self.fx_refused = None;
         self.notice = "";
@@ -944,6 +1016,56 @@ impl Ui {
             return;
         }
 
+        if shift && key == 0 && matches!(self.page, Page::Play | Page::DrumSound) {
+            self.navigate(Page::Perform, s);
+            return;
+        }
+        if self.page == Page::Perform {
+            if key == 0 {
+                self.navigate(
+                    if s.track_kind(self.selected) == Kind::Drum {
+                        Page::DrumSound
+                    } else {
+                        Page::Play
+                    },
+                    s,
+                );
+            } else if key == 1 {
+                self.perform_section = match s.track_kind(self.selected) {
+                    Kind::Synth => (self.perform_section + 1) % 3,
+                    Kind::Audio => {
+                        if self.perform_section == 1 {
+                            2
+                        } else {
+                            1
+                        }
+                    }
+                    Kind::Drum => 2,
+                };
+            } else if s.track_kind(self.selected) != Kind::Drum {
+                if shift {
+                    send(Command::ChordValue {
+                        track: self.selected,
+                        index: 5,
+                        value: f32::from(!s.chord().smooth),
+                    });
+                } else {
+                    let enabled = !self.chord_modes[self.selected];
+                    if s.track_kind(self.selected) == Kind::Audio
+                        && enabled
+                        && s.audio_target(self.selected) != crate::audio::RecordTarget::Chromatic
+                    {
+                        send(Command::AudioTarget(
+                            self.selected,
+                            crate::audio::RecordTarget::Chromatic,
+                        ));
+                    }
+                    self.chord_modes[self.selected] = enabled;
+                    send(Command::ChordMode(self.selected, enabled));
+                }
+            }
+            return;
+        }
         if self.page == Page::FxSettings {
             if key == 0 {
                 if let Some(e) = self.fx_edit {
@@ -1057,12 +1179,21 @@ impl Ui {
         }
         if self.page == Page::Play && s.track_kind(self.selected) == Kind::Audio {
             if key == 0 {
-                let next = match s.audio_target(self.selected) {
+                let target = s.audio_target(self.selected);
+                let chord = target == crate::audio::RecordTarget::Chromatic
+                    && !self.chord_modes[self.selected];
+                let next = match target {
                     crate::audio::RecordTarget::Input => crate::audio::RecordTarget::Chromatic,
+                    crate::audio::RecordTarget::Chromatic if chord => target,
                     crate::audio::RecordTarget::Chromatic => crate::audio::RecordTarget::Chop,
-                    crate::audio::RecordTarget::Chop => crate::audio::RecordTarget::Input,
+                    crate::audio::RecordTarget::Chop => crate::audio::RecordTarget::Turntable,
+                    crate::audio::RecordTarget::Turntable => crate::audio::RecordTarget::Input,
                 };
-                send(Command::AudioTarget(self.selected, next));
+                if target != next {
+                    send(Command::AudioTarget(self.selected, next));
+                }
+                self.chord_modes[self.selected] = chord;
+                send(Command::ChordMode(self.selected, chord));
                 self.notice = "";
                 return;
             }
@@ -1070,6 +1201,19 @@ impl Ui {
                 self.navigate(Page::Chop, s);
                 return;
             }
+        }
+        if self.page == Page::Play
+            && s.track_kind(self.selected) == Kind::Audio
+            && s.audio_target(self.selected) == crate::audio::RecordTarget::Turntable
+            && key == 2
+            && shift
+        {
+            send(Command::DeckValue(
+                self.selected,
+                2,
+                if s.deck().slip { 0. } else { 1. },
+            ));
+            return;
         }
         if matches!(self.page, Page::Loop | Page::Play) && key == 2 {
             let mode = if s.words[16 + self.selected * 12] & (1 << 18) == 0 {
@@ -1153,6 +1297,11 @@ impl Ui {
             return Action::None;
         }
         if !on {
+            if pad == 0
+                && let Some(track) = self.deck_held.take()
+            {
+                send(Command::DeckGrab(track, false, self.last_fader));
+            }
             if pad < 8 && self.texture_held[pad] {
                 self.texture_held[pad] = false;
                 match pad {
@@ -1440,7 +1589,9 @@ impl Ui {
                     });
                 }
             }
-            Page::Play => return self.perform_pad(pad, velocity, shift, erase, s, &mut send),
+            Page::Perform | Page::Play => {
+                return self.perform_pad(pad, velocity, shift, erase, s, &mut send);
+            }
             Page::Sidechain => {
                 let mut c = s.sidechain();
                 if shift {
@@ -1636,6 +1787,15 @@ impl Ui {
         send: &mut impl FnMut(Command),
     ) -> Action {
         if s.track_kind(self.selected) == Kind::Audio {
+            if !shift && s.audio_target(self.selected) == crate::audio::RecordTarget::Turntable {
+                if pad == 0 {
+                    if let Some(old) = self.deck_held.replace(self.selected) {
+                        send(Command::DeckGrab(old, false, self.last_fader));
+                    }
+                    send(Command::DeckGrab(self.selected, true, self.last_fader));
+                }
+                return Action::None;
+            }
             if shift {
                 return Action::None;
             }
@@ -1643,10 +1803,23 @@ impl Ui {
                 self.notice = "RECORD OR LOAD A WAV FIRST";
                 return Action::None;
             }
+            if self.chord_modes[self.selected]
+                && s.audio_target(self.selected) == crate::audio::RecordTarget::Chromatic
+            {
+                self.sound = pad;
+                self.held_chords[pad] = Some(self.selected);
+                send(Command::Chord {
+                    track: self.selected,
+                    pad,
+                    velocity,
+                    on: true,
+                });
+                return Action::None;
+            }
             let note = if s.audio_target(self.selected) == crate::audio::RecordTarget::Chop {
                 pad as u8
             } else {
-                48 + pad as u8
+                (48i16 + pad as i16 + i16::from(s.play_settings().octave) * 12) as u8
             };
             let source = 100 + pad as u16;
             self.sound = pad;
@@ -1693,7 +1866,7 @@ impl Ui {
             let note = if s.track_kind(self.selected) == Kind::Drum {
                 pad as u8
             } else {
-                48 + pad as u8
+                (48i16 + pad as i16 + i16::from(s.play_settings().octave) * 12) as u8
             };
             if s.track_kind(self.selected) == Kind::Drum {
                 self.sound = pad;
@@ -1852,6 +2025,17 @@ impl Ui {
         });
     }
     pub fn fader(&mut self, value: f32, s: &Snapshot, mut send: impl FnMut(Command)) {
+        self.last_fader = Some(value.clamp(0., 1.));
+        if (self.page == Page::Play
+            || self.page == Page::Loop && self.loop_mode == 0 && !self.loop_edit)
+            && s.track_kind(self.selected) == Kind::Audio
+            && s.audio_target(self.selected) == crate::audio::RecordTarget::Turntable
+        {
+            send(Command::DeckFader(self.selected, value.clamp(0., 1.)));
+            self.pickup.select(s.level(self.selected));
+            return;
+        }
+
         if matches!(self.page, Page::KitMix | Page::DrumSound) {
             let m = s.drum(self.sound);
             if let Some(v) = self.pickup.move_to(value, m.level) {
@@ -1890,6 +2074,19 @@ impl Ui {
             return;
         }
         let value = value.clamp(0., 1.);
+        if self.page == Page::Play
+            && s.track_kind(self.selected) == Kind::Audio
+            && s.audio_target(self.selected) == crate::audio::RecordTarget::Turntable
+        {
+            match index {
+                0 => send(Command::DeckValue(self.selected, 0, 0.5 + value * 1.5)),
+                1 => send(Command::DeckValue(self.selected, 1, (value * 2.99).floor())),
+                2 => send(Command::Level(self.selected, value)),
+                _ => {}
+            }
+            return;
+        }
+
         if matches!(self.page, Page::TrackFx | Page::MasterFx)
             || self.page == Page::Texture && self.texture_slot >= 6
         {
@@ -1947,6 +2144,92 @@ impl Ui {
         if self.page == Page::Grid && !s.note_view(self.selected) {
             return;
         }
+        if self.page == Page::Loop
+            && self.loop_mode == 0
+            && self.shift_view
+            && index == 0
+            && melodic_pad_octave(s, self.selected)
+        {
+            send(Command::PlayValue {
+                track: self.selected,
+                index: 4,
+                value: (value * 4.).round() - 2.,
+            });
+            return;
+        }
+        if self.page == Page::Perform {
+            match self.perform_section {
+                0 => {
+                    if self.shift_view && index == 2 {
+                        send(Command::ChordValue {
+                            track: self.selected,
+                            index: 7,
+                            value: (value * 2.99).floor(),
+                        });
+                    } else if index == 2 {
+                        send(Command::ChordValue {
+                            track: self.selected,
+                            index: 6,
+                            value: value * 80.,
+                        });
+                    } else {
+                        send(Command::PlayValue {
+                            track: self.selected,
+                            index: index as u8,
+                            value: if index == 0 {
+                                (value * 2.99).floor()
+                            } else {
+                                value * 2000.
+                            },
+                        });
+                    }
+                }
+                1 => {
+                    let (field, v) = if self.shift_view {
+                        match index {
+                            0 => (3, (value * 4.).round() - 2.),
+                            1 => (4, value),
+                            _ => (6, value * 80.),
+                        }
+                    } else {
+                        (
+                            index as u8,
+                            match index {
+                                0 => (value * 11.99).floor(),
+                                _ => (value * 2.99).floor(),
+                            },
+                        )
+                    };
+                    send(Command::ChordValue {
+                        track: self.selected,
+                        index: field,
+                        value: v,
+                    });
+                }
+                _ => {
+                    if index == 0 {
+                        send(Command::PlayValue {
+                            track: self.selected,
+                            index: 2,
+                            value: if s.track_kind(self.selected) == Kind::Drum {
+                                (value * 2.99).floor()
+                            } else if value < 0.5 {
+                                1.
+                            } else {
+                                2.
+                            },
+                        });
+                    } else if index == 1 && s.track_kind(self.selected) == Kind::Synth {
+                        send(Command::PlayValue {
+                            track: self.selected,
+                            index: 3,
+                            value: 10. + value * 7990.,
+                        });
+                    }
+                }
+            }
+            return;
+        }
         if self.page == Page::Play && s.track_kind(self.selected) == Kind::Audio {
             let mut a = s.audio_settings();
             match index {
@@ -1958,6 +2241,7 @@ impl Ui {
             return;
         }
         match self.page {
+            Page::Perform => {}
             Page::FxSettings => {}
             Page::Sidechain => {
                 let mut c = s.sidechain();
@@ -2241,6 +2525,18 @@ impl Ui {
             Page::Setup => match index {
                 0 => send(Command::Bpm((40. + f64::from(value) * 200.).round())),
                 1 => send(Command::Preroll((value * 2.99) as u8)),
+                2 => {
+                    let mut swing = s.swing().unwrap_or(crate::swing::Basis {
+                        amount: 50.,
+                        sixteenth: false,
+                    });
+                    if self.shift_view {
+                        swing.sixteenth = value >= 0.5;
+                    } else {
+                        swing.amount = (50. + value * 25.).round();
+                    }
+                    send(Command::Swing(Some(swing)));
+                }
                 _ => {}
             },
             Page::Grid => {
@@ -2306,4 +2602,10 @@ fn fx_command(target: u8, track: usize, slot: usize, fx: Fx, temporary: bool) ->
         effect: fx.effect,
         temporary,
     }
+}
+
+pub fn melodic_pad_octave(s: &Snapshot, track: usize) -> bool {
+    s.track_kind(track) == Kind::Synth
+        || s.track_kind(track) == Kind::Audio
+            && s.audio_target(track) == crate::audio::RecordTarget::Chromatic
 }

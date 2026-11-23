@@ -1,0 +1,63 @@
+{
+  "version": "0.11.1",
+  "status": "public preview",
+  "native_tests": {
+    "test-debug": 345,
+    "test-release": 345
+  },
+  "project_format": 9,
+  "timing_revision": 1,
+  "public_zip_sha256": "2f5bea71eeac98b94347fd683634bd1164a13a491b00ced25c9f7d68056731d3",
+  "public_library_sha256": "6caae8438212280ab6ad0d0cfeb2a49b86282f72bf3b765fe56537005a9a5362",
+  "payload_files": [
+    "autorun/INSTALL.txt",
+    "autorun/LICENSE",
+    "autorun/SDK-LICENSE",
+    "autorun/autorun.check",
+    "autorun/autorun.json",
+    "autorun/autorun.sh",
+    "autorun/compatibility.json",
+    "autorun/loop-club.so",
+    "autorun/sampleboot.txt"
+  ],
+  "private_audio_banks_in_zip": false,
+  "qa_agent_in_zip": false,
+  "sdk_firmware_hash_source": "pinned upstream first4KiB reference; not independently remeasured by packager",
+  "exact_public_smoke": {
+    "app_version": "0.11.1",
+    "Swing": "PASS",
+    "WAV_load_and_Turntable_directions": "PASS",
+    "original16ownertracks_restored": true
+  },
+  "device_audit": "validation-0.11.1.json",
+  "demo": "demo-scratch-0.11.1.json",
+  "existing_videos": "0.9.3 full2:12 and FX46s URLs retained unchanged",
+  "remaining_checks": [
+    "physical input acceptance",
+    "analog inputs/latency",
+    "power-cycle recovery",
+    "worst-case16deck load"
+  ],
+  "sd": {
+    "runtime_sha256": "6caae8438212280ab6ad0d0cfeb2a49b86282f72bf3b765fe56537005a9a5362",
+    "files_readback_verified": 20,
+    "old_files_preserved": 20
+  },
+  "demo_verification": {
+    "source": "Original on-device synth resample; actual MPC Sample DRM + USB output",
+    "duration_seconds": 51.82693877551021,
+    "frames": 315,
+    "raw_peak": 0.24785815179347992,
+    "raw_rms": 0.021519625559449196,
+    "linear_gain": 2.5,
+    "decode_errors": 0,
+    "mp4_bytes": 2800812,
+    "sha256": "a4c086006b25c4db82c0497d34dfc3649eab7bda3af40986022c99859b12356c",
+    "owner_restored": true,
+    "actual_bpm": 88.0,
+    "swing": 58,
+    "chord": "Dm9",
+    "kit": "Original procedural drums",
+    "scratch_events": 11
+  }
+}

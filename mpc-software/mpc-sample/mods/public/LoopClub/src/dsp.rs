@@ -17,6 +17,13 @@ pub struct Voice {
     phase: f32,
     synth_voice: crate::synth::SynthVoice,
     frequency: f32,
+    target_frequency: f32,
+    glide_ratio: f64,
+    glide_frequency: f64,
+    glide_remaining: u32,
+    one_shot: bool,
+    shot_frames: u32,
+    forced_gate: bool,
     velocity: f32,
     noise: u32,
     low: f32,
@@ -46,6 +53,13 @@ impl Default for Voice {
             phase: 0.,
             synth_voice: crate::synth::SynthVoice::default(),
             frequency: 440.,
+            target_frequency: 440.,
+            glide_ratio: 1.,
+            glide_frequency: 440.,
+            glide_remaining: 0,
+            one_shot: false,
+            shot_frames: 0,
+            forced_gate: false,
             velocity: 0.,
             noise: 0x12345678,
             low: 0.,
@@ -87,7 +101,54 @@ impl Voice {
             ..Self::default()
         }
     }
+    pub fn configure_trigger(&mut self, cfg: crate::performance::Settings, rate: u32) {
+        self.one_shot = cfg.trigger == 2;
+        self.forced_gate = cfg.trigger == 1;
+        self.shot_frames = if self.one_shot && self.drum.is_none() {
+            (cfg.shot_ms * rate as f32 / 1000.).round() as u32
+        } else {
+            0
+        };
+    }
+    pub fn note_off(&mut self) {
+        if !self.one_shot && (self.drum.is_none() || self.pcm_gate || self.forced_gate) {
+            self.release();
+        }
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub fn retarget(
+        &mut self,
+        note: u8,
+        velocity: u8,
+        source: u16,
+        synth: Synth,
+        glide: f32,
+        rate: u32,
+        legato: bool,
+    ) {
+        self.note = note;
+        self.source = source;
+        self.velocity = f32::from(velocity) / 127.;
+        self.gate = true;
+        self.target_frequency =
+            440. * 2_f32.powf((f32::from(note) - 69. + f32::from(synth.octave) * 12.) / 12.);
+        self.glide_remaining = (glide * rate as f32 / 1000.).round() as u32;
+        if self.glide_remaining == 0 {
+            self.frequency = self.target_frequency;
+            self.glide_ratio = 1.;
+        } else {
+            self.glide_ratio = (f64::from(self.target_frequency) / f64::from(self.frequency))
+                .powf(1. / f64::from(self.glide_remaining));
+        }
+        self.glide_frequency = f64::from(self.frequency);
+        if !legato {
+            self.synth_voice.retrigger();
+        }
+    }
     pub fn release(&mut self) {
+        if self.delay_frames > 0 {
+            self.active = false;
+        }
         if self.pcm_gate {
             self.pcm_release = true;
         }
@@ -148,6 +209,28 @@ impl Voice {
             return 0.;
         }
         self.age_seconds += 1. / rate;
+        if self.shot_frames > 0 {
+            self.shot_frames -= 1;
+            if self.shot_frames == 0 {
+                self.release();
+            }
+        }
+        if self.glide_remaining > 0 {
+            self.glide_remaining -= 1;
+            self.frequency = if self.glide_remaining == 0 {
+                self.target_frequency
+            } else {
+                self.glide_frequency *= self.glide_ratio;
+                self.glide_frequency as f32
+            };
+        }
+        if self.forced_gate && !self.gate && self.drum.is_some() {
+            self.pcm_release_env = (self.pcm_release_env - 1. / (rate * 0.005)).max(0.);
+            if self.pcm_release_env == 0. {
+                self.active = false;
+                return 0.;
+            }
+        }
         if let Some(k) = self.drum {
             self.noise ^= self.noise << 13;
             self.noise ^= self.noise >> 17;
@@ -194,7 +277,7 @@ impl Voice {
             if env < 0.00005 {
                 self.active = false
             }
-            return sound * env * self.velocity * 0.5;
+            return sound * env * self.velocity * 0.5 * self.pcm_release_env;
         }
         let x = self
             .synth_voice
@@ -604,5 +687,70 @@ mod history_wrap_tests {
                 assert!((actual - expected).abs() < 1e-10 || expected == n && actual == 0.);
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod performance_tests {
+    use super::*;
+    #[test]
+    fn glide_reaches_target_in_the_selected_time_without_a_pitch_jump() {
+        let s = Synth::default();
+        let mut v = Voice::default();
+        v.start(0, 48, 100, 2, None, 1, s, 0.);
+        for _ in 0..100 {
+            v.sample(8000., &s, Drum::default());
+        }
+        let begin = v.frequency;
+        v.retarget(60, 100, 2, s, 200., 8000, true);
+        assert_eq!(v.frequency, begin);
+        for _ in 0..800 {
+            v.sample(8000., &s, Drum::default());
+        }
+        assert!(v.frequency > begin && v.frequency < v.target_frequency);
+        for _ in 0..800 {
+            v.sample(8000., &s, Drum::default());
+        }
+        assert_eq!(v.frequency, v.target_frequency);
+        assert_eq!(v.glide_remaining, 0);
+    }
+    #[test]
+    fn legato_keeps_envelope_while_mono_retriggers_it() {
+        let s = Synth {
+            attack: 1.,
+            ..Synth::default()
+        };
+        let mut v = Voice::default();
+        v.start(0, 48, 100, 2, None, 1, s, 0.);
+        for _ in 0..4000 {
+            v.sample(8000., &s, Drum::default());
+        }
+        let mut retrigger = v;
+        v.retarget(48, 100, 2, s, 0., 8000, true);
+        retrigger.retarget(48, 100, 2, s, 0., 8000, false);
+        let mut a = 0.;
+        let mut b = 0.;
+        for _ in 0..80 {
+            a += v.sample(8000., &s, Drum::default()).abs();
+            b += retrigger.sample(8000., &s, Drum::default()).abs();
+        }
+        assert!(a > b * 10., "legato {a}, mono {b}");
+    }
+}
+#[cfg(test)]
+mod long_glide_tests {
+    use super::*;
+    #[test]
+    fn two_second_semitone_glide_has_no_rounding_jump_at_the_endpoint() {
+        let s = Synth::default();
+        let mut v = Voice::default();
+        v.start(0, 60, 100, 2, None, 1, s, 0.);
+        v.retarget(61, 100, 2, s, 2000., 44100, true);
+        for _ in 0..88199 {
+            v.sample(44100., &s, Drum::default());
+        }
+        assert!((v.target_frequency - v.frequency).abs() < 0.001);
+        v.sample(44100., &s, Drum::default());
+        assert_eq!(v.frequency, v.target_frequency);
     }
 }

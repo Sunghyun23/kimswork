@@ -21,6 +21,8 @@ fn notes(e: &mut Engine, n: u8) {
     e.tracks[0].audio_sequence = true;
     e.tracks[0].events = vec![
         Event {
+            deck: None,
+            timing: None,
             tick: 0,
             note: n,
             velocity: 90,
@@ -28,6 +30,8 @@ fn notes(e: &mut Engine, n: u8) {
             slice: true,
         },
         Event {
+            deck: None,
+            timing: None,
             tick: PPQ,
             note: n,
             velocity: 0,

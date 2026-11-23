@@ -1,0 +1,66 @@
+{
+  "version": "0.10.0",
+  "status": "local candidate; public release remains0.9.3",
+  "project_format": 8,
+  "native_tests": {
+    "debug": 318,
+    "release": 318
+  },
+  "strict_host_and_arm64_clippy": "PASS",
+  "normal_and_qa_arm64_builds": "PASS",
+  "device": {
+    "audio_five_note_chord_and_gate_release": {
+      "peak": 0.4693323075771332,
+      "original_frames_preserved": 11025
+    },
+    "audio_chord_octave_and_release": "PASS",
+    "audio_gate_repeats_one_shot_ends": {
+      "gate_tail_peak": 0.09687519818544388,
+      "one_shot_peak": 0.09687519818544388,
+      "one_shot_end_peak": 0.0
+    },
+    "mono_overlap_fallback_and_release": "PASS",
+    "loop_shift_k1_octave_and_held_release": "PASS",
+    "legato_single_voice": "PASS",
+    "external_usb_midi_legato_ownership": {
+      "result": "PASS",
+      "audio_peak": 0.06588706374168396
+    },
+    "recorded_octave_notes": [
+      60,
+      64,
+      67,
+      71
+    ],
+    "recorded_strum_four_onsets": [
+      10307272,
+      11205735,
+      12104197,
+      13002659
+    ],
+    "strum_intervals_ticks": [
+      898463,
+      898462,
+      898462
+    ],
+    "synth_held_one_shot_auto_release": "PASS",
+    "drum_gate_and_one_shot": "PASS",
+    "delayed_drum_layer_gate_cancel_usb_peak": 0.0,
+    "format8_recall": "PASS"
+  },
+  "normal_library_sha256": "e4a763f1682302c4a0128c25adc580b5c6c9bf2c4dd61439f0477c2c68a3cb96",
+  "sd": {
+    "files_readback_verified": 20,
+    "old_files_preserved": 20,
+    "runtime_matches_sd": true
+  },
+  "owner_16_tracks_restored": true,
+  "limitations": [
+    "Actual remote controls + CoreMIDI and USB output are distinct from physical button/fader acceptance",
+    "No new power-cycle/recovery or maximum-load CPU certification",
+    "32Synth/Drum voices and16sample voices remain shared",
+    "Audio chords apply to chromatic sampler performance; CHOP identities remain unchanged"
+  ],
+  "turntable": "Design proposal only; not in this build",
+  "rage_circuit": "Not installed locally; owner canceled import"
+}

@@ -206,13 +206,19 @@ fn empty_sampler_refuses_capture_and_changing_target_during_capture_is_refused()
     );
 }
 #[test]
-fn snapshot_and_ui_choose_three_targets_without_leaving_audio_sound() {
+fn snapshot_and_ui_choose_five_performances_without_leaving_audio_sound() {
     let mut e = core();
     source(&mut e);
     let mut u = Ui::default();
     u.navigate(Page::Play, &Snapshot::capture(&e));
     assert_eq!(u.page, Page::Play);
-    for expected in [Target::Chromatic, Target::Chop, Target::Input] {
+    for expected in [
+        Target::Chromatic,
+        Target::Chromatic,
+        Target::Chop,
+        Target::Turntable,
+        Target::Input,
+    ] {
         u.soft(0, false, &Snapshot::capture(&e), |c| {
             e.command(c).unwrap();
         });

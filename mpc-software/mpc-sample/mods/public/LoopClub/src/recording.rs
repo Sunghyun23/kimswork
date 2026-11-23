@@ -1,8 +1,19 @@
 //! Single preallocated take buffer: completed loops survive cancellation/replace.
 use super::*;
 impl Engine {
+    fn mixed_audio_overdub(t: &Track) -> bool {
+        t.kind == Kind::Audio
+            && t.audio_sequence
+            && t.record_mode == RecordMode::Overdub
+            && ((t.audio_target == crate::audio::RecordTarget::Turntable)
+                != t.events.first().is_some_and(|e| e.deck.is_some()))
+    }
+
     pub(super) fn check_record_capacity(&self, i: usize) -> Result<(), Error> {
         let t = &self.tracks[i];
+        if Self::mixed_audio_overdub(t) {
+            return Err(Error::ResampleFirst);
+        }
         if t.kind == Kind::Audio && t.audio_target != crate::audio::RecordTarget::Input {
             return if t.empty() || t.audio_frames == 0 {
                 Err(Error::NoContent)
@@ -68,6 +79,9 @@ impl Engine {
                 && self.tracks[i].audio_target != crate::audio::RecordTarget::Input);
         if midi && self.tracks[i].kind == Kind::Audio && self.tracks[i].audio_frames == 0 {
             return Err(Error::NoContent);
+        }
+        if Self::mixed_audio_overdub(&self.tracks[i]) {
+            return Err(Error::ResampleFirst);
         }
         let existing = !self.tracks[i].empty();
         let now = self.clock.tick();
@@ -163,6 +177,7 @@ impl Engine {
         Ok(())
     }
     pub(super) fn prepare_take(&mut self) {
+        self.deck_spans.reset();
         let r = self.recorder.unwrap();
         let t = &self.tracks[r.track];
         self.capture_events.clear();
@@ -174,8 +189,11 @@ impl Engine {
             && r.mode == RecordMode::Overdub
             && t.kind == Kind::Audio
             && !t.audio_sequence
+            && t.audio_target != crate::audio::RecordTarget::Turntable
         {
             self.capture_events.push(Event {
+                deck: None,
+                timing: None,
                 slice: false,
                 tick: 0,
                 note: t.audio_settings.root,
@@ -183,6 +201,8 @@ impl Engine {
                 on: true,
             });
             self.capture_events.push(Event {
+                deck: None,
+                timing: None,
                 slice: false,
                 tick: t.length_ticks - 1,
                 note: t.audio_settings.root,
@@ -201,10 +221,49 @@ impl Engine {
         if r.notes_started || self.clock.tick() < r.start {
             return;
         }
+        if r.mode == RecordMode::Replace && self.tracks[r.track].kind != Kind::Drum {
+            self.release_sequence_for_recording(r.track);
+        }
+
+        if r.midi
+            && self.tracks[r.track].audio_target == crate::audio::RecordTarget::Turntable
+            && (r.mode != RecordMode::Overdub
+                || !self.tracks[r.track].audio_sequence
+                || self.decks[r.track].live)
+        {
+            let i = r.track;
+            if self.capture_events.len() >= MAX_EVENTS {
+                self.event_overflows += 1;
+                self.cancel_capture();
+                self.error = Some(Error::Capacity);
+                return;
+            }
+            if !self.decks[i].active {
+                self.decks[i].start(0.);
+            }
+            self.capture_events.push(Event {
+                deck: Some(self.decks[i].state.normalized(self.tracks[i].source_frames)),
+                timing: None,
+                slice: false,
+                tick: 0,
+                note: 0,
+                velocity: 0,
+                on: true,
+            });
+        }
+
+        if r.midi
+            && self.tracks[r.track].audio_target == crate::audio::RecordTarget::Turntable
+            && self.decks[r.track].live
+        {
+            self.deck_spans.edge(0, true);
+        }
         if r.midi && self.tracks[r.track].kind != Kind::Drum {
             for (note, &velocity) in self.capture_velocities.iter().enumerate() {
                 if velocity > 0 && self.capture_events.len() < MAX_EVENTS - 128 {
                     self.capture_events.push(Event {
+                        deck: None,
+                        timing: None,
                         slice: self.tracks[r.track].kind == Kind::Audio
                             && self.tracks[r.track].audio_target
                                 == crate::audio::RecordTarget::Chop,
@@ -288,6 +347,8 @@ impl Engine {
             return;
         }
         self.capture_events.push(Event {
+            deck: None,
+            timing: None,
             slice: self.tracks[r.track].kind == Kind::Audio
                 && self.tracks[r.track].audio_target == crate::audio::RecordTarget::Chop,
             tick: tick - r.start,
@@ -329,6 +390,9 @@ impl Engine {
         if !r.midi {
             self.clear_slice_voices(i);
         }
+        if !(r.midi && self.tracks[i].audio_target == crate::audio::RecordTarget::Turntable) {
+            self.decks[i] = crate::deck::Player::default();
+        }
         let t = &mut self.tracks[i];
         if !r.repeating {
             t.origin = r.start;
@@ -349,9 +413,16 @@ impl Engine {
             t.chops.divide(frames);
             t.wave_view = (0, 0);
         } else {
+            if t.audio_target == crate::audio::RecordTarget::Turntable {
+                self.capture_events.retain(|e| {
+                    e.deck.is_none() || e.on || !self.deck_spans.covered(e.tick, captured_length)
+                });
+            }
             for (note, &velocity) in self.capture_velocities.iter().enumerate() {
                 if velocity > 0 && self.capture_events.len() < MAX_EVENTS {
                     self.capture_events.push(Event {
+                        deck: None,
+                        timing: None,
                         slice: t.kind == Kind::Audio
                             && t.audio_target == crate::audio::RecordTarget::Chop,
                         tick: captured_length - 1,
@@ -363,6 +434,11 @@ impl Engine {
             }
             self.capture_events.retain(|event| event.tick < length);
             self.capture_events.sort_unstable_by_key(|e| (e.tick, e.on));
+            for e in &mut self.capture_events {
+                if e.deck.is_some() {
+                    e.on = false;
+                }
+            }
             std::mem::swap(&mut t.events, &mut self.capture_events);
             if t.kind == Kind::Audio {
                 t.audio_sequence = true;
@@ -437,6 +513,9 @@ impl Engine {
             return;
         };
         self.begin_capture_notes(&mut r);
+        if self.recorder.is_none() {
+            return;
+        }
         if !r.midi
             && r.repeating
             && r.mode == RecordMode::Overdub
@@ -515,5 +594,54 @@ impl Engine {
         if let Some(r) = self.recorder.filter(|r| r.resample) {
             self.capture_frame(r, self.clock.frame, sum);
         }
+    }
+}
+
+impl Engine {
+    pub(super) fn capture_deck(&mut self, i: usize) -> Result<(), Error> {
+        let Some(r) = self.recorder.filter(|r| {
+            r.track == i
+                && r.midi
+                && self.tracks[i].audio_target == crate::audio::RecordTarget::Turntable
+        }) else {
+            return Ok(());
+        };
+        let tick = self.clock.tick();
+        if tick < r.start || tick >= r.end.unwrap_or(r.limit) {
+            return Ok(());
+        }
+        let coalesce = self
+            .capture_events
+            .last()
+            .is_some_and(|e| e.tick == tick - r.start && e.deck.is_some() && e.on);
+        if (self.capture_events.len() >= MAX_EVENTS && !coalesce)
+            || !self
+                .deck_spans
+                .edge(tick - r.start, self.decks[i].state.grabbed)
+        {
+            self.event_overflows += 1;
+            self.cancel_capture();
+            self.error = Some(Error::Capacity);
+            return Err(Error::Capacity);
+        }
+        let event = Event {
+            deck: Some(self.decks[i].state.normalized(self.tracks[i].source_frames)),
+            timing: None,
+            slice: false,
+            tick: tick - r.start,
+            note: 0,
+            velocity: 0,
+            on: true,
+        };
+        if let Some(last) = self.capture_events.last_mut()
+            && last.tick == event.tick
+            && last.deck.is_some()
+            && last.on
+        {
+            *last = event;
+        } else {
+            self.capture_events.push(event);
+        }
+        Ok(())
     }
 }

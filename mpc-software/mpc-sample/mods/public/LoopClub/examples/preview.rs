@@ -32,6 +32,8 @@ fn main() -> std::io::Result<()> {
     e.tracks[0].length_ticks = 4 * PPQ;
     e.tracks[0].events.extend([
         Event {
+            deck: None,
+            timing: None,
             slice: false,
             tick: 0,
             note: 60,
@@ -39,6 +41,8 @@ fn main() -> std::io::Result<()> {
             on: true,
         },
         Event {
+            deck: None,
+            timing: None,
             slice: false,
             tick: PPQ,
             note: 60,
@@ -46,6 +50,8 @@ fn main() -> std::io::Result<()> {
             on: false,
         },
         Event {
+            deck: None,
+            timing: None,
             slice: false,
             tick: 2 * PPQ,
             note: 65,
@@ -53,6 +59,8 @@ fn main() -> std::io::Result<()> {
             on: true,
         },
         Event {
+            deck: None,
+            timing: None,
             slice: false,
             tick: 3 * PPQ,
             note: 65,

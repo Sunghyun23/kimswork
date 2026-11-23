@@ -163,6 +163,7 @@ pub struct SynthVoice {
     phase: [f32; 2],
     last_pitch: [f32; 2],
     frequency: [f32; 2],
+    tune_ratio: [f32; 2],
     base: f32,
     rate: f32,
     cutoff: f32,
@@ -192,6 +193,7 @@ impl Default for SynthVoice {
             phase: [0.; 2],
             last_pitch: [f32::NAN; 2],
             frequency: [0.; 2],
+            tune_ratio: [1.; 2],
             base: 0.,
             rate: 0.,
             cutoff: 0.,
@@ -228,6 +230,11 @@ fn wave(t: f32, dt: f32, kind: u8) -> f32 {
     }
 }
 impl SynthVoice {
+    pub fn retrigger(&mut self) {
+        self.envelope = Envelope::default();
+        self.filter_envelope = Envelope::default();
+        self.lfo = Lfo::default();
+    }
     pub fn done(&self) -> bool {
         self.envelope.done()
     }
@@ -296,10 +303,11 @@ impl SynthVoice {
         self.k += (self.target_k - self.k) * self.smooth;
         let pitches = [s.tune1 + s.fine1 * 0.01, s.tune2 + s.fine2 * 0.01];
         for (i, pitch) in pitches.iter().enumerate() {
-            if self.last_pitch[i] != *pitch || self.base != base {
-                self.frequency[i] = base * 2_f32.powf(*pitch / 12.);
+            if self.last_pitch[i] != *pitch {
+                self.tune_ratio[i] = 2_f32.powf(*pitch / 12.);
                 self.last_pitch[i] = *pitch;
             }
+            self.frequency[i] = base * self.tune_ratio[i];
         }
         self.base = base;
         self.levels[0] += (s.level1 - self.levels[0]) * self.smooth;

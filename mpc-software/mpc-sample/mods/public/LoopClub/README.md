@@ -1,8 +1,8 @@
 # Loop Club
 
-A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.9.3 targets firmware1.3.0.12. This is an SD preload mod, not an MPC OS VST or a firmware image.
+A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.11.1 targets firmware1.3.0.12. This is an SD preload mod, not an MPC OS VST or a firmware image.
 
-[Manual](docs/manual.md) · [Installation](docs/public-install.txt) · [Verification](docs/release-0.9.3.md) · [Source specification](../../../docs/looper-srs.md)
+[Manual](docs/manual.md) · [Installation](docs/public-install.txt) · [Verification](docs/release-0.11.1.md) · [Source specification](../../../docs/looper-srs.md)
 
 - LOOP/MUTE/CHAIN pad modes; record from LOOP without changing the screen; REC ends at the bar boundary.
 - Independent bar-aligned audio, synth and drum loops; count-in; Replace/Overdub; MIDI grid.
@@ -64,3 +64,16 @@ Local0.9.0 adds in-place LOOP editing: stopped **SHIFT+LOOP**, then B1 COPY / B2
 
 
 Latest public preview0.9.3 supersedes the historical local-candidate/public0.1.0 status notes above. Includes Audio/XPM/loop edits, format7 phase-preserving recall/copy, and immediate bottom K1/K2/K3 controls when pressing FX pads.293 Debug/293 Release, strict host/ARM64 Clippy and actual39FX contexts plus phase/copy recall passed. See docs/release-0.9.3.md/json for hashes and remaining limits. Public video source banks are not included in the ZIP.
+
+
+Local0.10.0 adds audio chords, Synth Poly/Mono/Legato and Glide, timed Strum recorded as expanded MIDI, and Gate/One Shot for all source types. LOOP SHIFT+K1 changes pad-performance octave±2 without changing already-recorded notes or CHOP indices. Source PCM remains intact. PLAY SETTINGS is SOUND→SHIFT+B1.318Debug/318Release, strict host/ARM64, actual remote/CoreMIDI/USB and own-SD readbacks pass; owner tracks restored. Public download remains0.9.3. See [local performance guide](docs/performance-0.10.0.md) and [verification](docs/validation-0.10.0.json). Turntable was a design proposal at that historical0.10.0 checkpoint.
+
+## Local0.11.0 candidate
+
+[Turntable and whole-project MIDI Swing](docs/turntable-swing-0.11.0.md) extends the local0.10 performance controls. Public release/site remain0.9.3. Device verification is recorded in validation-0.11.0.json; follow its precise scope rather than historical local-version claims.
+
+## Local0.11.1 detailed audit
+
+[Detailed QA and fixes](docs/qa-0.11.1.md) covers cross-mode recording, playback ownership, Swing metadata and capacity handling. Public downloads remain0.9.3. See validation-0.11.1.json for the final tested build/device/SD identity.
+
+Publication0.11.1 supersedes historical local-only status notes above: Turntable/whole-project MIDI Swing/performance controls and the detailed audit are included in the public preview. Scratch Pocket is a new actual-device video; earlier full-session/FX videos remain available at their existing0.9.3 URLs.

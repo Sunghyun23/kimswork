@@ -1,0 +1,97 @@
+{
+  "version": "0.11.1",
+  "date": "2026-11-23",
+  "native": {
+    "test-debug": 345,
+    "test-release": 345
+  },
+  "strict_clippy": [
+    "host/all-targets",
+    "ARM64/lib"
+  ],
+  "arm64_builds": [
+    "normal",
+    "isolated QA"
+  ],
+  "normal_library_sha256": "063444a8a7b83946cd41a0b12b7a4976cbf302e5fe167b38da53d40074faf54d",
+  "project_format": 9,
+  "timing_revision": 1,
+  "older_readable_formats": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "device": "MPC Sample1.3.0.12",
+  "scope": "actual active DRM, queued remote control, stereo USB; physical pads/fader/power-cycle not certified",
+  "device_tests": {
+    "forward_scratch_usb_peak": 0.13776156306266785,
+    "reverse_scratch_usb_peak": 0.15553440153598785,
+    "held_stationary_usb_peak": 0.0,
+    "slip_release_usb_peak": 0.1367044597864151,
+    "fader_volume_isolation_and_release_after_navigation": "PASS",
+    "live_swing_all_midi_controls_and_original_events": {
+      "swing_percent": 75.0,
+      "sixteenth": true,
+      "peak": 0.09746085107326508
+    },
+    "recording_undo_redo_and_replay": {
+      "control_events": 5,
+      "source_frames": 11025,
+      "usb_peak": 0.22342069447040558
+    },
+    "noop_overdub_preserves_gestures": "PASS",
+    "punch_overdub_and_replay": {
+      "control_events": 7,
+      "source_frames": 11025,
+      "usb_peak": 0.22454743087291718
+    },
+    "format9_swing_and_deck_recall": "PASS",
+    "deck_to_note_overdub_refused": "PASS",
+    "replace_suppresses_old_deck_and_keeps_live_notes": {
+      "silent_peak": 0.0,
+      "note_peak": 0.09687519818544388
+    },
+    "cross_mode_undo_redo": "PASS",
+    "cancelled_automated_take_returns_to_silence": 0.0,
+    "grab_release_after_track_change": "PASS",
+    "malformed_wav_refused_atomically": "Unsupported WAV",
+    "stereo_wav_resampling_and_channels": {
+      "frames": 11024,
+      "frequencies": [
+        330.75,
+        441.0
+      ],
+      "peak": 0.14262615144252777
+    }
+  },
+  "audio_timing": {
+    "blocks": 24655,
+    "max_deadline_pct": 103.2617,
+    "overrun_blocks": 1,
+    "p99_deadline_pct_upper": 40.0,
+    "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+  },
+  "cpu_note": "Scheduling-inclusive observed window, including setup/load. One deadline crossing; not a worst-case CPU certificate.",
+  "owner_restored": true,
+  "owner_saved_or_overwritten": false,
+  "native_defects_reproduced_and_fixed": 7,
+  "remaining_checks": [
+    "physical input acceptance",
+    "analog inputs/latency",
+    "power-cycle recovery",
+    "worst-case16deck load"
+  ],
+  "evidence": "build/qa-device/deep-audit-0.11.1 (excluded from public package)",
+  "actual_images": "design/device-0.11.1/",
+  "sd": {
+    "persisted": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20,
+    "runtime_sha256": "063444a8a7b83946cd41a0b12b7a4976cbf302e5fe167b38da53d40074faf54d"
+  }
+}

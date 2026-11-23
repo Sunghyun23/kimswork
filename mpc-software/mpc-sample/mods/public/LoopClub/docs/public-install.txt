@@ -1,4 +1,4 @@
-Loop Club 0.9.3 — MPC Sample public preview — by kim
+Loop Club 0.11.1 — MPC Sample public preview — by kim
 
 MPC Sample firmware 1.3.0.12 only. SD preload mod, not MPC OS VST or firmware.
 Actual remote UI and USB audio are tested. Physical controls, calibrated
@@ -50,3 +50,8 @@ firmware flash or internal persistent service change is performed.
 
 Manual: https://kimswork.app/mods/loop-club/manual/
 Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.9.3/mpc-software/mpc-sample/mods/public/LoopClub
+
+0.11.1: Audio SOUND B1 cycles through CHORD and TURN. TURN: hold PAD1,
+move the fader; K1 Speed/K2 Range/K3 Level, SHIFT+B3 Slip. Record scratch
+with SHIFT+track pad, preserving original PCM. PROJECT K3 selects MIDI
+Swing, SHIFT+K3 eighth/sixteenth grid. Format9 reads1-8; older apps reject9.

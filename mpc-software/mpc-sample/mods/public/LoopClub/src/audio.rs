@@ -14,6 +14,7 @@ pub enum RecordTarget {
     Input,
     Chromatic,
     Chop,
+    Turntable,
 }
 impl RecordTarget {
     pub fn name(self) -> &'static str {
@@ -21,6 +22,7 @@ impl RecordTarget {
             Self::Input => "INPUT",
             Self::Chromatic => "CHROMATIC",
             Self::Chop => "CHOP",
+            Self::Turntable => "TURNTABLE",
         }
     }
 }
@@ -229,6 +231,8 @@ pub fn time_step(frames: usize, source_ticks: u64, bpm: f64, rate: u32) -> f64 {
 }
 #[derive(Clone, Copy)]
 pub struct Voice {
+    pub one_shot: bool,
+    pub finished: bool,
     pub note: u8,
     pub source: u16,
     played_note: u8,
@@ -244,6 +248,8 @@ impl Voice {
     pub fn new(note: u8, source: u16, settings: Settings) -> Self {
         let pitch = settings.ratio(note);
         Self {
+            one_shot: false,
+            finished: false,
             note,
             source,
             played_note: note,
@@ -269,7 +275,7 @@ impl Voice {
         bpm: f64,
         rate: u32,
     ) -> Frame {
-        if audio.is_empty() {
+        if audio.is_empty() || self.finished {
             return Frame::ZERO;
         }
         if self.last_root != settings.root || self.last_tune != settings.tune {
@@ -298,7 +304,9 @@ impl Voice {
         let edge = (self.position / fade)
             .min((audio.len() as f64 - self.position) / fade)
             .clamp(0., 1.) as f32;
-        self.position = wrap(self.position + step, audio.len() as f64);
+        let next = self.position + step;
+        self.finished = self.one_shot && next >= audio.len() as f64;
+        self.position = wrap(next, audio.len() as f64);
         sample.gain(edge)
     }
 }

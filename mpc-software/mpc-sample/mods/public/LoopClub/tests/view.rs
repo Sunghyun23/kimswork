@@ -311,3 +311,40 @@ fn loop_edit_captions_name_the_whole_instrument_not_one_performance_pad() {
         view::render(&ui, &s, &mut Bounds);
     }
 }
+#[test]
+fn performance_sections_for_all_sources_stay_inside_screen() {
+    for kind in [Kind::Synth, Kind::Audio, Kind::Drum] {
+        let mut e = Engine::new(8000, 100., 8000);
+        e.tracks[0].kind = kind;
+        let s = Snapshot::capture(&e);
+        let mut u = Ui::default();
+        u.navigate(Page::Perform, &s);
+        for section in 0..3 {
+            u.perform_section = section;
+            for shift in [false, true] {
+                u.shift_view = shift;
+                view::render(&u, &s, &mut Bounds);
+            }
+        }
+    }
+}
+#[test]
+fn turntable_and_global_swing_controls_stay_inside_native_screen() {
+    let mut e = Engine::new(8000, 100., 24000);
+    let t = &mut e.tracks[0];
+    t.audio_target = loop_club::audio::RecordTarget::Turntable;
+    t.source_frames = 8000;
+    t.audio_frames = 8000;
+    t.source_ticks = 4 * PPQ;
+    t.length_ticks = 4 * PPQ;
+    e.command(loop_club::engine::Command::DeckGrab(0, true, Some(0.5)))
+        .unwrap();
+    let mut u = Ui::default();
+    u.page = Page::Play;
+    view::render(&u, &Snapshot::capture(&e), &mut Bounds);
+    u.page = Page::Setup;
+    for shift in [false, true] {
+        u.shift_view = shift;
+        view::render(&u, &Snapshot::capture(&e), &mut Bounds);
+    }
+}
