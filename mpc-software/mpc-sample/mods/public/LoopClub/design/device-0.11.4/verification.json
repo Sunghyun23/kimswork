@@ -1,0 +1,33 @@
+{
+  "setup_buttons_and_back": true,
+  "tap_120_bpm": 120.0,
+  "tap_100_bpm": 99.0,
+  "shift_tap_only_toggles_metronome": true,
+  "one_bar_preroll": {
+    "click_count": 4,
+    "onsets_seconds": [
+      2.144149659863946,
+      2.750204081632653,
+      3.356281179138322,
+      3.9623356009070294
+    ],
+    "peak": 0.06339621543884277
+  },
+  "metronome_on_during_recording_clicks": 3,
+  "metronome_off_recording_peak": 0.0,
+  "click_not_printed_to_recorded_usb_pcm_peak": 0.0,
+  "fader_endpoints_full_wave_and_unchanged_level": {
+    "0.0": {
+      "wave_fraction": 0.7480312585830688,
+      "expected": 0.7480312827425346,
+      "normalized_fader": 0.0
+    },
+    "1.0": {
+      "wave_fraction": 0.24751555919647217,
+      "expected": 0.2480317079129642,
+      "normalized_fader": 1.0
+    }
+  },
+  "saved_metronome_option_recalls": true,
+  "same_pid_entire_test": 32862
+}

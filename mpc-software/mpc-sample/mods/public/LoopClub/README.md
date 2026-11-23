@@ -80,4 +80,4 @@ Publication0.11.1 supersedes historical local-only status notes above: Turntable
 
 Local0.11.3 adds Drum/CHOP MIDI-lane Erase/Copy, explicit Done/toggle exit, transport-preserving generation and optional Turntable DOWN CUT with format10 direction recall. Public release remains0.11.2 until separately published. Verification is recorded in docs/qa-0.11.3.md when complete.
 
-Local0.11.4 adds physical Tap Tempo and SHIFT+Tap monitor metronome, explicit four-click count-in and non-printing monitor routing. Native/build results are in docs/validation-0.11.4.json; device installation requires current volatile-session discard approval.
+Local0.11.4 adds physical Tap Tempo and SHIFT+Tap monitor metronome, explicit four-click count-in and non-printing monitor routing. Native/build and actual USB/display results are in docs/validation-0.11.4.json. Final normal binary is installed in runtime and verified SD autorun; public release remains0.11.2.

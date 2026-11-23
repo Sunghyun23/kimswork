@@ -20,14 +20,14 @@
     "tap averaging/bounce/long pause/boundary jitter",
     "no callback allocation/free"
   ],
-  "device_installed": false,
-  "sd_changed": false,
-  "device_verification": "PENDING explicit current volatile-session discard/restart approval; no actual0.11.4 USB/physical claim",
-  "current_installed_version": "0.11.3",
+  "device_installed": true,
+  "sd_changed": true,
+  "device_verification": "PASS actual Sample DRM, injected independent hardware callbacks and actual stereo USB capture; physical TAP code previously owner-confirmed. No new physical fader calibration/power-cycle certification.",
+  "current_installed_version": "0.11.4",
   "public_release": "0.11.2",
   "normal_arm64_build": "PASS",
   "package_launcher_cases": 8,
-  "local_zip_sha256": "a41ae8a23546dec064407137e44f2f3414cc2ded12ffa6aa4435308369ae9a37",
+  "local_zip_sha256": "5f4da721f47b2300cc663c595c4daff11e997b7fd2ef0dd3ce0ca3d3226937f4",
   "additional_debug_wave_renderer_case": 1,
   "distinct_native_debug_tests_passed": 375,
   "final_release_focused_tests": 73,
@@ -43,5 +43,50 @@
     "shared audio/UI wrapped positions including negative epsilon",
     "full waveform on TURN entry with selected-track guard",
     "single cursor and exact left/right pixel alignment"
-  ]
+  ],
+  "installed_library_sha256": "e95fd6c80d89418a0d0e47285ed432822589d36ce10c32a8864479e48a86244b",
+  "sd_files_readback_verified": 20,
+  "old_boot_files_preserved": 20,
+  "actual_device": {
+    "setup_buttons_and_back": true,
+    "tap_120_bpm": 120.0,
+    "tap_100_bpm": 99.0,
+    "shift_tap_only_toggles_metronome": true,
+    "one_bar_preroll": {
+      "click_count": 4,
+      "onsets_seconds": [
+        2.144149659863946,
+        2.750204081632653,
+        3.356281179138322,
+        3.9623356009070294
+      ],
+      "peak": 0.06339621543884277
+    },
+    "metronome_on_during_recording_clicks": 3,
+    "metronome_off_recording_peak": 0.0,
+    "click_not_printed_to_recorded_usb_pcm_peak": 0.0,
+    "fader_endpoints_full_wave_and_unchanged_level": {
+      "0.0": {
+        "wave_fraction": 0.7480312585830688,
+        "expected": 0.7480312827425346,
+        "normalized_fader": 0.0
+      },
+      "1.0": {
+        "wave_fraction": 0.24751555919647217,
+        "expected": 0.2480317079129642,
+        "normalized_fader": 1.0
+      }
+    },
+    "saved_metronome_option_recalls": true,
+    "same_pid_entire_test": 32862
+  },
+  "final_public_smoke": {
+    "owner16_restored": true,
+    "setup_toggles_and_back": true,
+    "preroll_bars": 1,
+    "metronome": false,
+    "pid": 33114,
+    "note": "Owner saved preroll was Off; current volatile switch set to one bar per request. No owner save."
+  },
+  "owner_project_file_overwritten": false
 }

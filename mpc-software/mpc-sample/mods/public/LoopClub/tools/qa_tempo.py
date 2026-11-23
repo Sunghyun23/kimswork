@@ -46,7 +46,7 @@ try:
  q.capture('actual-four-count-recording');button(True);q.wait(lambda s:s['words'][4]&(1<<16));q.capture('actual-metronome-on');x=capture_sound(1.8);assert 2<=len(count(x))<=4;report['metronome_on_during_recording_clicks']=len(count(x));button(True);q.wait(lambda s:s['words'][4]&(1<<16)==0);time.sleep(.1);x=capture_sound(.8);assert float(np.max(np.abs(x)))<.0001;assert state()['words'][9]==1;report['metronome_off_recording_peak']=float(np.max(np.abs(x)));q.button(73);q.wait(lambda s:s['words'][9]==0,timeout=7);stop()
  # The USB host sends digital zero; monitoring clicks must not become source PCM.
  assert state()['input_source']['selected']==2
- q.kind(1,0);button(True);q.wait(lambda s:s['words'][4]&(1<<16));q.pad(1,shift=True);q.wait(lambda s:s['words'][9]==2 and s['words'][8]>=s['words'][10],timeout=7);time.sleep(.2);q.pad(1,shift=True);q.wait(lambda s:s['words'][9]==0,timeout=7);stop();button(True);q.wait(lambda s:s['words'][4]&(1<<16)==0);assert state()['words'][39]>0;q.button(13);q.button(12);q.wait(lambda s:(s['words'][28]>>21)&3==1);q.event(kind='pad',index=0,on=True,velocity=90);x=capture_sound(.4);q.event(kind='pad',index=0,on=False,velocity=0);assert float(np.max(np.abs(x)))<.0001;report['click_not_printed_to_recorded_usb_pcm_peak']=float(np.max(np.abs(x)))
+ q.kind(1,0);q.button(6);button(True);q.wait(lambda s:s['words'][4]&(1<<16));q.pad(1,shift=True);q.wait(lambda s:s['words'][9]==2 and s['words'][8]>=s['words'][10],timeout=7);time.sleep(.2);q.pad(1,shift=True);q.wait(lambda s:s['words'][9]==0,timeout=7);stop();button(True);q.wait(lambda s:s['words'][4]&(1<<16)==0);assert state()['words'][39]>0;q.button(13);q.button(12);q.wait(lambda s:(s['words'][28]>>21)&3==1);q.event(kind='pad',index=0,on=True,velocity=90);x=capture_sound(.4);q.event(kind='pad',index=0,on=False,velocity=0);assert float(np.max(np.abs(x)))<.0001;report['click_not_printed_to_recorded_usb_pcm_peak']=float(np.max(np.abs(x)))
  # Full fader travel is relative to the grab anchor, not an absolute seek.
  for _ in range(3):q.button(12)
  q.wait(lambda s:(s['words'][28]>>21)&3==3);q.knob(1,1);q.knob(4,.5);q.event(kind='pad',index=0,on=True,velocity=90);q.wait(lambda s:s['words'][1191]&2)
@@ -60,6 +60,11 @@ try:
  q.event(kind='pad',index=0,on=False,velocity=0);stop();report['fader_endpoints_full_wave_and_unchanged_level']=endpoints
  button(True);q.wait(lambda s:s['words'][4]&(1<<16));q.setup();seq=state()['project_io']['sequence'];q.pad(7);q.wait(lambda s:s['project_io']['sequence']>seq and s['project_io']['result']==1,timeout=15);q.pad(8);q.wait(lambda s:s['project_io']['sequence']>seq+1 and s['project_io']['result']==2,timeout=15);q.button(6);q.wait(lambda s:s['words'][4]&(1<<16));q.capture('actual-metronome-recalled');assert state()['pid']==pid;report['saved_metronome_option_recalls']=True;report['same_pid_entire_test']=pid
  (out/'verification.json').write_text(json.dumps(report,indent=2));print('TAP / METRONOME / FOUR-COUNT DEVICE PASS',json.dumps(report),flush=True)
+except BaseException:
+ (out/'partial-verification.json').write_text(json.dumps(report,indent=2))
+ try:(out/'failure-state.json').write_text(json.dumps(state(),indent=2))
+ except Exception:pass
+ raise
 finally:
  if stream:stream.stop();stream.close()
  try:stop()

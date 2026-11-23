@@ -51,7 +51,7 @@ impl Input {
     pub fn valid(&self) -> bool {
         match *self {
             Self::Button { code, .. } | Self::TransportButton { code, .. } => [
-                0, 1, 6, 7, 9, 12, 13, 14, 36, 40, 49, 54, 55, 73, 74, 75, 80, 81, 82, 111,
+                0, 1, 6, 7, 9, 12, 13, 14, 36, 40, 49, 53, 54, 55, 73, 74, 75, 80, 81, 82, 111,
             ]
             .contains(&code),
             Self::Knob { index, value, .. } => {
