@@ -1,0 +1,164 @@
+{
+  "version": "0.11.4",
+  "pid": 33114,
+  "scope": "Host HTTP send to state/active DRM/USB capture for controls; CoreMIDI MIDISend to actual USB capture for MIDI. Includes transport/capture/observer overhead. ADC time is a PortAudio timestamp estimate, not a calibrated physical pad-to-analog measurement.",
+  "before_audio_timing": {
+    "blocks": 115242,
+    "max_deadline_pct": 65.3475,
+    "overrun_blocks": 0,
+    "p99_deadline_pct_upper": 40.0,
+    "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+  },
+  "synth_usb_midi": {
+    "callback_observed_ms": {
+      "n": 30,
+      "min_ms": 30.962624994572252,
+      "median_ms": 34.51720849261619,
+      "p95_ms": 39.64325814449694,
+      "max_ms": 52.38795801415108
+    },
+    "adc_timestamp_estimate_ms": {
+      "n": 30,
+      "min_ms": 3.173579229041934,
+      "median_ms": 5.0444093940313905,
+      "p95_ms": 6.301666774379555,
+      "max_ms": 6.6260258900001645
+    }
+  },
+  "audio_trials": [
+    {
+      "callback_observed_ms": 52.38795801415108,
+      "adc_timestamp_estimate_ms": 5.791856558062136
+    },
+    {
+      "callback_observed_ms": 32.55541602266021,
+      "adc_timestamp_estimate_ms": 6.277691922150552
+    },
+    {
+      "callback_observed_ms": 34.92362500401214,
+      "adc_timestamp_estimate_ms": 5.752573546487838
+    },
+    {
+      "callback_observed_ms": 32.07487502368167,
+      "adc_timestamp_estimate_ms": 5.8030259096995
+    },
+    {
+      "callback_observed_ms": 40.02995800692588,
+      "adc_timestamp_estimate_ms": 5.074708897154778
+    },
+    {
+      "callback_observed_ms": 31.310916994698346,
+      "adc_timestamp_estimate_ms": 5.075192893855274
+    },
+    {
+      "callback_observed_ms": 33.061042020563036,
+      "adc_timestamp_estimate_ms": 3.864323574816808
+    },
+    {
+      "callback_observed_ms": 33.04404200753197,
+      "adc_timestamp_estimate_ms": 3.8549485616385937
+    },
+    {
+      "callback_observed_ms": 35.52866700920276,
+      "adc_timestamp_estimate_ms": 3.4137452312279493
+    },
+    {
+      "callback_observed_ms": 38.742917007766664,
+      "adc_timestamp_estimate_ms": 3.844209888484329
+    },
+    {
+      "callback_observed_ms": 34.12387499702163,
+      "adc_timestamp_estimate_ms": 4.983739578165114
+    },
+    {
+      "callback_observed_ms": 35.183917003450915,
+      "adc_timestamp_estimate_ms": 3.173579229041934
+    },
+    {
+      "callback_observed_ms": 33.029708021786064,
+      "adc_timestamp_estimate_ms": 3.8608235772699118
+    },
+    {
+      "callback_observed_ms": 31.24116698745638,
+      "adc_timestamp_estimate_ms": 5.014109890908003
+    },
+    {
+      "callback_observed_ms": 35.55870900163427,
+      "adc_timestamp_estimate_ms": 3.49058021674864
+    },
+    {
+      "callback_observed_ms": 34.672291978495196,
+      "adc_timestamp_estimate_ms": 5.458531551994383
+    },
+    {
+      "callback_observed_ms": 32.91987499687821,
+      "adc_timestamp_estimate_ms": 6.6260258900001645
+    },
+    {
+      "callback_observed_ms": 32.820166990859434,
+      "adc_timestamp_estimate_ms": 3.7162815569899976
+    },
+    {
+      "callback_observed_ms": 33.227084000827745,
+      "adc_timestamp_estimate_ms": 4.015157581306994
+    },
+    {
+      "callback_observed_ms": 35.73058298206888,
+      "adc_timestamp_estimate_ms": 3.6827872099820524
+    },
+    {
+      "callback_observed_ms": 35.49833400757052,
+      "adc_timestamp_estimate_ms": 6.321282562566921
+    },
+    {
+      "callback_observed_ms": 39.17062497930601,
+      "adc_timestamp_estimate_ms": 4.147250874666497
+    },
+    {
+      "callback_observed_ms": 33.29224998014979,
+      "adc_timestamp_estimate_ms": 4.1009475535247475
+    },
+    {
+      "callback_observed_ms": 31.83424999588169,
+      "adc_timestamp_estimate_ms": 5.558983888477087
+    },
+    {
+      "callback_observed_ms": 34.73508299794048,
+      "adc_timestamp_estimate_ms": 5.555156560149044
+    },
+    {
+      "callback_observed_ms": 30.962624994572252,
+      "adc_timestamp_estimate_ms": 4.740067874081433
+    },
+    {
+      "callback_observed_ms": 34.78787498897873,
+      "adc_timestamp_estimate_ms": 5.5715735652484
+    },
+    {
+      "callback_observed_ms": 35.04108398919925,
+      "adc_timestamp_estimate_ms": 5.893657566048205
+    },
+    {
+      "callback_observed_ms": 34.36212500673719,
+      "adc_timestamp_estimate_ms": 5.198698578169569
+    },
+    {
+      "callback_observed_ms": 34.82487500878051,
+      "adc_timestamp_estimate_ms": 5.672364553902298
+    }
+  ],
+  "audio_callback_flags": [],
+  "usb_stream_latency_seconds": [
+    0.09596371882086167,
+    0.0963718820861678
+  ],
+  "after_audio_timing": {
+    "blocks": 123477,
+    "max_deadline_pct": 65.3475,
+    "overrun_blocks": 0,
+    "p99_deadline_pct_upper": 40.0,
+    "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+  },
+  "new_audio_deadline_overruns": 0,
+  "final_pid": 33114
+}

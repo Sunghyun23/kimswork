@@ -1,0 +1,385 @@
+{
+  "version": "0.11.4",
+  "pid": 33114,
+  "scope": "Host HTTP send to state/active DRM/USB capture for controls; CoreMIDI MIDISend to actual USB capture for MIDI. Includes transport/capture/observer overhead. ADC time is a PortAudio timestamp estimate, not a calibrated physical pad-to-analog measurement.",
+  "before_audio_timing": {
+    "blocks": 88866,
+    "max_deadline_pct": 65.3475,
+    "overrun_blocks": 0,
+    "p99_deadline_pct_upper": 40.0,
+    "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+  },
+  "status_http_round_trip": {
+    "n": 30,
+    "min_ms": 2.6291669928468764,
+    "median_ms": 4.077542005688883,
+    "p95_ms": 5.892589708673768,
+    "max_ms": 5.993707978632301
+  },
+  "button_metronome": {
+    "accepted_ms": {
+      "n": 30,
+      "min_ms": 1.594458008185029,
+      "median_ms": 2.864229492843151,
+      "p95_ms": 3.49039550346788,
+      "max_ms": 3.57504200655967
+    },
+    "state_ms": {
+      "n": 30,
+      "min_ms": 133.11541700386442,
+      "median_ms": 145.44016699073836,
+      "p95_ms": 151.39298094873084,
+      "max_ms": 154.39908299595118
+    },
+    "drm_observed_ms": {
+      "n": 30,
+      "min_ms": 188.2016670133453,
+      "median_ms": 201.6414999961853,
+      "p95_ms": 207.56196875008754,
+      "max_ms": 247.3494170117192
+    }
+  },
+  "button_trials": [
+    {
+      "accepted_ms": 1.7871669842861593,
+      "state_ms": 138.3032499870751,
+      "drm_observed_ms": 194.0830840030685
+    },
+    {
+      "accepted_ms": 1.894457993330434,
+      "state_ms": 147.34437500010245,
+      "drm_observed_ms": 203.27895798254758
+    },
+    {
+      "accepted_ms": 2.9171670030336827,
+      "state_ms": 144.15462501347065,
+      "drm_observed_ms": 199.8001669999212
+    },
+    {
+      "accepted_ms": 2.0965830190107226,
+      "state_ms": 142.10837500286289,
+      "drm_observed_ms": 197.83545800601132
+    },
+    {
+      "accepted_ms": 3.064958000322804,
+      "state_ms": 141.636207990814,
+      "drm_observed_ms": 198.32920798216946
+    },
+    {
+      "accepted_ms": 3.497708006761968,
+      "state_ms": 133.11541700386442,
+      "drm_observed_ms": 188.2016670133453
+    },
+    {
+      "accepted_ms": 2.835082996170968,
+      "state_ms": 151.40724999946542,
+      "drm_observed_ms": 206.70499998959713
+    },
+    {
+      "accepted_ms": 2.861999993911013,
+      "state_ms": 146.13637499860488,
+      "drm_observed_ms": 200.51083399448544
+    },
+    {
+      "accepted_ms": 1.837667019572109,
+      "state_ms": 151.37066700845025,
+      "drm_observed_ms": 206.3616670202464
+    },
+    {
+      "accepted_ms": 2.8985419776290655,
+      "state_ms": 144.74395898287185,
+      "drm_observed_ms": 201.23304199660197
+    },
+    {
+      "accepted_ms": 3.0916249961592257,
+      "state_ms": 147.0687089895364,
+      "drm_observed_ms": 201.44629199057817
+    },
+    {
+      "accepted_ms": 3.291042026830837,
+      "state_ms": 140.39604202844203,
+      "drm_observed_ms": 195.16666702111252
+    },
+    {
+      "accepted_ms": 2.067791996523738,
+      "state_ms": 148.8219170132652,
+      "drm_observed_ms": 204.78266701684333
+    },
+    {
+      "accepted_ms": 3.57504200655967,
+      "state_ms": 143.0915420060046,
+      "drm_observed_ms": 197.3500839958433
+    },
+    {
+      "accepted_ms": 3.360458998940885,
+      "state_ms": 147.93812498101033,
+      "drm_observed_ms": 205.51266698748805
+    },
+    {
+      "accepted_ms": 2.863292000256479,
+      "state_ms": 142.68537500174716,
+      "drm_observed_ms": 197.45187502121553
+    },
+    {
+      "accepted_ms": 2.743749995715916,
+      "state_ms": 144.33095802087337,
+      "drm_observed_ms": 202.7808749990072
+    },
+    {
+      "accepted_ms": 2.8651669854298234,
+      "state_ms": 142.82249999814667,
+      "drm_observed_ms": 198.87445800122805
+    },
+    {
+      "accepted_ms": 3.4814579994417727,
+      "state_ms": 138.12587500433438,
+      "drm_observed_ms": 193.48108299891464
+    },
+    {
+      "accepted_ms": 2.0121669804211706,
+      "state_ms": 142.99812499666587,
+      "drm_observed_ms": 199.58004198269919
+    },
+    {
+      "accepted_ms": 3.238665987737477,
+      "state_ms": 147.0392910123337,
+      "drm_observed_ms": 202.62525000725873
+    },
+    {
+      "accepted_ms": 2.8103749791625887,
+      "state_ms": 150.73699998902157,
+      "drm_observed_ms": 204.18124998104759
+    },
+    {
+      "accepted_ms": 1.594458008185029,
+      "state_ms": 149.1072500066366,
+      "drm_observed_ms": 205.74508301797323
+    },
+    {
+      "accepted_ms": 3.0859580147080123,
+      "state_ms": 139.46945799398236,
+      "drm_observed_ms": 247.3494170117192
+    },
+    {
+      "accepted_ms": 2.9866250115446746,
+      "state_ms": 154.39908299595118,
+      "drm_observed_ms": 208.2631250086706
+    },
+    {
+      "accepted_ms": 3.1245829886756837,
+      "state_ms": 148.87350000208244,
+      "drm_observed_ms": 203.3674159902148
+    },
+    {
+      "accepted_ms": 1.870250009233132,
+      "state_ms": 146.7395000217948,
+      "drm_observed_ms": 202.21658301306888
+    },
+    {
+      "accepted_ms": 3.0553750111721456,
+      "state_ms": 144.44999999250285,
+      "drm_observed_ms": 198.96308300667442
+    },
+    {
+      "accepted_ms": 1.6372079844586551,
+      "state_ms": 151.375540997833,
+      "drm_observed_ms": 204.80741598294117
+    },
+    {
+      "accepted_ms": 2.1017919934820384,
+      "state_ms": 147.1231670002453,
+      "drm_observed_ms": 201.83670800179243
+    }
+  ],
+  "data_encoder_state": {
+    "n": 30,
+    "min_ms": 70.14416699530557,
+    "median_ms": 75.10166648717131,
+    "p95_ms": 134.08439345948864,
+    "max_ms": 138.94445801270194
+  },
+  "data_trials_ms": [
+    132.1030409890227,
+    70.14416699530557,
+    73.15650000236928,
+    73.56104097561911,
+    75.54099999833852,
+    76.78537498577498,
+    71.96695799939334,
+    138.94445801270194,
+    78.56112500303425,
+    135.7055000262335,
+    71.60075000138022,
+    78.97445801063441,
+    75.63558401307091,
+    74.3699999875389,
+    74.30770801147446,
+    75.00670899753459,
+    73.8829159818124,
+    77.50029102317058,
+    80.29287500539795,
+    72.60583300376311,
+    84.74391599884257,
+    74.32049998897128,
+    75.56324999313802,
+    75.14908298617229,
+    75.05424998817034,
+    75.92900001327507,
+    72.69837500643916,
+    82.75575001607649,
+    73.30729198292829,
+    71.73245900776237
+  ],
+  "drum_pad_usb": {
+    "callback_observed_ms": {
+      "n": 30,
+      "min_ms": 48.0678329768125,
+      "median_ms": 79.63212448521517,
+      "p95_ms": 86.53514374454971,
+      "max_ms": 88.11241702642292
+    },
+    "adc_timestamp_estimate_ms": {
+      "n": 30,
+      "min_ms": 9.039241907885298,
+      "median_ms": 40.64442863455042,
+      "p95_ms": 63.305647192464676,
+      "max_ms": 66.94800266996026
+    }
+  },
+  "audio_trials": [
+    {
+      "callback_observed_ms": 48.0678329768125,
+      "adc_timestamp_estimate_ms": 42.0138243061956
+    },
+    {
+      "callback_observed_ms": 78.93412499106489,
+      "adc_timestamp_estimate_ms": 9.039241907885298
+    },
+    {
+      "callback_observed_ms": 77.42695798515342,
+      "adc_timestamp_estimate_ms": 62.705800315598026
+    },
+    {
+      "callback_observed_ms": 81.9176250079181,
+      "adc_timestamp_estimate_ms": 61.394311662297696
+    },
+    {
+      "callback_observed_ms": 83.70729099260643,
+      "adc_timestamp_estimate_ms": 57.35040595754981
+    },
+    {
+      "callback_observed_ms": 84.48399999178946,
+      "adc_timestamp_estimate_ms": 55.23732863366604
+    },
+    {
+      "callback_observed_ms": 76.50850000209175,
+      "adc_timestamp_estimate_ms": 41.49946497636847
+    },
+    {
+      "callback_observed_ms": 80.72808300494216,
+      "adc_timestamp_estimate_ms": 39.78939229273237
+    },
+    {
+      "callback_observed_ms": 80.07416597683914,
+      "adc_timestamp_estimate_ms": 33.479903591796756
+    },
+    {
+      "callback_observed_ms": 78.06787500157952,
+      "adc_timestamp_estimate_ms": 25.63120794366114
+    },
+    {
+      "callback_observed_ms": 83.27770899632014,
+      "adc_timestamp_estimate_ms": 27.872630598722026
+    },
+    {
+      "callback_observed_ms": 83.08020798722282,
+      "adc_timestamp_estimate_ms": 21.871931909117848
+    },
+    {
+      "callback_observed_ms": 86.53587498702109,
+      "adc_timestamp_estimate_ms": 22.439021588070318
+    },
+    {
+      "callback_observed_ms": 78.89883397729136,
+      "adc_timestamp_estimate_ms": 11.901778256287798
+    },
+    {
+      "callback_observed_ms": 78.7758750084322,
+      "adc_timestamp_estimate_ms": 66.94800266996026
+    },
+    {
+      "callback_observed_ms": 79.1756670223549,
+      "adc_timestamp_estimate_ms": 61.46930597606115
+    },
+    {
+      "callback_observed_ms": 83.96879199426621,
+      "adc_timestamp_estimate_ms": 60.571067297132686
+    },
+    {
+      "callback_observed_ms": 79.11262498237193,
+      "adc_timestamp_estimate_ms": 52.79615696053952
+    },
+    {
+      "callback_observed_ms": 78.53691600030288,
+      "adc_timestamp_estimate_ms": 46.39008329831995
+    },
+    {
+      "callback_observed_ms": 86.53425000375137,
+      "adc_timestamp_estimate_ms": 51.44221495720558
+    },
+    {
+      "callback_observed_ms": 78.67929199710488,
+      "adc_timestamp_estimate_ms": 37.839810276636854
+    },
+    {
+      "callback_observed_ms": 80.28483300586231,
+      "adc_timestamp_estimate_ms": 33.59932062448934
+    },
+    {
+      "callback_observed_ms": 83.60550002544187,
+      "adc_timestamp_estimate_ms": 31.13037397270091
+    },
+    {
+      "callback_observed_ms": 76.42204200965352,
+      "adc_timestamp_estimate_ms": 18.13517729169689
+    },
+    {
+      "callback_observed_ms": 78.48395800101571,
+      "adc_timestamp_estimate_ms": 14.364812610438094
+    },
+    {
+      "callback_observed_ms": 79.1900829935912,
+      "adc_timestamp_estimate_ms": 12.25106924539432
+    },
+    {
+      "callback_observed_ms": 82.55808299873024,
+      "adc_timestamp_estimate_ms": 9.758080588653684
+    },
+    {
+      "callback_observed_ms": 81.41800001612864,
+      "adc_timestamp_estimate_ms": 63.79643100081012
+    },
+    {
+      "callback_observed_ms": 77.66920898575336,
+      "adc_timestamp_estimate_ms": 54.238484299276024
+    },
+    {
+      "callback_observed_ms": 88.11241702642292,
+      "adc_timestamp_estimate_ms": 61.73049000790343
+    }
+  ],
+  "audio_callback_flags": [],
+  "usb_stream_latency_seconds": [
+    0.09596371882086167,
+    0.0963718820861678
+  ],
+  "after_audio_timing": {
+    "blocks": 102180,
+    "max_deadline_pct": 65.3475,
+    "overrun_blocks": 0,
+    "p99_deadline_pct_upper": 40.0,
+    "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+  },
+  "new_audio_deadline_overruns": 0,
+  "final_pid": 33114
+}
