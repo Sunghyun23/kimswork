@@ -173,14 +173,14 @@ fn original_default_scratch_loads_on_worker_and_does_not_overwrite_existing_audi
     r.with_engine(|slot| {
         let e = slot.as_ref().unwrap();
         let t = &e.tracks[0];
-        assert_eq!(t.name, "Original AHH");
+        assert_eq!(t.name, "Classic Ah Yeah");
         assert_eq!(t.audio_target, loop_club::audio::RecordTarget::Turntable);
-        assert_eq!(t.source_frames, 14400);
+        assert_eq!(t.source_frames, 7600);
         let peak = t.audio[..t.source_frames]
             .iter()
             .map(|x| x.l.abs())
             .fold(0f32, f32::max);
-        assert!((peak - 0.6).abs() < 1e-5);
+        assert!(peak > 0.05 && peak < 0.99);
         assert!(t.audio.iter().all(|x| x.l.is_finite() && x.r.is_finite()));
     })
     .unwrap();
@@ -231,13 +231,13 @@ fn stopped_grid_later_bar_selection_edits_the_true_event_beyond_first64() {
 fn default_scratch_is_finite_and_bounded_at_every_supported_rate() {
     for rate in [8000, 44100, 96000] {
         let job = loop_club::scratch_source::prepare(0, rate, 100., rate as usize * 4).unwrap();
-        assert_eq!(job.source_frames, (rate as f64 * 1.8).round() as usize);
+        assert_eq!(job.source_frames, (rate as f64 * 0.95).round() as usize);
         assert_eq!(job.audio[0], Frame::ZERO);
         assert_eq!(job.audio[job.source_frames - 1], Frame::ZERO);
         assert!(
             job.audio
                 .iter()
-                .all(|x| x.l.is_finite() && x.l.abs() <= 0.601)
+                .all(|x| x.l.is_finite() && x.r.is_finite() && x.l.abs().max(x.r.abs()) <= 0.601)
         );
         let power = job.audio[..job.source_frames]
             .iter()

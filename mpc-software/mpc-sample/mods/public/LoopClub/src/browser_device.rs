@@ -67,7 +67,8 @@ impl FileWorker {
         {
             return Err(Error::NotEmpty);
         }
-        let job = crate::scratch_source::prepare(
+        let job = crate::scratch_source::prepare_default(
+            self.root.as_deref(),
             track,
             self.rate,
             f64::from_bits(s.words[2]),

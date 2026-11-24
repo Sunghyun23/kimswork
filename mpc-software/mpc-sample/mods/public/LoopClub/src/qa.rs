@@ -490,6 +490,78 @@ fn serve(mut stream: TcpStream) {
         };
         return;
     }
+    if first.starts_with("post /scratch-default ") {
+        if header.contains("\r\norigin:")
+            || !header
+                .lines()
+                .any(|h| h == "x-loop-club-management: scratch-v1")
+        {
+            reply(
+                &mut stream,
+                "403 Forbidden",
+                "text/plain",
+                b"Explicit scratch installation header required",
+            );
+            return;
+        }
+        let len = header
+            .lines()
+            .find_map(|h| {
+                h.strip_prefix("content-length:")?
+                    .trim()
+                    .parse::<usize>()
+                    .ok()
+            })
+            .unwrap_or(0);
+        if !(44..=512 * 1024).contains(&len) {
+            reply(
+                &mut stream,
+                "413 Payload Too Large",
+                "text/plain",
+                b"Expected bounded WAV",
+            );
+            return;
+        }
+        while raw.len() < header_end + len {
+            let Ok(n) = stream.read(&mut b) else { return };
+            if n == 0 {
+                return;
+            }
+            raw.extend_from_slice(&b[..n]);
+        }
+        let result = std::env::var_os("LOOP_CLUB_CARD_DIR")
+            .ok_or_else(|| std::io::Error::other("No card root"))
+            .and_then(|root| {
+                crate::scratch_source::install_default(
+                    std::path::Path::new(&root),
+                    &raw[header_end..header_end + len],
+                )
+            });
+        match result {
+            Ok(frames) => reply(&mut stream,"200 OK","application/json",&serde_json::to_vec(&serde_json::json!({"installed":true,"frames_at_48000":frames,"bytes":len,"existing_project_audio_changed":false})).unwrap_or_default()),
+            Err(e) => reply(&mut stream,"400 Bad Request","text/plain",e.to_string().as_bytes()),
+        }
+        return;
+    }
+    if first.starts_with("get /scratch-default.wav ") {
+        let bytes = std::env::var_os("LOOP_CLUB_CARD_DIR").and_then(|root| {
+            let path = std::path::PathBuf::from(root).join("LoopClub/Content/Scratch/default.wav");
+            std::fs::metadata(&path)
+                .ok()
+                .filter(|m| m.is_file() && m.len() <= 512 * 1024)?;
+            std::fs::read(path).ok()
+        });
+        match bytes {
+            Some(bytes) => reply(&mut stream, "200 OK", "audio/wav", &bytes),
+            None => reply(
+                &mut stream,
+                "404 Not Found",
+                "text/plain",
+                b"No default scratch WAV",
+            ),
+        }
+        return;
+    }
     if first.starts_with("post /persist ") {
         if header.contains("\r\norigin:")
             || !header

@@ -1,0 +1,27 @@
+{
+  "version": "0.14.5",
+  "status": "bundled default implemented, exact packaged library installed locally; no new release/site publication",
+  "native_tests": 459,
+  "strict_clippy": "PASS",
+  "arm64_build": "PASS",
+  "launcher_checks": 8,
+  "bundled_default": "Classic Ah Yeah,0.95s",
+  "sample_embedded_in_zip_library": true,
+  "audio_notice_bundled": true,
+  "application_license": "MIT, excludes bundled third-party recording",
+  "audio_rights_status": "original redistribution grant not independently verified; included at owner explicit instruction",
+  "external_default_override_preserved": true,
+  "existing_project_audio_unchanged": true,
+  "exact_zip_runtime_sd_library_sha256": "927d5e9f25cec5013b85d281868f1fa2cfe10279c76b50fa1caf54ca70e681d2",
+  "zip_sha256": "3480e96ef3a1f1878a62da66ee3cb3e3e4929ab3ee1096d1280c30b32941d189",
+  "sd_readbacks": 20,
+  "previous_boot_files_preserved": 20,
+  "actual_usb": {
+    "peak": 0.2651805281639099,
+    "flags": [],
+    "source_frames": 41895,
+    "scope": "Actual USB audio with remote queued pad/fader controls, not physical-hand certification"
+  },
+  "bundled_no_external_path_check": "native fallback tests; actual device retains the matching external WAV",
+  "public_version_unchanged": "0.14.4"
+}

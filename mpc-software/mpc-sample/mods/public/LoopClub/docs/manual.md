@@ -1,6 +1,6 @@
 # Loop Club manual
 
-Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.14.4 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
+Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.14.5 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
 
 ## Recording alignment and top-note voicing — 0.14.4
 
@@ -33,7 +33,7 @@ Public0.14.4 includes these verified changes, which supersede the older gesture 
 - Drum SHIFT+pad records only, from LOOP, DRUM PLAY or DRUM SOUND. From a drum sound page it returns to LOOP. Generate a selected part explicitly with **DRUM PLAY B2 GENERATE**; **SHIFT+B2 UNDO GEN** restores it. Generation preserves stopped/running state and is refused during recording.
 - Drum REPLACE suppresses every old sequence lane from capture start, with a short release for old one-shots. A new take contains only newly recorded events. OVERDUB retains prior notes. Cancel and Undo preserve the prior completed take.
 - The current-bar drum display scans the complete clip, including notes beyond the first64 events. GRID shows/edits the visible bar using original event indices. Brief live-hit markers remain visible after short hits.
-- SOURCE Audio **pad8 TURN** creates an original procedural1.8-second AHH only when the source is empty. Existing recorded/loaded audio is preserved. The source is synthesized by this project, not a third-party scratch sample.
+- SOURCE Audio **pad8 TURN** opens the Turntable view. Existing recorded/loaded audio is preserved.
 - Every nested page has a visible **BACK** upper button. BACK returns to its previous context; SAMPLE returns directly to LOOP. Audio SOUND uses **B3 BACK**; change Replace/Overdub on LOOP. On Synth, BACK first returns a deep sound editor to PLAY, then its parent. Drum layer detail returns to the layer overview first. INPUT returns to SETUP2/2, then TIMING1/2, then the entry page. PROJECT BACK closes its overlay and preserves the underlying page.
 - FX boards use **B1 BACK**, B2 TRACK FX, B3 MASTER FX. The physical MIX key opens MIX directly; SHIFT+B1 opens DRUM MIX when a drum track is selected. FX SETTINGS BACK returns to the originating board.
 - LOOP edit uses B1 COPY, B2 DELETE, **B3 BACK**; **SHIFT+B1 MOVE** selects Move. Erase/Copy or DATA still exits. Drum/CHOP note editing uses B3 BACK instead of the older DONE caption. Entering or leaving an editor never deletes a clip.

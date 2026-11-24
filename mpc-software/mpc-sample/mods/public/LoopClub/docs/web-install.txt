@@ -1,0 +1,58 @@
+Loop Club 0.14.5 — MPC Sample public preview — by kim
+
+MPC Sample firmware1.3.0.12 only. An SD preload mod, not MPC OS VST or
+firmware. Actual remote screen/USB checks are separate from physical input,
+analog, power-cycle recovery and maximum-load acceptance.
+
+1. Save work, power off and back up the complete existing autorun/projects.
+   Replace the whole autorun folder from the ZIP; never mix old/new files.
+   With SampleBoot, put the complete folder in autorun/mods/Loop Club/.
+   Safely eject before booting. No firmware is flashed.
+2. SAMPLE returns to LOOP. DATA selects a track. B1 SOURCE chooses Audio /
+   Synth / Drum; B2 SOUND edits it. Ordinary pads perform the chosen source.
+3. SHIFT+track pad starts recording with count-in. SHIFT+the same pad or REC
+   finishes at the bar; SHIFT+another pad queues a bar-end handoff. The LOOP
+   screen remains. REPLACE sets a new length; OVERDUB retains the old length.
+4. ERASE/COPY opens DELETE; SHIFT+ERASE/COPY opens COPY. B1/B2/B3 selects
+   COPY/DELETE/MOVE. Copy/move needs an empty destination; press the same pad
+   twice to confirm deletion. ERASE/COPY, DATA or SAMPLE exits. SHIFT -/+ is
+   latest-edit Undo/Redo. Drum/CHOP editing changes notes, not source samples.
+5. BROWSE loads an existing WAV on an empty Audio track, or an optional .lcbank
+   kit on Drum. SHIFT+BROWSE imports Drum XPM, choosing an A–H bank of16pads.
+   Keep sample folders available until the project is saved. Two layers per
+   drum retain Volume/Tune/Shift/Decay/REV. SOUND SHIFT+pad generates a drum
+   part; LOOP SHIFT+pad records only.
+6. Audio SOUND B1 cycles INPUT/CHROMATIC/CHORD/CHOP/TURN. TURN PAD1 toggles
+   GRAB on/off, PAD2 is momentary source-only CUT. Left fader moves platter;
+   K1Speed/K2Range/K3Level. SHIFT+B3 Slip; SHIFT+B2 optional Down Cut. STOP
+   releases Grab. Other loops continue. SHIFT+track pad records gestures and
+   cuts without changing original PCM; Overdub punches performed regions.
+7. TAP TEMPO sets40–240BPM; SHIFT+TAP toggles monitor metronome. LOOP SHIFT+
+   DATA opens SETUP: B1metronome/B2preroll/B3back. One-bar preroll has four
+   full clicks, separate from the ordinary metronome; clicks are not recorded
+   into source PCM or resampled audio. SETUP2/2 K3Swing/SHIFT+K3grid.
+8. Track/master FX pads are momentary; SHIFT+press latches. Controls appear
+   below the pad board. Two track inserts can coexist; extra FX is refused.
+   Main master board retains textures, Duck and two custom performance FX.
+9. SHIFT+SEQ opens PROJECT. Turn DATA to select NEW PROJECT, OPEN PROJECT,
+   SAVE or SAVE A COPY; press DATA to execute. Confirmations also use DATA
+   and begin on CANCEL. Stop and release notes/tails before saving/opening.
+   Each project embeds audio, kits, MIDI and settings, with a previous-save
+   backup. Last saved/opened project restores stopped on LOOP.
+10. Format12 reads1–11;
+   older apps reject12. Saved old scratch curves retain their old playback.
+   New live smoothing trades following lag for steadier motion (about40ms
+   braking horizon at50Hz). It is not a physical-turntable realism guarantee.
+
+Projects: <card>/LoopClub/Projects/. Optional banks: LoopClub/Expansions/.
+Optional banks, configured user files and projects are not replaced.
+USB exposes one stereo pair, not individual drum stems.
+32shared Synth/Drum voices and16sampler voices; FX/load can exceed headroom.
+Drum GRID shows a bar viewport; other event views remain bounded. Warp is bounded granular processing, not a
+commercial transient-aware algorithm. XPM native FX/envelopes/Warp and XPN
+installers are not reproduced. Full physical/analog/power-cycle QA is pending.
+
+Recovery: power off, restore your old autorun or rename/remove this one,
+then power on. Never remove SD during playback, recording or writes.
+Manual: https://kimswork.app/mods/loop-club/manual/
+Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.14.5/mpc-software/mpc-sample/mods/public/LoopClub

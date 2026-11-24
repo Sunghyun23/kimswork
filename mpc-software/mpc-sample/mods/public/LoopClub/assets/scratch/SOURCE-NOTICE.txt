@@ -1,0 +1,14 @@
+Loop Club bundled scratch audio
+
+Classic Ah Yeah — Run-DMC, Here We Go (Live at the Funhouse),
+as identified by the source compilation:
+https://freesound.org/people/Bronxio/sounds/456121/
+
+0.95-second excerpt beginning at 00:03 in that compilation.
+This recording is third-party audio and is not covered by Loop Club's MIT
+source-code license. The compilation uploader labels the compilation CC0,
+but an original-rightsholder redistribution grant has not been independently
+verified. This notice does not grant rights in the original recording.
+
+Included at the repository owner's explicit direction on 2026-11-25.
+See source.json for the exact PCM format and integrity hash.

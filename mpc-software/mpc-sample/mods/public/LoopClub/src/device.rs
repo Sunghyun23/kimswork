@@ -851,7 +851,7 @@ impl LoopClub {
                 8 => "DESTINATION HAS CONTENT",
                 9 => "SOURCE HAS NO CONTENT",
                 10 => "KIT MEMORY LIMIT",
-                11 => "ORIGINAL AHH / PAD 1 GRAB",
+                11 => "SCRATCH READY / PAD 1 GRAB",
                 5 if self.browser.target.is_some() => "LAYER SAMPLE LOADED",
                 5 if self.snapshot.track_kind(self.ui.selected) == Kind::Drum => "KIT LOADED",
                 5 => "SAMPLE LOADED",
@@ -918,7 +918,7 @@ impl LoopClub {
                     )
                     .is_ok()
                 {
-                    self.ui.notice = "PREPARING ORIGINAL AHH...";
+                    self.ui.notice = "PREPARING SCRATCH SOURCE...";
                 } else {
                     self.ui.notice = "PROJECT BUSY";
                 }

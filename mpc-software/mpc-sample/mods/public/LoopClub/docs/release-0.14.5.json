@@ -1,0 +1,29 @@
+{
+  "version": "0.14.5",
+  "status": "public preview",
+  "project_format": 12,
+  "native_tests": 459,
+  "strict_clippy": true,
+  "arm64_build": true,
+  "launcher_checks": 8,
+  "public_zip_sha256": "3480e96ef3a1f1878a62da66ee3cb3e3e4929ab3ee1096d1280c30b32941d189",
+  "public_library_sha256": "927d5e9f25cec5013b85d281868f1fa2cfe10279c76b50fa1caf54ca70e681d2",
+  "exact_public_library_device_smoke": "PASS; actual USB output finite peak0.26518/no flags; matching external default present",
+  "runtime_sd_matches_public_library": true,
+  "sd_files_readback": 20,
+  "previous_boot_files_retained": 20,
+  "bundled_audio_notice": true,
+  "qa_agent_in_zip": false,
+  "optional_private_banks_in_zip": false,
+  "existing_videos_changed": false,
+  "website_content_announcement": false,
+  "remaining_checks": [
+    "physical input",
+    "analog latency",
+    "power-cycle recovery",
+    "maximum/long-session CPU"
+  ],
+  "internal_links": 493,
+  "responsive_cases": 35,
+  "website_content_name_scan": "PASS"
+}

@@ -1,4 +1,4 @@
-Loop Club 0.14.4 — MPC Sample public preview — by kim
+Loop Club 0.14.5 — MPC Sample public preview — by kim
 
 MPC Sample firmware1.3.0.12 only. An SD preload mod, not MPC OS VST or
 firmware. Actual remote screen/USB checks are separate from physical input,
@@ -45,15 +45,17 @@ analog, power-cycle recovery and maximum-load acceptance.
    braking horizon at50Hz). It is not a physical-turntable realism guarantee.
 
 Projects: <card>/LoopClub/Projects/. Optional banks: LoopClub/Expansions/.
-The ZIP contains no private/commercial bank, sample, MIDI, firmware or QA
-agent. Optional banks and projects are not replaced. Original procedural
-sounds are built in. USB is one stereo pair, not individual drum stems.
+The ZIP contains no optional private bank, MIDI library, firmware or QA
+agent. It includes original procedural instruments and the third-party
+Classic Ah Yeah scratch excerpt. See SCRATCH-SOURCE-NOTICE.txt; the audio
+is excluded from the application MIT grant. Optional banks, configured
+default.wav and projects are not replaced. USB is one stereo pair.
 32shared Synth/Drum voices and16sampler voices; FX/load can exceed headroom.
-GRID shows the first64events. Warp is bounded granular processing, not a
+Drum GRID shows a bar viewport; other event views remain bounded. Warp is bounded granular processing, not a
 commercial transient-aware algorithm. XPM native FX/envelopes/Warp and XPN
 installers are not reproduced. Full physical/analog/power-cycle QA is pending.
 
 Recovery: power off, restore your old autorun or rename/remove this one,
 then power on. Never remove SD during playback, recording or writes.
 Manual: https://kimswork.app/mods/loop-club/manual/
-Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.14.4/mpc-software/mpc-sample/mods/public/LoopClub
+Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.14.5/mpc-software/mpc-sample/mods/public/LoopClub

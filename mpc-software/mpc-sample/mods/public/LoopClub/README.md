@@ -1,8 +1,8 @@
 # Loop Club
 
-A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.14.4 targets firmware1.3.0.12. This is an SD preload mod, not an MPC OS VST or a firmware image.
+A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.14.5 targets firmware1.3.0.12. This is an SD preload mod, not an MPC OS VST or a firmware image.
 
-[Manual](docs/manual.md) · [Installation](docs/public-install.txt) · [Verification](docs/release-0.14.4.md) · [Source specification](../../../docs/looper-srs.md)
+[Manual](docs/manual.md) · [Installation](docs/public-install.txt) · [Verification](docs/release-0.14.5.md) · [Source specification](../../../docs/looper-srs.md)
 
 - LOOP/MUTE/CHAIN pad modes; record from LOOP without changing the screen; REC ends at the bar boundary.
 - Independent bar-aligned audio, synth and drum loops; count-in; Replace/Overdub; MIDI grid.
@@ -102,3 +102,9 @@ Local0.14.1 supersedes0.14.0's upper action buttons: **SHIFT+SEQ** opens a separ
 Current release0.14.1 adds the independent PROJECT menu: SHIFT+SEQ, then DATA to select New/Open/Save/Save a Copy. The numbered projects retain embedded samples/settings and prior-save backups; Cancel is initially selected on replacement confirmations. Existing Session and all earlier video releases remain available. See [release notes](docs/release-0.14.1.md) and [publication](docs/publication-0.14.1.json).
 
 Public0.14.4 includes aligned additional recording, stopped-loop preroll synchronization, optional TOP NOTE voice leading, two-stage recording STOP, Drum REPLACE and navigation repairs. See [release notes](docs/release-0.14.4.md) for public checks and remaining limits.
+
+## 0.14.5 — bundled Classic Ah Yeah and optional override
+
+Place your own WAV at `<card>/LoopClub/Content/Scratch/default.wav`. On an **empty Audio source**, SOURCE PAD8 TURN loads this file instead of the bundled Classic Ah Yeah. It lives outside autorun, survives application replacement and is not included in public packages. Invalid configured files report an error; missing files use the bundled Classic Ah Yeah. WAV conversion and feature preparation run only on the file worker, and existing project/source PCM is never silently replaced.
+
+The owner explicitly instructed including the selected Classic Ah Yeah excerpt in the default on2026-11-25. The bundled audio is third-party and excluded from the application MIT grant; its source and unverified original redistribution status are documented in assets/scratch/SOURCE-NOTICE.txt. The rejected recorded Yeah candidate is retained only in ignored local build research; it is not the new product default. The owner authorized0.14.5 publication.

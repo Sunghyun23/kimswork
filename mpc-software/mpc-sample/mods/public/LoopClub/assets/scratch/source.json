@@ -1,0 +1,16 @@
+{
+  "title": "Classic Ah Yeah",
+  "performer": "Run-DMC (as identified by the source compilation)",
+  "original_recording": "Here We Go (Live at the Funhouse)",
+  "excerpt_seconds": 0.95,
+  "compilation": "https://freesound.org/people/Bronxio/sounds/456121/",
+  "compilation_excerpt_start_seconds": 3.0,
+  "asset": "classic-ah-yeah-44100-stereo.s16le",
+  "sample_rate": 44100,
+  "channels": 2,
+  "encoding": "signed16 little endian",
+  "frames": 41895,
+  "sha256": "cb8b8babc7bd86459651e9289766f63581f9f82315d245ce01f60336b467351a",
+  "copyright_status": "Third-party recording. Original recording rights and a redistribution grant have not been independently verified. Not covered by the application MIT license.",
+  "inclusion": "Explicit owner instruction on 2026-11-25; replaces procedural fallback, without replacing existing user source PCM."
+}

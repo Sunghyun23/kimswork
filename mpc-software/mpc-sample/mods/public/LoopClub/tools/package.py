@@ -18,7 +18,7 @@ SALT = b'f7bed1c9-7e90-4731-9194-c996666b4331'
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--public',action='store_true',help='Create the original-content public preview; never includes QA tools or banks')
+    parser.add_argument('--public',action='store_true',help='Create the public preview; includes documented bundled scratch audio, never QA tools or banks')
     parser.add_argument('--direct',action='store_true',help='Direct Loop Club autorun without SampleBoot or launch question')
     parser.add_argument('--qa',action='store_true',help='Separate USB-only screen/input QA package; existing normal package is retained')
     parser.add_argument('--firmware-prefix-sha256', help='Optional independently measured first-4KiB hash; defaults to explicitly labelled pinned upstream reference')
@@ -88,9 +88,11 @@ systemctl show ac50.service --property=MainPID --property=ActiveState --property
     (stage/'autorun.check').write_text(hashlib.sha256((stage/'autorun.json').read_bytes()+(stage/'autorun.sh').read_bytes()+SALT).hexdigest())
     (stage/'sampleboot.txt').write_text('Loop Club USB QA5\n'if args.qa else f'Loop Club {version} - development\n')
     shutil.copy2(PROJECT/'LICENSE',stage/'LICENSE')
+    shutil.copy2(PROJECT/'assets/scratch/SOURCE-NOTICE.txt',stage/'SCRATCH-SOURCE-NOTICE.txt')
     (stage/'SDK-LICENSE').write_text((SDK/'LICENSE').read_text()+'\n\n'+(PROJECT/'src/roxmltree-license.txt').read_text())
     metadata = {'product':'Loop Club','version':version,'status':'local development candidate; hardware unverified','firmware':'1.3.0.12','expected_app_first_4KiB_sha256':expected,'hash_source':'caller supplied; measurement not independently verified by packager' if args.firmware_prefix_sha256 else 'pinned SDK upstream reference; NOT measured on connected device','library_sha256':lib_hash,'device_installed':False,'screen_capture':'none; host previews only','persistent_data':'<card>/LoopClub/Projects/ (Session.lcproj, Projects/*.lcproj and active-project.txt)'}
     metadata['boot_mode']='direct' if args.direct else 'sampleboot-compatible'
+    metadata['bundled_scratch']={'name':'Classic Ah Yeah','seconds':0.95,'source_notice':'SCRATCH-SOURCE-NOTICE.txt','license':'third-party recording; excluded from application MIT; original redistribution grant unverified'}
     metadata['qa_agent_sha256']=agent_hash
     metadata['usb_qa_enabled']=args.qa
     metadata['qa_variant']='qa5'if args.qa else None
