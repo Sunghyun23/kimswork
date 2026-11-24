@@ -49,11 +49,55 @@
     }
   ],
   "tag_source_verified": true,
-  "status": "public release published; Pages deployment pending",
+  "status": "public preview published; Pages successful",
   "native_tests": 411,
   "responsive_cases": 35,
   "internal_links": 491,
   "project_menu": "SHIFT+SEQ; DATA turn/push",
   "device_update": "withheld to preserve newly changed owner project; explicit confirmation pending",
-  "new_source_or_bank_files_published": false
+  "new_source_or_bank_files_published": false,
+  "pages_run_id": 45383767813,
+  "pages_head": "55ff685ad201c57c4ed622604e23c9cfcdbd8b7e",
+  "live_checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 8829
+    },
+    {
+      "path": "/mods/loop-club/",
+      "status": 200,
+      "bytes": 16315
+    },
+    {
+      "path": "/mods/loop-club/manual/",
+      "status": 200,
+      "bytes": 57220
+    },
+    {
+      "path": "/mods/loop-club/public-install.txt",
+      "status": 200,
+      "bytes": 4025
+    },
+    {
+      "path": "/software/sample-mods/",
+      "status": 200,
+      "bytes": 3639
+    },
+    {
+      "path": "/images/loop-club-main-0.14.1.webp",
+      "status": 200,
+      "bytes": 9074
+    },
+    {
+      "path": "/images/loop-club-project-0.14.1.webp",
+      "status": 200,
+      "bytes": 7788
+    },
+    {
+      "path": "/images/loop-club-project-confirm-0.14.1.webp",
+      "status": 200,
+      "bytes": 8664
+    }
+  ]
 }
