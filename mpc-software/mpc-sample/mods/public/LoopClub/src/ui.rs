@@ -608,6 +608,8 @@ pub enum Action {
     None,
     Save,
     Load,
+    NewProject,
+    Projects,
     Exit,
 }
 #[derive(Clone, Copy)]
@@ -1880,6 +1882,7 @@ impl Ui {
                 4..=6 => send(Command::Preroll((pad - 4) as u8)),
                 7 => return Action::Save,
                 8 => return Action::Load,
+                14 => return Action::NewProject,
                 9 => send(Command::Resample(self.selected)),
                 10 => send(Command::Stop),
                 11 => send(Command::PlayAll),

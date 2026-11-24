@@ -471,7 +471,7 @@ fn worker() {
     }
 
     if let Some(dir) = &dir {
-        let path = dir.join("Session.lcproj");
+        let path = crate::project_manager::startup_path(dir);
         if path.is_file() {
             match crate::project::load(&path, rate, capacity) {
                 Ok(loaded) => {
@@ -491,6 +491,7 @@ fn worker() {
             let _ = std::fs::write(dir.join("startup.json"), bytes);
         }
     }
+    let mut projects = crate::project_manager::Worker::new(dir.clone());
     let mut input = crate::input_hw::InputWorker::new(dir.as_deref());
     let mut files = crate::browser_device::FileWorker::new(rate, capacity);
     loop {
@@ -499,6 +500,10 @@ fn worker() {
         input.tick(r.active.load(Ordering::Acquire));
         if let Some(ok) = files.tick(r) {
             IO_STATUS.store(if ok { 5 } else { 4 }, Ordering::Release);
+        }
+        // Finish previously queued sample/kit imports before replacing a project.
+        if !files.pending() {
+            projects.tick(r, rate, capacity);
         }
         let action = IO_REQUEST.swap(0, Ordering::AcqRel);
         if action == 0 {
@@ -533,58 +538,12 @@ fn worker() {
             }
             continue;
         }
-        let Some(dir) = dir.as_ref() else {
-            IO_STATUS.store(4, Ordering::Release);
-            continue;
-        };
-        if !dir.is_absolute() {
-            IO_STATUS.store(4, Ordering::Release);
-            continue;
-        }
-        let path = dir.join("Session.lcproj");
-        let done = r.with_engine(|slot| {
-            let Some(e) = slot.as_mut() else { return 4 };
-            if !e.is_idle() {
-                return 3;
-            }
-            if action == 1 {
-                if path.is_file() {
-                    let backup = dir.join("Session.previous.lcproj");
-                    let temp = dir.join("Session.previous.lcproj.new");
-                    let preserved = (|| -> std::io::Result<()> {
-                        std::fs::copy(&path, &temp)?;
-                        std::fs::File::open(&temp)?.sync_all()?;
-                        std::fs::rename(&temp, &backup)
-                    })();
-                    if preserved.is_err() {
-                        return 4;
-                    }
-                }
-                if crate::project::save(e, &path).is_ok() {
-                    1
-                } else {
-                    4
-                }
-            } else {
-                match crate::project::load_for_replacement(&path, rate, capacity, e) {
-                    Ok(loaded) => {
-                        **e = loaded;
-                        2
-                    }
-                    Err(_) => 4,
-                }
-            }
-        });
-        if let Some(status) = done {
-            IO_STATUS.store(status, Ordering::Release)
-        } else {
-            let _ = IO_REQUEST.compare_exchange(0, action, Ordering::AcqRel, Ordering::Relaxed);
-        }
     }
 }
 #[derive(Default)]
 pub struct LoopClub {
     browser: crate::browser_device::BrowserUi,
+    projects: crate::project_manager::Manager,
     ui: Ui,
     snapshot: Snapshot,
     armed: bool,
@@ -659,7 +618,9 @@ impl LoopClub {
                     }
                     HardwareControl::Encoder { delta, shift } => {
                         self.refresh();
-                        if self.browser.open {
+                        if self.projects.open {
+                            self.projects.encoder(delta);
+                        } else if self.browser.open {
                             self.browser.encoder(delta);
                         } else {
                             self.ui.shift_view = shift;
@@ -675,7 +636,7 @@ impl LoopClub {
                 let Some(event) = (unsafe { events.pop_shared() }) else {
                     break;
                 };
-                if self.browser.open && event.on {
+                if (self.browser.open || self.projects.open) && event.on {
                     continue;
                 }
                 let action = self.ui.pad(
@@ -719,7 +680,7 @@ impl LoopClub {
             )));
             return Flow::Forward;
         }
-        if self.browser.open {
+        if self.browser.open || self.projects.open {
             return Flow::Consume;
         }
         self.ui.shift_view = shift;
@@ -788,6 +749,14 @@ impl LoopClub {
         Flow::Consume
     }
     fn refresh(&mut self) {
+        if self.projects.refresh() {
+            let active = self.ui.active;
+            self.ui = Ui::default();
+            self.ui.active = active;
+            SCRATCH_CUT_OWNER.store(255, Ordering::Release);
+            SCRATCH_ROUTE.store(255, Ordering::Release);
+            self.tap.reset();
+        }
         let value = f32::from_bits(FADER_VALUE.load(Ordering::Acquire));
         if value.is_finite() {
             self.ui.last_fader = Some(value);
@@ -905,15 +874,19 @@ impl LoopClub {
                     self.ui.notice = "SELECT AUDIO OR DRUM TRACK";
                 }
             }
-            Action::Save | Action::Load => {
-                let n = if action == Action::Save { 1 } else { 2 };
-                if IO_REQUEST
-                    .compare_exchange(0, n, Ordering::AcqRel, Ordering::Relaxed)
-                    .is_ok()
-                {
-                    self.ui.notice = "PROJECT WORKING..."
+            Action::Save | Action::Load | Action::NewProject | Action::Projects => {
+                use crate::project_manager::Operation;
+                if self.snapshot.words[9] != 0 {
+                    self.ui.notice = "FINISH RECORDING FIRST";
+                } else if IO_REQUEST.load(Ordering::Acquire) != 0 || crate::input_hw::pending() {
+                    self.ui.notice = "PROJECT BUSY";
                 } else {
-                    self.ui.notice = "PROJECT BUSY"
+                    self.projects.start(match action {
+                        Action::Save => Operation::Save,
+                        Action::Load => Operation::Open(0),
+                        Action::NewProject => Operation::New,
+                        _ => Operation::Scan,
+                    });
                 }
             }
             Action::Exit => self.leave(),
@@ -949,6 +922,7 @@ impl Mod for LoopClub {
         let _ = PAD_EVENTS.set(crate::queue::Queue::default());
         let _ = CONTROL_EVENTS.set(crate::queue::Queue::default());
         crate::browser_device::initialize();
+        crate::project_manager::initialize();
         let _ = std::thread::Builder::new()
             .name("loopclub-project".into())
             .spawn(worker);
@@ -1012,6 +986,18 @@ impl Mod for LoopClub {
             }
             return Flow::Consume;
         }
+        if self.projects.open {
+            if event.code == 81 {
+                self.ui.release_deck_latch(send);
+                send(Command::Stop);
+            } else {
+                self.projects.button(event.code as u8, event.shift);
+                if !self.projects.open {
+                    self.ui.navigate(Page::Loop, &self.snapshot);
+                }
+            }
+            return Flow::Consume;
+        }
         if self.browser.open {
             if event.code == 81 {
                 send(Command::Stop)
@@ -1069,6 +1055,9 @@ impl Mod for LoopClub {
             return Flow::Consume;
         }
         match event.code {
+            13 if self.ui.page == Page::Setup && !self.ui.setup_timing && !self.ui.input_view => {
+                self.action(Action::Projects)
+            }
             6 if event.shift => {
                 self.ui.navigate(Page::Setup, &self.snapshot);
                 self.ui.input_view = true;
@@ -1108,6 +1097,7 @@ impl Mod for LoopClub {
                 self.ui.loop_mode = 0;
                 self.ui.navigate(Page::Loop, &self.snapshot);
             }
+            7 if event.shift => self.action(Action::Projects),
             7 => self.ui.navigate(Page::Grid, &self.snapshot),
             40 => self.ui.navigate(Page::Play, &self.snapshot),
             36 if event.shift => self.action(Action::BrowseXpm),
@@ -1248,6 +1238,10 @@ impl Mod for LoopClub {
         }
         self.refresh();
         let delta = normalize_encoder(event.delta);
+        if self.projects.open {
+            self.projects.encoder(delta);
+            return Flow::Consume;
+        }
         if self.browser.open {
             self.browser.encoder(delta);
             return Flow::Consume;
@@ -1267,7 +1261,7 @@ impl Mod for LoopClub {
         if !self.ui.active {
             return Flow::Consume;
         }
-        if !(self.browser.open && on) {
+        if !((self.browser.open || self.projects.open) && on) {
             let action = self.ui.pad(
                 event.pad as usize,
                 on,
@@ -1375,7 +1369,7 @@ impl Mod for LoopClub {
                     shift,
                     erase,
                 } => {
-                    if self.browser.open && on {
+                    if (self.browser.open || self.projects.open) && on {
                         continue;
                     }
                     let action =
@@ -1388,18 +1382,25 @@ impl Mod for LoopClub {
         self.drain_pending_inputs();
         self.refresh();
         SCRATCH_ROUTE.store(
-            scratch_route(&self.ui, &self.snapshot, self.browser.open),
+            scratch_route(
+                &self.ui,
+                &self.snapshot,
+                self.browser.open || self.projects.open,
+            ),
             Ordering::Release,
         );
         crate::qa::browser(self.browser.open, self.browser.row, self.browser.total());
         crate::qa::paint(&self.ui, &self.snapshot, self.browser.open);
+        crate::project_manager::observe(&self.projects);
         if !self.ui.active {
             return;
         }
         if let Some(command) = turntable_wave_reset(&self.ui, &self.snapshot) {
             send(command);
         }
-        if self.browser.open {
+        if self.projects.open {
+            self.projects.render(&mut NativePainter(*graphics))
+        } else if self.browser.open {
             self.browser.render(&mut NativePainter(*graphics))
         } else {
             view::render(&self.ui, &self.snapshot, &mut NativePainter(*graphics));

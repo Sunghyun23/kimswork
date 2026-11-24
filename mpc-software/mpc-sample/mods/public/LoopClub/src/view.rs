@@ -160,7 +160,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             } else if ui.setup_timing {
                 "SETUP 1/2"
             } else {
-                "PROJECT 2/2"
+                "SETUP 2/2"
             }
             .to_owned(),
             Page::Chop => "CHOP".to_owned(),
@@ -359,7 +359,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         } else if ui.setup_timing {
             ["METRO", "PREROLL", "BACK"]
         } else {
-            ["TIMING", "LOOP", "INPUT"]
+            ["TIMING", "PROJECTS", "INPUT"]
         };
     }
     if ui.page == Page::FxSettings {
@@ -834,13 +834,13 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 "PRE 1 BAR",
                 "PRE 2 BAR",
                 "SAVE",
-                "LOAD",
+                "OPEN",
                 "RESAMPLE",
                 "STOP",
                 "PLAY ALL",
                 "LOAD WAV",
                 "RE-SLICE",
-                "",
+                "NEW",
                 "EXIT",
             ];
             for (pad, name) in names.iter().enumerate() {
@@ -1392,7 +1392,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             .into()
         }
     } else if ui.page == Page::Setup && ui.setup_timing {
-        "+/-: PROJECT | B3: BACK TO LOOP".into()
+        "+/-: SETUP 2/2 | B3: LOOP".into()
     } else if ui.page == Page::Setup {
         "+/-: TIMING | SHIFT K3: GRID".into()
     } else if ui.page == Page::Output {

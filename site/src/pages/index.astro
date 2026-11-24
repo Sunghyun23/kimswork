@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import {plugins, url} from '../data/plugins';
+import {loopClub} from '../data/loop-club';
 const featured = plugins.find(p=>p.slug==='donut-theory')!;
 const otherPlugins = plugins.filter(p=>p.slug!==featured.slug);
 ---
@@ -29,7 +30,7 @@ const otherPlugins = plugins.filter(p=>p.slug!==featured.slug);
       <p class="art-note">A little soul. A lot of possibility.</p>
     </figure>
   </section>
-  <section class="catalog wrap"><div class="section-head"><h2>Now for MPC Sample.</h2></div><article class="catalog-row"><a class="catalog-thumbnail" href={url('mods/loop-club/')}><img src={url('images/loop-club-main-0.1.0.webp')} width="320" height="240" loading="lazy" alt="Loop Club actual MPC Sample loop overview"/></a><div><p class="eyebrow">MPC SAMPLE · PUBLIC PREVIEW</p><h3>Loop Club</h3><p>Sixteen independent audio, synth and drum loops. Layer your sounds, shape the groove and keep playing.</p></div><div class="catalog-action"><p class="release-status">Preview0.1.0 · Firmware1.3.0.12</p><a href={url('mods/loop-club/')}>Explore Loop Club →</a></div></article></section>
+  <section class="catalog wrap"><div class="section-head"><h2>Now for MPC Sample.</h2></div><article class="catalog-row"><a class="catalog-thumbnail" href={url('mods/loop-club/')}><img src={url(`images/${loopClub.image}`)} width="320" height="240" loading="lazy" alt="Loop Club actual MPC Sample loop overview"/></a><div><p class="eyebrow">MPC SAMPLE · PUBLIC PREVIEW</p><h3>Loop Club</h3><p>Sixteen independent audio, synth and drum loops. Layer your sounds, shape the groove and keep playing.</p></div><div class="catalog-action"><p class="release-status">Preview {loopClub.version} · Firmware1.3.0.12</p><a href={url('mods/loop-club/')}>Explore Loop Club →</a></div></article></section>
   <section class="catalog wrap" id="collection">
     <div class="section-head catalog-heading"><h2>More for your session<span>Explore our other instruments and effects.</span></h2><a href={url('software/')}>All software →</a></div>
     {otherPlugins.map(p=><article class="catalog-row"><a class="catalog-thumbnail" href={url(`plugins/${p.slug}/`)}><img src={url(`images/${p.image}`)} alt={p.imageAlt} width="1280" height="800" loading="lazy"/></a><div><p class="eyebrow">{p.category}</p><h3>{p.name}</h3><p>{p.summary}</p></div><div class="catalog-action"><p class="release-status">{p.release ? `${p.release.preview?'Public preview':'Available'} · v${p.release.version}` : 'In development · No public download'}</p><a href={url(`plugins/${p.slug}/`)}>View features & status →</a></div></article>)}

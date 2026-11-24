@@ -1,6 +1,6 @@
 # Loop Club manual
 
-Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.11.1 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
+Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.14.1 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
 
 ## Start with the loop
 
@@ -21,7 +21,7 @@ On LOOP, **SHIFT+B1 selects LOOP, SHIFT+B2 selects MUTE, SHIFT+B3 selects CHAIN*
 
 Only chain members switch or stop. Independent tracks continue playing. During playback, list/repeat edits apply on the next step; the current cached repeats finish. The status strip shows the active step, remaining repeats and next loop. Configuration is saved with the project, but loading never starts the chain automatically. Recording/clearing an active chain member is blocked; stop the chain first. STOP always stops all tracks.
 
-Each track has its own whole-bar length. A one-bar track repeats four times while another track plays four bars; it is not stretched to that length. New projects default to100BPM. SHIFT+DATA opens PROJECT: K1 selects40–240BPM and DATA moves1BPM. Stop playback first. Stopped MIDI loops follow tempo. Raw Audio loops must have Warp enabled before changing tempo; changing raw-audio INPUT Overdub timing requires an explicit resample first. Recording memory defaults to16seconds per track; the actual longest whole-bar length depends on tempo. Warp is available as bounded granular processing; transient-heavy or extreme stretching may smear.
+Each track has its own whole-bar length. A one-bar track repeats four times while another track plays four bars; it is not stretched to that length. New projects default to100BPM. SHIFT+DATA opens SETUP; use + to reach SETUP2/2, where K1 selects40–240BPM and DATA moves1BPM. Stop playback first. Stopped MIDI loops follow tempo. Raw Audio loops must have Warp enabled before changing tempo; changing raw-audio INPUT Overdub timing requires an explicit resample first. Recording memory defaults to16seconds per track; the actual longest whole-bar length depends on tempo. Warp is available as bounded granular processing; transient-heavy or extreme stretching may smear.
 
 ## Source and sound
 
@@ -114,7 +114,19 @@ MIX -> press DATA -> OUTPUT. Pads1/2/3 or K1 choose MAIN / USB / MAIN+USB for th
 
 ## Save and compatibility
 
-Stop transport and wait for release tails before saving. SHIFT+DATA opens PROJECT; pad8 SAVE / pad9 LOAD. A save preserves a previous-session copy and replaces the new file atomically. On launch, the last project is restored stopped, starting at LOOP. Project format9 retains loop origins and the stopped transport frame, source PCM, imported zones, MIDI, master LATCH/bypass and sound settings. Formats1–8 remain readable; they cannot restore alignment offsets that their version never stored. Older Loop Club versions cannot read new format9 saves. Copy the project/previous-session backup before upgrading. Loading starts stopped. New legacy fields retain safe defaults.
+**PROJECT menu — 0.14.1:** press **SHIFT+SEQ** to open the independent PROJECT menu directly. Turn **DATA** to move between **NEW PROJECT / OPEN PROJECT / SAVE / SAVE A COPY**, then **press DATA** to execute the selected item. Upper B1/B2/B3 now mean **BACK / SELECT / LOOP**; B2 is an optional equivalent to DATA push, not a dedicated OPEN action. SAMPLE also returns to LOOP. SETUP2/2 B2 PROJECTS remains an alternate entry.
+
+- **NEW PROJECT** asks whether to SAVE AND CONTINUE, DISCARD CHANGES or CANCEL. Turn DATA and press to choose; **CANCEL is selected initially**. It creates an empty, stopped16-track project at100BPM with a free numbered name. Nothing is written until SAVE. Hardware master volume stays unchanged.
+- **OPEN PROJECT** lists saved projects. Turn DATA to select a file and press DATA; select the desired save/discard/cancel choice using DATA and press again. Cancel retains the selected filename when returning to the list. Corrupt/missing files leave the live engine intact. Opened projects start stopped with LOOP underneath the panel.
+- **SAVE** atomically updates the current project and preserves its previous version. **SAVE A COPY** is a visible fourth menu item and creates/selects another numbered file. No shifted save-button shortcut is needed.
+
++/− also move selection; SHIFT+/− moves six rows only in the saved-file browser. Project-pad shortcuts from older versions now open the corresponding menu/selection; they never save on entry.
+
+Stop transport and release notes/tails before saving, creating or opening. The panel consumes background pads, knobs, fader and record commands; STOP remains available. Disk work runs on the non-audio project worker and WORKING is shown during it. A failed SAVE + GO does not discard the current project. Cancel never replaces live content. The list supports up to256 named project entries; backups are excluded.
+
+The existing `Session.lcproj` remains at the data root and appears as Session. Named files live in `Projects/Project-001.lcproj`; their backups use `Project-001.previous.lcproj`. `active-project.txt` remembers only the last successfully saved/opened choice for the next app launch. New unsaved projects do not change that choice. Project files contain source PCM, imported kit/layer samples, MIDI, sounds, routing, loop/chop/deck settings and saved FX. They do not rely on the original bank being installed to recall embedded samples. Project names are currently automatically numbered; there is no text rename editor.
+
+File format stays **12**: formats1–11 remain readable with their legacy motion behavior preserved; older apps cannot read format12. Preserve project and previous-version backups before downgrading. This project-management addition does not change synth, drum or scratch DSP.
 
 32voices are shared across tracks/layers. Up to4096MIDI events per track; GRID currently displays the first64. CPU headroom varies with polyphony/effects; actual QA recorded isolated scheduling-inclusive peaks above one callback deadline. Save regularly. Physical control operation, calibrated mic/line latency, latest power-cycle boot/recovery and long-duration stability need further acceptance. Do not describe automated remote inputs as physical pad tests.
 

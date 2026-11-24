@@ -1,0 +1,45 @@
+{
+  "version": "0.14.0",
+  "status": "local candidate; public release/site remain 0.13.0",
+  "feature": "NEW / OPEN / SAVE / SAVE COPY",
+  "project_format": 12,
+  "new_project_bpm": 100,
+  "native_full_regression_before_last_routing_fix": 410,
+  "final_native_library_tests": 51,
+  "final_native_strict_clippy_all_targets": "PASS",
+  "arm64_qa_and_normal": "PASS; max imported GLIBC_2.30",
+  "qa_sha256": "68b8818f2eb7d9f81161ddeca38f4253d6a6ae1c18e3e97dae9ccf8625c5213e",
+  "normal_sha256": "259dde5d6d052468e819b29ed804ea47aeb84cbe3e6b10dfb1da4dc52ad6d7cd",
+  "actual_device_checks": [
+    "NEW cancel does not replace project",
+    "NEW empty Project-001 / default 100 BPM",
+    "SAVE creates named file and keeps selected Synth/BPM112",
+    "SHIFT SAVE creates independent Project-002",
+    "SAVE + NEW preserves previous current file and starts empty",
+    "DATA selects / confirms OPEN; SAVE+OPEN saves outgoing Project-003 and recalls Synth/BPM112 stopped",
+    "SAMPLE returns directly to LOOP after load",
+    "SAVE while playing refused; STOP still works inside modal"
+  ],
+  "named_project_restart_recall": "PASS; Project-001, Synth, 112 BPM, LOOP, stopped",
+  "owner16_tracks_and_bpm_preserved": true,
+  "owner_session_saved_by_tests": false,
+  "test_isolation": "separate compile-time QA directory; raw files/screenshots retained only in ignored build/project-manager-0.14.0",
+  "physical_controls": "not independently finger-tested; queued controller + actual DRM evidence",
+  "power_cycle": "not tested; app restart tested",
+  "release_or_site_published": false,
+  "private_banks_or_raw_samples_published": false,
+  "limits": [
+    "Automatic Project-NNN names; no text rename editor",
+    "256 project-list entries maximum",
+    "Stop and release notes/tails before writes or replacement",
+    "Samples and kit payloads are embedded in each project/copy, so copies consume storage"
+  ],
+  "installation": {
+    "runtime_and_sd_sha256": "259dde5d6d052468e819b29ed804ea47aeb84cbe3e6b10dfb1da4dc52ad6d7cd",
+    "sd_files_readback_verified": 20,
+    "old_sd_files_preserved": 20,
+    "owner16_tracks_and_bpm": "exact snapshot match; no owner Save",
+    "first_page": "LOOP",
+    "current_preroll": "1 bar; metronome Off"
+  }
+}

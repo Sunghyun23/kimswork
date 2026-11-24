@@ -89,7 +89,7 @@ systemctl show ac50.service --property=MainPID --property=ActiveState --property
     (stage/'sampleboot.txt').write_text('Loop Club USB QA5\n'if args.qa else f'Loop Club {version} - development\n')
     shutil.copy2(PROJECT/'LICENSE',stage/'LICENSE')
     (stage/'SDK-LICENSE').write_text((SDK/'LICENSE').read_text()+'\n\n'+(PROJECT/'src/roxmltree-license.txt').read_text())
-    metadata = {'product':'Loop Club','version':version,'status':'local development candidate; hardware unverified','firmware':'1.3.0.12','expected_app_first_4KiB_sha256':expected,'hash_source':'caller supplied; measurement not independently verified by packager' if args.firmware_prefix_sha256 else 'pinned SDK upstream reference; NOT measured on connected device','library_sha256':lib_hash,'device_installed':False,'screen_capture':'none; host previews only','persistent_data':'<card>/LoopClub/Projects/Session.lcproj'}
+    metadata = {'product':'Loop Club','version':version,'status':'local development candidate; hardware unverified','firmware':'1.3.0.12','expected_app_first_4KiB_sha256':expected,'hash_source':'caller supplied; measurement not independently verified by packager' if args.firmware_prefix_sha256 else 'pinned SDK upstream reference; NOT measured on connected device','library_sha256':lib_hash,'device_installed':False,'screen_capture':'none; host previews only','persistent_data':'<card>/LoopClub/Projects/ (Session.lcproj, Projects/*.lcproj and active-project.txt)'}
     metadata['boot_mode']='direct' if args.direct else 'sampleboot-compatible'
     metadata['qa_agent_sha256']=agent_hash
     metadata['usb_qa_enabled']=args.qa

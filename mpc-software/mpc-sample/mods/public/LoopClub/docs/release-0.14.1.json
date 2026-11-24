@@ -1,0 +1,37 @@
+{
+  "version": "0.14.1",
+  "status": "public preview; publication pending",
+  "project_format": 12,
+  "debug_tests": 411,
+  "strict_clippy": true,
+  "arm64_normal_qa_builds": true,
+  "launcher_checks": 8,
+  "public_zip_sha256": "173d0a9eddc5a3ed5bd5aacc029ee60634f6962924c690ede2cb07c4dfbdb21b",
+  "public_library_sha256": "5a209ef4e3ce6202b8d2f1246b5de552851636e2e9b0b5bd5be8a40c93c745f5",
+  "feature_candidate_installed_sha256": "6da9f73348a8724dc2d0f30f126d970760a4d6fbe25bfea092d233ac8126856c",
+  "actual_device_feature_checks": [
+    "SHIFT+SEQ opens separate PROJECT list directly",
+    "DATA traverses all four actions, without executing on rotation",
+    "DATA push confirms selected CANCEL by default, no project replaced",
+    "NEW and SAVE run through DATA selection; no autosave on menu entry",
+    "SAVE A COPY is a visible DATA-selectable menu item",
+    "OPEN file selection and Cancel both use DATA and retain selection",
+    "DATA DISCARD then OPEN recalls chosen Synth and BPM112 stopped",
+    "DATA SAVE AND CONTINUE saves outgoing project before New",
+    "BACK exits PROJECT menu to LOOP"
+  ],
+  "actual_restart_recall": "Project-003 restored stopped on LOOP",
+  "public_zip_exact_device_smoke": "pending; owner started a new project so restart was withheld",
+  "private_banks_in_zip": false,
+  "qa_agent_in_zip": false,
+  "responsive_cases": 35,
+  "internal_links": 491,
+  "new_videos": [],
+  "existing_video_assets_changed": false,
+  "remaining_checks": [
+    "physical input",
+    "analog latency",
+    "power-cycle recovery",
+    "maximum/long-session CPU"
+  ]
+}

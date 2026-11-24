@@ -49,6 +49,9 @@ pub struct FileWorker {
     pending: bool,
 }
 impl FileWorker {
+    pub fn pending(&self) -> bool {
+        self.pending
+    }
     pub fn new(rate: u32, capacity: usize) -> Self {
         Self::with_root(
             std::env::var_os("LOOP_CLUB_CARD_DIR")

@@ -45,3 +45,5 @@ pub mod xpm;
 pub mod tempo;
 
 mod qa_scratch;
+
+pub mod project_manager;

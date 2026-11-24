@@ -1,0 +1,51 @@
+{
+  "version": "0.14.1",
+  "status": "local installed; public0.13.0 unchanged",
+  "entry": "SHIFT+SEQ",
+  "navigation": "DATA turn / DATA push",
+  "menu": [
+    "NEW PROJECT",
+    "OPEN PROJECT",
+    "SAVE",
+    "SAVE A COPY"
+  ],
+  "upper_buttons": [
+    "BACK",
+    "SELECT",
+    "LOOP"
+  ],
+  "confirmation": [
+    "SAVE AND CONTINUE",
+    "DISCARD CHANGES",
+    "CANCEL"
+  ],
+  "default_confirmation": "CANCEL",
+  "native_library_tests": 51,
+  "strict_clippy_all_targets": "PASS",
+  "arm64_qa_and_normal": "PASS",
+  "qa_sha256": "27bebeda50778b454195197b615dd30629b46f1be3f331a7dbc60f5e0cdbaede",
+  "normal_and_sd_sha256": "6da9f73348a8724dc2d0f30f126d970760a4d6fbe25bfea092d233ac8126856c",
+  "actual_device_checks": [
+    "SHIFT+SEQ opens separate PROJECT list directly",
+    "DATA traverses all four actions, without executing on rotation",
+    "DATA push confirms selected CANCEL by default, no project replaced",
+    "NEW and SAVE run through DATA selection; no autosave on menu entry",
+    "SAVE A COPY is a visible DATA-selectable menu item",
+    "OPEN file selection and Cancel both use DATA and retain selection",
+    "DATA DISCARD then OPEN recalls chosen Synth and BPM112 stopped",
+    "DATA SAVE AND CONTINUE saves outgoing project before New",
+    "BACK exits PROJECT menu to LOOP"
+  ],
+  "named_project_app_restart_recall": "Project-003 restored stopped on LOOP",
+  "sd_files_readback_verified": 20,
+  "old_sd_files_preserved": 20,
+  "owner16_tracks_and_bpm_preserved": true,
+  "owner_session_saved_by_tests": false,
+  "raw_evidence": "ignored build/project-data-menu-0.14.1",
+  "limits": [
+    "Controller inputs queued remotely; actual DRM captured; physical fingers not separately tested",
+    "App restart tested; no new power-cycle certification",
+    "Auto-numbered names; no rename editor",
+    "Storage/format12/DSP unchanged from0.14.0"
+  ]
+}

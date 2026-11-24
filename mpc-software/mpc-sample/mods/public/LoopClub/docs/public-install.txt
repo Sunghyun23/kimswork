@@ -1,4 +1,4 @@
-Loop Club 0.13.0 — MPC Sample public preview — by kim
+Loop Club 0.14.1 — MPC Sample public preview — by kim
 
 MPC Sample firmware1.3.0.12 only. An SD preload mod, not MPC OS VST or
 firmware. Actual remote screen/USB checks are separate from physical input,
@@ -30,11 +30,16 @@ analog, power-cycle recovery and maximum-load acceptance.
 7. TAP TEMPO sets40–240BPM; SHIFT+TAP toggles monitor metronome. LOOP SHIFT+
    DATA opens SETUP: B1metronome/B2preroll/B3back. One-bar preroll has four
    full clicks, separate from the ordinary metronome; clicks are not recorded
-   into source PCM or resampled audio. PROJECT K3Swing/SHIFT+K3grid.
+   into source PCM or resampled audio. SETUP2/2 K3Swing/SHIFT+K3grid.
 8. Track/master FX pads are momentary; SHIFT+press latches. Controls appear
    below the pad board. Two track inserts can coexist; extra FX is refused.
    Main master board retains textures, Duck and two custom performance FX.
-9. Stop and release notes/FX before PROJECT SAVE. Format12 reads1–11;
+9. SHIFT+SEQ opens PROJECT. Turn DATA to select NEW PROJECT, OPEN PROJECT,
+   SAVE or SAVE A COPY; press DATA to execute. Confirmations also use DATA
+   and begin on CANCEL. Stop and release notes/tails before saving/opening.
+   Each project embeds audio, kits, MIDI and settings, with a previous-save
+   backup. Last saved/opened project restores stopped on LOOP.
+10. Format12 reads1–11;
    older apps reject12. Saved old scratch curves retain their old playback.
    New live smoothing trades following lag for steadier motion (about40ms
    braking horizon at50Hz). It is not a physical-turntable realism guarantee.
@@ -51,4 +56,4 @@ installers are not reproduced. Full physical/analog/power-cycle QA is pending.
 Recovery: power off, restore your old autorun or rename/remove this one,
 then power on. Never remove SD during playback, recording or writes.
 Manual: https://kimswork.app/mods/loop-club/manual/
-Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.13.0/mpc-software/mpc-sample/mods/public/LoopClub
+Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.14.1/mpc-software/mpc-sample/mods/public/LoopClub
