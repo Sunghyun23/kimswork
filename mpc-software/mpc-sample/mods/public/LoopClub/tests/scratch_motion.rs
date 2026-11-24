@@ -43,10 +43,10 @@ fn steady_motion_has_no_repeated_stops_or_four_x_bursts_after_initial_observatio
             d.grab(true, Some(0.), cfg, rate);
             let interval = rate / hz;
             let mut speeds = Vec::new();
-            for i in 0..rate * 3 / 10 {
+            for i in 0..rate * 2 {
                 if i % interval == 0 {
                     d.move_to_timed(
-                        0.45 * (i + interval).min(rate * 3 / 10) as f32 / (rate * 3 / 10) as f32,
+                        0.75 * (i + interval).min(rate * 2) as f32 / (rate * 2) as f32,
                         cfg,
                         100.,
                         rate,
@@ -54,18 +54,18 @@ fn steady_motion_has_no_repeated_stops_or_four_x_bursts_after_initial_observatio
                     );
                 }
                 d.sample(&wave, cfg, rate);
-                if i >= interval && i + interval <= rate * 3 / 10 {
+                if i >= interval * 5 && i + interval <= rate * 2 {
                     speeds.push(d.rate);
                 }
                 assert!(d.rate.abs() <= 4.001);
             }
             let mean = speeds.iter().sum::<f32>() / speeds.len() as f32;
-            let deviation = (speeds.iter().map(|v| (v - 0.9).powi(2)).sum::<f32>()
+            let deviation = (speeds.iter().map(|v| (v - 0.225).powi(2)).sum::<f32>()
                 / speeds.len() as f32)
                 .sqrt();
-            assert!((mean - 0.9).abs() < 0.015, "{rate}/{hz}: {mean}");
-            assert!(deviation < 0.03, "{rate}/{hz}: {deviation}");
-            assert!(speeds.iter().all(|v| *v > 0.8), "{rate}/{hz} stalled");
+            assert!((mean - 0.225).abs() < 0.005, "{rate}/{hz}: {mean}");
+            assert!(deviation < 0.015, "{rate}/{hz}: {deviation}");
+            assert!(speeds.iter().all(|v| *v > 0.18), "{rate}/{hz} stalled");
         }
     }
 }
@@ -162,6 +162,7 @@ fn motion_validation_rejects_malformed_and_unbounded_segments() {
         duration: 100,
         elapsed: 0,
         slope: 1.,
+        stop: false,
     };
     let c = Control {
         motion: Some(good),
@@ -336,4 +337,79 @@ fn duplicate_packets_accumulate_time_without_restarting_or_accelerating_the_segm
     d.advance(4410, cfg, 44100);
     d.move_to_timed(0.2, cfg, 100., 44100, Some(100_000));
     assert_eq!(d.state.motion.unwrap().duration, 8820);
+}
+
+#[test]
+fn recorded_remote_jitter_and_seven_bit_steps_do_not_restore_endpoint_stalls() {
+    let data: Vec<(u64, f32)> =
+        serde_json::from_str(include_str!("fixtures/scratch-demo-fader-timing.json")).unwrap();
+    let rate = 44100;
+    let cfg = Settings {
+        range: 2,
+        slip: false,
+        ..Settings::default()
+    };
+    let wave = pcm(rate);
+    let mut d = Player::default();
+    d.grab(true, Some((0.12_f32 * 127.).round() / 127.), cfg, rate);
+    let mut ix = 0;
+    let mut prior = 0;
+    let mut speeds = Vec::new();
+    let mut paused = 0;
+    let mut count = 0;
+    for frame in 0..rate * 47 / 10 {
+        let us = u64::from(frame) * 1_000_000 / u64::from(rate);
+        while ix < data.len() && data[ix].0 <= us {
+            let (at, value) = data[ix];
+            d.move_to_timed(
+                (value * 127.).round() / 127.,
+                cfg,
+                100.,
+                rate,
+                Some((at - prior).min(u64::from(u32::MAX)) as u32),
+            );
+            prior = at;
+            ix += 1;
+        }
+        d.sample(&wave, cfg, rate);
+        assert!(d.rate.is_finite() && d.rate.abs() <= 4.001);
+        if frame > rate / 5 {
+            count += 1;
+            if d.rate.abs() < 0.01 {
+                paused += 1;
+            }
+            let phase = f64::from(frame) / f64::from(rate);
+            if phase % 0.6 > 0.08 && phase % 0.6 < 0.52 {
+                speeds.push(f64::from(d.rate.abs()));
+            }
+        }
+    }
+    let mean = speeds.iter().sum::<f64>() / speeds.len() as f64;
+    let sd = (speeds.iter().map(|x| (x - mean).powi(2)).sum::<f64>() / speeds.len() as f64).sqrt();
+    assert!(
+        paused as f64 / (count as f64) < 0.03,
+        "pause fraction {paused}/{count}"
+    );
+    assert!(sd < 0.5, "jitter speed deviation {sd}");
+}
+#[test]
+fn version_eleven_motion_without_stop_field_retains_its_original_curve() {
+    let motion: Motion =
+        serde_json::from_str(r#"{"start":0,"end":100,"duration":100,"elapsed":0,"slope":1}"#)
+            .unwrap();
+    assert!(!motion.stop);
+    let mut d = Player::default();
+    d.restore(
+        Control {
+            head: 0.,
+            target: 100.,
+            grabbed: true,
+            motion: Some(motion),
+            ..Control::default()
+        },
+        50,
+        Settings::default(),
+        44100,
+    );
+    assert_eq!(d.state.head, 50.);
 }

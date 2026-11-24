@@ -1,0 +1,101 @@
+{
+  "version": "0.13.0",
+  "scope": "local installation and personal video; public release/site remain0.11.2",
+  "debug_tests": 405,
+  "release_realtime_motion_tests": 31,
+  "strict_clippy": true,
+  "arm64_normal_qa_builds": true,
+  "launcher_checks": 8,
+  "library_sha256": "7c67070f7551d6515c7f67f1bd4ef8303c166f3794fbc406f75d60a3c6f56b18",
+  "zip_sha256": "6bcc30e7abf59a2ac20a9cfd9727acbd63e40fb37cba5048182fa5376e0dd111",
+  "device": "MPC Sample1.3.0.12",
+  "actual_video": {
+    "seconds": 16.99700680272109,
+    "video": "scratch-brake-demo.mp4",
+    "bytes": 783566,
+    "sha256": "bf1ba2516ed707fd3be653d73e8e71898d27ea9462822e066272a8648727651e",
+    "actual_frames": 158,
+    "max_screen_gap_seconds": 0.12749541699304245,
+    "audio_callback_flags": [],
+    "adc_clock_drift_ms": 0.5399330125435142,
+    "linear_gain": 2.707015528391269,
+    "decoded_peak": 0.8334379196166992,
+    "decoded_rms": 0.11216698586940765,
+    "decoded_audio_seconds": 16.99700680272109,
+    "decode_errors": "",
+    "owner16_restored": true,
+    "scratch_source_pcm_peak": 0.4973632991,
+    "sources": "Actual MPC Sample DRM + USB stereo. Original procedural drums + personal Classic Ahhh from Studio Scratches / Beside, Change The Beat. Audio-clock programmed quantized7bit fader inputs + dedicated CUT; same Player as physical input. NOT human-hand performance or physical latency evidence. No host audio rendering.",
+    "stage_audio": [
+      {
+        "stage": "01 / BREAK ONLY",
+        "start": 0.09715807510656305,
+        "end": 4.355617367109517,
+        "rms": 0.026237763450789577,
+        "peak": 0.24188232421875
+      },
+      {
+        "stage": "02 / BABY SCRATCH",
+        "start": 4.355617367109517,
+        "end": 6.721226117108017,
+        "rms": 0.06190643758846036,
+        "peak": 0.31231689453125
+      },
+      {
+        "stage": "03 / SHORTER BABIES",
+        "start": 6.721226117108017,
+        "end": 9.095651367097162,
+        "rms": 0.06123299448676437,
+        "peak": 0.31396484375
+      },
+      {
+        "stage": "04 / FORWARD CUTS",
+        "start": 9.095651367097162,
+        "end": 11.511492825113237,
+        "rms": 0.039367951054591135,
+        "peak": 0.249847412109375
+      },
+      {
+        "stage": "05 / SYNCOPATED CUTS",
+        "start": 11.511492825113237,
+        "end": 13.938818575115874,
+        "rms": 0.036917179179726575,
+        "peak": 0.274444580078125
+      },
+      {
+        "stage": "06 / BACK TO THE BREAK",
+        "start": 13.938818575115874,
+        "end": 16.99700680272109,
+        "rms": 0.023134547577718285,
+        "peak": 0.232421875
+      }
+    ],
+    "gesture_timing_ms": {
+      "max_audio_clock_ms": 0.004541873931884766
+    },
+    "audio_clock_event_count": 969,
+    "version": "0.13.0",
+    "bpm": 100,
+    "schedule": {
+      "applied": 969,
+      "busy": false,
+      "max_late_ticks": 127,
+      "ready": false,
+      "scope": "isolated QA sample-clock, quantized fader input; NOT physical hand performance"
+    },
+    "output": "build/demos/scratch-brake-0.13.0-20261124/scratch-brake-demo.mp4",
+    "audio": "build/demos/scratch-brake-0.13.0-20261124/scratch-brake-audio.wav",
+    "public_release_or_site_changed": false,
+    "owner_project_saved": false,
+    "existing_videos_preserved": true
+  },
+  "owner16_tracks_and_bpm_preserved_without_save": true,
+  "normal_build_rejects_schedule_endpoint": true,
+  "sd_files_verified": 20,
+  "old_boot_files_preserved": 20,
+  "limits": [
+    "audio-clock programmed gesture, NOT physical human performance",
+    "smoothing adds following lag; a two-period horizon is40ms at50Hz",
+    "maximum16deck CPU, analog and power-cycle not newly certified"
+  ]
+}

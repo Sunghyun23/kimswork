@@ -1,0 +1,35 @@
+{
+  "scope": "Native actual Player replay; nominal schedule versus estimated host HTTP midpoint arrivals. No audio generated; NOT measured physical input or actual audio-thread trajectory. Initial/reversal 80ms excluded from baby steady-speed statistics.",
+  "rows": [
+    {
+      "baby_expected_abs_speed": 1.2,
+      "baby_steady_mean_abs_speed": 1.2000077522169719,
+      "baby_steady_speed_stddev": 0.26533551285772183,
+      "maximum_abs_speed": 3.1387760639190674,
+      "open_samples_at_4x_percent": 0.0,
+      "open_samples_near_stationary_percent": 0.43626863727510057,
+      "quantized7bit": false,
+      "timing": "nominal_schedule"
+    },
+    {
+      "baby_expected_abs_speed": 1.2,
+      "baby_steady_mean_abs_speed": 1.2025813629685032,
+      "baby_steady_speed_stddev": 0.3807452421827486,
+      "maximum_abs_speed": 3.149604082107544,
+      "open_samples_at_4x_percent": 0.0,
+      "open_samples_near_stationary_percent": 0.43791978014115435,
+      "quantized7bit": true,
+      "timing": "nominal_schedule"
+    },
+    {
+      "baby_expected_abs_speed": 1.2,
+      "baby_steady_mean_abs_speed": 1.2075620091787025,
+      "baby_steady_speed_stddev": 0.7561643298783698,
+      "maximum_abs_speed": 3.554868221282959,
+      "open_samples_at_4x_percent": 0.0,
+      "open_samples_near_stationary_percent": 12.68362124356541,
+      "quantized7bit": true,
+      "timing": "estimated_request_midpoint"
+    }
+  ]
+}

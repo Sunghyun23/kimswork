@@ -1,0 +1,62 @@
+warning: output filename collision at /Users/sunghyunkim/source/kimswork/mpc-software/mpc-sample/mods/public/LoopClub/build/target/release/deps/libloop_club.rlib
+  |
+  = note: the lib target `loop_club` in package `loop-club v0.13.0 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-wfgu0a3h/project)` has the same output filename as the lib target `loop_club` in package `loop-club v0.13.0 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-wfgu0a3h/project)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/sunghyunkim/source/kimswork/mpc-software/mpc-sample/mods/public/LoopClub/build/target/release/deps/libloop_club.dylib
+  |
+  = note: the lib target `loop_club` in package `loop-club v0.13.0 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-wfgu0a3h/project)` has the same output filename as the lib target `loop_club` in package `loop-club v0.13.0 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-wfgu0a3h/project)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/sunghyunkim/source/kimswork/mpc-software/mpc-sample/mods/public/LoopClub/build/target/release/deps/libloop_club.dylib.dSYM
+  |
+  = note: the lib target `loop_club` in package `loop-club v0.13.0 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-wfgu0a3h/project)` has the same output filename as the lib target `loop_club` in package `loop-club v0.13.0 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-wfgu0a3h/project)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling serde_json v1.0.154
+   Compiling mpc-sample-sdk v0.7.3 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-wfgu0a3h/sdk)
+   Compiling loop-club v0.13.0 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-wfgu0a3h/project)
+    Finished `release` profile [optimized] target(s) in 16.70s
+     Running tests/realtime.rs (build/target/release/deps/realtime-01e4305215a9b178)
+
+running 19 tests
+test callback_commands_capture_and_snapshot_do_not_allocate ... ok
+test chain_boundaries_and_commands_do_not_allocate ... ok
+test chromatic_chop_warp_capture_history_and_snapshot_have_no_callback_allocations_or_frees ... ok
+test external_midi_stays_with_recording_track_even_when_mixer_selects_another ... ok
+test full_scratch_overdub_refuses_seed_without_growing_or_mutating_completed_clip ... ok
+test full_track_copy_move_undo_redo_swap_without_callback_allocation_or_free ... ok
+test generation_chords_chops_and_import_commit_do_not_allocate_or_free ... ok
+test kit_swap_playback_and_snapshot_do_not_allocate_or_free ... ok
+test modulation_effects_and_parameter_changes_allocate_nothing ... ok
+test monitor_metronome_count_in_and_toggle_never_allocate_or_free ... ok
+test mono_glide_strum_and_trigger_commands_do_not_allocate_or_free ... ok
+test pad_note_erase_copy_and_capture_edits_do_not_allocate_or_free ... ok
+test partial_overdub_tail_preparation_and_commit_do_not_allocate ... ok
+test record_history_rotation_undo_redo_and_clear_do_not_allocate_or_free ... ok
+test recording_handoffs_rotate_buffers_without_allocation_or_deallocation ... ok
+test repeat_arming_and_live_hardware_volume_changes_do_not_allocate ... ok
+test replace_overdub_wrap_and_mode_commands_do_not_allocate_or_free ... ok
+test swing_reschedule_and_turntable_capture_never_allocate_or_free ... ok
+test xpm_four_zones_playback_choke_and_replacement_do_not_allocate_or_free ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/scratch_motion.rs (build/target/release/deps/scratch_motion-47e8585843697f4b)
+
+running 12 tests
+test cut_reaches_silence_in_three_ms_without_stopping_the_head_or_changing_level ... ok
+test duplicate_packets_accumulate_time_without_restarting_or_accelerating_the_segment ... ok
+test legacy_target_chase_remains_available_for_old_saved_controls ... ok
+test motion_and_cut_recording_recall_and_undo_preserve_pcm_and_legacy_defaults ... ok
+test motion_validation_rejects_malformed_and_unbounded_segments ... ok
+test recorded_remote_jitter_and_seven_bit_steps_do_not_restore_endpoint_stalls ... ok
+test reversal_settle_duplicate_and_full_range_jump_do_not_overshoot_or_run_away ... ok
+test same_audio_block_coalescing_preserves_the_total_input_interval ... ok
+test seven_bit_position_quantization_stays_bounded_and_continuous ... ok
+test steady_motion_has_no_repeated_stops_or_four_x_bursts_after_initial_observation ... ok
+test two_hand_latch_cut_and_release_survive_navigation_without_affecting_loop_record_mapping ... ok
+test version_eleven_motion_without_stop_field_retains_its_original_curve ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+

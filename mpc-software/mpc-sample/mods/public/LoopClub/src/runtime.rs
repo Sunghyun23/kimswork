@@ -61,6 +61,7 @@ pub struct Runtime {
     engine: UnsafeCell<Option<Box<Engine>>>,
     busy: AtomicBool,
     commands: Queue<Command, 256>,
+    qa_scratch: UnsafeCell<crate::qa_scratch::Playback>,
     input: Queue<Frame, 16384>,
     pub snapshot: AtomicSnapshot,
     pub active: AtomicBool,
@@ -97,6 +98,7 @@ impl Default for Runtime {
             engine: UnsafeCell::new(None),
             busy: AtomicBool::new(false),
             commands: Queue::default(),
+            qa_scratch: UnsafeCell::new(crate::qa_scratch::Playback::default()),
             input: Queue::default(),
             snapshot: AtomicSnapshot::default(),
             active: AtomicBool::new(false),
@@ -416,6 +418,8 @@ impl Runtime {
                     self.output_mirror.push(Frame::ZERO);
                     continue;
                 }
+                // SAFETY: the exclusive engine guard owns this single-consumer QA state.
+                crate::qa_scratch::frame(unsafe { &mut *self.qa_scratch.get() }, e);
                 let click = e.metronome_sample();
                 let mut s = e.process(input.unwrap_or(Frame::ZERO));
                 let mut usb = e.usb_output;

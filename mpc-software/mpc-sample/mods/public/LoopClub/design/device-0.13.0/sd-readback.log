@@ -1,0 +1,23 @@
+{
+  "agent": "loop-club-qa-agent-v1",
+  "app": {
+    "build_id": "development",
+    "pid": 37154
+  },
+  "last_result": {
+    "app_pid": 37154,
+    "build_id": "development",
+    "result": "restarted",
+    "runtime_sha256": "7c67070f7551d6515c7f67f1bd4ef8303c166f3794fbc406f75d60a3c6f56b18"
+  },
+  "pending_sha256": null,
+  "scope": "volatile /run only; no SD or firmware changes"
+}
+{
+  "backup": "/media/MPC SD Card/.LoopClubBackups/remote-37154-1795488626292716010",
+  "files_readback_verified": 20,
+  "old_files_preserved": 20,
+  "persisted": true,
+  "restart": false,
+  "runtime_sha256": "7c67070f7551d6515c7f67f1bd4ef8303c166f3794fbc406f75d60a3c6f56b18"
+}

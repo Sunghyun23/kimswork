@@ -106,7 +106,7 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
     }
     let state = State {
         chain: engine.chain.config,
-        version: 11,
+        version: 12,
         timing_revision: 1,
         swing: engine.swing,
         transport_frame: engine.clock.frame,
@@ -240,7 +240,7 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
     f.read_exact(&mut bytes)?;
     let s: State = serde_json::from_slice(&bytes)?;
     if s.tracks.len() != 16
-        || !(1..=11).contains(&s.version)
+        || !(1..=12).contains(&s.version)
         || s.transport_frame > u64::from(s.rate) * u64::from(u32::MAX)
         || s.rate != expected_rate
         || !s.bpm.is_finite()

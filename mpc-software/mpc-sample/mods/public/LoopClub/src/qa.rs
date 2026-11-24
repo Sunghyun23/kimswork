@@ -420,6 +420,58 @@ fn serve(mut stream: TcpStream) {
     };
     let header = String::from_utf8_lossy(&raw[..header_end]).to_lowercase();
     let first = header.lines().next().unwrap_or("");
+    if first.starts_with("get /scratch-schedule.json ") {
+        reply(
+            &mut stream,
+            "200 OK",
+            "application/json",
+            &serde_json::to_vec(&crate::qa_scratch::status()).unwrap_or_default(),
+        );
+        return;
+    }
+    if first.starts_with("post /scratch-schedule ")
+        && option_env!("LOOP_CLUB_QA_SESSION").is_some()
+        && header.contains("content-type: application/json")
+        && !header.contains("\r\norigin:")
+    {
+        let len = header
+            .lines()
+            .find_map(|s| {
+                s.strip_prefix("content-length:")
+                    .and_then(|s| s.trim().parse::<usize>().ok())
+            })
+            .unwrap_or(0);
+        if len == 0 || len > 262144 {
+            return;
+        }
+        while raw.len() < header_end + len {
+            let Ok(n) = stream.read(&mut b) else { return };
+            if n == 0 {
+                return;
+            }
+            raw.extend_from_slice(&b[..n]);
+            if raw.len() > header_end + 262144 {
+                return;
+            }
+        }
+        let result =
+            serde_json::from_slice::<crate::qa_scratch::Plan>(&raw[header_end..header_end + len])
+                .map_err(|_| "invalid schedule")
+                .and_then(|p| {
+                    let s = STATE.get().and_then(|s| s.read()).ok_or("no snapshot")?;
+                    crate::qa_scratch::submit(p, &s)
+                });
+        match result {
+            Ok(r) => reply(
+                &mut stream,
+                "202 Accepted",
+                "application/json",
+                &serde_json::to_vec(&r).unwrap_or_default(),
+            ),
+            Err(e) => reply(&mut stream, "409 Conflict", "text/plain", e.as_bytes()),
+        };
+        return;
+    }
     if first.starts_with("get /usb-capabilities.json ") {
         let data = serde_json::to_vec(&crate::usb_bus::capabilities()).unwrap_or_default();
         reply(&mut stream, "200 OK", "application/json", &data);

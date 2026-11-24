@@ -43,3 +43,5 @@ pub mod deck;
 pub mod xpm;
 
 pub mod tempo;
+
+mod qa_scratch;

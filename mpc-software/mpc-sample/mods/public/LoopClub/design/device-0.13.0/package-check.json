@@ -1,0 +1,14 @@
+{
+  "scope": "host fixture; no device commands executed",
+  "checks": [
+    "manifest/checksum integrity",
+    "development status retained",
+    "SD root launcher: firmware=False library=True",
+    "SD root launcher: firmware=True library=True",
+    "SD root launcher: firmware=True library=False",
+    "SampleBoot relocated launcher: firmware=False library=True",
+    "SampleBoot relocated launcher: firmware=True library=True",
+    "SampleBoot relocated launcher: firmware=True library=False"
+  ],
+  "passed": 8
+}

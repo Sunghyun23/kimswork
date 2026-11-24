@@ -37,6 +37,9 @@ pub struct Motion {
     pub elapsed: u32,
     /// Initial slope normalized to the secant; end slope is the secant.
     pub slope: f64,
+    /// New live segments brake at the endpoint; false preserves format11.
+    #[serde(default)]
+    pub stop: bool,
 }
 impl Motion {
     fn valid(self) -> bool {
@@ -52,7 +55,11 @@ impl Motion {
     }
     fn position(self) -> f64 {
         let u = f64::from(self.elapsed) / f64::from(self.duration);
-        let curve = (self.slope - 1.) * u * u * u + (2. - 2. * self.slope) * u * u + self.slope * u;
+        let curve = if self.stop {
+            (self.slope - 2.) * u * u * u + (3. - 2. * self.slope) * u * u + self.slope * u
+        } else {
+            (self.slope - 1.) * u * u * u + (2. - 2. * self.slope) * u * u + self.slope * u
+        };
         self.start + (self.end - self.start) * curve
     }
     fn speed(self) -> f32 {
@@ -60,9 +67,12 @@ impl Motion {
             return 0.;
         }
         let u = f64::from(self.elapsed) / f64::from(self.duration);
-        (((3. * (self.slope - 1.) * u + 4. - 4. * self.slope) * u + self.slope)
-            * (self.end - self.start)
-            / f64::from(self.duration)) as f32
+        let derivative = if self.stop {
+            (3. * (self.slope - 2.) * u + 6. - 4. * self.slope) * u + self.slope
+        } else {
+            (3. * (self.slope - 1.) * u + 4. - 4. * self.slope) * u + self.slope
+        };
+        (derivative * (self.end - self.start) / f64::from(self.duration)) as f32
     }
 }
 #[derive(Clone, Copy, Debug, Default, PartialEq, Serialize, Deserialize)]
@@ -120,6 +130,8 @@ pub struct Player {
     has_move: bool,
     batch_interval: u64,
     unchanged_us: u64,
+    periods: [u64; 5],
+    period_index: usize,
     anchor_pending: bool,
     fade: u32,
     fade_head: f64,
@@ -158,11 +170,14 @@ impl Player {
                 duration: 1,
                 elapsed: 1,
                 slope: 0.,
+                stop: true,
             });
             self.since_move = 0;
             self.has_move = false;
             self.batch_interval = 0;
             self.unchanged_us = 0;
+            self.periods = [0; 5];
+            self.period_index = 0;
             self.anchor_pending = fader.is_none();
             self.state.anchor_fader = fader.unwrap_or(self.state.fader).clamp(0., 1.);
             self.state.fader = self.state.anchor_fader;
@@ -236,7 +251,18 @@ impl Player {
         }
         self.batch_interval = interval;
         let distance = target - self.state.head;
-        let duration = interval
+        if self.periods[0] == 0 {
+            self.periods = [interval; 5];
+        } else {
+            self.periods[self.period_index] = interval;
+            self.period_index = (self.period_index + 1) % 5;
+        }
+        let mut sorted = self.periods;
+        sorted.sort_unstable();
+        // A median cadence rejects arrival bursts. A two-period brake horizon
+        // leaves continuous velocity across ordinary one-packet jitter, then
+        // reaches the exact target with zero speed when the hand stops.
+        let duration = (sorted[2] * 2)
             .max((distance.abs() * 1.5 / 4.).ceil() as u64)
             .clamp(1, 1_536_000) as u32;
         let secant = distance / f64::from(duration);
@@ -252,6 +278,7 @@ impl Player {
             duration,
             elapsed: 0,
             slope,
+            stop: true,
         });
         self.since_move = 0;
         self.has_move = true;

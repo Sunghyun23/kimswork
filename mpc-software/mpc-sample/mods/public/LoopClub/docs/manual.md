@@ -299,3 +299,9 @@ While a WAV/XPM/kit/sample browser is open, DATA and+/− move the list; SHIFT+/
 PAD1 toggles GRAB on/off; releasing the pad leaves GRAB unchanged. No SHIFT is needed. PAD2 is a dedicated momentary CUT: hold to mute only the scratch source, release to reopen. The left fader moves the platter; K3 LEVEL remains the mix volume. STOP or leaving the app releases the GRAB latch. LOOP SHIFT+pad remains recording, never a GRAB command.
 
 Live fader motion uses input-interval-aware bounded interpolation; legacy saved gestures retain their old trajectory. New motion/cut recordings use project format11 (reads1–10; older apps reject11). Hardware verification for this candidate is recorded separately from native tests.
+
+### Live scratch smoothing — local0.13.0
+
+PAD1 GRAB toggle, PAD2 momentary CUT and K3 Level are unchanged. New live moves use the median of five input intervals and a two-interval braking horizon. Movement reaches its target with zero final velocity instead of stopping abruptly when a one-interval segment ends. At50Hz input this is roughly a40ms horizon: smoother motion trades some following lag for fewer pitch fluctuations. Sparse input still cannot reproduce an unobserved hand trajectory. Saved version11 gestures retain their original curves. New saves use format12, read1–11; older apps reject12. JSON float parsing now preserves exact stored double values on recall.
+
+The new development demonstration uses audio-clock programmed7bit fader/CUT input and real MPC output, isolating the engine from HTTP packet jitter. It is not a physical-hand latency or realism acceptance test. This scheduling interface only runs in an isolated QA-session build; normal installation retains manual control.
