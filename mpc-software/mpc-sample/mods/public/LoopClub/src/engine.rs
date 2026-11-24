@@ -204,6 +204,8 @@ pub enum Command {
     },
     DeckGrab(usize, bool, Option<f32>),
     DeckFader(usize, f32),
+    DeckFaderTimed(usize, f32, u32),
+    DeckCut(usize, bool),
     DeckValue(usize, u8, f32),
     Swing(Option<crate::swing::Basis>),
     PlayValue {
@@ -402,6 +404,7 @@ mod recording;
 
 pub struct Engine {
     pub decks: Box<[crate::deck::Player; 16]>,
+    pub deck_cuts: [bool; 16],
     deck_spans: Box<crate::deck::Spans>,
     pub swing: Option<crate::swing::Basis>,
     history: History,
@@ -472,6 +475,7 @@ impl Engine {
         let rate = rate.clamp(8000, 96000);
         Self {
             decks: Box::new([crate::deck::Player::default(); 16]),
+            deck_cuts: [false; 16],
             deck_spans: Box::default(),
             swing: None,
             history: History::new(frames_per_track),
@@ -738,10 +742,39 @@ impl Engine {
                         return Err(Error::Capacity);
                     }
                 }
+                if on {
+                    self.decks[i].state.muted = self.deck_cuts[i];
+                }
+                let was_live = self.decks[i].live;
                 self.decks[i].grab(on, fader, self.tracks[i].deck, self.clock.rate);
+                if !on && was_live {
+                    self.decks[i].state.muted = false;
+                }
                 self.capture_deck(i)?;
             }
-            Command::DeckFader(i, value) => {
+            Command::DeckCut(i, closed) => {
+                Self::valid_track(i)?;
+                if closed
+                    && (self.tracks[i].kind != Kind::Audio
+                        || self.tracks[i].audio_target != crate::audio::RecordTarget::Turntable)
+                {
+                    return Err(Error::WrongKind);
+                }
+                if self.recorder.is_some_and(|r| r.track == i && r.midi) {
+                    let overflows = self.event_overflows;
+                    self.process_capture(Frame::ZERO);
+                    if self.event_overflows != overflows && self.recorder.is_none() {
+                        return Err(Error::Capacity);
+                    }
+                }
+                self.deck_cuts[i] = closed;
+                self.decks[i].manual_cut = closed;
+                if self.decks[i].live {
+                    self.decks[i].state.muted = closed;
+                }
+                self.capture_deck(i)?;
+            }
+            Command::DeckFader(i, value) | Command::DeckFaderTimed(i, value, _) => {
                 Self::valid_track(i)?;
                 if !value.is_finite() || !(0.0..=1.0).contains(&value) {
                     return Err(Error::InvalidValue);
@@ -753,11 +786,17 @@ impl Engine {
                         return Err(Error::Capacity);
                     }
                 }
-                if self.decks[i].move_to(
+                let interval = if let Command::DeckFaderTimed(_, _, us) = c {
+                    Some(us)
+                } else {
+                    None
+                };
+                if self.decks[i].move_to_timed(
                     value,
                     self.tracks[i].deck,
                     self.clock.bpm,
                     self.clock.rate,
+                    interval,
                 ) {
                     self.capture_deck(i)?;
                 }
@@ -2651,6 +2690,7 @@ impl Engine {
                     .start(self.clock.frame_at(t.phase(tick)) as f64 * f64::from(t.deck.speed));
             }
             if t.kind == Kind::Audio && t.source_frames > 0 {
+                self.decks[i].manual_cut = self.deck_cuts[i];
                 *signal = signal.combine(self.decks[i].sample(
                     &t.audio[..t.source_frames],
                     t.deck,
@@ -3023,6 +3063,7 @@ impl Engine {
     pub fn is_idle(&self) -> bool {
         !self.running
             && !self.decks.iter().any(|d| d.active)
+            && !self.deck_cuts.iter().any(|cut| *cut)
             && self.pending_chords == 0
             && self.recorder.is_none()
             && self.active_voices() == 0
@@ -3030,6 +3071,7 @@ impl Engine {
     }
     pub fn emergency_silence(&mut self) {
         self.decks.fill(crate::deck::Player::default());
+        self.deck_cuts.fill(false);
         for voice in &mut self.voices {
             voice.active = false;
         }

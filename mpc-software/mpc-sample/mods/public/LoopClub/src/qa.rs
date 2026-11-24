@@ -64,7 +64,12 @@ impl Input {
         }
     }
 }
-static INPUT: OnceLock<Queue<Input, 64>> = OnceLock::new();
+#[derive(Clone, Copy)]
+pub struct QueuedInput {
+    pub input: Input,
+    pub received: Instant,
+}
+static INPUT: OnceLock<Queue<QueuedInput, 64>> = OnceLock::new();
 static STATE: OnceLock<crate::runtime::AtomicSnapshot> = OnceLock::new();
 static BUTTONS: AtomicU64 = AtomicU64::new(0);
 static DATA_CCS: AtomicU64 = AtomicU64::new(0);
@@ -333,7 +338,7 @@ pub fn paint(ui: &crate::ui::Ui, s: &Snapshot, browser: bool) {
         PAINTS.fetch_add(1, Ordering::Relaxed);
     }
 }
-pub fn pop() -> Option<Input> {
+pub fn pop() -> Option<QueuedInput> {
     // SAFETY: only serialized owning UI callbacks consume the QA queue.
     let item = INPUT.get().and_then(|q| unsafe { q.pop_shared() });
     if item.is_some() {
@@ -612,7 +617,16 @@ fn serve(mut stream: TcpStream) {
         if let Ok(input) = serde_json::from_slice::<Input>(&raw[header_end..header_end + len])
             && input.valid()
         {
-            if INPUT.get().is_some_and(|q| q.push(input)) {
+            let received = Instant::now();
+            let fast = crate::device::fast_qa_input(input, received);
+            if fast {
+                APPLIED.fetch_add(1, Ordering::Relaxed);
+            }
+            if fast
+                || INPUT
+                    .get()
+                    .is_some_and(|q| q.push(QueuedInput { input, received }))
+            {
                 reply(&mut stream, "202 Accepted", "text/plain", b"queued");
             } else {
                 reply(

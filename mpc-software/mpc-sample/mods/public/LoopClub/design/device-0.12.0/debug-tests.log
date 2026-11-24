@@ -1,0 +1,613 @@
+   Compiling mpc-sample-sdk v0.7.3 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-ennd89yx/sdk)
+   Compiling loop-club v0.12.0 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-ennd89yx/project)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.51s
+     Running unittests src/lib.rs (build/target/debug/deps/loop_club-8b01d080bef97e5c)
+
+running 42 tests
+test browser_device::cursor_tests::no_modulo_wrap_at_list_edges_and_shift_pages_are_bounded ... ok
+test browser_device::cursor_tests::ordinary_buttons_move_one_row_in_short_and_long_lists ... ok
+test browser_device::cursor_tests::scaled_hardware_data_cannot_cancel_against_the_list_length ... ok
+test device::input_audit_tests::actual_button_chord_record_transport_and_navigation_are_mutually_exclusive ... ok
+test device::input_audit_tests::browser_blocks_background_knobs_fader_and_pad_press_every_page ... ok
+test device::input_audit_tests::browser_owns_plus_minus_modifiers_without_background_commands_on_all_pages ... ok
+test device::input_audit_tests::data_raw_delta_is_one_logical_selection_and_never_a_second_press_action ... ok
+test device::input_audit_tests::every_page_button_press_has_no_duplicate_engine_command_and_release_is_inert ... ok
+test device::input_audit_tests::every_page_pad_modifiers_emit_no_duplicate_command_and_repeat_release_is_inert ... ok
+test device::input_audit_tests::held_note_releases_exactly_once_after_every_navigation_destination ... ok
+test device::input_audit_tests::loop_mute_chain_and_edit_overlays_never_fall_through_to_record_or_generation ... ok
+test device::input_audit_tests::modulated_fx_settings_shape_sync_and_data_are_single_parameter_actions ... ok
+test device::input_audit_tests::note_edit_overlays_change_only_notes_and_releases_never_retrigger ... ok
+test device::input_audit_tests::synth_all_subpages_and_chord_modes_have_single_soft_action_and_inert_release ... ok
+test device::regression_tests::audio_sampler_recording_allows_sound_entry_but_unfinished_pcm_does_not ... ok
+test device::regression_tests::browse_on_a_filled_audio_track_explains_the_empty_track_requirement ... ok
+test device::regression_tests::data_cc_reaches_native_encoder_dispatch_even_with_browser_open ... ok
+test device::regression_tests::encoder_deltas_have_one_detent_for_all_signed_scales ... ok
+test device::regression_tests::fallback_controls_keep_order_and_are_consumed_once_without_a_paint ... ok
+test device::regression_tests::fallback_fx_release_cannot_be_lost_or_replayed_by_immediate_dispatch ... ok
+test device::regression_tests::immediate_mod_input_handles_navigation_and_fx_edges_without_paint ... ok
+test device::regression_tests::native_widget_restore_is_not_a_physical_data_turn ... ok
+test device::regression_tests::physical_volume_preserves_project_master_and_controls_injected_audio ... ok
+test device::regression_tests::rec_from_loop_keeps_screen_and_switches_pad_role_only ... ok
+test device::regression_tests::reentrant_drain_leaves_events_for_the_exclusive_outer_consumer ... ok
+test device::regression_tests::shifted_minus_plus_never_select_tracks_or_change_editor_pages ... ok
+test dsp::history_wrap_tests::fast_wrap_matches_reference_for_boundaries_and_abrupt_window_changes ... ok
+test dsp::long_glide_tests::two_second_semitone_glide_has_no_rounding_jump_at_the_endpoint ... ok
+test dsp::performance_tests::glide_reaches_target_in_the_selected_time_without_a_pitch_jump ... ok
+test dsp::performance_tests::legato_keeps_envelope_while_mono_retriggers_it ... ok
+test midi_input::tests::both_note_off_forms_close_the_same_owner_and_ignore_release_velocity ... ok
+test midi_input::tests::malformed_non_note_and_ump_events_are_ignored ... ok
+test midi_input::tests::ports_channels_and_clients_have_independent_ownership ... ok
+test output_mirror::tests::independent_outputs_get_same_audio_without_advancing_producer ... ok
+test output_mirror::tests::stalled_output_recovers_to_recent_audio_not_old_notes ... ok
+test qa::audio_fixtures_decode_and_never_overwrite_different_existing_data ... ok
+test qa::tests::actual_framebuffer_rgb565_layout ... ok
+test qa::tests::input_limits_reject_invalid_values ... ok
+test qa_persist::tests::direct_update_preserves_old_boot_and_owner_data ... ok
+test qa_persist::tests::mixed_boot_folder_refused_without_writes ... ok
+test qa_persist::tests::stale_identity_never_moves_existing_boot ... ok
+test runtime::tests::atomic_snapshot_never_returns_torn_payload ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+
+     Running unittests src/bin/loop-club-qa-agent.rs (build/target/debug/deps/loop_club_qa_agent-4fe922a094d90592)
+
+running 3 tests
+test tests::failed_candidate_restores_previous_before_restart_and_clears_pending ... ok
+test tests::reject_wrong_elf_architecture_and_hash ... ok
+test tests::stage_checks_hash_and_atomic_replace_keeps_old_inode ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/audio_deep_qa.rs (build/target/debug/deps/audio_deep_qa-74417be6d8243954)
+
+running 11 tests
+test chromatic_countin_cancel_overdub_and_pending_target_guards_preserve_source ... ok
+test deleting_and_splitting_chops_remaps_existing_performance_owners ... ok
+test input_overdub_never_silently_flattens_performance_or_discards_tempo_changed_pcm ... ok
+test invalid_empty_sampler_handoff_does_not_cancel_current_countin_or_schedule_a_bad_target ... ok
+test negative_tune_runs_through_whole_source_over_two_bars_without_bar_retrigger ... ok
+test original_loop_tune_works_without_warp ... ok
+test random_valid_audio_edits_always_save_load_with_valid_sample_owners ... ok
+test reducing_chop_count_keeps_recorded_slice_events_valid_and_undoable ... ok
+test sampler_can_record_from_source_padded_beyond_capture_capacity ... ok
+test structural_chop_edits_are_refused_while_that_track_is_recording ... ok
+test unity_warp_preserves_loaded_wav_padding_and_source_content ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+
+     Running tests/audio_performance.rs (build/target/debug/deps/audio_performance-f93cfd5755bbbf96)
+
+running 15 tests
+test chop_hold_repeats_only_selected_region_and_release_is_owned ... ok
+test chop_record_replays_as_chops_after_target_changes_and_can_overdub_chromatic ... ok
+test chromatic_record_keeps_pcm_chops_and_input_choice_while_recording_real_events ... ok
+test empty_sampler_refuses_capture_and_changing_target_during_capture_is_refused ... ok
+test explicit_input_captures_pcm_and_never_automatically_changes_target ... ok
+test held_chromatic_repeats_and_releases_without_transport ... ok
+test loop_mixer_controls_do_not_change_sampler_settings_and_source_picker_is_explicit ... ok
+test project_v5_roundtrip_keeps_source_sequence_target_and_warp ... ok
+test runtime_sampler_capture_requires_no_audio_input_stream ... ok
+test sequence_undo_redo_and_input_replace_undo_preserve_original_source ... ok
+test snapshot_and_ui_choose_five_performances_without_leaving_audio_sound ... ok
+test stopped_warp_audio_allows_bpm_change_without_rewriting_source_ticks ... ok
+test unfinished_first_input_take_cannot_audition_stale_track_pcm ... ok
+test warp_identity_preserves_pcm_and_octave_changes_pitch_independently_of_loop_duration ... ok
+test wav_import_can_be_used_for_chromatic_and_chop_recording_without_replacing_the_file ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/banks.rs (build/target/debug/deps/banks-5a7aed4e3d257231)
+
+running 6 tests
+test background_browser_selects_bank_then_kit ... ok
+test bank_and_kit_cursors_load_the_exact_selected_combination ... ok
+test bank_corruption_is_rejected_without_changing_existing_track ... ok
+test bank_sample_replaces_only_selected_layer_and_roundtrips ... ok
+test project_embeds_loaded_samples_and_reloads_without_bank_file ... ok
+test selected_kit_decodes_stereo_pcm_and_replays_through_existing_mix ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/chain.rs (build/target/debug/deps/chain-efaaaa083476540a)
+
+running 6 tests
+test boundaries_validate_capacity_empty_and_recording_conflicts ... ok
+test chain_switches_only_members_and_completes_whole_loops ... ok
+test edits_wait_for_boundary_and_duplicate_steps_work ... ok
+test mode_shortcuts_keep_sound_and_record_mode_accessible ... ok
+test mute_preserves_playhead_and_chain_controls_do_not_record ... ok
+test project_restores_chain_configuration_but_never_autoplays ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/controller.rs (build/target/debug/deps/controller-48bc9deed1ea7a41)
+
+running 24 tests
+test cc_normalization_follows_sdk_float_geometry ... ok
+test changing_sound_requires_fader_pickup_again ... ok
+test chop_soft_buttons_cycle_and_apply_modes_without_leaving_editor ... ok
+test data_select_is_silent_and_shift_pad_starts_recording_instead_of_playback_toggle ... ok
+test drum_sound_shift_pad_generates_and_undoes_without_playing_preview ... ok
+test fx_navigation_preserves_playback_and_parameters ... ok
+test fx_pages_remember_their_own_slot_and_latch ... ok
+test fx_release_follows_original_track_after_navigation ... ok
+test held_texture_release_survives_navigation_and_shift_can_latch_a_held_effect ... ok
+test initial_unknown_fader_position_does_not_fake_a_crossing ... ok
+test input_picker_changes_only_selection_and_returns_an_explicit_action ... ok
+test insufficient_record_capacity_does_not_start_transport ... ok
+test kit_mixer_requires_a_drum_track ... ok
+test kit_mute_solo_and_fader_do_not_overwrite_each_other ... ok
+test lfo_sync_and_smooth_controls_do_not_change_record_mode_or_note_mode ... ok
+test master_bus_fx_targets_do_not_change_track_or_other_bus ... ok
+test master_hold_ownership_transfers_between_fx_boards_without_stale_release ... ok
+test project_data_encoder_adjusts_tempo_one_bpm_without_changing_selected_track ... ok
+test rapid_knob_edits_from_one_snapshot_preserve_prior_changes ... ok
+test releasing_superseded_fx_pad_does_not_disable_current_effect ... ok
+test shift_latches_the_same_effect_without_retargeting_and_normal_release_is_independent ... ok
+test shifted_loop_pad_records_and_normal_pad_always_plays_configured_chord ... ok
+test stop_clears_unfinished_audio_metadata ... ok
+test synth_edit_preserves_octave ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/detailed_qa.rs (build/target/debug/deps/detailed_qa-5f995788bdb7778f)
+
+running 9 tests
+test canceled_audio_replace_preserves_original_playback_frames_and_save_validity ... ok
+test count_in_released_synth_note_and_drum_hit_are_not_recorded_as_held_notes ... ok
+test each_held_chord_tone_is_seeded_once_and_closed_before_the_recorded_loop_end ... ok
+test held_synth_note_during_count_in_has_note_on_at_the_first_downbeat ... ok
+test midi_target_after_automatic_handoff_and_finish_is_the_latest_instrument ... ok
+test pad_note_off_reaches_its_original_owner_after_page_and_track_changes ... ok
+test randomized_record_transport_and_edits_keep_bounded_valid_clip_state ... ok
+test rejected_audio_handoff_does_not_change_selected_recording_instrument ... ok
+test synth_chord_performance_mode_survives_project_reload ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.46s
+
+     Running tests/engine.rs (build/target/debug/deps/engine-325cba1b0556ec03)
+
+running 26 tests
+test bounded_queue_fails_full_and_retains_fifo ... ok
+test cancel_count_in_keeps_other_track_playing ... ok
+test count_in_and_record_boundary ... ok
+test default_project_is100bpm_and_stopped_midi_tempo_change_preserves_events ... ok
+test drum_closed_hat_chokes_open_hat_only_in_its_kit ... ok
+test held_midi_note_is_closed_at_loop_end ... ok
+test invalid_values_and_indices_are_rejected ... ok
+test kind_change_cannot_destroy_recorded_material ... ok
+test legacy_hidden_track_audio_survives_project_roundtrip ... ok
+test live_notes_and_audio_are_visible_before_recording ... ok
+test loop_replace_resets_length_and_cancel_preserves_previous_clip ... ok
+test midi_record_has_no_embedded_audio_frames ... ok
+test midi_recording_preserves_notes_and_replays ... ok
+test midi_sources_have_independent_note_ownership ... ok
+test output_peak_guard_bounds_loud_inputs ... ok
+test partial_audio_overdub_ends_this_bar_and_keeps_original_tail_and_length ... ok
+test pickup_does_not_jump_or_touch_other_channel ... ok
+test project_round_trip_and_failed_load_do_not_mutate_source ... ok
+test recording_capacity_closes_at_last_complete_bar ... ok
+test recording_waveform_reads_current_take_before_commit ... ok
+test resample_records_current_mix_without_feedback ... ok
+test restored_sixteen_track_looper_plays_all_backing_tracks ... ok
+test save_during_play_is_rejected_without_overwriting ... ok
+test stopped_transport_finishes_input_latency_tail ... ok
+test tempo_change_rejected_instead_of_desynchronizing_audio ... ok
+test three_bar_loop_is_not_power_of_two ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.80s
+
+     Running tests/fx.rs (build/target/debug/deps/fx-847312435b6259b4)
+
+running 9 tests
+test adjusting_released_duck_depth_does_not_enable_it ... ok
+test every_effect_is_finite_for_full_control_range ... ok
+test latest_pressed_pad_edits_only_its_slot_and_full_slots_are_protected ... ok
+test pressed_effect_gets_inline_knob_routing_and_keeps_values_when_released ... ok
+test repeat_after_old_audio_and_long_silence_waits_for_new_audio ... ok
+test repeat_freezes_the_captured_segment_and_ignores_new_input ... ok
+test repeat_reenabled_after_bypass_and_silence_rearms_for_new_audio ... ok
+test repeat_turned_on_in_silence_captures_later_audio_instead_of_freezing_zero ... ok
+test tape_stop_does_not_resume_at_history_capacity ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/history.rs (build/target/debug/deps/history-f42cfb219a1872ec)
+
+running 11 tests
+test audio_clear_undo_retains_pcm_and_tempo_change_invalidates_stale_redo ... ok
+test canceled_capture_keeps_prior_redo_and_does_not_undo_another_edit ... ok
+test chops_undo_redo_leave_pcm_and_transport_state_intact ... ok
+test completed_audio_record_undo_redo_preserves_pcm_chops_and_other_tracks ... ok
+test continuous_recording_is_one_undo_gesture_even_after_multiple_commits ... ok
+test generated_pattern_undo_redo_restores_seed_and_lane_notes ... ok
+test history_is_global_but_does_not_change_selection_and_kind_change_invalidates ... ok
+test new_committed_edit_replaces_redo_but_invalid_edit_does_not ... ok
+test note_edit_and_clear_have_redo_and_do_not_rewind_mix ... ok
+test recorded_synth_and_drum_events_undo_redo_with_different_loop_lengths ... ok
+test replace_and_overdub_restore_prior_take_and_new_take_repeatedly ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+
+     Running tests/layers.rs (build/target/debug/deps/layers-3ea6bea3923697e1)
+
+running 7 tests
+test both_layers_roundtrip_and_old_project_defaults_preserve_primary ... ok
+test layer_knobs_and_source_sound_navigation_leave_total_gain_intact ... ok
+test layer_shift_delays_onset_without_allocating_a_second_timeline ... ok
+test layers_are_independent_and_open_hat_chokes_both ... ok
+test recording_shorter_second_loop_does_not_resize_first ... ok
+test sample_reverse_tune_and_layer_gain_have_audible_effect ... ok
+test sound_reentry_returns_to_primary_controls_without_resetting_layer_values ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+     Running tests/loop_edit.rs (build/target/debug/deps/loop_edit-67def544ecc105c6)
+
+running 8 tests
+test audio_chop_source_and_multizone_drum_copies_do_not_alias ... ok
+test copy_is_independent_preserves_sound_and_supports_single_undo_redo ... ok
+test erase_copy_refuses_transport_and_recording_and_leaves_sound_erase_alone ... ok
+test later_edits_replace_transfer_history_instead_of_resurrecting_old_tracks ... ok
+test loop_edit_pads_choose_then_transfer_or_confirm_delete_without_performing ... ok
+test move_and_undo_keep_chain_sidechain_references ... ok
+test physical_erase_copy_enters_confirmed_edit_and_shift_release_does_not_record ... ok
+test refuse_running_recording_same_or_occupied_targets_without_touching_content ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/modes.rs (build/target/debug/deps/modes-7ff2ebada6d72989)
+
+running 15 tests
+test chop_and_generated_state_roundtrip ... ok
+test chop_modes_and_manual_undo_preserve_audio ... ok
+test chop_playback_leaves_source_unchanged_and_release_is_owned ... ok
+test chord_release_uses_notes_before_key_change_and_records_real_midi ... ok
+test drum_shortcut_is_in_drum_play_not_main ... ok
+test every_sound_can_generate_a_nonempty_lane ... ok
+test generated_lane_undo_restores_only_last_change ... ok
+test generator_does_not_restart_phase_or_other_track ... ok
+test new_generated_part_repeats_inside_existing_three_bar_loop ... ok
+test part_generation_preserves_other_drums_and_mix ... ok
+test qa_save_load_directory_cannot_replace_normal_session ... ok
+test recorded_part_can_be_generated_then_undone_without_touching_other_parts ... ok
+test temporary_effects_are_not_saved_as_track_inserts ... ok
+test too_dense_bpm_grid_is_rejected_without_replacing_regions ... ok
+test transient_chops_find_separate_attacks ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/modulation.rs (build/target/debug/deps/modulation-947577f96f72f632)
+
+running 12 tests
+test fixed_master_slot_settings_stay_on_that_slot_and_board_rate_uses_sync_division ... ok
+test master_mod_pads_hold_latch_refuse_third_and_do_not_toggle_old_custom_tiles ... ok
+test modulation_shapes_divisions_and_extremes_stay_bounded ... ok
+test musical_rate_has_straight_dotted_triplet_and_follows_tempo ... ok
+test saving_a_held_master_mod_bypasses_it_on_recall_and_retains_latched_mod ... ok
+test settings_back_keeps_the_edited_slot_selected ... ok
+test settings_edit_sync_shape_without_turning_effect_on_and_save_new_fields ... ok
+test settings_fader_controls_the_original_track_or_master ... ok
+test sound_lfo_edit_keeps_legacy_volume_settings_and_edits_filter_depth ... ok
+test temporary_texture_and_duck_are_not_saved_and_latched_texture_is_retained ... ok
+test tremolo_has_full_depth_and_pan_moves_audio_without_loudness_pumping ... ok
+test zero_depth_is_transparent_and_filter_sweep_changes_high_frequency_energy ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/motion.rs (build/target/debug/deps/motion-a8f95f3991db8962)
+
+running 11 tests
+test auto_pan_moves_both_directions_and_static_pan_is_shared ... ok
+test custom_master_bypass_restores_audio_without_destroying_effect ... ok
+test direct_pad_toggle_keeps_two_effects_and_refuses_silent_replacement ... ok
+test master_pad_bypass_preserves_effect_and_knobs_and_recall ... ok
+test master_pad_duck_bypass_keeps_depth_and_source ... ok
+test master_subpages_fader_controls_master_without_touching_track ... ok
+test motion_roundtrip_and_missing_legacy_defaults ... ok
+test sidechain_attack_release_targets_and_sync ... ok
+test source_mute_prevents_trigger_and_other_tracks_duck ... ok
+test texture_and_sidechain_controls_do_not_overwrite_track_fx ... ok
+test texture_simultaneous_bypass_and_finite_extremes ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+
+     Running tests/music.rs (build/target/debug/deps/music-e8948af3324f409c)
+
+running 10 tests
+test chord_notes_stay_diatonic_and_have_correct_names ... ok
+test generated_eighth_hats_keep_strong_weak_medium_weak_velocity ... ok
+test generated_ghosts_are_softer_than_backbeat_and_triplets_have_accents ... ok
+test generated_patterns_keep_backbeats_and_avoid_kick_on_two_four ... ok
+test groove_dice_accents_are_strong_weak_medium_weak ... ok
+test hat_regeneration_changes_musical_grid_not_just_velocity ... ok
+test musical_ticks_convert_without_bar_drift ... ok
+test same_seed_is_reproducible_and_new_seeds_vary_motifs ... ok
+test smooth_voicings_preserve_pitch_classes_and_reduce_large_jumps ... ok
+test sync_divisions_follow_bpm_and_old_synth_json_stays_free ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pad_notes.rs (build/target/debug/deps/pad_notes-ddbe8b076ae7900e)
+
+running 7 tests
+test active_capture_edit_is_cancelable_and_does_not_change_completed_clip ... ok
+test capture_commit_and_undo_preserve_original_and_reject_open_gate_copy ... ok
+test chop_notes_do_not_delete_regions_pcm_or_chromatic_notes ... ok
+test drum_erase_and_copy_preserve_other_lanes_sound_timing_and_undo ... ok
+test edit_toggle_done_and_source_dest_do_not_play_or_arm_record ... ok
+test generation_does_not_start_transport_or_recording_but_updates_running_loop ... ok
+test occupied_capacity_invalid_and_wrong_kind_are_atomic ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/performance.rs (build/target/debug/deps/performance-a70841ef17f6e08f)
+
+running 20 tests
+test audio_chord_cannot_reinterpret_chop_notes ... ok
+test audio_chord_uses_source_pitch_and_preserves_pcm ... ok
+test audio_one_shot_ignores_release_then_ends_at_sample_endpoint ... ok
+test audio_sound_selector_explicitly_cycles_input_notes_chord_chop ... ok
+test gate_cancels_delayed_drum_layers_but_native_one_shot_taps_do_not ... ok
+test loop_shift_k1_octave_records_actual_notes_and_keeps_held_note_release ... ok
+test mono_has_one_voice_and_falls_back_by_owner ... ok
+test mono_lane_does_not_steal_polyphonic_chord_owners ... ok
+test mono_setting_does_not_collapse_chord_voices ... ok
+test octave_shortcut_leaves_drum_and_chop_pad_identity_unchanged ... ok
+test one_shot_strum_finishes_phrase_after_pad_release_and_stop_cancels_it ... ok
+test performance_octave_transposes_synth_and_audio_chords_without_changing_key ... ok
+test play_page_opens_from_each_sound_editor_and_settings_round_trip ... ok
+test procedural_drum_gate_cuts_and_one_shot_ignores_note_off ... ok
+test project8_preserves_play_settings_and_copy_keeps_them ... ok
+test sampled_one_shot_ends_while_gate_repeats ... ok
+test strum_records_expanded_note_onsets_in_real_time ... ok
+test strum_runs_without_transport_and_release_cancels_unplayed_notes ... ok
+test synth_one_shot_releases_automatically_but_gate_waits_for_release ... ok
+test unrelated_note_off_does_not_end_current_mono_note ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+
+     Running tests/project_phase.rs (build/target/debug/deps/project_phase-5156dc9fe7f93736)
+
+running 3 tests
+test full_track_copy_preserves_source_origin ... ok
+test malformed_transport_position_is_refused_before_engine_creation ... ok
+test saved_stopped_clock_and_independent_loop_origins_preserve_relative_phase ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/realtime.rs (build/target/debug/deps/realtime-e040426e3a318c14)
+
+running 19 tests
+test callback_commands_capture_and_snapshot_do_not_allocate ... ok
+test chain_boundaries_and_commands_do_not_allocate ... ok
+test chromatic_chop_warp_capture_history_and_snapshot_have_no_callback_allocations_or_frees ... ok
+test external_midi_stays_with_recording_track_even_when_mixer_selects_another ... ok
+test full_scratch_overdub_refuses_seed_without_growing_or_mutating_completed_clip ... ok
+test full_track_copy_move_undo_redo_swap_without_callback_allocation_or_free ... ok
+test generation_chords_chops_and_import_commit_do_not_allocate_or_free ... ok
+test kit_swap_playback_and_snapshot_do_not_allocate_or_free ... ok
+test modulation_effects_and_parameter_changes_allocate_nothing ... ok
+test monitor_metronome_count_in_and_toggle_never_allocate_or_free ... ok
+test mono_glide_strum_and_trigger_commands_do_not_allocate_or_free ... ok
+test pad_note_erase_copy_and_capture_edits_do_not_allocate_or_free ... ok
+test partial_overdub_tail_preparation_and_commit_do_not_allocate ... ok
+test record_history_rotation_undo_redo_and_clear_do_not_allocate_or_free ... ok
+test recording_handoffs_rotate_buffers_without_allocation_or_deallocation ... ok
+test repeat_arming_and_live_hardware_volume_changes_do_not_allocate ... ok
+test replace_overdub_wrap_and_mode_commands_do_not_allocate_or_free ... ok
+test swing_reschedule_and_turntable_capture_never_allocate_or_free ... ok
+test xpm_four_zones_playback_choke_and_replacement_do_not_allocate_or_free ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.31s
+
+     Running tests/recording.rs (build/target/debug/deps/recording-3315d155c12919cf)
+
+running 11 tests
+test audio_latency_keeps_last_take_until_complete_and_captures_every_wrap ... ok
+test audio_overdub_adds_previous_loop_mode_switch_is_boundary_latched ... ok
+test button_is_per_track_and_mode_is_saved ... ok
+test cancelled_replace_preserves_completed_take_and_other_track ... ok
+test drum_overdub_accumulates_same_lane_hits ... ok
+test drum_replace_touches_only_played_lane_and_does_not_accumulate ... ok
+test existing_track_can_reenter_record_without_destroying_other_loops ... ok
+test first_frame_at_midi_wrap_is_not_lost_and_held_notes_are_closed ... ok
+test midi_capacity_failure_retains_last_complete_take ... ok
+test replace_default_repeats_and_rec_stops_only_capture ... ok
+test synth_replace_discards_previous_notes_overdub_keeps_them ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+
+     Running tests/runtime.rs (build/target/debug/deps/runtime-539a56ee42a12c38)
+
+running 12 tests
+test audio_record_without_input_is_rejected ... ok
+test concurrent_queue_preserves_every_producer_order ... ok
+test emergency_stop_clears_held_notes_and_temporary_effects ... ok
+test external_release_uses_original_track_after_selection ... ok
+test external_sources_are_independent ... ok
+test full_command_queue_fails_to_stop_without_stuck_notes ... ok
+test input_loss_cancels_only_new_take ... ok
+test midi_uses_requested_track_before_next_audio_snapshot ... ok
+test output_mixes_without_erasing_native_audio ... ok
+test project_guard_never_blocks_audio_or_changes_native_buffer ... ok
+test runtime_diagnostics_do_not_overwrite_recording_mode_and_loop_flags ... ok
+test snapshot_matches_published_track_state ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/sample.rs (build/target/debug/deps/sample-7e3ec1c1586fdd1a)
+
+running 5 tests
+test background_picker_loads_the_selected_wav ... ok
+test browser_stays_within_root_and_filters_audio ... ok
+test sample_commit_preserves_other_playing_tracks_and_rejects_overwrite ... ok
+test wav_browser_first_turn_scaled_input_and_selected_file_roundtrip ... ok
+test wav_load_keeps_original_speed_and_pads_the_loop_boundary ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/scratch_motion.rs (build/target/debug/deps/scratch_motion-2e3ea3b4f38bb9d6)
+
+running 10 tests
+test cut_reaches_silence_in_three_ms_without_stopping_the_head_or_changing_level ... ok
+test duplicate_packets_accumulate_time_without_restarting_or_accelerating_the_segment ... ok
+test legacy_target_chase_remains_available_for_old_saved_controls ... ok
+test motion_and_cut_recording_recall_and_undo_preserve_pcm_and_legacy_defaults ... ok
+test motion_validation_rejects_malformed_and_unbounded_segments ... ok
+test reversal_settle_duplicate_and_full_range_jump_do_not_overshoot_or_run_away ... ok
+test same_audio_block_coalescing_preserves_the_total_input_interval ... ok
+test seven_bit_position_quantization_stays_bounded_and_continuous ... ok
+test steady_motion_has_no_repeated_stops_or_four_x_bursts_after_initial_observation ... ok
+test two_hand_latch_cut_and_release_survive_navigation_without_affecting_loop_record_mapping ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/setup.rs (build/target/debug/deps/setup-b38b1584ad76bbd2)
+
+running 6 tests
+test regrab_after_repositioning_at_min_or_max_has_no_initial_jump ... ok
+test setup_restores_last_preroll_length_and_keeps_project_input_access ... ok
+test setup_switches_only_monitor_and_preroll_with_visible_back ... ok
+test turntable_entry_uses_full_wave_but_chop_zoom_and_unselected_tracks_are_untouched ... ok
+test turntable_wave_strip_has_aligned_endpoints_and_only_one_playhead ... ok
+test waveform_and_audio_use_identical_wrap_at_both_fader_endpoints ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/shift_record.rs (build/target/debug/deps/shift_record-7dbaf2ac0e3d4959)
+
+running 8 tests
+test count_in_retarget_reuses_original_start_without_committing_empty_take ... ok
+test different_shift_pad_queues_without_switching_sound_until_bar_end ... ok
+test existing_overdub_can_handoff_at_next_bar_and_keeps_full_original_length ... ok
+test invalid_or_oversized_target_does_not_disturb_active_recording ... ok
+test normal_loop_pads_play_without_recording_before_and_after_capture ... ok
+test pending_target_is_replaced_and_same_track_requests_finish_only ... ok
+test stop_and_undo_cancel_pending_next_recording ... ok
+test transition_has_no_second_preroll_for_every_source_pair ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/swing.rs (build/target/debug/deps/swing-6d7229acaa7cad97)
+
+running 8 tests
+test all_midi_kinds_schedule_later_without_modifying_source_events ... ok
+test eighth_and_sixteenth_swing_have_exact_boundaries_and_invert ... ok
+test existing_swing_is_replaced_and_recording_does_not_get_swung_twice ... ok
+test old_project_generator_timing_metadata_is_repaired_without_rewriting_events ... ok
+test only_lanes_with_baked_generator_swing_carry_a_timing_basis ... ok
+test project_timing_and_ui_knobs_roundtrip_and_invalid_values_are_refused ... ok
+test raw_audio_remains_identical_with_global_swing ... ok
+test swing_edit_restores_a_live_mono_owner_when_playback_had_priority ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+
+     Running tests/synth.rs (build/target/debug/deps/synth-5544b557d82f0693)
+
+running 10 tests
+test adsr_reaches_peak_sustain_and_releases_from_current_level ... ok
+test all_lfo_targets_at_extremes_are_finite_and_pages_save_independent_depths ... ok
+test all_wave_pairs_filter_extremes_and_rates_are_finite ... ok
+test filter_types_and_envelope_change_audio_independently_of_amp ... ok
+test independent_oscillator_tune_is_one_octave_and_levels_can_silence ... ok
+test legacy_synth_state_defaults_new_controls_and_new_state_roundtrips ... ok
+test lfo_has_saw_directions_square_triangle_sine_and_random_hold ... ok
+test phase_sine_keeps_wave_shape_within_one_part_per_million ... ok
+test synth_pages_map_knobs_without_changing_chords_or_record_mode ... ok
+test zero_depth_preserves_sound_and_each_lfo_target_changes_only_its_routing ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running tests/tempo.rs (build/target/debug/deps/tempo-2a5b1330768e1182)
+
+running 9 tests
+test click_is_not_printed_into_audio_input_recording ... ok
+test enabled_metronome_keeps_playing_while_waiting_for_count_in_bar ... ok
+test metronome_option_recalls_and_tempo_guard_preserves_recording ... ok
+test metronome_toggle_is_monitor_only_and_stops_with_transport ... ok
+test one_bar_count_in_has_exactly_four_full_clicks_at_any_start_phase ... ok
+test preroll_off_and_two_bars_respect_configuration ... ok
+test tap_bounce_long_pause_reset_and_supported_limits ... ok
+test tap_boundary_jitter_clamps_without_resetting_the_sequence ... ok
+test tap_two_and_multiple_presses_average_real_intervals ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.28s
+
+     Running tests/turntable.rs (build/target/debug/deps/turntable-1e9a3534e33a8739)
+
+running 20 tests
+test analytical_seek_matches_continuous_playback_and_large_ranges_keep_direction ... ok
+test canceling_an_automated_deck_take_restores_silence_but_manual_audition_can_continue ... ok
+test deck_to_sampler_overdub_is_refused_in_both_directions_without_changing_clip ... ok
+test down_cut_mutes_return_rearms_and_release_restores_forward_playback ... ok
+test empty_source_and_invalid_controls_fail_without_creating_a_player_or_recording ... ok
+test fader_direction_and_stationary_stylus_are_finite_and_silent ... ok
+test grid_follows_recording_and_saved_clip_identity_after_switching_targets ... ok
+test legacy_and_new_tracks_default_to_bidirectional_with_optional_down_cut ... ok
+test negative_subsample_loop_boundary_never_indexes_the_pcm_endpoint ... ok
+test pad_grab_toggle_and_fader_never_change_volume_and_release_preserves_latch ... ok
+test project10_preserves_cut_option_and_muted_return_controls ... ok
+test recording_replays_controls_keeps_pcm_and_supports_undo_redo_and_project_recall ... ok
+test replacing_a_deck_clip_with_notes_silences_the_old_deck_and_undo_restores_it ... ok
+test replacing_midway_through_a_long_note_clip_releases_only_its_playback_owner ... ok
+test scratch_automation_bypasses_global_swing_and_mixed_sampler_overdub_preserves_source ... ok
+test scratch_grab_capacity_reports_error_and_preserves_previous_clip ... ok
+test scratch_overdub_preserves_untouched_gestures_and_noop_take ... ok
+test slip_returns_to_moving_playhead_and_off_keeps_scratched_position ... ok
+test sound_source_button_during_recording_preserves_target_and_chord_mode ... ok
+test turntable_respects_pan_track_filter_and_master_level ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+
+     Running tests/usb_routing.rs (build/target/debug/deps/usb_routing-ad1da3f8a802dbe5)
+
+running 6 tests
+test hardware_volume_scales_main_and_usb_without_rewriting_saved_master ... ok
+test main_usb_both_are_isolated_and_source_advances_once ... ok
+test output_selection_roundtrips_and_legacy_defaults_both ... ok
+test project_replacement_preserves_live_hardware_volume_and_selected_track ... ok
+test route_editor_changes_only_selected_track_output ... ok
+test usb_only_does_not_feed_main_room_or_fx_bus ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+
+     Running tests/view.rs (build/target/debug/deps/view-636973b7baaab14f)
+
+running 13 tests
+test actionable_notice_is_not_hidden_by_empty_track_hint ... ok
+test audio_source_target_labels_have_no_generic_footer_overlaid_on_their_rows ... ok
+test chop_and_browser_stay_inside_native_screen ... ok
+test enlarged_synth_views_and_shift_cards_stay_inside_screen ... ok
+test every_page_stays_inside_native_screen ... ok
+test fx_boards_keep_effect_pads_without_utility_actions_and_show_inline_controls ... ok
+test loop_edit_captions_name_the_whole_instrument_not_one_performance_pad ... ok
+test loop_record_hint_does_not_appear_on_the_instrument_performance_page ... ok
+test performance_sections_for_all_sources_stay_inside_screen ... ok
+test recording_previews_and_audio_grid_stay_inside_screen ... ok
+test sixteen_loop_performance_role_and_sidechain_targets_stay_in_bounds ... ok
+test turntable_and_global_swing_controls_stay_inside_native_screen ... ok
+test zero_master_is_visible_on_every_page_and_fx_shows_master_value ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/xpm.rs (build/target/debug/deps/xpm-222553193bb1a8a3)
+
+running 8 tests
+test bank_selection_preserves_empty_positions_and_decodes_only_selected_bank ... ok
+test changing_source_kind_keeps_dormant_xpm_zones_project_portable ... ok
+test file_aliases_do_not_allow_ambiguous_sample_search ... ok
+test four_velocity_zones_and_native_rules_survive_portable_project ... ok
+test malformed_metadata_is_rejected_before_import ... ok
+test replacing_full_kit_keeps_other_track_and_rejects_recording_target ... ok
+test trim_reverse_gain_and_pitch_are_applied_before_callback ... ok
+test velocity_cycle_random_gate_and_choke_have_distinct_runtime_behavior ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+   Doc-tests loop_club
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

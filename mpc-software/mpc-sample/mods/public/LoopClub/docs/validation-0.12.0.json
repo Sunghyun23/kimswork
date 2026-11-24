@@ -1,0 +1,40 @@
+{
+  "version": "0.12.0",
+  "scope": "local development; public release/site unchanged at 0.11.2",
+  "normal_library_sha256": "c8c5b7c308c0452faf866b536e730bd5e4c8b8519a6d7e0cd6ae39456942a904",
+  "zip_sha256": "5bad46977de99eaa4161d2915c7f440ea0bd99c50fc4d1e137aba81232f23bfd",
+  "debug_distinct": 401,
+  "release_tests": 29,
+  "remote_usb": {
+    "plain_pad1_release_keeps_grab": true,
+    "second_press_releases_grab": true,
+    "pad2_cut_release_after_navigation": true,
+    "stop_releases_grab": true,
+    "actual_usb_cut": {
+      "open": {
+        "peak": 0.19442658126354218,
+        "rms": 0.057474538683891296
+      },
+      "cut": {
+        "peak": 0.0,
+        "rms": 0.0
+      },
+      "reopen": {
+        "peak": 0.19562366604804993,
+        "rms": 0.06094888225197792
+      }
+    },
+    "usb_flags": [],
+    "passed": true,
+    "owner16_restored_without_save": true
+  },
+  "sd": {
+    "verified": 20,
+    "old_preserved": 20
+  },
+  "limits": [
+    "remote injection is not physical pad/fader acceptance",
+    "no new video or public publication",
+    "maximum 16-deck CPU and analog output not measured"
+  ]
+}

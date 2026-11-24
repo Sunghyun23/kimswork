@@ -1,0 +1,23 @@
+{
+  "plain_pad1_release_keeps_grab": true,
+  "second_press_releases_grab": true,
+  "pad2_cut_release_after_navigation": true,
+  "stop_releases_grab": true,
+  "actual_usb_cut": {
+    "open": {
+      "peak": 0.19442658126354218,
+      "rms": 0.057474538683891296
+    },
+    "cut": {
+      "peak": 0.0,
+      "rms": 0.0
+    },
+    "reopen": {
+      "peak": 0.19562366604804993,
+      "rms": 0.06094888225197792
+    }
+  },
+  "usb_flags": [],
+  "passed": true,
+  "owner16_restored_without_save": true
+}

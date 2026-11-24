@@ -106,7 +106,7 @@ pub fn save(engine: &Engine, path: &Path) -> io::Result<()> {
     }
     let state = State {
         chain: engine.chain.config,
-        version: 10,
+        version: 11,
         timing_revision: 1,
         swing: engine.swing,
         transport_frame: engine.clock.frame,
@@ -240,7 +240,7 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
     f.read_exact(&mut bytes)?;
     let s: State = serde_json::from_slice(&bytes)?;
     if s.tracks.len() != 16
-        || !(1..=10).contains(&s.version)
+        || !(1..=11).contains(&s.version)
         || s.transport_frame > u64::from(s.rate) * u64::from(u32::MAX)
         || s.rate != expected_rate
         || !s.bpm.is_finite()
@@ -473,6 +473,12 @@ pub fn load(path: &Path, expected_rate: u32, capacity: usize) -> io::Result<Engi
         dst.audio_frames = t.audio_frames;
         let mut previous_deck: Option<crate::deck::Control> = None;
         dst.events.extend(t.events.into_iter().map(|mut event| {
+            if s.version < 11
+                && let Some(c) = &mut event.deck
+            {
+                c.motion = None;
+                c.muted = false;
+            }
             if s.version < 10
                 && let Some(mut control) = event.deck
             {

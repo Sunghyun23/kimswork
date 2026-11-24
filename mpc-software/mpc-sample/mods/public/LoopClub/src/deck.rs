@@ -28,6 +28,43 @@ impl Settings {
         [0.5, 1., 2.][usize::from(self.range.min(2))]
     }
 }
+/// An audio-clock segment. Stored with gesture events for exact bounded seek.
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Motion {
+    pub start: f64,
+    pub end: f64,
+    pub duration: u32,
+    pub elapsed: u32,
+    /// Initial slope normalized to the secant; end slope is the secant.
+    pub slope: f64,
+}
+impl Motion {
+    fn valid(self) -> bool {
+        self.start.is_finite()
+            && self.end.is_finite()
+            && self.start.abs() < 1e12
+            && self.end.abs() < 1e12
+            && (1..=1_536_000).contains(&self.duration)
+            && self.elapsed <= self.duration
+            && self.slope.is_finite()
+            && (0.0..=1.5).contains(&self.slope)
+            && ((self.end - self.start) / f64::from(self.duration)).abs() <= 4.0 / 1.5 + 1e-9
+    }
+    fn position(self) -> f64 {
+        let u = f64::from(self.elapsed) / f64::from(self.duration);
+        let curve = (self.slope - 1.) * u * u * u + (2. - 2. * self.slope) * u * u + self.slope * u;
+        self.start + (self.end - self.start) * curve
+    }
+    fn speed(self) -> f32 {
+        if self.elapsed >= self.duration {
+            return 0.;
+        }
+        let u = f64::from(self.elapsed) / f64::from(self.duration);
+        (((3. * (self.slope - 1.) * u + 4. - 4. * self.slope) * u + self.slope)
+            * (self.end - self.start)
+            / f64::from(self.duration)) as f32
+    }
+}
 #[derive(Clone, Copy, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct Control {
     pub head: f64,
@@ -39,6 +76,11 @@ pub struct Control {
     pub grabbed: bool,
     #[serde(default)]
     pub returning: bool,
+    #[serde(default)]
+    pub muted: bool,
+    /// None is the legacy version1-10 target chase, preserving old takes.
+    #[serde(default)]
+    pub motion: Option<Motion>,
 }
 impl Control {
     pub fn valid(self) -> bool {
@@ -47,6 +89,7 @@ impl Control {
             .all(|x| x.is_finite() && x.abs() < 1e12)
             && self.fader.is_finite()
             && (0.0..=1.0).contains(&self.fader)
+            && self.motion.is_none_or(Motion::valid)
             && self.anchor_fader.is_finite()
             && (0.0..=1.0).contains(&self.anchor_fader)
     }
@@ -57,6 +100,10 @@ impl Control {
         self.slip -= offset;
         self.target -= offset;
         self.anchor -= offset;
+        if let Some(m) = &mut self.motion {
+            m.start -= offset;
+            m.end -= offset;
+        }
         self
     }
 }
@@ -67,6 +114,12 @@ pub struct Player {
     pub live: bool,
     pub audition: bool,
     pub rate: f32,
+    /// Live cut overlays recorded cuts without altering the stored track gain.
+    pub manual_cut: bool,
+    since_move: u64,
+    has_move: bool,
+    batch_interval: u64,
+    unchanged_us: u64,
     anchor_pending: bool,
     fade: u32,
     fade_head: f64,
@@ -78,9 +131,11 @@ pub struct Player {
 }
 impl Player {
     pub fn start(&mut self, head: f64) {
+        let muted = self.state.muted;
         *self = Self::default();
+        self.state.muted = muted;
         self.active = true;
-        self.cut_gain = 1.;
+        self.cut_gain = if muted { 0. } else { 1. };
         self.state.head = head;
         self.state.slip = head;
         self.state.target = head;
@@ -97,6 +152,17 @@ impl Player {
             self.audition = true;
             self.state.anchor = self.state.head;
             self.state.target = self.state.head;
+            self.state.motion = Some(Motion {
+                start: self.state.head,
+                end: self.state.head,
+                duration: 1,
+                elapsed: 1,
+                slope: 0.,
+            });
+            self.since_move = 0;
+            self.has_move = false;
+            self.batch_interval = 0;
+            self.unchanged_us = 0;
             self.anchor_pending = fader.is_none();
             self.state.anchor_fader = fader.unwrap_or(self.state.fader).clamp(0., 1.);
             self.state.fader = self.state.anchor_fader;
@@ -110,26 +176,85 @@ impl Player {
                 self.state.slip = self.state.head;
             }
             self.state.target = self.state.head;
+            self.state.motion = None;
             self.state.grabbed = false;
             self.live = false;
         }
     }
     pub fn move_to(&mut self, value: f32, cfg: Settings, bpm: f64, rate: u32) -> bool {
-        if !self.live || !self.state.grabbed {
+        self.move_to_timed(value, cfg, bpm, rate, None)
+    }
+    /// Input interval is measured at arrival, not when a busy paint queue drains.
+    pub fn move_to_timed(
+        &mut self,
+        value: f32,
+        cfg: Settings,
+        bpm: f64,
+        rate: u32,
+        interval_us: Option<u32>,
+    ) -> bool {
+        if !self.live
+            || !self.state.grabbed
+            || !value.is_finite()
+            || !bpm.is_finite()
+            || bpm <= 0.
+            || rate == 0
+        {
             return false;
         }
         let next = value.clamp(0., 1.);
-        if next != self.state.fader {
-            self.state.returning = next > self.state.fader;
+        if next == self.state.fader {
+            self.unchanged_us = self
+                .unchanged_us
+                .saturating_add(u64::from(interval_us.unwrap_or(0)))
+                .min(1_000_000);
+            return false;
         }
+        self.state.returning = next > self.state.fader;
         self.state.fader = next;
         if self.anchor_pending {
-            self.state.anchor_fader = self.state.fader;
+            self.state.anchor_fader = next;
             self.anchor_pending = false;
         }
-        self.state.target = self.state.anchor
-            + f64::from(self.state.fader - self.state.anchor_fader) * cfg.beats() * 60. / bpm
-                * f64::from(rate);
+        let target = self.state.anchor
+            + f64::from(next - self.state.anchor_fader) * cfg.beats() * 60. / bpm * f64::from(rate);
+        let observed = interval_us
+            .filter(|n| *n > 0)
+            .map_or(self.since_move, |us| {
+                u64::from(us).saturating_add(self.unchanged_us) * u64::from(rate) / 1_000_000
+            });
+        self.unchanged_us = 0;
+        let default = u64::from(rate) / 100;
+        let mut interval = if observed == 0 { default } else { observed }
+            .clamp((u64::from(rate) / 500).max(1), (u64::from(rate) / 5).max(1));
+        // Coalesce points received before any audio frame elapsed, retaining the
+        // whole measured interval rather than doubling the final velocity.
+        if self.has_move && self.since_move == 0 {
+            interval = interval
+                .saturating_add(self.batch_interval)
+                .min((u64::from(rate) / 5).max(1));
+        }
+        self.batch_interval = interval;
+        let distance = target - self.state.head;
+        let duration = interval
+            .max((distance.abs() * 1.5 / 4.).ceil() as u64)
+            .clamp(1, 1_536_000) as u32;
+        let secant = distance / f64::from(duration);
+        let slope = if secant.abs() < 1e-12 {
+            0.
+        } else {
+            (f64::from(self.rate) / secant).clamp(0., 1.5)
+        };
+        self.state.target = target;
+        self.state.motion = Some(Motion {
+            start: self.state.head,
+            end: target,
+            duration,
+            elapsed: 0,
+            slope,
+        });
+        self.since_move = 0;
+        self.has_move = true;
         true
     }
     pub fn restore(&mut self, control: Control, elapsed: u64, cfg: Settings, rate: u32) {
@@ -156,6 +281,18 @@ impl Player {
     }
     // Analytical catch-up; no loop proportional to elapsed transport time.
     pub fn advance(&mut self, n: u64, cfg: Settings, rate: u32) {
+        self.since_move = self.since_move.saturating_add(n);
+        if self.state.grabbed
+            && let Some(motion) = &mut self.state.motion
+        {
+            self.state.slip += n as f64 * f64::from(cfg.speed);
+            motion.elapsed = u64::from(motion.elapsed)
+                .saturating_add(n)
+                .min(u64::from(motion.duration)) as u32;
+            self.state.head = motion.position();
+            self.rate = motion.speed();
+            return;
+        }
         let n = n as f64;
         self.state.slip += n * f64::from(cfg.speed);
         if self.state.grabbed {
@@ -205,7 +342,9 @@ impl Player {
         if self.state.slip.abs() > pcm.len().max(1) as f64 * 1024. {
             self.state = self.state.normalized(pcm.len());
         }
-        let audible = !(cfg.reverse_cut && self.state.grabbed && self.state.returning);
+        let audible = !(self.manual_cut
+            || self.state.muted
+            || cfg.reverse_cut && self.state.grabbed && self.state.returning);
         let step = 1. / (rate as f32 * 0.003).max(1.);
         self.cut_gain = if audible {
             (self.cut_gain + step).min(1.)

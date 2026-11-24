@@ -249,7 +249,7 @@ impl Engine {
                 self.decks[i].start(0.);
             }
             self.capture_events.push(Event {
-                deck: Some(self.decks[i].state.normalized(self.tracks[i].source_frames)),
+                deck: Some(self.deck_control(i)),
                 timing: None,
                 slice: false,
                 tick: 0,
@@ -607,6 +607,11 @@ impl Engine {
 }
 
 impl Engine {
+    fn deck_control(&self, i: usize) -> crate::deck::Control {
+        let mut c = self.decks[i].state.normalized(self.tracks[i].source_frames);
+        c.muted |= self.deck_cuts[i];
+        c
+    }
     pub(super) fn capture_deck(&mut self, i: usize) -> Result<(), Error> {
         let Some(r) = self.recorder.filter(|r| {
             r.track == i
@@ -624,9 +629,10 @@ impl Engine {
             .last()
             .is_some_and(|e| e.tick == tick - r.start && e.deck.is_some() && e.on);
         if (self.capture_events.len() >= MAX_EVENTS && !coalesce)
-            || !self
-                .deck_spans
-                .edge(tick - r.start, self.decks[i].state.grabbed)
+            || !self.deck_spans.edge(
+                tick - r.start,
+                self.decks[i].state.grabbed || self.deck_cuts[i],
+            )
         {
             self.event_overflows += 1;
             self.cancel_capture();
@@ -634,7 +640,7 @@ impl Engine {
             return Err(Error::Capacity);
         }
         let event = Event {
-            deck: Some(self.decks[i].state.normalized(self.tracks[i].source_frames)),
+            deck: Some(self.deck_control(i)),
             timing: None,
             slice: false,
             tick: tick - r.start,

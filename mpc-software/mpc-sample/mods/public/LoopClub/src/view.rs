@@ -2771,7 +2771,10 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     p.text(150, 76, 160, 20, 17., INK, &s.name(ui.selected));
     let grabbed = s.words[1191] & 2 != 0;
     let speed = s.deck_rate();
-    let state = if s.words[1191] & 4 == 0 {
+    let closed = s.words[1191] & (1 << 5) != 0;
+    let state = if closed {
+        "CUT"
+    } else if s.words[1191] & 4 == 0 {
         "READY"
     } else if !grabbed {
         "PLAY"
@@ -2797,7 +2800,7 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     p.text(
         150,
         124,
-        160,
+        100,
         18,
         14.,
         INK,
@@ -2806,6 +2809,19 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             f64::from(s.deck_head()) * seconds,
             seconds
         ),
+    );
+    p.text(
+        252,
+        124,
+        58,
+        18,
+        10.,
+        if ui.deck_latched == Some(ui.selected) {
+            GOLD
+        } else {
+            DIM
+        },
+        "P1 ON/OFF",
     );
     p.rect(150, 144, 70, 17, if s.deck().slip { GOLD } else { BG });
     p.text(
@@ -2824,7 +2840,13 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         17,
         13.,
         if grabbed { GOLD } else { DIM },
-        if grabbed { "GRABBED" } else { "PAD 1 GRAB" },
+        if closed {
+            "CUT HELD"
+        } else if grabbed {
+            "PAD 2 CUT"
+        } else {
+            "PAD 1 GRAB"
+        },
     );
     p.rect(5, 170, 310, 21, PANEL);
     // Draw directly in this strip: the generic timeline has its own margins

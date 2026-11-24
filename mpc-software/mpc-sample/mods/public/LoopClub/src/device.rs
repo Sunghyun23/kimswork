@@ -17,6 +17,91 @@ use std::{
     },
     time::{Duration, Instant},
 };
+// Scratch-only fast path: immutable UI route + lock-free audio commands.
+// Never calls a native widget, Graphics, filesystem, or mutable Ui from a worker.
+static SCRATCH_ROUTE: AtomicU8 = AtomicU8::new(255);
+static SCRATCH_CUT_OWNER: AtomicU8 = AtomicU8::new(255);
+static FADER_VALUE: AtomicU32 = AtomicU32::new(f32::NAN.to_bits());
+static FADER_EPOCH: OnceLock<Instant> = OnceLock::new();
+static FADER_TIMES: [std::sync::atomic::AtomicU64; 16] =
+    [const { std::sync::atomic::AtomicU64::new(0) }; 16];
+fn scratch_route(ui: &Ui, s: &Snapshot, browser: bool) -> u8 {
+    if !browser
+        && ui.active
+        && (ui.page == Page::Play || ui.page == Page::Loop && ui.loop_mode == 0 && !ui.loop_edit)
+        && s.track_kind(ui.selected) == Kind::Audio
+        && s.audio_target(ui.selected) == crate::audio::RecordTarget::Turntable
+    {
+        ui.selected as u8
+    } else {
+        255
+    }
+}
+fn timed_fader(track: usize, value: f32, received: Instant) {
+    let now = FADER_EPOCH
+        .get()
+        .and_then(|epoch| received.checked_duration_since(*epoch))
+        .map_or(1, |dt| {
+            dt.as_micros().min(u128::from(u64::MAX - 1)) as u64 + 1
+        });
+    let prior = FADER_TIMES[track].swap(now, Ordering::AcqRel);
+    let us = if prior == 0 {
+        0
+    } else {
+        now.saturating_sub(prior).min(u64::from(u32::MAX)) as u32
+    };
+    FADER_VALUE.store(value.to_bits(), Ordering::Release);
+    send(Command::DeckFaderTimed(track, value, us));
+}
+fn fast_fader(value: f32, received: Instant) -> bool {
+    let route = SCRATCH_ROUTE.load(Ordering::Acquire);
+    if route >= 16 || !runtime().is_some_and(|r| r.active.load(Ordering::Acquire)) {
+        return false;
+    }
+    timed_fader(usize::from(route), value, received);
+    true
+}
+fn fast_cut(on: bool, shift: bool) -> bool {
+    if !on {
+        let old = SCRATCH_CUT_OWNER.swap(255, Ordering::AcqRel);
+        if old < 16 {
+            send(Command::DeckCut(usize::from(old), false));
+            return true;
+        }
+        return false;
+    }
+    if shift || !runtime().is_some_and(|r| r.active.load(Ordering::Acquire)) {
+        return false;
+    }
+    let route = SCRATCH_ROUTE.load(Ordering::Acquire);
+    if route >= 16 {
+        return false;
+    }
+    let old = SCRATCH_CUT_OWNER.swap(route, Ordering::AcqRel);
+    if old != route {
+        if old < 16 {
+            send(Command::DeckCut(usize::from(old), false));
+        }
+        send(Command::DeckCut(usize::from(route), true));
+    }
+    true
+}
+pub(crate) fn fast_qa_input(input: crate::qa::Input, received: Instant) -> bool {
+    match input {
+        crate::qa::Input::Knob {
+            index: 20,
+            value,
+            shift: false,
+        } => fast_fader((value * 127.).round() / 127., received),
+        crate::qa::Input::Pad {
+            index: 1,
+            on,
+            shift,
+            ..
+        } => fast_cut(on, shift),
+        _ => false,
+    }
+}
 static RUNTIME: OnceLock<Box<Runtime>> = OnceLock::new();
 #[derive(Clone, Copy)]
 struct HardwarePad {
@@ -43,6 +128,7 @@ enum HardwareControl {
         low: f32,
         range: f32,
         shift: bool,
+        timestamp: Instant,
     },
     Encoder {
         delta: i32,
@@ -84,7 +170,14 @@ static DATA_CC_PENDING: std::sync::atomic::AtomicBool = std::sync::atomic::Atomi
 fn claim_data_turn(pending: &std::sync::atomic::AtomicBool, delta: i32) -> bool {
     delta != 0 && pending.swap(false, Ordering::AcqRel)
 }
+thread_local! {static CONTROL_ARRIVAL:std::cell::Cell<Option<Instant>>=const{std::cell::Cell::new(None)};}
 fn hardware_cc(event: CcEvent) -> Flow {
+    let received = Instant::now();
+    if event.control == 20
+        && fast_fader(normalize_cc(event.value, event.low, event.range), received)
+    {
+        return Flow::Consume;
+    }
     // DATA CC is the firmware's input to its higher-level encoder handler.
     // Forward it once; our independent encoder hook consumes the resulting turn.
     if event.control == u32::from(mpc_sample_sdk::event::cc::DATA) {
@@ -97,7 +190,16 @@ fn hardware_cc(event: CcEvent) -> Flow {
     if !runtime().is_some_and(|r| r.active.load(Ordering::Acquire)) {
         return Flow::Forward;
     }
-    if mpc_sample_sdk::loader::with_mod(|module| module.on_cc(event)).is_some() {
+    if mpc_sample_sdk::loader::with_mod(|module| {
+        CONTROL_ARRIVAL.with(|slot| {
+            let previous = slot.replace(Some(received));
+            let result = module.on_cc(event);
+            slot.set(previous);
+            result
+        })
+    })
+    .is_some()
+    {
         return if event.control == 19 {
             Flow::Forward
         } else {
@@ -110,6 +212,7 @@ fn hardware_cc(event: CcEvent) -> Flow {
         low: event.low,
         range: event.range,
         shift: mpc_sample_sdk::shift(),
+        timestamp: received,
     });
     if event.control == 19 {
         Flow::Forward
@@ -178,6 +281,13 @@ fn pad_input(event: PadEvent) -> PadResponse {
             token: 0,
         };
     }
+    if pad == 1 && fast_cut(on, mpc_sample_sdk::shift()) {
+        return PadResponse {
+            flow: Flow::Consume,
+            token: 0,
+        };
+    }
+    SCRATCH_ROUTE.store(255, Ordering::Release);
     // Only the SDK's nonblocking exclusive Mod dispatch may consume UI events.
     // Busy/reentrant callbacks retain ownership and enqueue the exact edge below.
     if mpc_sample_sdk::loader::with_mod(|module| {
@@ -483,6 +593,7 @@ pub struct LoopClub {
     tap_epoch: Option<Instant>,
     tap: crate::tempo::TapTempo,
     draining_inputs: bool,
+    control_timestamp: Option<Instant>,
 }
 impl LoopClub {
     /// Consume fallback edges under the SDK's exclusive Mod lock. Input callbacks
@@ -532,7 +643,9 @@ impl LoopClub {
                         low,
                         range,
                         shift,
+                        timestamp,
                     } => {
+                        self.control_timestamp = Some(timestamp);
                         self.control_cc(
                             CcEvent {
                                 event: 0,
@@ -583,6 +696,11 @@ impl LoopClub {
         self.draining_inputs = false;
     }
     fn control_cc(&mut self, event: CcEvent, shift: bool) -> Flow {
+        let received = self
+            .control_timestamp
+            .take()
+            .or_else(|| CONTROL_ARRIVAL.with(std::cell::Cell::get))
+            .unwrap_or_else(Instant::now);
         if event.control == u32::from(mpc_sample_sdk::event::cc::DATA) {
             return Flow::Forward;
         }
@@ -655,12 +773,25 @@ impl LoopClub {
             16..=18 => self
                 .ui
                 .knob((event.control - 16) as usize, value, &self.snapshot, send),
-            20 => self.ui.fader(value, &self.snapshot, send),
+            20 => {
+                FADER_VALUE.store(value.to_bits(), Ordering::Release);
+                self.ui.fader(value, &self.snapshot, |command| {
+                    if let Command::DeckFader(i, v) = command {
+                        timed_fader(i, v, received);
+                    } else {
+                        send(command);
+                    }
+                });
+            }
             _ => {}
         }
         Flow::Consume
     }
     fn refresh(&mut self) {
+        let value = f32::from_bits(FADER_VALUE.load(Ordering::Acquire));
+        if value.is_finite() {
+            self.ui.last_fader = Some(value);
+        }
         if let Some(s) = runtime().and_then(|r| r.snapshot.read()) {
             self.snapshot = s;
         }
@@ -702,6 +833,12 @@ impl LoopClub {
         }
     }
     fn leave(&mut self) {
+        SCRATCH_ROUTE.store(255, Ordering::Release);
+        let owner = SCRATCH_CUT_OWNER.swap(255, Ordering::AcqRel);
+        if owner < 16 {
+            send(Command::DeckCut(usize::from(owner), false));
+        }
+        self.ui.release_deck_latch(send);
         if let Some(r) = runtime() {
             r.emergency_stop();
             r.active.store(false, Ordering::Release)
@@ -805,6 +942,7 @@ impl Painter for NativePainter {
 }
 impl Mod for LoopClub {
     fn on_start(&mut self) {
+        let _ = FADER_EPOCH.set(Instant::now());
         let _ = RUNTIME.set(Box::new(Runtime::default()));
         self.armed = true;
         crate::qa::start();
@@ -834,6 +972,7 @@ impl Mod for LoopClub {
         }
     }
     fn on_button(&mut self, event: ButtonEvent) -> Flow {
+        SCRATCH_ROUTE.store(255, Ordering::Release);
         self.drain_pending_inputs();
         crate::qa::button();
         let timestamp = self.button_timestamp.take().unwrap_or_else(Instant::now);
@@ -1026,7 +1165,10 @@ impl Mod for LoopClub {
                     }
                 }
             }
-            81 => send(Command::Stop),
+            81 => {
+                self.ui.release_deck_latch(send);
+                send(Command::Stop);
+            }
             82 => send(Command::PlayAll),
             73 | 80 => {
                 if self.ui.loop_edit {
@@ -1099,6 +1241,7 @@ impl Mod for LoopClub {
         Flow::Consume
     }
     fn on_encoder(&mut self, event: EncoderEvent) -> Flow {
+        SCRATCH_ROUTE.store(255, Ordering::Release);
         self.drain_pending_inputs();
         if !self.ui.active {
             return Flow::Forward;
@@ -1114,6 +1257,7 @@ impl Mod for LoopClub {
         Flow::Consume
     }
     fn on_pad(&mut self, event: PadEvent) -> Flow {
+        SCRATCH_ROUTE.store(255, Ordering::Release);
         self.drain_pending_inputs();
         self.refresh();
         if !(0..16).contains(&event.pad) {
@@ -1166,7 +1310,8 @@ impl Mod for LoopClub {
             let Some(input) = crate::qa::pop() else {
                 break;
             };
-            match input {
+            let received = input.received;
+            match input.input {
                 crate::qa::Input::TransportButton {
                     code,
                     on,
@@ -1207,6 +1352,7 @@ impl Mod for LoopClub {
                     value,
                     shift,
                 } => {
+                    self.control_timestamp = Some(received);
                     self.control_cc(
                         CcEvent {
                             event: 0,
@@ -1241,6 +1387,10 @@ impl Mod for LoopClub {
         }
         self.drain_pending_inputs();
         self.refresh();
+        SCRATCH_ROUTE.store(
+            scratch_route(&self.ui, &self.snapshot, self.browser.open),
+            Ordering::Release,
+        );
         crate::qa::browser(self.browser.open, self.browser.row, self.browser.total());
         crate::qa::paint(&self.ui, &self.snapshot, self.browser.open);
         if !self.ui.active {
@@ -1299,6 +1449,60 @@ pub fn normalize_encoder(delta: i32) -> i32 {
 #[cfg(test)]
 mod regression_tests {
     use super::*;
+    #[test]
+    fn scratch_fast_route_is_limited_to_visible_turntable_performance() {
+        let mut e = Engine::new(8000, 100., 8000);
+        e.tracks[0].audio_target = crate::audio::RecordTarget::Turntable;
+        let s = Snapshot::capture(&e);
+        let mut ui = Ui::default();
+        ui.active = true;
+        for page in [
+            Page::Loop,
+            Page::Play,
+            Page::Grid,
+            Page::Mix,
+            Page::KitMix,
+            Page::TrackFx,
+            Page::MasterFx,
+            Page::Setup,
+            Page::Chop,
+            Page::Source,
+            Page::DrumSound,
+            Page::Output,
+            Page::Sidechain,
+            Page::Texture,
+            Page::FxSettings,
+            Page::Perform,
+        ] {
+            ui.page = page;
+            assert_eq!(
+                scratch_route(&ui, &s, false),
+                if matches!(page, Page::Loop | Page::Play) {
+                    0
+                } else {
+                    255
+                }
+            );
+            assert_eq!(scratch_route(&ui, &s, true), 255);
+        }
+        ui.page = Page::Loop;
+        for mode in [1, 2] {
+            ui.loop_mode = mode;
+            assert_eq!(scratch_route(&ui, &s, false), 255);
+        }
+        ui.loop_mode = 0;
+        ui.loop_edit = true;
+        assert_eq!(scratch_route(&ui, &s, false), 255);
+        ui.loop_edit = false;
+        ui.active = false;
+        assert_eq!(scratch_route(&ui, &s, false), 255);
+        ui.active = true;
+        e.tracks[0].kind = Kind::Synth;
+        assert_eq!(scratch_route(&ui, &Snapshot::capture(&e), false), 255);
+        e.tracks[0].kind = Kind::Audio;
+        e.tracks[0].audio_target = crate::audio::RecordTarget::Chromatic;
+        assert_eq!(scratch_route(&ui, &Snapshot::capture(&e), false), 255);
+    }
     #[test]
     fn immediate_mod_input_handles_navigation_and_fx_edges_without_paint() {
         let mut app = LoopClub::default();

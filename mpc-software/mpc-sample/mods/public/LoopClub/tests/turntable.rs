@@ -135,7 +135,7 @@ fn recording_replays_controls_keeps_pcm_and_supports_undo_redo_and_project_recal
     assert_eq!(loaded.tracks[0].audio[..8000], original);
 }
 #[test]
-fn pad_grab_and_fader_never_change_volume_and_release_survives_navigation() {
+fn pad_grab_toggle_and_fader_never_change_volume_and_release_preserves_latch() {
     let mut e = core();
     let mut u = Ui::default();
     u.page = Page::Play;
@@ -154,6 +154,11 @@ fn pad_grab_and_fader_never_change_volume_and_release_survives_navigation() {
     assert!(frames(&mut e, 500) > 0.01);
     u.navigate(Page::Mix, &Snapshot::capture(&e));
     u.pad(0, false, 0, false, false, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert!(e.decks[0].state.grabbed);
+    u.navigate(Page::Play, &Snapshot::capture(&e));
+    u.pad(0, true, 90, false, false, &Snapshot::capture(&e), |c| {
         e.command(c).unwrap();
     });
     assert!(!e.decks[0].state.grabbed);

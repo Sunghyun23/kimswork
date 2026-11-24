@@ -191,7 +191,10 @@ impl Snapshot {
             | (u64::from(d.state.grabbed) << 1)
             | (u64::from(d.active) << 2)
             | (u64::from(current.deck.reverse_cut) << 3)
-            | (u64::from(d.state.returning) << 4);
+            | (u64::from(d.state.returning) << 4)
+            | (u64::from(d.state.muted || e.deck_cuts[e.selected]) << 5)
+            | (u64::from(e.deck_cuts[e.selected]) << 6)
+            | (u64::from(d.state.motion.is_some()) << 7);
         s.words[1192] = pair(
             d.state.fader,
             crate::deck::position_fraction(d.state.slip, n),
@@ -617,7 +620,8 @@ pub struct FxEdit {
     pub texture: bool,
 }
 pub struct Ui {
-    pub deck_held: Option<usize>,
+    pub deck_cut_held: Option<usize>,
+    pub deck_latched: Option<usize>,
     pub last_fader: Option<f32>,
     pub pad_notes_edit: Option<bool>,
     pub pad_notes_source: Option<usize>,
@@ -685,7 +689,8 @@ impl Default for Ui {
             chop_slice: 0,
             chop_cursor: 0,
             chop_zoom: 0,
-            deck_held: None,
+            deck_cut_held: None,
+            deck_latched: None,
             last_fader: None,
             held_slices: [None; 16],
             chord_modes: [false; 16],
@@ -1318,6 +1323,9 @@ impl Ui {
                     crate::audio::RecordTarget::Turntable => crate::audio::RecordTarget::Input,
                 };
                 if target != next {
+                    if target == crate::audio::RecordTarget::Turntable {
+                        self.release_deck_latch(&mut send);
+                    }
                     send(Command::AudioTarget(self.selected, next));
                 }
                 self.chord_modes[self.selected] = chord;
@@ -1431,10 +1439,10 @@ impl Ui {
             return Action::None;
         }
         if !on {
-            if pad == 0
-                && let Some(track) = self.deck_held.take()
+            if pad == 1
+                && let Some(track) = self.deck_cut_held.take()
             {
-                send(Command::DeckGrab(track, false, self.last_fader));
+                send(Command::DeckCut(track, false));
             }
             if pad < 8 && self.texture_held[pad] {
                 self.texture_held[pad] = false;
@@ -1953,10 +1961,18 @@ impl Ui {
         if s.track_kind(self.selected) == Kind::Audio {
             if !shift && s.audio_target(self.selected) == crate::audio::RecordTarget::Turntable {
                 if pad == 0 {
-                    if let Some(old) = self.deck_held.replace(self.selected) {
-                        send(Command::DeckGrab(old, false, self.last_fader));
+                    if self.deck_latched == Some(self.selected) {
+                        self.release_deck_latch(&mut *send);
+                    } else {
+                        self.release_deck_latch(&mut *send);
+                        self.deck_latched = Some(self.selected);
+                        send(Command::DeckGrab(self.selected, true, self.last_fader));
                     }
-                    send(Command::DeckGrab(self.selected, true, self.last_fader));
+                } else if pad == 1 && self.deck_cut_held != Some(self.selected) {
+                    if let Some(old) = self.deck_cut_held.replace(self.selected) {
+                        send(Command::DeckCut(old, false));
+                    }
+                    send(Command::DeckCut(self.selected, true));
                 }
                 return Action::None;
             }
@@ -2047,12 +2063,23 @@ impl Ui {
         }
         Action::None
     }
+    pub fn release_deck_latch(&mut self, mut send: impl FnMut(Command)) {
+        if let Some(track) = self.deck_latched.take() {
+            send(Command::DeckGrab(track, false, self.last_fader));
+        }
+    }
     pub fn sync_chord_modes(&mut self, s: &Snapshot) {
         for i in 0..16 {
             self.chord_modes[i] = s.words[16 + i * 12] & (1 << 19) != 0;
         }
     }
     pub fn sync_loop_role(&mut self, s: &Snapshot) {
+        if self.deck_latched.is_some_and(|i| {
+            s.track_kind(i) != Kind::Audio
+                || s.audio_target(i) != crate::audio::RecordTarget::Turntable
+        }) {
+            self.deck_latched = None;
+        }
         self.loop_perform = self.loop_mode == 0;
         if self.page == Page::Loop && s.words[9] > 0 {
             let track = (s.words[9] - 1) as usize;

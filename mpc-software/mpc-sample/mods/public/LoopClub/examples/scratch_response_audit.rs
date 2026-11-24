@@ -29,7 +29,7 @@ fn measure(hz: u32, quantize: bool) {
             if quantize {
                 position = (position * 127.).round() / 127.;
             }
-            deck.move_to(position, cfg, bpm, rate);
+            deck.move_to_timed(position, cfg, bpm, rate, Some(1_000_000 / hz));
         }
         deck.sample(&pcm, cfg, rate);
         speeds.push(deck.rate as f64);
