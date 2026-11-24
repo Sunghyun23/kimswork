@@ -1,0 +1,59 @@
+{
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.14.1",
+  "release_id": 456662682,
+  "source_commit": "e27e51b6de23dc7aa2267548c80ec44c80da51b1",
+  "tag": "loop-club/v0.14.1",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "loop-club-0.14.1-mpc-sample.zip",
+      "size": 812514,
+      "digest": "sha256:173d0a9eddc5a3ed5bd5aacc029ee60634f6962924c690ede2cb07c4dfbdb21b",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.14.1/loop-club-0.14.1-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.14.1-mpc-sample.zip.sha256",
+      "size": 98,
+      "digest": "sha256:8cc3c00172b7811202247e0c4c27f9d2f46b78512697a72c7ed4c07f91f9300c",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.14.1/loop-club-0.14.1-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "SHA256SUMS-0.14.1.txt",
+      "size": 203,
+      "digest": "sha256:7f038ea9295c8bfb4fb402210ee8fc960981ce84abfe198dfec8f9be8917b0ce",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.14.1/SHA256SUMS-0.14.1.txt"
+    }
+  ],
+  "existing_video_assets_changed": false,
+  "anonymous_assets": [
+    {
+      "name": "loop-club-0.14.1-mpc-sample.zip",
+      "bytes": 812514,
+      "sha256": "173d0a9eddc5a3ed5bd5aacc029ee60634f6962924c690ede2cb07c4dfbdb21b",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.14.1-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.14.1-mpc-sample.zip.sha256",
+      "bytes": 98,
+      "sha256": "8cc3c00172b7811202247e0c4c27f9d2f46b78512697a72c7ed4c07f91f9300c",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.14.1-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "SHA256SUMS-0.14.1.txt",
+      "bytes": 203,
+      "sha256": "7f038ea9295c8bfb4fb402210ee8fc960981ce84abfe198dfec8f9be8917b0ce",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=SHA256SUMS-0.14.1.txt"
+    }
+  ],
+  "tag_source_verified": true,
+  "status": "public release published; Pages deployment pending",
+  "native_tests": 411,
+  "responsive_cases": 35,
+  "internal_links": 491,
+  "project_menu": "SHIFT+SEQ; DATA turn/push",
+  "device_update": "withheld to preserve newly changed owner project; explicit confirmation pending",
+  "new_source_or_bank_files_published": false
+}
