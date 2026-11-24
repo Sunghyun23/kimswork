@@ -25,5 +25,30 @@
   ],
   "internal_links": 493,
   "responsive_cases": 35,
-  "website_content_name_scan": "PASS"
+  "website_content_name_scan": "PASS",
+  "release_id": 457413023,
+  "source_commit": "0c9655312e30ccb0400cb48044308a34915fc9aa",
+  "anonymous_assets_verified": [
+    {
+      "name": "loop-club-0.14.5-mpc-sample.zip",
+      "bytes": 979037,
+      "sha256": "3480e96ef3a1f1878a62da66ee3cb3e3e4929ab3ee1096d1280c30b32941d189",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.14.5-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.14.5-mpc-sample.zip.sha256",
+      "bytes": 98,
+      "sha256": "04ce19d23d81ec3bef891c3733001786ae4e186b8d4980f2031e8a0131af422c",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.14.5-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "SHA256SUMS-0.14.5.txt",
+      "bytes": 185,
+      "sha256": "4e73c365ea987a3a12e07878cad2d9a469beaf1a956ada237cb41e20bd154556",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=SHA256SUMS-0.14.5.txt"
+    }
+  ]
 }
