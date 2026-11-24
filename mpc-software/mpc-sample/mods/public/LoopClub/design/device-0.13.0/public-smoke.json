@@ -1,0 +1,8 @@
+{
+  "version": "0.13.0",
+  "library_sha256": "a3c2afcef5cba844055744edc9af0293fc74a2933fc1a31a91351c856f3e4493",
+  "owner16_tracks_and_bpm_preserved": true,
+  "usb_midi_audio_peak": 0.016085581853985786,
+  "usb_flags": [],
+  "scope": "Exact normal public ZIP library actual USB MIDI/audio; no owner save or extra restart, no physical input/maximum CPU claim"
+}

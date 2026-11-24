@@ -1,72 +1,54 @@
-Loop Club 0.11.4 — MPC Sample public preview — by kim
+Loop Club 0.13.0 — MPC Sample public preview — by kim
 
-MPC Sample firmware 1.3.0.12 only. SD preload mod, not MPC OS VST or firmware.
-Actual remote UI and USB audio are tested. Physical controls, calibrated
-analog input, power-cycle recovery and maximum-load acceptance are pending.
-32 shared Synth/Drum voices, 16 sampler voices. CPU headroom depends on FX.
+MPC Sample firmware1.3.0.12 only. An SD preload mod, not MPC OS VST or
+firmware. Actual remote screen/USB checks are separate from physical input,
+analog, power-cycle recovery and maximum-load acceptance.
 
-1. Save your project, power off, and back up existing autorun and projects.
-2. Under SampleBoot put the complete folder in autorun/mods/Loop Club/.
-   Otherwise put the complete autorun at the card root after preserving the
-   old folder. Never merge old/new boot files. Safely eject before booting.
-3. Press SAMPLE for LOOP. DATA chooses a track. B1 SOURCE chooses Audio /
-   Synth / Drum on an empty track; B2 SOUND edits it. Ordinary pads perform.
-4. SHIFT+track pad starts recording with count-in, retaining the LOOP screen.
-   SHIFT+same pad or REC finishes at the next bar. SHIFT+another pad queues
-   a bar-end handoff. B3 switches REPLACE (new length) / OVERDUB (old length).
-5. Audio SOURCE selects INPUT / CHROMATIC / CHOP explicitly. SOUND sets
-   Root/Tune/Warp and opens CHOP EDIT. Hold chromatic/chop performance pads
-   to repeat; release to stop. INPUT uses SHIFT+SAMPLE: LINE / MIC / USB.
-   BROWSE loads an existing WAV into an empty Audio track.
-6. Drum SOUND has two editable layers, Tune, Shift, Decay and REV. Ordinary
-   BROWSE loads a .lcbank kit; SOURCE pad5 or SHIFT+BROWSE imports a Drum
-   XPM after selecting bank A-H. Keep its WAV folders available until saved.
-7. SHIFT+B1/B2/B3 selects LOOP / MUTE / CHAIN. SHIFT+LOOP opens loop EDIT:
-   B1 COPY, B2 DELETE, B3 MOVE. Source then empty destination for COPY/MOVE;
-   same pad twice confirms DELETE. Stop/release notes/held FX before EDIT.
-   DATA, LOOP or SAMPLE leaves EDIT. SHIFT -/+ is latest-edit Undo/Redo.
-8. FX upper buttons select MIX / TRACK FX / MASTER FX. Effect pads are
-   momentary: press enables, release disables. SHIFT+press toggles LATCH.
-   Two insert slots can be active together; a third is refused visibly.
-   Turn DATA to focus an effect and push for its settings; return with B1.
-   Master has texture, performance FX and individual-drum/track sidechain.
-9. Stop/release notes before SHIFT+DATA -> PROJECT -> SAVE. Project format10
-   includes source PCM/zones, MIDI and independent loop origins/clock for
-   relative phase recall. Formats1-9 open; they cannot contain offsets that
-   were never saved. Older Loop Club versions cannot read new format10 saves.
-   Clip deletion keeps the sound/kit; Undo history clears on load/restart.
+1. Save work, power off and back up the complete existing autorun/projects.
+   Replace the whole autorun folder from the ZIP; never mix old/new files.
+   With SampleBoot, put the complete folder in autorun/mods/Loop Club/.
+   Safely eject before booting. No firmware is flashed.
+2. SAMPLE returns to LOOP. DATA selects a track. B1 SOURCE chooses Audio /
+   Synth / Drum; B2 SOUND edits it. Ordinary pads perform the chosen source.
+3. SHIFT+track pad starts recording with count-in. SHIFT+the same pad or REC
+   finishes at the bar; SHIFT+another pad queues a bar-end handoff. The LOOP
+   screen remains. REPLACE sets a new length; OVERDUB retains the old length.
+4. ERASE/COPY opens DELETE; SHIFT+ERASE/COPY opens COPY. B1/B2/B3 selects
+   COPY/DELETE/MOVE. Copy/move needs an empty destination; press the same pad
+   twice to confirm deletion. ERASE/COPY, DATA or SAMPLE exits. SHIFT -/+ is
+   latest-edit Undo/Redo. Drum/CHOP editing changes notes, not source samples.
+5. BROWSE loads an existing WAV on an empty Audio track, or an optional .lcbank
+   kit on Drum. SHIFT+BROWSE imports Drum XPM, choosing an A–H bank of16pads.
+   Keep sample folders available until the project is saved. Two layers per
+   drum retain Volume/Tune/Shift/Decay/REV. SOUND SHIFT+pad generates a drum
+   part; LOOP SHIFT+pad records only.
+6. Audio SOUND B1 cycles INPUT/CHROMATIC/CHORD/CHOP/TURN. TURN PAD1 toggles
+   GRAB on/off, PAD2 is momentary source-only CUT. Left fader moves platter;
+   K1Speed/K2Range/K3Level. SHIFT+B3 Slip; SHIFT+B2 optional Down Cut. STOP
+   releases Grab. Other loops continue. SHIFT+track pad records gestures and
+   cuts without changing original PCM; Overdub punches performed regions.
+7. TAP TEMPO sets40–240BPM; SHIFT+TAP toggles monitor metronome. LOOP SHIFT+
+   DATA opens SETUP: B1metronome/B2preroll/B3back. One-bar preroll has four
+   full clicks, separate from the ordinary metronome; clicks are not recorded
+   into source PCM or resampled audio. PROJECT K3Swing/SHIFT+K3grid.
+8. Track/master FX pads are momentary; SHIFT+press latches. Controls appear
+   below the pad board. Two track inserts can coexist; extra FX is refused.
+   Main master board retains textures, Duck and two custom performance FX.
+9. Stop and release notes/FX before PROJECT SAVE. Format12 reads1–11;
+   older apps reject12. Saved old scratch curves retain their old playback.
+   New live smoothing trades following lag for steadier motion (about40ms
+   braking horizon at50Hz). It is not a physical-turntable realism guarantee.
 
 Projects: <card>/LoopClub/Projects/. Optional banks: LoopClub/Expansions/.
-These folders are never included or replaced by this package. The ZIP only
-contains autorun files and licenses; original procedural drums are built in.
-It includes no firmware, third-party samples/MIDI, private bank or QA agent.
-XPM native FX/filter envelopes/Warp and XPN installers are not supported.
-USB is stereo, not independent per-drum stems. GRID shows first64events.
-Warp is bounded granular processing, not commercial transient-aware stretch.
+The ZIP contains no private/commercial bank, sample, MIDI, firmware or QA
+agent. Optional banks and projects are not replaced. Original procedural
+sounds are built in. USB is one stereo pair, not individual drum stems.
+32shared Synth/Drum voices and16sampler voices; FX/load can exceed headroom.
+GRID shows the first64events. Warp is bounded granular processing, not a
+commercial transient-aware algorithm. XPM native FX/envelopes/Warp and XPN
+installers are not reproduced. Full physical/analog/power-cycle QA is pending.
 
-Recovery: power off, remove/rename this autorun (or restore its backup), then
-power on. Do not remove the SD card during playback/recording/writes. No
-firmware flash or internal persistent service change is performed.
-
+Recovery: power off, restore your old autorun or rename/remove this one,
+then power on. Never remove SD during playback, recording or writes.
 Manual: https://kimswork.app/mods/loop-club/manual/
-Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.9.3/mpc-software/mpc-sample/mods/public/LoopClub
-
-0.11.1: Audio SOUND B1 cycles through CHORD and TURN. TURN: hold PAD1,
-move the fader; K1 Speed/K2 Range/K3 Level, SHIFT+B3 Slip. Record scratch
-with SHIFT+track pad, preserving original PCM. PROJECT K3 selects MIDI
-Swing, SHIFT+K3 eighth/sixteenth grid. Format9 reads1-8; older apps reject9.
-
-0.11.3: ERASE/COPY again exits LOOP EDIT. Drum/CHOP ERASE/COPY edits
-recorded MIDI notes only. B1 ERASE NOTES / B2 COPY NOTES / B3 DONE.
-Copy requires an empty destination lane; samples and CHOP regions remain.
-Drum SOUND SHIFT+pad generates without starting playback or recording.
-LOOP SHIFT+pad only starts/ends recording. TURN defaults BOTH DIR;
-SHIFT+B2 selects optional DOWN CUT (down audible/up muted re-arm).
-PAD1 release resumes forward playback. Format10 persists return-cut
-controls, reads1-9 and preserves legacy bidirectional settings.
-
-0.11.4: TAP TEMPO sets BPM from two or more taps (four-interval average,
-40-240 BPM). SHIFT+TAP TEMPO toggles monitor metronome; CLK indicates On.
-One-bar count-in emits four complete beats, independently of the regular
-metronome setting. Click is monitor-only, not source PCM/resampled audio.
-Existing recording/playback/non-Warp PCM tempo protections remain.
+Source: https://github.com/Sunghyun23/kimswork/tree/loop-club/v0.13.0/mpc-software/mpc-sample/mods/public/LoopClub

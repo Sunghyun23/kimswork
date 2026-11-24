@@ -1,0 +1,52 @@
+{
+  "version": "0.13.0",
+  "status": "public preview",
+  "project_format": 12,
+  "reads_formats": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "debug_tests": 405,
+  "release_realtime_motion_tests": 31,
+  "strict_clippy": true,
+  "arm64_normal_qa_builds": true,
+  "launcher_checks": 8,
+  "public_zip_sha256": "1c42ca759aa67cdcf5ad4f556ebfd7a9553f3668374e20d7171171c5f3dcaa34",
+  "public_library_sha256": "a3c2afcef5cba844055744edc9af0293fc74a2933fc1a31a91351c856f3e4493",
+  "private_banks_in_zip": false,
+  "qa_agent_in_zip": false,
+  "normal_scheduler_endpoint": "404 in normal builds",
+  "public_smoke": {
+    "version": "0.13.0",
+    "library_sha256": "a3c2afcef5cba844055744edc9af0293fc74a2933fc1a31a91351c856f3e4493",
+    "owner16_tracks_and_bpm_preserved": true,
+    "usb_midi_audio_peak": 0.016085581853985786,
+    "usb_flags": [],
+    "scope": "Exact normal public ZIP library actual USB MIDI/audio; no owner save or extra restart, no physical input/maximum CPU claim"
+  },
+  "sd_readbacks": 20,
+  "previous_sd_files_preserved": 20,
+  "responsive_cases": 28,
+  "internal_links": 489,
+  "new_videos": [
+    "loop-club-cosmic-105-scratch-mpc.mp4",
+    "loop-club-drums-bass-scratch-105-mpc.mp4"
+  ],
+  "existing_video_assets_changed": false,
+  "sdk_firmware_hash_source": "pinned upstream first4KiB reference, not independently remeasured by packager",
+  "remaining_checks": [
+    "physical input",
+    "analog latency",
+    "power-cycle recovery",
+    "maximum/long-session CPU"
+  ]
+}

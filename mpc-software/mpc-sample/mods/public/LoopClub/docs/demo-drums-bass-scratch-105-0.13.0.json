@@ -1,0 +1,185 @@
+{
+  "seconds": 92.41541950113378,
+  "video": "loop-club-drums-bass-scratch-105.mp4",
+  "bytes": 4654344,
+  "sha256": "f61f9bd1275fd7383933f56dd26bbfeee5546a82f089dafa74f7905a53a1e51a",
+  "actual_frames": 859,
+  "max_screen_gap_seconds": 0.11734014650573954,
+  "audio_callback_flags": [],
+  "adc_clock_drift_ms": 2.9949005908065374,
+  "linear_gain": 1.8297223391409039,
+  "decoded_peak": 0.8479062914848328,
+  "decoded_rms": 0.12594029307365417,
+  "decoded_audio_seconds": 92.41541950113378,
+  "decode_errors": "",
+  "owner16_restored": true,
+  "scratch_source_pcm_peak": 0.4973632991,
+  "sources": "Actual MPC Sample DRM + USB stereo. Drum and bass clips recorded live through USB MIDI in this take; Cosmic Vintage Drums private kit, internal two-osc mono bass, and personal Classic Ahhh from Studio Scratches / Beside, Change The Beat. Audio-clock programmed7bit scratch gestures. NOT human-hand performance. No host-rendered replacement audio.",
+  "stage_audio": [
+    {
+      "stage": "01 / START WITH THE DRUMS",
+      "start": 0.11447182510164566,
+      "end": 6.056137158098863,
+      "rms": 0.0,
+      "peak": 0.0
+    },
+    {
+      "stage": "02 / LOAD COSMIC VINTAGE DRUMS",
+      "start": 6.056137158098863,
+      "end": 9.936719450110104,
+      "rms": 0.0,
+      "peak": 0.0
+    },
+    {
+      "stage": "03 / CHECK THE DRUM SOUNDS",
+      "start": 9.936719450110104,
+      "end": 12.237104325089604,
+      "rms": 0.03210693499062559,
+      "peak": 0.2274169921875
+    },
+    {
+      "stage": "04 / RECORD THE STRAIGHT BEAT",
+      "start": 12.237104325089604,
+      "end": 18.288779908092692,
+      "rms": 0.04897242381954496,
+      "peak": 0.43011474609375
+    },
+    {
+      "stage": "05 / THE DRUM LOOP IS RUNNING",
+      "start": 18.288779908092692,
+      "end": 25.851400992105482,
+      "rms": 0.06817350094511507,
+      "peak": 0.43011474609375
+    },
+    {
+      "stage": "06 / ADD A MONO BASS",
+      "start": 25.851400992105482,
+      "end": 29.12128332510474,
+      "rms": 0.07008616517950347,
+      "peak": 0.43011474609375
+    },
+    {
+      "stage": "07 / RECORD A FOUR-BAR BASSLINE",
+      "start": 29.12128332510474,
+      "end": 41.171611200115876,
+      "rms": 0.07367881373621378,
+      "peak": 0.464508056640625
+    },
+    {
+      "stage": "08 / DRUMS + BASS",
+      "start": 41.171611200115876,
+      "end": 50.69930665809079,
+      "rms": 0.07376436850890554,
+      "peak": 0.464508056640625
+    },
+    {
+      "stage": "09 / BALANCE THE TWO LOOPS",
+      "start": 50.69930665809079,
+      "end": 54.27660370009835,
+      "rms": 0.0731945467155905,
+      "peak": 0.402984619140625
+    },
+    {
+      "stage": "10 / BRING IN THE SCRATCH SOURCE",
+      "start": 54.27660370009835,
+      "end": 58.99177295010304,
+      "rms": 0.07364038567861694,
+      "peak": 0.464508056640625
+    },
+    {
+      "stage": "11 / BABY SCRATCH",
+      "start": 58.99177295010304,
+      "end": 61.29524840810336,
+      "rms": 0.09058878725934286,
+      "peak": 0.39385986328125
+    },
+    {
+      "stage": "12 / SHORTER BABIES",
+      "start": 61.29524840810336,
+      "end": 63.61588736710837,
+      "rms": 0.09265818159759595,
+      "peak": 0.425506591796875
+    },
+    {
+      "stage": "13 / FORWARD CUTS",
+      "start": 63.61588736710837,
+      "end": 65.82900153310038,
+      "rms": 0.07407905856486634,
+      "peak": 0.42919921875
+    },
+    {
+      "stage": "14 / SYNCOPATED CUTS",
+      "start": 65.82900153310038,
+      "end": 68.15940503310412,
+      "rms": 0.07928835990673237,
+      "peak": 0.464508056640625
+    },
+    {
+      "stage": "11 / BABY SCRATCH",
+      "start": 68.15940503310412,
+      "end": 70.43428420010605,
+      "rms": 0.09004801405700164,
+      "peak": 0.39251708984375
+    },
+    {
+      "stage": "12 / SHORTER BABIES",
+      "start": 70.43428420010605,
+      "end": 72.70063320008921,
+      "rms": 0.09087069884344771,
+      "peak": 0.402984619140625
+    },
+    {
+      "stage": "13 / FORWARD CUTS",
+      "start": 72.70063320008921,
+      "end": 75.06591528310673,
+      "rms": 0.08233999898068488,
+      "peak": 0.42919921875
+    },
+    {
+      "stage": "14 / SYNCOPATED CUTS",
+      "start": 75.06591528310673,
+      "end": 77.25966728309868,
+      "rms": 0.07126619336613205,
+      "peak": 0.464508056640625
+    },
+    {
+      "stage": "15 / LET THE GROOVE RUN",
+      "start": 77.25966728309868,
+      "end": 86.65951095009223,
+      "rms": 0.07522225275118785,
+      "peak": 0.464508056640625
+    },
+    {
+      "stage": "16 / THE MIX",
+      "start": 86.65951095009223,
+      "end": 92.41541950113378,
+      "rms": 0.06916283356088146,
+      "peak": 0.402984619140625
+    }
+  ],
+  "gesture_timing_ms": {
+    "max_audio_clock_ms": 0.0
+  },
+  "audio_clock_event_count": 1869,
+  "version": "0.13.0",
+  "bpm": 105,
+  "drum_bank": "Cosmic Vintage Drums Private",
+  "drum_kit": "Stand2gether E 105",
+  "swing_percent": 50,
+  "drum_bars": 1,
+  "drum_events": 44,
+  "bass_bars": 4,
+  "bass_events": 48,
+  "output": "build/demos/cosmic-build-bass-scratch-105-0.13.0-20261124/loop-club-drums-bass-scratch-105.mp4",
+  "audio": "build/demos/cosmic-build-bass-scratch-105-0.13.0-20261124/loop-club-drums-bass-scratch-105.wav",
+  "schedule": {
+    "applied": 1869,
+    "busy": false,
+    "max_late_ticks": 0,
+    "ready": false,
+    "scope": "isolated QA sample-clock, quantized fader input; NOT physical hand performance"
+  },
+  "owner_project_saved": false,
+  "raw_sample_or_bank_distributed": false,
+  "existing_videos_retained": true
+}

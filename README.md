@@ -22,7 +22,7 @@ mpc-software/
     private/splat-to-clat/                 Local-only source and optional pack
   shared/groove-dice-expansion/             Dedicated .gdexp manager/validator
   mpc-sample/                              MPC Sample hardware mods/tools/docs
-    mods/public/LoopClub/                  Loop Club 16-track looper (0.11.1 preview)
+    mods/public/LoopClub/                  Loop Club 16-track looper (0.13.0 preview)
   docs/                                    Product specifications and records
   scripts/                                 Build/test/bootstrap entry points
   third_party/mpc-plugin-builder-sdk/       One pinned, unmodified SDK checkout
@@ -52,7 +52,7 @@ Install developer dependencies from `mpc-software/requirements-dev.txt`. Follow 
 | Crate Press | [0.2.6 stable](https://github.com/Sunghyun23/kimswork/releases/tag/crate-press/v0.2.6), partial hardware verification | [Manual](mpc-software/docs/plugins/crate-press/manual.md), [verification](mpc-software/docs/plugins/crate-press/validation.md) |
 | Groove Dice | [1.11.0 stable](https://github.com/Sunghyun23/kimswork/releases/tag/groove-dice/v1.11.0), original core | [README](mpc-software/plugins/public/GrooveDice/README.md), [verification](mpc-software/plugins/public/GrooveDice/VALIDATION.md) |
 | Felt Club | [0.3.2 stable](https://github.com/Sunghyun23/kimswork/releases/tag/felt-club/v0.3.2) | [Manual](mpc-software/docs/plugins/felt-club/manual.md), [verification](mpc-software/plugins/public/FeltClub/design/validation-0.3.2/README.md) |
-| Loop Club | [0.11.1 public preview](https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.11.1), MPC Sample1.3.0.12 | [Manual](mpc-software/mpc-sample/mods/public/LoopClub/docs/manual.md), [verification](mpc-software/mpc-sample/mods/public/LoopClub/docs/release-0.11.1.md) |
+| Loop Club | [0.13.0 public preview](https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.13.0), MPC Sample1.3.0.12 | [Manual](mpc-software/mpc-sample/mods/public/LoopClub/docs/manual.md), [verification](mpc-software/mpc-sample/mods/public/LoopClub/docs/release-0.13.0.md) |
 | Groove Dice Pack Builder | 1.0.0 standalone macOS/Windows app | [Project](mpc-software/apps/public/GrooveDicePackBuilder/README.md) |
 
 MPC OS plugin installation requires standalone OS3.10.1+ and Enable Enhancements / External Plugin Support. Current NVMe builds are Donut Theory1.15.4, Groove Dice1.11.0, Felt Club0.3.2 and Crate Press0.2.6. Existing owner Groove packs/captures are preserved; public ZIPs contain only the original core. The latest SD copy is **pending**: card backup disconnected before any new SD write. Do not overwrite old card content without preserving it. SSD remains untouched. Open MPC submission/CI, hardware limits and actual-image scope are recorded in [current publication](mpc-software/docs/releases/2026-11-22.md).
