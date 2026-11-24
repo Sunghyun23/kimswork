@@ -1,0 +1,89 @@
+{
+  "seconds": 25.913469387755104,
+  "video": "scratch-toggle-demo.mp4",
+  "bytes": 1273345,
+  "sha256": "3e56e9c16a16829c1f3a14cb30445e8dad6b90aeb83f16d03ab67e418f5f92bf",
+  "actual_frames": 105,
+  "max_screen_gap_seconds": 0.25461439599166624,
+  "audio_callback_flags": [],
+  "adc_clock_drift_ms": 1.1033469699803788,
+  "linear_gain": 3.2227103756155167,
+  "decoded_peak": 0.845784604549408,
+  "decoded_rms": 0.13181176781654358,
+  "decoded_audio_seconds": 25.913469387755104,
+  "decode_errors": "",
+  "owner16_restored": true,
+  "scratch_source_pcm_peak": 0.4973632991,
+  "sources": "Actual MPC Sample DRM + USB stereo. Original procedural drums and personal Classic Ahhh from Studio Scratches / Beside, Change The Beat. Remote 50Hz target fader trajectories, PAD1 grab toggle and PAD2 dedicated cuts. Not a physical human-hand performance. No synthesis/host audio rendering. Private demo only; source excluded from public assets.",
+  "stage_audio": [
+    {
+      "stage": "01 / GRAB ON, HANDS FREE",
+      "start": 0.09712461606250145,
+      "end": 2.702966200042283,
+      "rms": 0.008939418984740495,
+      "peak": 0.124603271484375
+    },
+    {
+      "stage": "02 / ORIGINAL ONE-BAR BREAK",
+      "start": 2.702966200042283,
+      "end": 3.007901908044005,
+      "rms": 0.017330699014771144,
+      "peak": 0.138916015625
+    },
+    {
+      "stage": "03 / BABY SCRATCH",
+      "start": 3.007901908044005,
+      "end": 7.80998474106309,
+      "rms": 0.05424312977128933,
+      "peak": 0.254364013671875
+    },
+    {
+      "stage": "04 / FORWARD STABS",
+      "start": 7.80998474106309,
+      "end": 12.611106450058287,
+      "rms": 0.04109959946235989,
+      "peak": 0.25634765625
+    },
+    {
+      "stage": "05 / CHIRP-STYLE CUTS",
+      "start": 12.611106450058287,
+      "end": 17.445333325042157,
+      "rms": 0.053592499805396224,
+      "peak": 0.26373291015625
+    },
+    {
+      "stage": "06 / TRANSFORMER-STYLE GATES",
+      "start": 17.445333325042157,
+      "end": 22.209120450046612,
+      "rms": 0.0350270423465854,
+      "peak": 0.214935302734375
+    },
+    {
+      "stage": "07 / BACK TO THE BREAK",
+      "start": 22.209120450046612,
+      "end": 23.405186950054485,
+      "rms": 0.014828308209193378,
+      "peak": 0.131622314453125
+    },
+    {
+      "stage": "08 / TOGGLE GRAB OFF",
+      "start": 23.405186950054485,
+      "end": 25.913469387755104,
+      "rms": 0.02439974823451559,
+      "peak": 0.197998046875
+    }
+  ],
+  "remote_input_lateness_ms": {
+    "median": 1.9393856637179852,
+    "p95": 25.661293874145485,
+    "max": 63.47209415980615
+  },
+  "remote_event_count": 1030,
+  "bpm": 100,
+  "output": "build/demos/scratch-toggle-0.12.0-20261124/scratch-toggle-demo.mp4",
+  "audio": "build/demos/scratch-toggle-0.12.0-20261124/scratch-toggle-audio.wav",
+  "existing_videos_preserved": true,
+  "owner_project_saved": false,
+  "runtime_restored": "normal 0.12.0 c8c5b7c308c0452faf866b536e730bd5e4c8b8519a6d7e0cd6ae39456942a904",
+  "public_release_or_site_changed": false
+}
