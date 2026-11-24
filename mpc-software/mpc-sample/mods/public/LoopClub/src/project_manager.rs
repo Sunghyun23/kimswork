@@ -28,6 +28,7 @@ pub struct View {
     pub message: &'static str,
     pub revision: u64,
     pub replaced: u64,
+    pub completed: u64,
 }
 #[derive(Default)]
 struct Shared {
@@ -304,6 +305,9 @@ impl Worker {
         }
         self.view.busy = false;
         self.view.revision += 1;
+        if done.is_ok() && req.operation != Operation::Scan {
+            self.view.completed = self.view.completed.wrapping_add(1);
+        }
         self.view.message = match done {
             Ok(()) => match req.operation {
                 Operation::New => "NEW PROJECT / NOT SAVED",
@@ -317,6 +321,7 @@ impl Worker {
         };
         if let Some(store) = &mut self.store {
             store.view.revision = self.view.revision;
+            store.view.completed = self.view.completed;
         }
         self.pending = None;
         publish(&self.view);
@@ -336,21 +341,38 @@ pub struct Manager {
     pub row: usize,
     pub view: View,
     pub replaced: u64,
+    completed: u64,
+    return_to_loop: bool,
 }
 impl Manager {
     pub fn refresh(&mut self) -> bool {
-        if let Some(m) = SHARED.get()
-            && let Ok(s) = m.try_lock()
-        {
-            self.view = s.view.clone();
+        let view = SHARED
+            .get()
+            .and_then(|m| m.try_lock().ok().map(|s| s.view.clone()));
+        if let Some(view) = view {
+            return self.accept(view);
         }
-        if self.view.replaced != self.replaced {
+        false
+    }
+    fn accept(&mut self, view: View) -> bool {
+        self.view = view;
+        let replaced = self.view.replaced != self.replaced;
+        if replaced {
             self.replaced = self.view.replaced;
             self.screen = Screen::Menu;
             self.row = 0;
-            return true;
         }
-        false
+        if self.view.completed != self.completed {
+            self.completed = self.view.completed;
+            self.open = false;
+            self.screen = Screen::Menu;
+            self.row = 0;
+            self.return_to_loop = true;
+        }
+        replaced
+    }
+    pub fn take_return_to_loop(&mut self) -> bool {
+        std::mem::take(&mut self.return_to_loop)
     }
     pub fn start(&mut self, operation: Operation) {
         self.open = true;
@@ -610,7 +632,7 @@ pub fn diagnostics() -> serde_json::Value {
         .get()
         .and_then(|m| m.try_lock().ok().map(|s| s.view.clone()))
         .unwrap_or_default();
-    serde_json::json!({"open":pos&1!=0,"screen":(pos>>1)&3,"row":pos>>8,"current":view.current,"names":view.names,"busy":view.busy,"message":view.message,"revision":view.revision,"replaced":view.replaced})
+    serde_json::json!({"open":pos&1!=0,"screen":(pos>>1)&3,"row":pos>>8,"current":view.current,"names":view.names,"busy":view.busy,"message":view.message,"revision":view.revision,"replaced":view.replaced,"completed":view.completed})
 }
 
 #[cfg(test)]
@@ -863,5 +885,55 @@ mod tests {
         m.view.busy = false;
         m.button(6, false);
         assert!(!m.open);
+    }
+    #[test]
+    fn successful_project_completion_closes_menu_and_returns_to_loop_exactly_once() {
+        for replaced in [0, 1] {
+            let mut m = Manager {
+                open: true,
+                screen: Screen::Confirm(Operation::New),
+                row: 1,
+                ..Manager::default()
+            };
+            let view = View {
+                completed: 1,
+                replaced,
+                ..View::default()
+            };
+            assert_eq!(m.accept(view.clone()), replaced != 0);
+            assert!(!m.open);
+            assert_eq!(m.screen, Screen::Menu);
+            assert_eq!(m.row, 0);
+            assert!(m.take_return_to_loop());
+            assert!(!m.take_return_to_loop());
+            assert!(!m.accept(view));
+            assert!(!m.take_return_to_loop());
+        }
+    }
+    #[test]
+    fn project_scan_busy_and_failure_do_not_close_menu_or_request_loop() {
+        let mut m = Manager {
+            open: true,
+            screen: Screen::Open,
+            row: 3,
+            ..Manager::default()
+        };
+        for (revision, busy, message) in [
+            (1, true, "WORKING..."),
+            (2, false, ""),
+            (3, false, "STOP / RELEASE NOTES FIRST"),
+            (4, false, "PROJECT IO ERROR / CURRENT KEPT"),
+        ] {
+            assert!(!m.accept(View {
+                revision,
+                busy,
+                message,
+                ..View::default()
+            }));
+            assert!(m.open);
+            assert_eq!(m.screen, Screen::Open);
+            assert_eq!(m.row, 3);
+            assert!(!m.take_return_to_loop());
+        }
     }
 }

@@ -812,3 +812,112 @@ fn monitor_metronome_count_in_and_toggle_never_allocate_or_free() {
     TRACK.with(|t| t.set(false));
     assert_eq!(COUNT.with(Cell::get), 0);
 }
+
+#[test]
+fn stop_trim_padding_and_rewind_do_not_allocate_or_free() {
+    let mut e = Engine::new(8000, 240., 24000);
+    e.preroll = 0;
+    e.latency_in = 16;
+    e.command(Command::LoopRecord(0)).unwrap();
+    for _ in 0..500 {
+        e.process(Frame::mono(0.2));
+    }
+    COUNT.with(|c| c.set(0));
+    TRACK.with(|t| t.set(true));
+    e.command(Command::Stop).unwrap();
+    e.command(Command::Stop).unwrap();
+    for _ in 0..1000 {
+        e.process(Frame::ZERO);
+    }
+    TRACK.with(|t| t.set(false));
+    assert_eq!(COUNT.with(Cell::get), 0);
+    assert!(e.recorder.is_none());
+    assert_eq!(e.clock.frame, 0);
+}
+
+#[test]
+fn stop_padding_finishes_even_when_input_stream_is_already_closed() {
+    let mut e = Engine::new(8000, 240., 24000);
+    e.preroll = 0;
+    e.command(Command::LoopRecord(0)).unwrap();
+    for _ in 0..500 {
+        e.process(Frame::mono(0.2));
+    }
+    e.command(Command::Stop).unwrap();
+    let r = Runtime::default();
+    r.initialize(Box::new(e)).ok().unwrap();
+    r.active.store(true, Ordering::Release);
+    let mut block = [0i32; 256];
+    for _ in 0..10 {
+        r.output(&mut block, 2, 8000);
+    }
+    r.with_engine(|slot| {
+        let e = slot.as_ref().unwrap();
+        assert!(e.recorder.is_none());
+        assert_eq!(e.tracks[0].length_ticks, 4 * PPQ);
+        assert_eq!(e.tracks[0].audio[100], Frame::mono(0.2));
+        assert!(e.error.is_none());
+    })
+    .unwrap();
+}
+
+#[test]
+fn a_single_usb_input_gap_keeps_capture_but_is_reported() {
+    let mut e = Engine::new(8000, 240., 24000);
+    e.preroll = 0;
+    let r = Runtime::default();
+    r.initialize(Box::new(e)).ok().unwrap();
+    r.active.store(true, Ordering::Release);
+    r.output(&mut [0; 4], 2, 8000);
+    r.capture(Frame::mono(0.2), 8000);
+    r.enqueue(Command::LoopRecord(0));
+    r.output(&mut [0; 4], 2, 8000);
+    assert_eq!(r.missing_input.load(Ordering::Relaxed), 1);
+    r.with_engine(|slot| {
+        assert!(slot.as_ref().unwrap().recorder.is_some());
+    })
+    .unwrap();
+    for _ in 0..128 {
+        r.capture(Frame::mono(0.1), 8000);
+    }
+    r.output(&mut [0; 256], 2, 8000);
+    r.with_engine(|slot| {
+        assert!(slot.as_ref().unwrap().recorder.is_some());
+    })
+    .unwrap();
+}
+
+#[test]
+fn optional_top_note_voicing_and_chord_playback_allocate_nothing() {
+    let mut e = Engine::new(8000, 240., 16000);
+    e.tracks[0].kind = Kind::Synth;
+    e.command(Command::ChordValue {
+        track: 0,
+        index: 8,
+        value: 2.,
+    })
+    .unwrap();
+    COUNT.with(|c| c.set(0));
+    TRACK.with(|t| t.set(true));
+    for pad in [0, 4, 5, 3, 1, 6] {
+        e.command(Command::Chord {
+            track: 0,
+            pad,
+            velocity: 85,
+            on: true,
+        })
+        .unwrap();
+        for _ in 0..128 {
+            e.process(Frame::ZERO);
+        }
+        e.command(Command::Chord {
+            track: 0,
+            pad,
+            velocity: 0,
+            on: false,
+        })
+        .unwrap();
+    }
+    TRACK.with(|t| t.set(false));
+    assert_eq!(COUNT.with(Cell::get), 0);
+}

@@ -1,0 +1,73 @@
+{
+  "product": "Loop Club",
+  "version": "0.14.3",
+  "status": "verified local candidate installed runtime and SD",
+  "public_version": "0.14.1",
+  "firmware": "MPC Sample1.3.0.12",
+  "stop_policy": "Recording STOP commits and keeps playback; next STOP stops/rewinds. Playback STOP stops/rewinds in one press.",
+  "native_tests": 448,
+  "optimized_realtime_stop_tests": 36,
+  "strict_clippy": "PASS",
+  "arm64_normal_qa": "PASS",
+  "device": {
+    "checks": [
+      "Stopped transport -> immediately4-count display and exactly4USB clicks; native tests also cover old saved partial stopped clocks",
+      "STOP1commits MIDI capture and keeps playback; STOP2stops+rewinds; two callback edges per press; native resume scheduler regression passes",
+      "Real USB input in bar1 then silence: STOP1 commits exactly1bar/44100frames and keeps playback; finite waveform and no USB flags",
+      "All-silent USB audio input leaves an empty track"
+    ],
+    "remaining_count_at_first_observation": 3.903250217437744,
+    "preroll_usb_clicks": 4,
+    "first_click_seconds_including_capture_lead": 0.17492063492063492,
+    "midi_event_times": [
+      [
+        34107332,
+        60
+      ],
+      [
+        42791412,
+        64
+      ],
+      [
+        49284182,
+        67
+      ]
+    ],
+    "raw_audio_one_bar_frames": 44100,
+    "raw_audio_wave_peak": 0.12999996542930603,
+    "other_loops_continue_on_capture_stop": true,
+    "other_loops_usb_peak": 0.1436431109905243,
+    "next_stop_stops_and_rewinds": true,
+    "usb_flags": [],
+    "missing_input_frames_reported": 1,
+    "qa_timing": {
+      "blocks": 9468,
+      "max_deadline_pct": 112.5769,
+      "overrun_blocks": 2,
+      "p99_deadline_pct_upper": 35.0,
+      "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+    },
+    "normal_usb_midi_peak": 0.017955554649233818,
+    "normal_usb_flags": []
+  },
+  "artifacts": {
+    "qa_two_stage_sha256": "7bc7e6a2f6c9ff7d27f1c674810d4151db0addabab26922c6f914f075bd1de3c",
+    "normal_runtime_sd_sha256": "a0664a6b76dcadf45d78f7fe816d78456ea8894e2a8c05a5c334d61082e196ba"
+  },
+  "installation": {
+    "owner_discard_permission": "Explicit current changes may be discarded for QA",
+    "saved_session16tracks_bpm_input_restored": true,
+    "owner_saved_for_testing": false,
+    "sd_files_verified": 20,
+    "old_files_preserved": 20,
+    "state": "Normal LOOP stopped; volatile preroll1bar/metronomeOff; saved Session preserved"
+  },
+  "limits": [
+    "Actual independent queued callbacks, active DRM and USB MIDI/audio; not physical finger or analog latency certification.",
+    "Fixed -60dBFS silence threshold; wanted material below it does not extend the final bar.",
+    "Short input gaps are reported and zero filled; sustained10ms loss cancels only the current take.",
+    "Two QA deadline crossings including scheduler interruptions; no maximum CPU/long-session guarantee.",
+    "No power-cycle certification or public release/site deployment."
+  ],
+  "development_environment": "Only regenerable own target/debug cache removed after disk exhaustion; run.py defaults to no debug symbols while retaining assertions/tests, overridable by Cargo profile environment."
+}

@@ -37,6 +37,7 @@ fn cancel_count_in_keeps_other_track_playing() {
     e.tracks[1].playing = true;
     e.running = true;
     e.preroll = 1;
+    e.clock.frame = 100; // Running capture waits for the loop boundary, not another preroll.
     e.command(Command::Record(0)).unwrap();
     e.command(Command::Pad(0, false)).unwrap();
     assert!(e.recorder.is_none());
@@ -288,7 +289,10 @@ fn stopped_transport_finishes_input_latency_tail() {
     render(&mut e, 20, Frame::mono(0.42));
     assert!(e.recorder.is_none());
     assert_eq!(e.tracks[0].audio[7999], Frame::mono(0.42));
+    assert!(e.running);
+    e.command(Command::Stop).unwrap();
     assert!(!e.running);
+    assert_eq!(e.clock.frame, 0);
 }
 #[test]
 fn resample_records_current_mix_without_feedback() {

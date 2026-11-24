@@ -3,7 +3,9 @@ use crate::{
     engine::{Command, Engine},
     model::*,
 };
-pub const WORDS: usize = 1193;
+pub const DRUM_PREVIEW: usize = 1193;
+pub const COUNT_IN_START: usize = DRUM_PREVIEW + 18;
+pub const WORDS: usize = COUNT_IN_START + 1;
 #[derive(Clone, Copy)]
 pub struct Snapshot {
     pub words: [u64; WORDS],
@@ -136,9 +138,27 @@ impl Snapshot {
         t
     }
 
+    pub fn grid_event_count(&self) -> usize {
+        if self.words[DRUM_PREVIEW + 1] & (1 << 16) != 0 {
+            (self.words[DRUM_PREVIEW + 1] >> 32).min(64) as usize
+        } else {
+            self.words[16 + self.words[3] as usize * 12 + 6].min(64) as usize
+        }
+    }
+    pub fn grid_event_index(&self, local: usize) -> usize {
+        if self.words[DRUM_PREVIEW + 1] & (1 << 16) != 0 {
+            (self.words[353 + local.min(63) * 2] >> 32) as usize
+        } else {
+            local
+        }
+    }
     pub fn capture(e: &Engine) -> Self {
         let mut s = Self::default();
         s.words[0] = e.clock.frame;
+        s.words[COUNT_IN_START] = e
+            .recorder
+            .and_then(|r| r.count_in_start)
+            .map_or(0, |start| start.saturating_add(1));
         s.words[1] = u64::from(e.clock.rate);
         s.words[2] = e.clock.bpm.to_bits();
         s.words[3] = e.selected as u64;
@@ -260,7 +280,14 @@ impl Snapshot {
             s.words[b + 2] = pair(t.mix.delay, t.mix.room);
             s.words[b + 3] = pair(t.meter, t.gain);
             s.words[b + 4] = t.length_ticks;
-            s.words[b + 5] = t.phase(e.clock.tick());
+            s.words[b + 5] = if e
+                .recorder
+                .is_some_and(|r| r.launch_on_start && e.clock.tick() < r.start && i != r.track)
+            {
+                0
+            } else {
+                t.phase(e.clock.tick())
+            };
             s.words[b + 6] = e.visible_events(i).len() as u64;
             s.words[b + 9] = t.route as u64 | ((t.output as u64) << 8);
             s.words[b + 10] = u64::from(t.generated);
@@ -369,7 +396,8 @@ impl Snapshot {
             | (u64::from(t.chord.color) << 16)
             | ((t.chord.octave as u8 as u64) << 24)
             | (u64::from(t.chord.open) << 32)
-            | (u64::from(t.chord.smooth) << 33);
+            | (u64::from(t.chord.smooth) << 33)
+            | (u64::from(t.chord.top_note) << 34);
         s.words[348] = u64::from(t.synth.wave) | ((t.synth.octave as u8 as u64) << 8);
         s.words[349] = pair(t.synth.cutoff, t.synth.attack);
         s.words[350] = pair(t.synth.release, t.synth.detune);
@@ -400,14 +428,55 @@ impl Snapshot {
         s.words[786] = u64::from(t.synth.lfo_shape)
             | (u64::from(t.synth.lfo_sync) << 8)
             | (u64::from(t.synth.lfo_division) << 16);
-        for (i, event) in e.visible_events(e.selected).iter().take(64).enumerate() {
-            let b = 352 + i * 2;
+        if t.kind == Kind::Drum {
+            let recording = e.recorder.filter(|r| r.track == e.selected && r.midi);
+            let elapsed = recording.map_or_else(
+                || t.phase(e.clock.tick()),
+                |r| e.clock.tick().saturating_sub(r.start),
+            );
+            let start = if recording.is_some() {
+                elapsed / (4 * PPQ) * (4 * PPQ)
+            } else {
+                e.drum_preview_bar
+                    .filter(|(track, _)| *track == e.selected)
+                    .map_or(elapsed / (4 * PPQ) * (4 * PPQ), |(_, bar)| bar * 4 * PPQ)
+            };
+            s.words[DRUM_PREVIEW] = start;
+            s.words[DRUM_PREVIEW + 1] = u64::from(e.drum_activity(e.selected));
+            // Capture may be unsorted while overdubbing. Scan the bounded complete
+            // event slice; never truncate a later bar to the first64 editor events.
+            for event in e.visible_events(e.selected) {
+                if event.on && event.tick >= start && event.tick < start + 4 * PPQ {
+                    let cell = (event.tick - start) * 64 / (4 * PPQ);
+                    s.words[DRUM_PREVIEW + 2 + usize::from(event.note % 16)] |= 1 << cell;
+                }
+            }
+        }
+        let viewport = t.kind == Kind::Drum
+            && e.drum_preview_bar
+                .is_some_and(|(track, _)| track == e.selected);
+        let start = s.words[DRUM_PREVIEW];
+        let mut count = 0;
+        for (index, event) in e.visible_events(e.selected).iter().enumerate() {
+            if viewport && (event.tick < start || event.tick >= start + 4 * PPQ) {
+                continue;
+            }
+            if count == 64 {
+                break;
+            }
+            let b = 352 + count * 2;
             s.words[b] = event.tick;
             s.words[b + 1] = u64::from(event.note)
                 | (u64::from(event.velocity) << 8)
                 | (u64::from(event.slice) << 24)
                 | (u64::from(event.on) << 16)
+                | if viewport { (index as u64) << 32 } else { 0 };
+            count += 1;
         }
+        if viewport {
+            s.words[DRUM_PREVIEW + 1] |= (1 << 16) | ((count as u64) << 32);
+        }
+
         s
     }
     pub fn slice(&self, i: usize) -> crate::chop::Slice {
@@ -453,6 +522,7 @@ impl Snapshot {
             strum_ms: lo(self.words[1186]),
             strum_direction: hi(self.words[1186]) as u8,
             smooth: self.words[480] & (1 << 33) != 0,
+            top_note: self.words[480] & (1 << 34) != 0,
             key: v as u8,
             scale: (v >> 8) as u8,
             color: (v >> 16) as u8,
@@ -605,6 +675,7 @@ pub enum Action {
     InputSource(u8),
     Browse,
     BrowseXpm,
+    DefaultScratch,
     None,
     Save,
     Load,
@@ -621,7 +692,25 @@ pub struct FxEdit {
     pub effect: Effect,
     pub texture: bool,
 }
+#[derive(Clone, Copy)]
+struct NavContext {
+    page: Page,
+    synth_page: u8,
+    grid_bar: u64,
+    setup_timing: bool,
+    input_view: bool,
+    layer: usize,
+    layer_detail: bool,
+    perform_section: u8,
+    master_target: u8,
+    fx_slot: usize,
+    fx_edit: Option<FxEdit>,
+    loop_mode: u8,
+}
 pub struct Ui {
+    back_stack: [Option<NavContext>; 8],
+    back_len: usize,
+    navigating_back: bool,
     pub deck_cut_held: Option<usize>,
     pub deck_latched: Option<usize>,
     pub last_fader: Option<f32>,
@@ -674,6 +763,9 @@ pub struct Ui {
 impl Default for Ui {
     fn default() -> Self {
         Self {
+            back_stack: [None; 8],
+            back_len: 0,
+            navigating_back: false,
             pad_notes_edit: None,
             pad_notes_source: None,
             loop_edit: false,
@@ -877,12 +969,7 @@ impl Ui {
     }
     pub fn open_fx_settings(&mut self, s: &Snapshot) {
         if self.page == Page::FxSettings {
-            if let Some(e) = self.fx_edit {
-                self.navigate(e.from, s);
-                if !e.texture {
-                    self.fx_slot = e.slot;
-                }
-            }
+            self.back(s);
             return;
         }
         let from = self.page;
@@ -905,7 +992,7 @@ impl Ui {
                 ][self.texture_slot],
                 texture: true,
             });
-            self.page = Page::FxSettings;
+            self.navigate(Page::FxSettings, s);
             return;
         }
         let target = if from == Page::Texture {
@@ -955,7 +1042,7 @@ impl Ui {
                 effect,
                 texture: false,
             });
-            self.page = Page::FxSettings;
+            self.navigate(Page::FxSettings, s);
             self.notice = "";
         } else {
             self.notice = "2 FX MAX: RELEASE ONE";
@@ -1027,7 +1114,98 @@ impl Ui {
         true
     }
 
+    fn navigation_context(&self) -> NavContext {
+        NavContext {
+            page: self.page,
+            synth_page: self.synth_page,
+            grid_bar: self.grid_bar,
+            setup_timing: self.setup_timing,
+            input_view: self.input_view,
+            layer: self.layer,
+            layer_detail: self.layer_detail,
+            perform_section: self.perform_section,
+            master_target: self.master_target,
+            fx_slot: self.fx_slot,
+            fx_edit: self.fx_edit,
+            loop_mode: self.loop_mode,
+        }
+    }
+    pub fn back(&mut self, s: &Snapshot) {
+        if self.page == Page::DrumSound && self.layer_detail {
+            self.layer_detail = false;
+            self.notice = "";
+            return;
+        }
+        if self.page == Page::Setup && self.input_view {
+            self.input_view = false;
+            self.setup_timing = false;
+            self.notice = "";
+            return;
+        }
+        if self.page == Page::Setup && !self.setup_timing {
+            self.setup_timing = true;
+            self.notice = "";
+            return;
+        }
+        if self.page == Page::Play
+            && s.track_kind(self.selected) == Kind::Synth
+            && self.synth_page > 0
+        {
+            self.synth_page = 0;
+            self.notice = "";
+            return;
+        }
+        if self.back_len > 0 {
+            self.back_len -= 1;
+            if let Some(c) = self.back_stack[self.back_len].take() {
+                self.navigating_back = true;
+                self.navigate(c.page, s);
+                self.navigating_back = false;
+                if self.page == c.page {
+                    self.synth_page = c.synth_page;
+                    self.grid_bar = c.grid_bar;
+                    self.setup_timing = c.setup_timing;
+                    self.input_view = c.input_view;
+                    self.layer = c.layer;
+                    self.layer_detail = c.layer_detail;
+                    self.perform_section = c.perform_section;
+                    self.master_target = c.master_target;
+                    self.fx_slot = c.fx_slot;
+                    self.fx_edit = c.fx_edit;
+                    self.loop_mode = c.loop_mode;
+                    if let Some(mut edit) = self.fx_edit
+                        && edit.target == 0
+                        && edit.track != self.selected
+                    {
+                        edit.track = self.selected;
+                        edit.effect = s.fx(fx_base(0, edit.slot)).effect;
+                        self.fx_edit = Some(edit);
+                    }
+                    return;
+                }
+            }
+        }
+        let fallback = match self.page {
+            Page::FxSettings => self.fx_edit.map_or(Page::Loop, |edit| edit.from),
+            Page::Output | Page::KitMix | Page::TrackFx | Page::MasterFx | Page::Texture => {
+                Page::Mix
+            }
+            Page::Sidechain => Page::Texture,
+            Page::Perform => {
+                if s.track_kind(self.selected) == Kind::Drum {
+                    Page::DrumSound
+                } else {
+                    Page::Play
+                }
+            }
+            _ => Page::Loop,
+        };
+        self.navigating_back = true;
+        self.navigate(fallback, s);
+        self.navigating_back = false;
+    }
     pub fn navigate(&mut self, page: Page, s: &Snapshot) {
+        let previous = self.navigation_context();
         self.close_pad_notes_edit();
         self.input_view = false;
         if page != Page::Loop {
@@ -1056,6 +1234,19 @@ impl Ui {
             self.notice = "SELECT A DRUM TRACK FIRST";
             return;
         }
+        if !self.navigating_back && page != self.page {
+            if page == Page::Loop {
+                self.back_stack = [None; 8];
+                self.back_len = 0;
+            } else {
+                if self.back_len == 8 {
+                    self.back_stack.rotate_left(1);
+                    self.back_len = 7;
+                }
+                self.back_stack[self.back_len] = Some(previous);
+                self.back_len += 1;
+            }
+        }
         if self.page == Page::TrackFx {
             self.fx_pages[0] = (self.fx_slot, self.latch)
         } else if self.page == Page::MasterFx {
@@ -1065,6 +1256,9 @@ impl Ui {
             (self.fx_slot, self.latch) = self.fx_pages[0]
         } else if page == Page::MasterFx {
             (self.fx_slot, self.latch) = self.fx_pages[1]
+        }
+        if page == Page::Play && self.page != page && !self.navigating_back {
+            self.synth_page = 0;
         }
         if page == Page::DrumSound && self.page != page {
             self.layer_detail = false;
@@ -1103,6 +1297,50 @@ impl Ui {
             }
             return;
         }
+        if key == 0
+            && matches!(
+                self.page,
+                Page::Source
+                    | Page::DrumSound
+                    | Page::Perform
+                    | Page::FxSettings
+                    | Page::Output
+                    | Page::Sidechain
+                    | Page::Grid
+                    | Page::Mix
+                    | Page::KitMix
+                    | Page::TrackFx
+                    | Page::MasterFx
+                    | Page::Texture
+                    | Page::Chop
+            )
+            && !shift
+        {
+            self.back(s);
+            return;
+        }
+        if key == 0
+            && shift
+            && matches!(
+                self.page,
+                Page::Mix | Page::KitMix | Page::TrackFx | Page::MasterFx | Page::Texture
+            )
+        {
+            if s.track_kind(self.selected) == Kind::Drum {
+                self.navigate(Page::KitMix, s);
+            } else {
+                self.back(s);
+            }
+            return;
+        }
+        if self.page == Page::Play
+            && !shift
+            && (key == 2 && s.track_kind(self.selected) == Kind::Audio
+                || key == 0 && s.track_kind(self.selected) != Kind::Audio)
+        {
+            self.back(s);
+            return;
+        }
         if self.page == Page::Setup && !self.input_view {
             if self.setup_timing {
                 match key {
@@ -1117,7 +1355,7 @@ impl Ui {
                         };
                         send(Command::Preroll(next));
                     }
-                    _ => self.navigate(Page::Loop, s),
+                    _ => self.back(s),
                 }
             } else {
                 match key {
@@ -1133,12 +1371,41 @@ impl Ui {
             return;
         }
         if self.page == Page::Loop && self.loop_edit {
-            self.edit_operation = key.min(2) as u8;
+            if key == 2 {
+                self.loop_edit = false;
+                self.edit_source = None;
+                self.notice = "";
+                return;
+            }
+            self.edit_operation = if key == 0 && shift {
+                2
+            } else {
+                key.min(1) as u8
+            };
             self.edit_source = None;
             self.notice = "";
             return;
         }
 
+        if self.page == Page::Play && s.track_kind(self.selected) == Kind::Drum && key == 1 {
+            if s.words[9] != 0 {
+                self.notice = "FINISH REC BEFORE GENERATE";
+            } else {
+                send(if shift {
+                    Command::UndoDrumPart {
+                        track: self.selected,
+                        sound: self.sound,
+                    }
+                } else {
+                    Command::GenerateDrumPart {
+                        track: self.selected,
+                        sound: self.sound,
+                    }
+                });
+                self.notice = "";
+            }
+            return;
+        }
         if shift && key == 0 && matches!(self.page, Page::Play | Page::DrumSound) {
             self.navigate(Page::Perform, s);
             return;
@@ -1169,8 +1436,8 @@ impl Ui {
                 if shift {
                     send(Command::ChordValue {
                         track: self.selected,
-                        index: 5,
-                        value: f32::from(!s.chord().smooth),
+                        index: 8,
+                        value: f32::from((s.chord().voice_lead_mode() + 1) % 3),
                     });
                 } else {
                     let enabled = !self.chord_modes[self.selected];
@@ -1295,8 +1562,8 @@ impl Ui {
             if key == 1 && self.chord_modes[self.selected] {
                 send(Command::ChordValue {
                     track: self.selected,
-                    index: 5,
-                    value: if s.chord().smooth { 0. } else { 1. },
+                    index: 8,
+                    value: f32::from((s.chord().voice_lead_mode() + 1) % 3),
                 });
                 return;
             }
@@ -1514,6 +1781,26 @@ impl Ui {
             }
             return Action::None;
         }
+        if shift
+            && !erase
+            && self.pad_notes_edit.is_none()
+            && matches!(self.page, Page::Play | Page::DrumSound)
+            && s.track_kind(self.selected) == Kind::Drum
+        {
+            if crate::input_hw::pending() {
+                self.notice = "WAIT FOR INPUT SWITCH";
+                return Action::None;
+            }
+            send(Command::LoopRecord(pad));
+            self.navigate(Page::Loop, s);
+            self.loop_mode = 0;
+            if s.words[9] == 0 {
+                self.selected = pad;
+                self.pickup.select(s.level(pad));
+            }
+            self.notice = "";
+            return Action::None;
+        }
         if let Some(copy) = self.pad_notes_edit {
             if !self.pad_notes_context(s) {
                 self.close_pad_notes_edit();
@@ -1643,6 +1930,15 @@ impl Ui {
                         [Kind::Audio, Kind::Synth, Kind::Drum][pad],
                     ));
                     self.navigate(Page::Loop, s);
+                } else if pad == 7 && s.track_kind(self.selected) == Kind::Audio {
+                    if s.words[16 + self.selected * 12 + 11] == 0 {
+                        return Action::DefaultScratch;
+                    }
+                    send(Command::AudioTarget(
+                        self.selected,
+                        crate::audio::RecordTarget::Turntable,
+                    ));
+                    self.navigate(Page::Play, s);
                 } else if (4..=6).contains(&pad) && s.track_kind(self.selected) == Kind::Audio {
                     send(Command::AudioTarget(
                         self.selected,
@@ -1661,18 +1957,6 @@ impl Ui {
             }
             Page::DrumSound => {
                 if shift {
-                    self.sound = pad;
-                    send(if erase {
-                        Command::UndoDrumPart {
-                            track: self.selected,
-                            sound: pad,
-                        }
-                    } else {
-                        Command::GenerateDrumPart {
-                            track: self.selected,
-                            sound: pad,
-                        }
-                    });
                     return Action::None;
                 }
                 if self.sound != pad {
@@ -1957,7 +2241,7 @@ impl Ui {
         pad: usize,
         velocity: u8,
         shift: bool,
-        erase: bool,
+        _erase: bool,
         s: &Snapshot,
         send: &mut impl FnMut(Command),
     ) -> Action {
@@ -2017,18 +2301,7 @@ impl Ui {
             return Action::None;
         }
         if shift && s.track_kind(self.selected) == Kind::Drum {
-            self.sound = pad;
-            send(if erase {
-                Command::UndoDrumPart {
-                    track: self.selected,
-                    sound: pad,
-                }
-            } else {
-                Command::GenerateDrumPart {
-                    track: self.selected,
-                    sound: pad,
-                }
-            });
+            return Action::None;
         } else if shift {
             if pad >= ACTIVE_TRACKS {
                 return Action::None;
@@ -2176,7 +2449,7 @@ impl Ui {
             return;
         }
         if self.page == Page::Grid {
-            let n = s.words[16 + self.selected * 12 + 6].min(64) as usize;
+            let n = s.grid_event_count();
             let valid: Vec<usize> = (0..n)
                 .filter(|i| s.words[353 + i * 2] & (1 << 16) != 0)
                 .collect();
@@ -2767,7 +3040,7 @@ impl Ui {
                 let length = if index == 1 {
                     (PPQ as f32 * (0.0625 + value * 3.9375)) as u64
                 } else {
-                    let n = s.words[16 + self.selected * 12 + 6].min(64) as usize;
+                    let n = s.grid_event_count();
                     ((self.grid_event + 1)..n)
                         .find(|i| {
                             let f = s.words[353 + i * 2];
@@ -2779,7 +3052,7 @@ impl Ui {
                 };
                 send(Command::Edit {
                     track: self.selected,
-                    index: self.grid_event,
+                    index: s.grid_event_index(self.grid_event),
                     note,
                     velocity,
                     length,

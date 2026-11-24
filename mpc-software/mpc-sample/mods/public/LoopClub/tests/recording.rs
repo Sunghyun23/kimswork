@@ -90,19 +90,14 @@ fn synth_replace_discards_previous_notes_overdub_keeps_them() {
     }
 }
 #[test]
-fn drum_replace_touches_only_played_lane_and_does_not_accumulate() {
+fn drum_replace_replaces_all_lanes_and_does_not_accumulate() {
     let mut e = core(Kind::Drum);
     begin(&mut e);
     hit(&mut e, 0);
     until(&mut e, 200, 0.);
     hit(&mut e, 1);
     until(&mut e, 8001, 0.);
-    let kick: Vec<_> = e.tracks[0]
-        .events
-        .iter()
-        .filter(|e| e.note == 0)
-        .copied()
-        .collect();
+    assert!(e.tracks[0].events.iter().any(|e| e.note == 0 && e.on));
     until(&mut e, 8500, 0.);
     hit(&mut e, 1);
     until(&mut e, 8700, 0.);
@@ -115,7 +110,7 @@ fn drum_replace_touches_only_played_lane_and_does_not_accumulate() {
             .filter(|e| e.note == 0)
             .copied()
             .collect::<Vec<_>>(),
-        kick
+        Vec::<Event>::new()
     );
     assert_eq!(
         e.tracks[0]
@@ -143,7 +138,7 @@ fn drum_replace_touches_only_played_lane_and_does_not_accumulate() {
             .filter(|e| e.note == 0)
             .copied()
             .collect::<Vec<_>>(),
-        kick
+        Vec::<Event>::new()
     );
 }
 #[test]

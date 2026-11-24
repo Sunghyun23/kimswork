@@ -269,7 +269,7 @@ fn audio_source_target_labels_have_no_generic_footer_overlaid_on_their_rows() {
     u.navigate(Page::Source, &Snapshot::capture(&e));
     let mut p = Texts(Vec::new());
     view::render(&u, &Snapshot::capture(&e), &mut p);
-    for target in ["INPUT", "CHROMATIC", "CHOP"] {
+    for target in ["INPUT", "NOTES", "CHOP", "TURN"] {
         assert!(p.0.iter().any(|(y, t)| *y == 173 && t == target));
     }
     assert!(

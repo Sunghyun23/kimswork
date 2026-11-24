@@ -224,7 +224,7 @@ fn generation_does_not_start_transport_or_recording_but_updates_running_loop() {
     );
     u.navigate(Page::Play, &s);
     c.clear();
-    u.pad(0, true, 90, true, false, &s, |x| c.push(x));
+    u.soft(1, false, &s, |x| c.push(x));
     assert!(matches!(c.last(), Some(Command::GenerateDrumPart { .. })));
     assert!(!c.iter().any(|x| matches!(x, Command::LoopRecord(_))));
 }

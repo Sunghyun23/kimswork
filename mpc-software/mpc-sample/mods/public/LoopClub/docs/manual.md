@@ -1,6 +1,43 @@
 # Loop Club manual
 
-Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.14.1 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
+Loop Club by kim is a16-track audio/MIDI looper for **MPC Sample firmware 1.3.0.12**. Public preview0.14.4 provides all16active tracks, LOOP/MUTE/CHAIN, in-place copy/delete/move and playable FX. It is a preload mod on SD, not an MPC OS VST or flashed firmware. See [installation](https://kimswork.app/mods/loop-club/public-install.txt).
+
+## Recording alignment and top-note voicing — 0.14.4
+
+Public preview0.14.4 includes these changes, which supersede the older additional-recording/count-in descriptions below.
+
+- **Adding a recording while loops play:** wait for the first beat of the longest currently playing loop, with **no second preroll**. The screen and target cell show WAIT / WAIT LOOP START. Equal-length references use the earliest origin. Each loop keeps its own length; this is an implementation default, not a persistent master-loop setting or an LCM alignment of all different loop lengths.
+- **Recording from stopped transport:** existing completed loops remain stopped at their beginning during the configured preroll. They launch from their first beat together with recording. One-bar preroll gives four beats. Canceling before capture does not launch them; retargeting during preroll keeps the same scheduled start.
+- In **PLAY SETTINGS → CHORD**, press **SHIFT+B3** to cycle **VOICE OFF → SMOOTH → TOP NOTE**. Synth SOUND in CHORD mode also supports **SHIFT+B2**. Existing projects retain their previous SMOOTH behavior. TOP NOTE gives first priority to the smallest change of the highest note, then places lower voices nearby without crossing or changing pitch classes. It affects newly played/recorded chords; existing MIDI notes are not rewritten. The option saves with the project.
+- The two-stage recording STOP policy below remains: STOP1 commits the take while other loops continue; the next STOP stops and rewinds everything.
+
+## STOP and exact preroll — included in 0.14.4
+
+These changes supersede older STOP/cancel descriptions below and are included in public0.14.4.
+
+- **STOP during playback:** stop all playback and return the transport and all loop cursors to zero in one press. STOP while already stopped is idempotent. Stopped wave/MIDI cursors remain visible; detailed GRID returns to its first bar after rewind.
+- **STOP during recording:** end only the current recording, cancel a queued handoff, and commit the take through its last musical bar. Transport and the other loops continue. **Press STOP again** to stop all playback and return to zero. REPLACE gets the new length; OVERDUB keeps the previous length and untouched material. Explicit recording Undo/Cancel remains the cancellation operation.
+- MIDI counts note attacks and genuine sustained melodic notes. Drum note-off/release alone does not create another bar. An empty take preserves the previous completed clip, or leaves a new track empty.
+- Audio counts finite input above **-60dBFS**; trailing bars without qualifying input are omitted. This is a fixed input threshold, not intelligent noise removal. Quiet wanted material below the threshold will not extend the last bar. Content inside the retained bars keeps its recorded timing.
+- If STOP falls inside the final retained bar, finish that bar with silence rather than stretching audio or moving MIDI notes. Input latency is drained using the original stopped time base; audio padding is prepared in bounded64-frame pieces. The second STOP also works while padding is pending: it stops playback immediately and rewinds after safe finalization.
+- A stopped partial bar no longer adds an empty wait before count-in: seek immediately to its next downbeat, then start the configured count-in. One bar gives **four clicks**, two bars eight. For the latest running-loop behavior, see0.14.4 above: wait for LOOP START without a second preroll. Waiting time is not labeled as extra preroll beats.
+- Resume seeks the MIDI scheduler to the current phase, so past note-ons are not replayed together. Note timestamps/content stay intact.
+- Project files are **not automatically saved by STOP**. Use PROJECT → SAVE. Finishing padding does not require a continuing input stream. Brief asynchronous input gaps retain their time slot as zero and increment missing-input telemetry; sustained10ms loss still cancels only the current take and reports input unavailable.
+
+## Maintenance changes — included in 0.14.4
+
+Public0.14.4 includes these verified changes, which supersede the older gesture descriptions further down this manual:
+
+- Successful NEW PROJECT, OPEN PROJECT, SAVE and SAVE A COPY close PROJECT and return directly to normal LOOP, including from MUTE or track edit. Cancel and failed operations retain the menu/current project. Saving does not reset sound, selection or track content.
+
+- Drum SHIFT+pad records only, from LOOP, DRUM PLAY or DRUM SOUND. From a drum sound page it returns to LOOP. Generate a selected part explicitly with **DRUM PLAY B2 GENERATE**; **SHIFT+B2 UNDO GEN** restores it. Generation preserves stopped/running state and is refused during recording.
+- Drum REPLACE suppresses every old sequence lane from capture start, with a short release for old one-shots. A new take contains only newly recorded events. OVERDUB retains prior notes. Cancel and Undo preserve the prior completed take.
+- The current-bar drum display scans the complete clip, including notes beyond the first64 events. GRID shows/edits the visible bar using original event indices. Brief live-hit markers remain visible after short hits.
+- SOURCE Audio **pad8 TURN** creates an original procedural1.8-second AHH only when the source is empty. Existing recorded/loaded audio is preserved. The source is synthesized by this project, not a third-party scratch sample.
+- Every nested page has a visible **BACK** upper button. BACK returns to its previous context; SAMPLE returns directly to LOOP. Audio SOUND uses **B3 BACK**; change Replace/Overdub on LOOP. On Synth, BACK first returns a deep sound editor to PLAY, then its parent. Drum layer detail returns to the layer overview first. INPUT returns to SETUP2/2, then TIMING1/2, then the entry page. PROJECT BACK closes its overlay and preserves the underlying page.
+- FX boards use **B1 BACK**, B2 TRACK FX, B3 MASTER FX. The physical MIX key opens MIX directly; SHIFT+B1 opens DRUM MIX when a drum track is selected. FX SETTINGS BACK returns to the originating board.
+- LOOP edit uses B1 COPY, B2 DELETE, **B3 BACK**; **SHIFT+B1 MOVE** selects Move. Erase/Copy or DATA still exits. Drum/CHOP note editing uses B3 BACK instead of the older DONE caption. Entering or leaving an editor never deletes a clip.
+- TURN PAD1 toggles GRAB. **PAD2 CUT** is momentary and affects only the scratch source, with a3ms anti-click ramp. Its playback head continues while muted. Release resumes audio even after navigation; STOP clears ownership. Background loops are unaffected.
 
 ## Start with the loop
 
@@ -144,7 +181,7 @@ LINE and MIC switch the validated Sample codec inputs. MIC disables the built-in
 
 ## Transport buttons
 
-PLAY starts all nonempty loops; STOP stops all playback and cancels capture that has not reached completion. SAMPLE REC and SEQ REC currently share the selected-track loop recording command: start capture, or request bar-end completion. They are not yet separate sampling/sequence workflows. SHIFT+− undoes the latest clip edit; SHIFT++ redoes it. See the bounded one-step history below.
+PLAY starts all nonempty loops. Local0.14.3+ STOP during recording commits the last musical bar while playback continues; empty/count-in takes preserve previous content. The next STOP, or STOP during playback without recording, stops all playback and rewinds. Public0.14.1 uses the earlier STOP/cancel behavior. SAMPLE REC and SEQ REC currently share the selected-track loop recording command: start capture, or request bar-end completion. They are not yet separate sampling/sequence workflows. SHIFT+− undoes the latest clip edit; SHIFT++ redoes it. See the bounded one-step history below.
 
 
 ## UNDO / REDO — local 0.5.0

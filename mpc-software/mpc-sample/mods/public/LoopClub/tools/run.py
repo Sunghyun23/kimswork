@@ -15,6 +15,10 @@ def main():
     # Ephemeral SDK staging changes crate identities; incremental caches cannot be reused reliably.
     # Keep the default bounded; an explicit caller override is still respected.
     env.setdefault("CARGO_INCREMENTAL", "0")
+    # Ephemeral SDK roots otherwise accumulate huge repeated debug-symbol trees.
+    # Keep debug assertions/tests enabled; callers can opt back into symbols.
+    env.setdefault("CARGO_PROFILE_DEV_DEBUG", "0")
+    env.setdefault("CARGO_PROFILE_TEST_DEBUG", "0")
     import json
     patch_lock=json.loads((PROJECT.parents[3]/'third_party/sample-sdk.lock.json').read_text())
     env['LOOP_CLUB_SDK_PATCH']=next(d for d in patch_lock['dependencies']if d['id']=='mpc-sample-sdk')['build_patches'][0]['sha256']

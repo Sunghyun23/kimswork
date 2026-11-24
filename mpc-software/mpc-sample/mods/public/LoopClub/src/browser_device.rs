@@ -47,8 +47,40 @@ pub struct FileWorker {
     rate: u32,
     capacity: usize,
     pending: bool,
+    builtin_track: Option<usize>,
+    builtin_loaded: Option<usize>,
 }
 impl FileWorker {
+    pub fn load_builtin(
+        &mut self,
+        runtime: &Runtime,
+        track: usize,
+    ) -> Result<(), crate::model::Error> {
+        use crate::model::{Error, Kind};
+        if self.pending || track >= 16 {
+            return Err(Error::Busy);
+        }
+        let s = runtime.snapshot.read().ok_or(Error::Busy)?;
+        if s.track_kind(track) != Kind::Audio
+            || s.words[16 + track * 12 + 4] != 0
+            || s.words[16 + track * 12 + 11] != 0
+        {
+            return Err(Error::NotEmpty);
+        }
+        let job = crate::scratch_source::prepare(
+            track,
+            self.rate,
+            f64::from_bits(s.words[2]),
+            self.capacity,
+        )?;
+        runtime.submit_import(job).map_err(|_| Error::Busy)?;
+        self.pending = true;
+        self.builtin_track = Some(track);
+        Ok(())
+    }
+    pub fn take_builtin_loaded(&mut self) -> Option<usize> {
+        self.builtin_loaded.take()
+    }
     pub fn pending(&self) -> bool {
         self.pending
     }
@@ -73,6 +105,8 @@ impl FileWorker {
             rate,
             capacity,
             pending: false,
+            builtin_track: None,
+            builtin_loaded: None,
         }
     }
     pub fn tick(&mut self, r: &Runtime) -> Option<bool> {
@@ -81,6 +115,13 @@ impl FileWorker {
             let ok = done.error.is_none();
             loaded = Some(ok);
             self.pending = false;
+            if self.builtin_track.take() == Some(done.track) && ok {
+                r.enqueue(crate::engine::Command::AudioTarget(
+                    done.track,
+                    crate::audio::RecordTarget::Turntable,
+                ));
+                self.builtin_loaded = Some(done.track);
+            }
             if let Some(b) = self.browser.as_mut() {
                 b.view.pending = false;
                 b.view.error = if ok {

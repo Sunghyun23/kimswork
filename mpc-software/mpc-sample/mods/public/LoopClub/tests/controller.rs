@@ -47,7 +47,13 @@ fn fx_navigation_preserves_playback_and_parameters() {
     e.tracks[0].playing = true;
     e.tracks[0].fx[0].effect = Effect::Filter;
     ui.page = Page::Mix;
-    for (key, page) in [(1, Page::TrackFx), (2, Page::Texture), (0, Page::Mix)] {
+    for (key, page) in [
+        (1, Page::TrackFx),
+        (2, Page::Texture),
+        (0, Page::TrackFx),
+        (0, Page::Mix),
+        (0, Page::Loop),
+    ] {
         ui.soft(key, false, &Snapshot::capture(&e), |c| {
             e.command(c).unwrap();
         });
@@ -75,7 +81,7 @@ fn insufficient_record_capacity_does_not_start_transport() {
     assert!(e.recorder.is_none());
 }
 #[test]
-fn stop_clears_unfinished_audio_metadata() {
+fn stop_keeps_audio_input_and_pads_the_last_musical_bar() {
     let (mut e, _) = state();
     e.preroll = 0;
     e.command(Command::Record(0)).unwrap();
@@ -84,8 +90,17 @@ fn stop_clears_unfinished_audio_metadata() {
     }
     assert_eq!(e.tracks[0].audio_frames, 100);
     e.command(Command::Stop).unwrap();
-    assert_eq!(e.tracks[0].audio_frames, 0);
-    assert!(e.tracks[0].empty());
+    for _ in 0..1000 {
+        e.process(Frame::ZERO);
+    }
+    assert!(e.recorder.is_none());
+    assert_eq!(e.tracks[0].length_ticks, 4 * PPQ);
+    assert_eq!(e.tracks[0].audio[50], Frame::mono(0.1));
+    assert!(
+        e.tracks[0].audio[100..e.tracks[0].audio_frames]
+            .iter()
+            .all(|frame| *frame == Frame::ZERO)
+    );
 }
 #[test]
 fn master_bus_fx_targets_do_not_change_track_or_other_bus() {
@@ -270,26 +285,32 @@ fn project_data_encoder_adjusts_tempo_one_bpm_without_changing_selected_track() 
 }
 
 #[test]
-fn drum_sound_shift_pad_generates_and_undoes_without_playing_preview() {
+fn drum_sound_shift_pad_records_only_and_generation_needs_explicit_button() {
     let (mut e, mut ui) = state();
     e.tracks[0].kind = Kind::Drum;
-    ui.navigate(Page::DrumSound, &Snapshot::capture(&e));
-    let s = Snapshot::capture(&e);
+    for page in [Page::Loop, Page::DrumSound, Page::Play] {
+        ui.navigate(page, &Snapshot::capture(&e));
+        let s = Snapshot::capture(&e);
+        let mut commands = Vec::new();
+        ui.pad(0, true, 90, true, false, &s, |c| commands.push(c));
+        assert_eq!(commands.len(), 1);
+        assert!(matches!(commands[0], Command::LoopRecord(0)));
+        assert!(e.tracks[0].events.is_empty());
+    }
+    ui.navigate(Page::Play, &Snapshot::capture(&e));
     let mut commands = Vec::new();
-    ui.pad(0, true, 90, true, false, &s, |c| commands.push(c));
-    assert_eq!(commands.len(), 1);
+    ui.soft(1, false, &Snapshot::capture(&e), |c| commands.push(c));
     assert!(matches!(
-        commands[0],
-        Command::GenerateDrumPart { track: 0, sound: 0 }
+        commands.as_slice(),
+        [Command::GenerateDrumPart { track: 0, sound: 0 }]
     ));
     e.command(commands[0]).unwrap();
     assert!(!e.tracks[0].events.is_empty());
-    let s = Snapshot::capture(&e);
     commands.clear();
-    ui.pad(0, true, 90, true, true, &s, |c| commands.push(c));
+    ui.soft(1, true, &Snapshot::capture(&e), |c| commands.push(c));
     assert!(matches!(
-        commands[0],
-        Command::UndoDrumPart { track: 0, sound: 0 }
+        commands.as_slice(),
+        [Command::UndoDrumPart { track: 0, sound: 0 }]
     ));
 }
 
@@ -315,7 +336,11 @@ fn lfo_sync_and_smooth_controls_do_not_change_record_mode_or_note_mode() {
     ui.soft(1, true, &Snapshot::capture(&e), |c| {
         e.command(c).unwrap();
     });
-    assert!(!e.tracks[0].chord.smooth);
+    assert_eq!(e.tracks[0].chord.voice_lead_mode(), 2);
+    ui.soft(1, true, &Snapshot::capture(&e), |c| {
+        e.command(c).unwrap();
+    });
+    assert_eq!(e.tracks[0].chord.voice_lead_mode(), 0);
     assert!(ui.chord_modes[0]);
 }
 

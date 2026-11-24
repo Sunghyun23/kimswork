@@ -1,0 +1,70 @@
+{
+  "version": "0.14.4",
+  "public_version_unchanged": "0.14.1",
+  "device": "MPC Sample firmware1.3.0.12",
+  "checks": {
+    "native_tests": 455,
+    "optimized_focused_tests": 39,
+    "strict_clippy": "PASS",
+    "arm64_qa_and_normal": "PASS",
+    "running_two_bar_reference_alignment": "PASS",
+    "no_second_preroll": "PASS",
+    "cold_preroll_holds_existing_loops": "PASS",
+    "simultaneous_first_beat_launch": "PASS",
+    "top_note_vs_off_live_chords": "PASS",
+    "isolated_save_restart_recall": "PASS",
+    "final_wait_label_actual_drm": "PASS",
+    "saved_owner_16_tracks_tempo_input_restored": "PASS",
+    "owner_save": false,
+    "usb_normal_smoke": {
+      "finite": true,
+      "peak": 0.012517642229795456,
+      "status_flags": []
+    }
+  },
+  "actual_voicings": {
+    "top": [
+      [
+        48,
+        52,
+        55,
+        59
+      ],
+      [
+        50,
+        53,
+        55,
+        59
+      ]
+    ],
+    "off": [
+      [
+        48,
+        52,
+        55,
+        59
+      ],
+      [
+        55,
+        59,
+        62,
+        65
+      ]
+    ]
+  },
+  "normal_runtime_sd_sha256": "bc418975091b154d0be66a259c0480c14c67dc08086b9b0b4d7c3562e8c0595e",
+  "qa_full_feature_sha256": "a2e29021f2b7fb8f5d446972a27f5e1f1ac1e78894053e16a0ca8951301f7b81",
+  "qa_final_wait_caption_sha256": "f36c89a591ba42468668344682b190542537cb14d3789c4581fc7fe21ef4f510",
+  "sd": {
+    "files_readback_verified": 20,
+    "old_files_preserved": 20
+  },
+  "project_format": 12,
+  "limits": [
+    "Actual USB MIDI/queued SDK controls/DRM, not physical-finger acceptance",
+    "No new analog-input, power-cycle, maximum-load or subjective-performance certification",
+    "Longest playing loop reference; independent lengths are not stretched or LCM-synchronized",
+    "TOP NOTE affects new performance, not previously recorded MIDI"
+  ],
+  "local_evidence": "build/launch-top-0.14.4 (ignored; do not publish owner states/raw captures)"
+}

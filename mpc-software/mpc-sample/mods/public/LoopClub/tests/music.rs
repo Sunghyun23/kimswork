@@ -221,3 +221,31 @@ fn sync_divisions_follow_bpm_and_old_synth_json_stays_free() {
         9
     );
 }
+
+#[test]
+fn optional_top_note_mode_prioritizes_melody_motion_over_total_voice_motion() {
+    let chord = [60, 64, 67, 0, 0];
+    let previous = [43, 47, 72, 0, 0];
+    let top = loop_club::music::top_note_voicing(chord, 3, previous, 3);
+    let classic = loop_club::music::smooth_voicing(chord, 3, previous, 3);
+    assert_eq!(top[2], 72);
+    assert_ne!(classic[2], 72);
+    let mut classes = top[..3].iter().map(|n| n % 12).collect::<Vec<_>>();
+    classes.sort();
+    assert_eq!(classes, vec![0, 4, 7]);
+    assert!(top[..3].windows(2).all(|p| p[0] <= p[1]));
+    assert_eq!(
+        loop_club::music::top_note_voicing(chord, 3, [0; 5], 0),
+        chord
+    );
+    let mut cfg = ChordConfig::default();
+    assert_eq!(cfg.voice_lead_mode(), 1);
+    cfg.top_note = true;
+    assert_eq!(cfg.voice_lead_mode(), 2);
+    let json = serde_json::to_string(&cfg).unwrap();
+    let recalled: ChordConfig = serde_json::from_str(&json).unwrap();
+    assert!(recalled.top_note);
+    let old: ChordConfig = serde_json::from_str("{\"smooth\":true}").unwrap();
+    assert!(!old.top_note);
+    assert_eq!(old.voice_lead_mode(), 1);
+}

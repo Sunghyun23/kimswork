@@ -124,7 +124,7 @@ fn generator_does_not_restart_phase_or_other_track() {
     assert!(e.tracks[1].playing);
 }
 #[test]
-fn drum_shortcut_is_in_drum_play_not_main() {
+fn drum_generation_requires_explicit_generate_button_not_shift_record() {
     let mut e = core();
     e.tracks[0].kind = Kind::Drum;
     let mut ui = Ui::default();
@@ -135,12 +135,15 @@ fn drum_shortcut_is_in_drum_play_not_main() {
     assert!(e.recorder.is_some());
     e.command(Command::Stop).unwrap();
     ui.page = Page::Play;
-    ui.pad(1, true, 80, true, false, &Snapshot::capture(&e), |c| {
+    ui.sound = 1;
+    ui.soft(1, false, &Snapshot::capture(&e), |c| {
         e.command(c).unwrap();
     });
     assert!(!e.tracks[0].empty());
     assert!(e.tracks[0].events.iter().all(|n| n.note == 1));
+    assert!(e.recorder.is_none());
 }
+
 #[test]
 fn generated_lane_undo_restores_only_last_change() {
     let mut e = core();

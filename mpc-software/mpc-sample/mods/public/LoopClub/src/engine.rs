@@ -193,9 +193,11 @@ pub struct Recorder {
     pub touched: u16,
     pub edited_pads: u16,
     pub count_in_start: Option<u64>,
+    pub launch_on_start: bool,
 }
 #[derive(Clone, Copy, Debug)]
 pub enum Command {
+    DrumPreviewBar(Option<(usize, u64)>),
     ToggleMetronome,
     PadNotes {
         track: usize,
@@ -417,6 +419,13 @@ pub struct Engine {
     input_preview_count: u32,
     capture_audio: Vec<Frame>,
     capture_prepared: usize,
+    capture_written: usize,
+    capture_last_signal: usize,
+    capture_stop_end: Option<u64>,
+    capture_stop_wait: u32,
+    capture_stop_clock: u64,
+    capture_stop_drained: bool,
+    rewind_pending: bool,
     capture_features: Box<crate::features::Features>,
     capture_events: Vec<Event>,
     capture_velocities: [u8; 128],
@@ -429,6 +438,7 @@ pub struct Engine {
     pub tracks: [Track; 16],
     pub selected: usize,
     pub running: bool,
+    pub drum_preview_bar: Option<(usize, u64)>,
     pub preroll: u8,
     pub metronome: bool,
     pub recorder: Option<Recorder>,
@@ -458,6 +468,8 @@ pub struct Engine {
     pub recorded_frames: u64,
     voices: [Voice; VOICES],
     age: u64,
+    rendered_frames: u64,
+    drum_activity_until: [[u64; 16]; 16],
     track_fx: [[FxState; 2]; 16],
     perf_state: [FxState; 2],
     bus_state: [FxState; 2],
@@ -488,6 +500,13 @@ impl Engine {
             input_preview_count: 0,
             capture_audio: vec![Frame::ZERO; frames_per_track],
             capture_prepared: 0,
+            capture_written: 0,
+            capture_last_signal: 0,
+            capture_stop_end: None,
+            capture_stop_wait: 0,
+            capture_stop_clock: 0,
+            capture_stop_drained: false,
+            rewind_pending: false,
             capture_features: Box::new(crate::features::Features::default()),
             capture_events: Vec::with_capacity(MAX_EVENTS),
             capture_velocities: [0; 128],
@@ -500,6 +519,7 @@ impl Engine {
             tracks: std::array::from_fn(|i| Track::new(frames_per_track, i)),
             selected: 0,
             running: false,
+            drum_preview_bar: None,
             preroll: 1,
             metronome: false,
             recorder: None,
@@ -529,6 +549,8 @@ impl Engine {
             recorded_frames: 0,
             voices: [Voice::default(); VOICES],
             age: 0,
+            rendered_frames: 0,
+            drum_activity_until: [[0; 16]; 16],
             track_fx: std::array::from_fn(|_| std::array::from_fn(|_| FxState::new(rate))),
             perf_state: std::array::from_fn(|_| FxState::new(rate)),
             bus_state: std::array::from_fn(|_| FxState::new(rate)),
@@ -540,6 +562,7 @@ impl Engine {
         }
     }
     pub fn command(&mut self, c: Command) -> Result<(), Error> {
+        self.apply_pending_rewind();
         let result = self.apply(c);
         self.error = result.err();
         result
@@ -663,6 +686,15 @@ impl Engine {
             return Err(Error::Busy);
         }
         match c {
+            Command::DrumPreviewBar(bar) => {
+                if let Some((track, bar)) = bar {
+                    Self::valid_track(track)?;
+                    if bar > 4095 {
+                        return Err(Error::InvalidValue);
+                    }
+                }
+                self.drum_preview_bar = bar;
+            }
             Command::ToggleMetronome => self.metronome = !self.metronome,
             Command::PadNotes {
                 track,
@@ -1150,13 +1182,18 @@ impl Engine {
                     5 => cfg.smooth = value >= 0.5,
                     6 => cfg.strum_ms = value,
                     7 => cfg.strum_direction = value.round().clamp(0., 2.) as u8,
+                    8 => {
+                        let mode = value.round().clamp(0., 2.) as u8;
+                        cfg.smooth = mode != 0;
+                        cfg.top_note = mode == 2;
+                    }
                     _ => return Err(Error::InvalidValue),
                 }
                 if !cfg.valid() {
                     return Err(Error::InvalidValue);
                 }
                 self.tracks[track].chord = cfg;
-                if index <= 5 {
+                if index <= 5 || index == 8 {
                     self.tracks[track].last_chord = ([0; 5], 0);
                 }
             }
@@ -1204,7 +1241,14 @@ impl Engine {
                             *note = (i16::from(*note) + shift) as u8;
                         }
                     }
-                    if t.chord.smooth {
+                    if t.chord.top_note && t.chord.smooth {
+                        notes = crate::music::top_note_voicing(
+                            notes,
+                            len,
+                            t.last_chord.0,
+                            t.last_chord.1,
+                        );
+                    } else if t.chord.smooth {
                         notes = crate::music::smooth_voicing(
                             notes,
                             len,
@@ -1461,8 +1505,14 @@ impl Engine {
                         self.check_record_capacity(i)?;
                         if self.clock.tick() < r.start {
                             let start = r.start;
+                            let launch = r.launch_on_start;
+                            let count_in = r.count_in_start;
                             self.cancel_capture();
                             self.start_loop_record(i, Some(start))?;
+                            if let Some(next) = &mut self.recorder {
+                                next.launch_on_start = launch;
+                                next.count_in_start = count_in;
+                            }
                         } else {
                             r.end = Some(self.clock.next_bar().min(r.limit).max(r.start + 4 * PPQ));
                             r.stop_after_cycle = true;
@@ -1519,23 +1569,29 @@ impl Engine {
             }
             Command::CancelRecord => self.cancel_capture(),
             Command::Stop => {
-                let change = self.chain.stop();
-                self.apply_chain_change(change);
-                if let Some(mut r) = self.recorder {
-                    if r.finish_started {
-                        r.stop_after_cycle = true;
-                        self.recorder = Some(r);
-                    } else {
-                        self.cancel_capture();
+                if self.recorder.is_some()
+                    && self.capture_stop_end.is_none()
+                    && self.capture_stop_wait == 0
+                {
+                    // First stage: end this take, keep the loop station running.
+                    self.finish_capture_on_stop();
+                } else {
+                    // Normal playback, or a second press during audio finalization.
+                    let change = self.chain.stop();
+                    self.apply_chain_change(change);
+                    self.running = false;
+                    for i in 0..16 {
+                        self.tracks[i].playing = false;
+                        self.release_track(i);
                     }
-                }
-                self.running = false;
-                for i in 0..16 {
-                    self.tracks[i].playing = false;
-                    self.release_track(i)
+                    self.rewind_pending = true;
+                    self.apply_pending_rewind();
                 }
             }
             Command::PlayAll => {
+                if self.capture_stop_end.is_some() {
+                    return Err(Error::Busy);
+                }
                 self.running = true;
                 let managed = if self.chain.running {
                     self.chain.members | self.chain.config.members()
@@ -2000,6 +2056,14 @@ impl Engine {
         }
         notes
     }
+    pub fn drum_activity(&self, track: usize) -> u16 {
+        self.drum_activity_until[track]
+            .iter()
+            .enumerate()
+            .fold(0, |mask, (sound, &until)| {
+                mask | (u16::from(until > self.rendered_frames) << sound)
+            })
+    }
     pub fn visible_events(&self, i: usize) -> &[Event] {
         if self.recorder.is_some_and(|r| r.track == i && r.midi) {
             &self.capture_events
@@ -2059,6 +2123,8 @@ impl Engine {
                         cfg.voice == 2,
                     );
                     v.configure_trigger(cfg, self.clock.rate);
+                } else if v.drum.is_some() {
+                    v.fade_out();
                 } else {
                     v.release();
                 }
@@ -2178,6 +2244,11 @@ impl Engine {
         } else {
             None
         };
+        if let Some(sound) = drum {
+            self.drum_activity_until[track][sound] = self
+                .rendered_frames
+                .saturating_add(u64::from(self.clock.rate) / 6);
+        }
         let native = drum.and_then(|d| self.tracks[track].kit.xpm.as_ref().map(|x| x.meta.pads[d]));
         if let Some(meta) = native {
             for v in &mut self.voices {
@@ -2492,7 +2563,21 @@ impl Engine {
             t.cursor = 0;
         }
     }
+    fn apply_pending_rewind(&mut self) {
+        if self.rewind_pending && self.recorder.is_none() {
+            self.rewind_pending = false;
+            self.clock.frame = 0;
+            for track in &mut self.tracks {
+                track.origin = 0;
+                track.cursor = 0;
+                track.last_phase = u64::MAX;
+                track.reset_audio_player();
+            }
+        }
+    }
     pub fn process(&mut self, input: Frame) -> Frame {
+        self.apply_pending_rewind();
+        self.rendered_frames = self.rendered_frames.saturating_add(1);
         let mut profile = crate::qa::dsp_start(|| self.active_voices());
         let tick = self.clock.tick();
         let rate = self.clock.rate as f32;
@@ -2542,7 +2627,16 @@ impl Engine {
                 {
                     self.refresh_schedule(i, tick);
                     let phase = self.tracks[i].phase(tick);
-                    if phase < self.tracks[i].last_phase {
+                    if self.tracks[i].last_phase == u64::MAX
+                        && !self.tracks[i]
+                            .events
+                            .first()
+                            .is_some_and(|e| e.deck.is_some())
+                    {
+                        // Resume at this phase, never replay all past note-ons in one sample.
+                        self.tracks[i].cursor =
+                            self.tracks[i].schedule.partition_point(|e| e.tick < phase);
+                    } else if phase < self.tracks[i].last_phase {
                         let was = self.mono[i].latest();
                         self.mono[i].release_source(1);
                         if was.is_some_and(|n| n.source == 1)
@@ -2585,9 +2679,7 @@ impl Engine {
                         let suppressed = self.recorder.is_some_and(|r| {
                             r.track == i
                                 && tick >= r.start
-                                && ((r.mode == RecordMode::Replace
-                                    && (self.tracks[i].kind != Kind::Drum
-                                        || r.touched & (1 << (e.note % 16)) != 0))
+                                && ((r.mode == RecordMode::Replace)
                                     || (e.deck.is_none()
                                         && (self.tracks[i].kind == Kind::Drum || e.slice)
                                         && r.edited_pads & (1 << (e.note % 16)) != 0))
@@ -2967,7 +3059,11 @@ impl Engine {
             l: (self.master_meter.l * 0.999).max(sum.l.abs()),
             r: (self.master_meter.r * 0.999).max(sum.r.abs()),
         };
-        if self.running || self.recorder.is_some_and(|r| r.finish_started) {
+        if self.running
+            || self.recorder.is_some_and(|r| r.finish_started)
+                && self.capture_stop_end.is_none()
+                && self.capture_stop_wait == 0
+        {
             self.clock.frame += 1
         }
         sum

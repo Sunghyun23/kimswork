@@ -154,6 +154,12 @@ impl Voice {
         }
         self.gate = false
     }
+    /// De-click a one-shot sequence voice when a replacement take starts.
+    pub fn fade_out(&mut self) {
+        self.forced_gate = true;
+        self.pcm_gate = true;
+        self.release();
+    }
     pub fn age(&self) -> u64 {
         self.age
     }

@@ -261,11 +261,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             if s.track_kind(ui.selected) == Kind::Drum {
                 "--"
             } else if ui.shift_view {
-                if s.chord().smooth {
-                    "SMOOTH ON"
-                } else {
-                    "SMOOTH OFF"
-                }
+                s.chord().voice_lead_label()
             } else if ui.chord_modes[ui.selected] {
                 "CHORD >"
             } else {
@@ -300,7 +296,11 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         };
     }
     if ui.page == Page::Play && s.track_kind(ui.selected) == Kind::Drum {
-        tabs[1] = "DRUM";
+        tabs[1] = if ui.shift_view {
+            "UNDO GEN"
+        } else {
+            "GENERATE"
+        };
     }
     if ui.page == Page::Play && s.track_kind(ui.selected) == Kind::Synth {
         tabs[1] = if ui.chord_modes[ui.selected] {
@@ -335,7 +335,11 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         tabs = ["LOOP", "MUTE", "CHAIN"];
     }
     if ui.page == Page::Loop && ui.loop_edit {
-        tabs = ["COPY", "DELETE", "MOVE"];
+        tabs = [
+            if ui.shift_view { "MOVE" } else { "COPY" },
+            "DELETE",
+            "BACK",
+        ];
     }
     if ui.page == Page::Play && s.track_kind(ui.selected) == Kind::Synth && ui.shift_view {
         if ui.synth_page >= 6 {
@@ -346,11 +350,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             };
         }
         if ui.chord_modes[ui.selected] {
-            tabs[1] = if s.chord().smooth {
-                "SMOOTH ON"
-            } else {
-                "SMOOTH OFF"
-            };
+            tabs[1] = s.chord().voice_lead_label();
         }
     }
     if ui.page == Page::Setup {
@@ -359,7 +359,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         } else if ui.setup_timing {
             ["METRO", "PREROLL", "BACK"]
         } else {
-            ["TIMING", "PROJECTS", "INPUT"]
+            ["BACK", "PROJECTS", "INPUT"]
         };
     }
     if ui.page == Page::FxSettings {
@@ -382,16 +382,50 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             },
         ];
     }
-    if ui.pad_notes_edit.is_some() {
-        tabs = ["ERASE NOTES", "COPY NOTES", "DONE"];
+    if matches!(
+        ui.page,
+        Page::Grid
+            | Page::Chop
+            | Page::Mix
+            | Page::KitMix
+            | Page::TrackFx
+            | Page::MasterFx
+            | Page::Texture
+    ) {
+        tabs[0] = if ui.shift_view
+            && matches!(
+                ui.page,
+                Page::Mix | Page::KitMix | Page::TrackFx | Page::MasterFx | Page::Texture
+            )
+            && s.track_kind(ui.selected) == Kind::Drum
+        {
+            "DRUM MIX"
+        } else {
+            "BACK"
+        };
     }
+    if ui.page == Page::Play {
+        if s.track_kind(ui.selected) == Kind::Audio && !ui.shift_view {
+            tabs[2] = "BACK";
+        } else if s.track_kind(ui.selected) != Kind::Audio && !ui.shift_view {
+            tabs[0] = "BACK";
+        }
+    }
+    if ui.pad_notes_edit.is_some() {
+        tabs = ["ERASE NOTES", "COPY NOTES", "BACK"];
+    }
+
     for (i, title) in tabs.iter().enumerate() {
         let active = if ui.page == Page::Setup && ui.setup_timing && !ui.input_view {
             i == 0 && s.words[4] & (1 << 16) != 0 || i == 1 && (s.words[4] >> 8) & 255 != 0
         } else if let Some(copy) = ui.pad_notes_edit {
             i == usize::from(copy)
         } else if ui.page == Page::Loop && ui.loop_edit {
-            i == ui.edit_operation as usize
+            if ui.edit_operation == 2 {
+                ui.shift_view && i == 0
+            } else {
+                i == ui.edit_operation as usize
+            }
         } else if ui.page == Page::Loop {
             i == 2 && s.words[16 + ui.selected * 12] & (1 << 18) != 0
         } else if ui.page == Page::Source {
@@ -563,34 +597,35 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 p.text(x + 4, 126, 92, 18, 12., DIM, detail);
             }
             if s.track_kind(ui.selected) == Kind::Audio {
-                for (i, target) in [
-                    crate::audio::RecordTarget::Input,
-                    crate::audio::RecordTarget::Chromatic,
-                    crate::audio::RecordTarget::Chop,
+                for (i, (target, label)) in [
+                    (crate::audio::RecordTarget::Input, "INPUT"),
+                    (crate::audio::RecordTarget::Chromatic, "NOTES"),
+                    (crate::audio::RecordTarget::Chop, "CHOP"),
+                    (crate::audio::RecordTarget::Turntable, "TURN"),
                 ]
                 .into_iter()
                 .enumerate()
                 {
-                    let x = 5 + i as i32 * 105;
+                    let x = 5 + i as i32 * 79;
                     let selected = s.audio_target(ui.selected) == target;
-                    p.rect(x, 152, 100, 44, if selected { GOLD } else { PANEL });
+                    p.rect(x, 152, 74, 44, if selected { GOLD } else { PANEL });
                     p.text(
-                        x + 4,
+                        x + 3,
                         153,
-                        92,
+                        68,
                         18,
                         13.,
                         if selected { BG } else { DIM },
-                        &format!("PAD {} / REC", i + 5),
+                        &format!("PAD {}", i + 5),
                     );
                     p.text(
-                        x + 4,
+                        x + 3,
                         173,
-                        92,
+                        68,
                         20,
                         15.,
                         if selected { BG } else { INK },
-                        target.name(),
+                        label,
                     );
                 }
             }
@@ -600,6 +635,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
                 p.text(12, 174, 296, 19, 15., INK, "CHOOSE FILE > BANK > 16 PADS");
             }
         }
+        Page::DrumSound if recording_view => note_timeline(ui, s, p),
         Page::DrumSound => {
             p.text(
                 7,
@@ -1311,7 +1347,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         )
     } else if ui.page == Page::DrumSound && !recording_view && err.is_empty() {
         if ui.notice.is_empty() {
-            "SHIFT+PAD: RANDOM / DATA: SAMPLE".into()
+            "SHIFT+PAD: REC / DATA: SAMPLE".into()
         } else {
             ui.notice.into()
         }
@@ -1368,10 +1404,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         && s.track_kind(ui.selected) == Kind::Synth
         && ui.chord_modes[ui.selected]
     {
-        format!(
-            "SHIFT+B2: SMOOTH {}",
-            if s.chord().smooth { "ON" } else { "OFF" }
-        )
+        format!("SHIFT+B2: {}", s.chord().voice_lead_label())
     } else if ui.page == Page::Play
         && s.track_kind(ui.selected) == Kind::Synth
         && ui.synth_page == 0
@@ -1392,7 +1425,7 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             .into()
         }
     } else if ui.page == Page::Setup && ui.setup_timing {
-        "+/-: SETUP 2/2 | B3: LOOP".into()
+        "+/-: SETUP 2/2 | B3: BACK".into()
     } else if ui.page == Page::Setup {
         "+/-: TIMING | SHIFT K3: GRID".into()
     } else if ui.page == Page::Output {
@@ -1411,7 +1444,14 @@ pub fn render(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     } else if ui.page == Page::Grid && !s.note_view(ui.selected) {
         format!("AUDIO {:02} / SAMPLE: BACK", ui.selected + 1)
     } else if ui.page == Page::Grid {
-        format!("BAR {} / DATA: NOTE / +/-: BAR", ui.grid_bar + 1)
+        format!(
+            "BAR {} / DATA: NOTE / +/-: BAR",
+            if s.track_kind(ui.selected) == Kind::Drum {
+                s.words[crate::ui::DRUM_PREVIEW] / (4 * PPQ) + 1
+            } else {
+                ui.grid_bar + 1
+            }
+        )
     } else if (ui.page == Page::Play || (ui.page == Page::Loop && ui.loop_mode == 0))
         && s.track_kind(ui.selected) == Kind::Drum
     {
@@ -2040,6 +2080,68 @@ fn texture_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     }
 }
 
+fn drum_timeline(ui: &Ui, s: &Snapshot, start: u64, p: &mut impl Painter) {
+    let base = crate::ui::DRUM_PREVIEW;
+    let hits = &s.words[base + 2..base + 18];
+    let recent = s.words[base + 1];
+    let active = hits
+        .iter()
+        .enumerate()
+        .fold(recent as u16, |mask, (sound, &cells)| {
+            mask | (u16::from(cells != 0) << sound)
+        });
+    let count = active.count_ones().max(4) as i32;
+    let mut row = 0;
+    for (sound, &cells) in hits.iter().enumerate() {
+        if active & (1 << sound) == 0 {
+            continue;
+        }
+        let y = 53 + row * 128 / count;
+        let bottom = 53 + (row + 1) * 128 / count;
+        if bottom - y >= 17 {
+            label(p, 1, y, 25, DIM, &(sound + 1).to_string());
+        }
+        p.rect(27, y, 286, 1, PANEL);
+        for cell in 0..64 {
+            if cells & (1 << cell) != 0 {
+                let x = 27 + cell * 286 / 64;
+                let selected = ui.page == Page::Grid
+                    && ui.grid_event < s.grid_event_count()
+                    && s.words[353 + ui.grid_event * 2] & (1 << 16) != 0
+                    && (s.words[353 + ui.grid_event * 2] & 255) % 16 == sound as u64
+                    && s.words[352 + ui.grid_event * 2].saturating_sub(start) * 64 / (4 * PPQ)
+                        == cell as u64;
+                p.rect(
+                    x,
+                    y + 1,
+                    4.min(313 - x),
+                    (bottom - y - 2).max(1),
+                    if selected { INK } else { GOLD },
+                );
+            }
+        }
+        if recent & (1 << sound) != 0 {
+            p.rect(307, y + 1, 6, (bottom - y - 2).max(1), RED);
+        }
+        row += 1;
+    }
+    let b = 16 + s.words[3] as usize * 12;
+    let tick = if s.words[9] == s.words[3] + 1 {
+        s.words[8].saturating_sub(s.words[10])
+    } else {
+        s.words[b + 5]
+    };
+    if tick >= start && tick < start + 4 * PPQ {
+        p.rect(
+            27 + ((tick - start) * 286 / (4 * PPQ)) as i32,
+            53,
+            1,
+            128,
+            GOLD,
+        );
+    }
+}
+
 fn note_timeline(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     let x = 27;
     let y = 53;
@@ -2058,7 +2160,14 @@ fn note_timeline(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     } else {
         ui.grid_bar * 4 * PPQ
     };
-    let count = s.words[16 + ui.selected * 12 + 6].min(64) as usize;
+    if s.track_kind(ui.selected) == Kind::Drum {
+        let preview_start = s.words[crate::ui::DRUM_PREVIEW];
+        if recording || matches!(ui.page, Page::Loop | Page::Play) || preview_start == start {
+            drum_timeline(ui, s, preview_start, p);
+            return;
+        }
+    }
+    let count = s.grid_event_count();
     let notes = (0..count).filter_map(|i| {
         let tick = s.words[352 + i * 2];
         let flags = s.words[353 + i * 2];
@@ -2133,7 +2242,7 @@ fn note_timeline(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     let b = 16 + ui.selected * 12;
     let playhead = if s.words[9] == ui.selected as u64 + 1 && s.words[8] >= s.words[10] {
         Some(s.words[8] - s.words[10])
-    } else if (s.words[b] >> 8) & 255 == 5 && s.words[4] & 1 != 0 {
+    } else if s.words[b + 4] > 0 {
         Some(s.words[b + 5])
     } else {
         None
@@ -2164,7 +2273,7 @@ fn audio_timeline(s: &Snapshot, p: &mut impl Painter) {
         label(p, 12, 58, 290, INK, "REC TO CAPTURE AUDIO");
     }
     let b = 16 + s.words[3] as usize * 12;
-    if s.words[b + 4] > 0 && s.words[4] & 1 != 0 && s.words[9] != s.words[3] + 1 {
+    if s.words[b + 4] > 0 && s.words[9] != s.words[3] + 1 {
         let pos = s.words[b + 5] as f64 / s.words[b + 4] as f64 * s.words[770] as f64;
         let start = s.words[768] as f64;
         let end = s.words[769] as f64;
@@ -2239,7 +2348,21 @@ fn loop_workspace(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         20,
         17.,
         GOLD,
-        &format!("{:02} {} / {}", ui.selected + 1, kind, status(s.words[b])),
+        &format!(
+            "{:02} {} / {}",
+            ui.selected + 1,
+            kind,
+            if recording
+                && s.words[8] < s.words[10]
+                && s.words[crate::ui::COUNT_IN_START]
+                    .checked_sub(1)
+                    .is_none_or(|start| s.words[8] < start)
+            {
+                "WAIT"
+            } else {
+                status(s.words[b])
+            }
+        ),
     );
     let length = if recording && s.words[12] & 1 == 0 {
         s.words[11].saturating_sub(s.words[10])
@@ -2317,11 +2440,18 @@ fn loop_workspace(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             (s.words[12] >> 8) & 255
         )
     } else if recording && s.words[8] < s.words[10] {
-        format!(
-            "PRE {} BEATS / {}",
-            (s.words[10] - s.words[8]).div_ceil(PPQ),
-            role
-        )
+        let count_start = s.words[crate::ui::COUNT_IN_START].checked_sub(1);
+        if count_start.is_none() {
+            format!("WAIT LOOP START / {role}")
+        } else if count_start.is_some_and(|start| s.words[8] < start) {
+            format!("WAIT FOR BAR / {role}")
+        } else {
+            format!(
+                "PRE {} BEATS / {}",
+                (s.words[10] - s.words[8]).div_ceil(PPQ),
+                role
+            )
+        }
     } else if recording {
         format!(
             "{} / {}",
@@ -2337,8 +2467,8 @@ fn loop_workspace(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             Some(source) if ui.edit_operation == 1 => {
                 format!("PAD {:02} AGAIN: DELETE", source + 1)
             }
-            Some(source) => format!("{:02} > EMPTY PAD / ERASE: BACK", source + 1),
-            None => "PAD: SOURCE / ERASE: BACK".into(),
+            Some(source) => format!("{:02} > EMPTY PAD / B3: BACK", source + 1),
+            None => "PAD: SOURCE / SHIFT+B1: MOVE".into(),
         }
     } else if ui.loop_mode == 1 {
         "PAD: MUTE / SAMPLE: LOOP".into()
@@ -2423,7 +2553,14 @@ fn loop_workspace(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         p.rect(x, y, 74, 18, bg);
         let label = if rec {
             if s.words[base] >> 8 & 255 == 2 {
-                "PRE"
+                if s.words[crate::ui::COUNT_IN_START]
+                    .checked_sub(1)
+                    .is_none_or(|start| s.words[8] < start)
+                {
+                    "WAIT"
+                } else {
+                    "PRE"
+                }
             } else {
                 "REC"
             }
@@ -2632,7 +2769,7 @@ fn performance_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
         1 => [
             "B3: NOTES / CHORD",
             "SHIFT+K1 OCT / K2 VOICING",
-            "SHIFT+B3: SMOOTH VOICING",
+            "SHIFT+B3: OFF / SMOOTH / TOP",
         ],
         _ if kind == Kind::Synth => [
             "GATE: RELEASE ON NOTE-OFF",
@@ -2647,6 +2784,17 @@ fn performance_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     };
     for (i, line) in lines.iter().enumerate() {
         p.text(14, 91 + i as i32 * 26, 292, 23, 16., INK, line);
+    }
+    if ui.perform_section == 1 && s.words[7] == 0 {
+        p.text(
+            14,
+            165,
+            292,
+            17,
+            15.,
+            GOLD,
+            &format!("VOICE LEAD: {}", c.voice_lead_label()),
+        );
     }
     if s.words[7] != 0 {
         p.rect(8, 151, 304, 27, PANEL);
@@ -2701,11 +2849,6 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
             }
         ),
     );
-    let mode = if s.words[16 + ui.selected * 12] & (1 << 18) != 0 {
-        "OVERDUB"
-    } else {
-        "REPLACE"
-    };
     let cut = if s.deck().reverse_cut {
         "DOWN CUT"
     } else {
@@ -2715,7 +2858,7 @@ fn turntable_panel(ui: &Ui, s: &Snapshot, p: &mut impl Painter) {
     let tabs = if ui.shift_view {
         ["TURN >", cut, slip]
     } else {
-        ["TURN >", "CHOP EDIT", mode]
+        ["TURN >", "CHOP EDIT", "BACK"]
     };
     for (i, title) in tabs.iter().enumerate() {
         p.rect(

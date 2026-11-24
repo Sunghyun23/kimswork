@@ -102,7 +102,7 @@ fn input_loss_cancels_only_new_take() {
     });
     r.capture(Frame::mono(0.2), 8000);
     r.enqueue(Command::Record(2));
-    r.output(&mut [0; 4], 2, 8000);
+    r.output(&mut [0; 256], 2, 8000);
     r.with_engine(|s| {
         let e = s.as_ref().unwrap();
         assert!(e.recorder.is_none());

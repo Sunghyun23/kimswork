@@ -499,7 +499,17 @@ fn worker() {
         crate::qa::tick();
         input.tick(r.active.load(Ordering::Acquire));
         if let Some(ok) = files.tick(r) {
-            IO_STATUS.store(if ok { 5 } else { 4 }, Ordering::Release);
+            let builtin = files.take_builtin_loaded().is_some();
+            IO_STATUS.store(
+                if ok && builtin {
+                    11
+                } else if ok {
+                    5
+                } else {
+                    4
+                },
+                Ordering::Release,
+            );
         }
         // Finish previously queued sample/kit imports before replacing a project.
         if !files.pending() {
@@ -507,6 +517,17 @@ fn worker() {
         }
         let action = IO_REQUEST.swap(0, Ordering::AcqRel);
         if action == 0 {
+            continue;
+        }
+        if action & 8 != 0 {
+            if files.pending() {
+                let _ = IO_REQUEST.compare_exchange(0, action, Ordering::AcqRel, Ordering::Relaxed);
+            } else if files
+                .load_builtin(r, ((action >> 4) & 15) as usize)
+                .is_err()
+            {
+                IO_STATUS.store(4, Ordering::Release);
+            }
             continue;
         }
         if action & 4 != 0 {
@@ -544,6 +565,7 @@ fn worker() {
 pub struct LoopClub {
     browser: crate::browser_device::BrowserUi,
     projects: crate::project_manager::Manager,
+    drum_preview_request: Option<(usize, Option<u64>)>,
     ui: Ui,
     snapshot: Snapshot,
     armed: bool,
@@ -762,7 +784,40 @@ impl LoopClub {
             self.ui.last_fader = Some(value);
         }
         if let Some(s) = runtime().and_then(|r| r.snapshot.read()) {
+            if s.words[0] == 0
+                && self.snapshot.words[0] > 0
+                && s.words[4] & 1 == 0
+                && s.words[9] == 0
+            {
+                self.ui.grid_bar = 0;
+                self.ui.grid_event = 0;
+            }
             self.snapshot = s;
+        }
+        if self.projects.take_return_to_loop() {
+            self.ui.loop_mode = 0;
+            self.ui.loop_edit = false;
+            self.ui.edit_source = None;
+            self.ui.navigate(Page::Loop, &self.snapshot);
+        }
+        if runtime().is_some() {
+            let bar = if self.ui.page == Page::Grid
+                && self.snapshot.track_kind(self.ui.selected) == Kind::Drum
+            {
+                Some(self.ui.grid_bar)
+            } else {
+                None
+            };
+            let request = (self.ui.selected, bar);
+            if self.drum_preview_request != Some(request) {
+                if bar.is_some() {
+                    self.ui.grid_event = 0;
+                }
+                send(Command::DrumPreviewBar(
+                    bar.map(|bar| (self.ui.selected, bar)),
+                ));
+                self.drum_preview_request = Some(request);
+            }
         }
         self.ui.sync_chord_modes(&self.snapshot);
         self.ui.sync_loop_role(&self.snapshot);
@@ -771,9 +826,11 @@ impl LoopClub {
             self.ui.chop_slice = self.ui.chop_slice.min(count - 1);
         }
         let status = IO_STATUS.swap(0, Ordering::AcqRel);
-        if status == 5 {
+        if status == 5 || status == 11 {
             self.browser.open = false;
-            let page = if self.browser.target.is_some() {
+            let page = if status == 11 {
+                Page::Play
+            } else if self.browser.target.is_some() {
                 Page::DrumSound
             } else if self.snapshot.track_kind(self.ui.selected) == Kind::Drum {
                 Page::Play
@@ -794,6 +851,7 @@ impl LoopClub {
                 8 => "DESTINATION HAS CONTENT",
                 9 => "SOURCE HAS NO CONTENT",
                 10 => "KIT MEMORY LIMIT",
+                11 => "ORIGINAL AHH / PAD 1 GRAB",
                 5 if self.browser.target.is_some() => "LAYER SAMPLE LOADED",
                 5 if self.snapshot.track_kind(self.ui.selected) == Kind::Drum => "KIT LOADED",
                 5 => "SAMPLE LOADED",
@@ -846,6 +904,23 @@ impl LoopClub {
                     self.ui.notice = "INPUT SWITCH BUSY";
                 } else {
                     self.ui.notice = "";
+                }
+            }
+            Action::DefaultScratch => {
+                if self.snapshot.words[9] != 0 {
+                    self.ui.notice = "FINISH RECORDING FIRST";
+                } else if IO_REQUEST
+                    .compare_exchange(
+                        0,
+                        8 | ((self.ui.selected as u32) << 4),
+                        Ordering::AcqRel,
+                        Ordering::Relaxed,
+                    )
+                    .is_ok()
+                {
+                    self.ui.notice = "PREPARING ORIGINAL AHH...";
+                } else {
+                    self.ui.notice = "PROJECT BUSY";
                 }
             }
             Action::BrowseXpm => {
@@ -992,7 +1067,7 @@ impl Mod for LoopClub {
                 send(Command::Stop);
             } else {
                 self.projects.button(event.code as u8, event.shift);
-                if !self.projects.open {
+                if !self.projects.open && matches!(event.code, 6 | 74 | 14) {
                     self.ui.navigate(Page::Loop, &self.snapshot);
                 }
             }
@@ -1027,8 +1102,7 @@ impl Mod for LoopClub {
         if self.ui.page == Page::Setup && self.ui.input_view {
             match event.code {
                 12 => {
-                    self.ui.input_view = false;
-                    self.ui.setup_timing = true;
+                    self.ui.back(&self.snapshot);
                     return Flow::Consume;
                 }
                 13 | 111 => {
@@ -1129,7 +1203,7 @@ impl Mod for LoopClub {
                 } else if self.ui.page == Page::Sidechain && !event.shift {
                     self.ui.navigate(Page::MasterFx, &self.snapshot);
                 } else if self.ui.page == Page::Output && !event.shift {
-                    self.ui.navigate(Page::Mix, &self.snapshot);
+                    self.ui.back(&self.snapshot);
                 } else if self.ui.page == Page::Mix && !event.shift {
                     self.ui.navigate(Page::Output, &self.snapshot);
                 } else if self.ui.page == Page::DrumSound {

@@ -73,8 +73,8 @@ fn auto_pan_moves_both_directions_and_static_pan_is_shared() {
     assert!(left > 1000 && right > 1000, "{left} {right}");
     let mut ui = Ui::default();
     ui.selected = 1;
-    ui.synth_page = 7;
     ui.navigate(Page::Play, &Snapshot::capture(&e));
+    ui.synth_page = 7;
     let s = Snapshot::capture(&e);
     ui.knob(0, 0., &s, |c| e.command(c).unwrap());
     ui.knob(1, 0., &s, |c| e.command(c).unwrap());

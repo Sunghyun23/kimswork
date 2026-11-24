@@ -41,6 +41,7 @@ fn canceled_audio_replace_preserves_original_playback_frames_and_save_validity()
         e.tracks[0].audio_frames, 16000,
         "unfinished REPLACE must not shrink the old loop"
     );
+    e.command(Command::CancelRecord).unwrap();
     e.command(Command::Stop).unwrap();
     assert_eq!(e.tracks[0].audio_frames, 16000);
     assert_eq!(e.tracks[0].audio[15000], Frame::mono(0.1));

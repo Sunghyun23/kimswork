@@ -1,8 +1,8 @@
 # Loop Club
 
-A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.11.1 targets firmware1.3.0.12. This is an SD preload mod, not an MPC OS VST or a firmware image.
+A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.14.4 targets firmware1.3.0.12. This is an SD preload mod, not an MPC OS VST or a firmware image.
 
-[Manual](docs/manual.md) · [Installation](docs/public-install.txt) · [Verification](docs/release-0.11.1.md) · [Source specification](../../../docs/looper-srs.md)
+[Manual](docs/manual.md) · [Installation](docs/public-install.txt) · [Verification](docs/release-0.14.4.md) · [Source specification](../../../docs/looper-srs.md)
 
 - LOOP/MUTE/CHAIN pad modes; record from LOOP without changing the screen; REC ends at the bar boundary.
 - Independent bar-aligned audio, synth and drum loops; count-in; Replace/Overdub; MIDI grid.
@@ -10,10 +10,12 @@ A16-track audio/MIDI looper for **MPC Sample**, by **kim**. Public preview0.11.1
 - Original procedural drums, musical velocity accents and optional standalone user banks.
 - Two layers per drum sound: sample selection, Volume/Tune/relative Shift, Decay/enable/REV.
 - Pad-shaped track/drum mixers, pickup fader and per-track MAIN/USB stereo destinations.
-- Direct4×4FXpad boards with tap ON/OFF: two simultaneous track slots, five master texture stages, Duck and two saved custom master effects.
+- Direct4×4FXpad boards with hold-to-apply and SHIFT latch: two simultaneous track slots, five master texture stages, Duck and two saved custom master effects.
 - Sidechain from an individual drum or whole track, to other/custom tracks or the full master.
 
 Native checks, real active-DRM screens, USB audio and remote-control tests are recorded separately from unverified physical inputs. The32voice cap is not an unlimited CPU guarantee; brief scheduling-inclusive peaks have exceeded the callback budget. USB multichannel drum stems and source-bank MIDI import are not implemented. Local0.7.0 adds bounded sample Warp; its limitations are documented below. See the manual for exact limits.
+
+Public maintenance preview **0.14.4** corrects Drum Replace, makes generation explicit, shows later-bar drum notes, adds an original default scratch source and provides nested BACK navigation. This release includes0.14.2–0.14.4 maintenance work. Version0.14.3 adds STOP commit/trailing-silence trimming, two-stage recording STOP / playback rewind, safe resume and immediate four-beat preroll. Latest0.14.4 aligns additional captures to the longest playing loop’s first beat without a second preroll, holds existing loops during stopped preroll, and adds optional TOP NOTE chord voice leading. See [additional verification](docs/qa-0.14.4.md).
 
 ## Build
 
@@ -98,3 +100,5 @@ Local0.14.0 adds named NEW / OPEN / SAVE and SHIFT+SAVE COPY, reached through SE
 Local0.14.1 supersedes0.14.0's upper action buttons: **SHIFT+SEQ** opens a separate **PROJECT** list. Rotate DATA to select New/Open/Save/Save a Copy, press DATA to execute. Confirmation lists use the same interaction and default to Cancel. See [workflow](docs/projects-0.14.1.md).
 
 Current release0.14.1 adds the independent PROJECT menu: SHIFT+SEQ, then DATA to select New/Open/Save/Save a Copy. The numbered projects retain embedded samples/settings and prior-save backups; Cancel is initially selected on replacement confirmations. Existing Session and all earlier video releases remain available. See [release notes](docs/release-0.14.1.md) and [publication](docs/publication-0.14.1.json).
+
+Public0.14.4 includes aligned additional recording, stopped-loop preroll synchronization, optional TOP NOTE voice leading, two-stage recording STOP, Drum REPLACE and navigation repairs. See [release notes](docs/release-0.14.4.md) for public checks and remaining limits.

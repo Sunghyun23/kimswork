@@ -317,6 +317,7 @@ pub struct ChordConfig {
     pub strum_ms: f32,
     pub strum_direction: u8,
     pub smooth: bool,
+    pub top_note: bool,
     pub key: u8,
     pub scale: u8,
     pub color: u8,
@@ -329,6 +330,7 @@ impl Default for ChordConfig {
             strum_ms: 0.,
             strum_direction: 0,
             smooth: true,
+            top_note: false,
             key: 0,
             scale: 0,
             color: 1,
@@ -338,6 +340,18 @@ impl Default for ChordConfig {
     }
 }
 impl ChordConfig {
+    pub fn voice_lead_mode(&self) -> u8 {
+        if !self.smooth {
+            0
+        } else if self.top_note {
+            2
+        } else {
+            1
+        }
+    }
+    pub fn voice_lead_label(&self) -> &'static str {
+        ["VOICE OFF", "SMOOTH", "TOP NOTE"][usize::from(self.voice_lead_mode())]
+    }
     pub fn valid(&self) -> bool {
         self.strum_ms.is_finite()
             && (0.0..=80.).contains(&self.strum_ms)
@@ -492,11 +506,29 @@ pub fn smooth_voicing(
     previous: [u8; 5],
     previous_len: usize,
 ) -> [u8; 5] {
+    choose_voicing(notes, len, previous, previous_len, false)
+}
+/// Prefer the smallest top-note motion, then minimize the remaining voice movement.
+pub fn top_note_voicing(
+    notes: [u8; 5],
+    len: usize,
+    previous: [u8; 5],
+    previous_len: usize,
+) -> [u8; 5] {
+    choose_voicing(notes, len, previous, previous_len, true)
+}
+fn choose_voicing(
+    notes: [u8; 5],
+    len: usize,
+    previous: [u8; 5],
+    previous_len: usize,
+    top_priority: bool,
+) -> [u8; 5] {
     if len == 0 || len > 5 || previous_len == 0 || previous_len > 5 {
         return notes;
     }
     let mut best = notes;
-    let mut score = i32::MAX;
+    let mut score = (i32::MAX, i32::MAX);
     for inversion in 0..len {
         for shift in -3..=3 {
             let mut candidate = [0u8; 5];
@@ -515,13 +547,39 @@ pub fn smooth_voicing(
                 continue;
             }
             candidate[..len].sort_unstable();
+            if top_priority {
+                // Keep the chosen melody note, then place lower voices near
+                // their previous register without crossings or pitch-class edits.
+                for i in (0..len - 1).rev() {
+                    let pitch_class = candidate[i] % 12;
+                    let old = previous[i * previous_len / len];
+                    let original = candidate[i];
+                    let chosen = (pitch_class..=127)
+                        .step_by(12)
+                        .filter(|note| *note < candidate[i + 1])
+                        .min_by_key(|note| (note.abs_diff(old), note.abs_diff(original)));
+                    if let Some(note) = chosen {
+                        candidate[i] = note;
+                    } else {
+                        valid = false;
+                        break;
+                    }
+                }
+                if !valid {
+                    continue;
+                }
+            }
             let movement = (0..len)
                 .map(|i| {
                     (i32::from(candidate[i]) - i32::from(previous[i * previous_len / len])).abs()
                 })
                 .sum::<i32>();
             let top = (i32::from(candidate[len - 1]) - i32::from(previous[previous_len - 1])).abs();
-            let cost = movement * 4 + top * 3;
+            let cost = if top_priority {
+                (top, movement)
+            } else {
+                (movement * 4 + top * 3, 0)
+            };
             if cost < score {
                 score = cost;
                 best = candidate;

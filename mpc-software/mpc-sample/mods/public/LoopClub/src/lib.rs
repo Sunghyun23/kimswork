@@ -47,3 +47,5 @@ pub mod tempo;
 mod qa_scratch;
 
 pub mod project_manager;
+
+pub mod scratch_source;

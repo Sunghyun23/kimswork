@@ -1,0 +1,37 @@
+{
+  "version": "0.14.4",
+  "status": "public preview",
+  "project_format": 12,
+  "native_tests": 455,
+  "optimized_focused_tests": 39,
+  "strict_clippy": true,
+  "arm64_normal_qa_builds": true,
+  "launcher_checks": 8,
+  "public_zip_sha256": "519223777d18cfcd2dba06d735a161939fe7a3b867d17401e1691224d825f0ff",
+  "public_library_sha256": "c58009714b084e32653d7ef7f1a5b032e5615e6d14ae48296d93048115d53ee3",
+  "installed_feature_sha256": "bc418975091b154d0be66a259c0480c14c67dc08086b9b0b4d7c3562e8c0595e",
+  "exact_public_library_device_smoke": "not performed: new unsaved owner project; restart withheld",
+  "feature_device_checks": [
+    "running two-bar reference alignment with no second count-in",
+    "stopped loops held through preroll and launched together",
+    "TOP NOTE vs OFF pitch comparison",
+    "isolated save/restart recall",
+    "two-stage STOP, MIDI and Audio trailing-bar trim",
+    "Drum Replace/Overdub and later-event editing",
+    "nested navigation and original AHH source"
+  ],
+  "qa_agent_in_zip": false,
+  "private_banks_in_zip": false,
+  "sd_feature_readbacks": 20,
+  "previous_sd_files_preserved": 20,
+  "existing_video_assets_changed": false,
+  "remaining_checks": [
+    "exact packaged-image separate device smoke",
+    "physical input",
+    "analog latency",
+    "power-cycle recovery",
+    "maximum/long-session CPU"
+  ],
+  "responsive_cases": 35,
+  "internal_links": 493
+}

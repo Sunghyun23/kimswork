@@ -69,6 +69,7 @@ pub struct Runtime {
     pub pcm: AtomicUsize,
     pub lost_input: AtomicU64,
     pub missing_input: AtomicU64,
+    input_missing_run: AtomicU32,
     input_seen: AtomicBool,
     panic: AtomicBool,
     pub rejected_commands: AtomicU64,
@@ -106,6 +107,7 @@ impl Default for Runtime {
             pcm: AtomicUsize::new(0),
             lost_input: AtomicU64::new(0),
             missing_input: AtomicU64::new(0),
+            input_missing_run: AtomicU32::new(0),
             input_seen: AtomicBool::new(false),
             panic: AtomicBool::new(false),
             rejected_commands: AtomicU64::new(0),
@@ -401,15 +403,19 @@ impl Runtime {
                 // SAFETY: only output under busy consumes input; producers only reserve/write.
                 let input = unsafe { self.input.pop_shared() };
                 if input.is_none()
-                    && e.recorder.is_some_and(|r| {
-                        !r.midi
-                            && !r.resample
-                            && e.clock.tick() >= r.start
-                    })
+                    && e.requires_capture_input()
                 {
                     self.missing_input.fetch_add(1, Ordering::Relaxed);
-                    let _ = e.command(Command::CancelRecord);
-                    e.error = Some(Error::InputUnavailable)
+                    let missing = self.input_missing_run.fetch_add(1, Ordering::Relaxed) + 1;
+                    // Asynchronous USB periods can leave a brief single-frame gap.
+                    // Keep its time slot (zero below), report it, and only cancel a
+                    // sustained 10ms input loss rather than silently losing the take.
+                    if missing >= (rate / 100).max(1) {
+                        let _ = e.command(Command::CancelRecord);
+                        e.error = Some(Error::InputUnavailable);
+                    }
+                } else {
+                    self.input_missing_run.store(0, Ordering::Relaxed);
                 }
                 if !active {
                     if e.recorder.is_some_and(|r| r.finish_started) {

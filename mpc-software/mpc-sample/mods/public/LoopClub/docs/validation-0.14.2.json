@@ -1,0 +1,138 @@
+{
+  "product": "Loop Club",
+  "version": "0.14.2",
+  "status": "verified local maintenance candidate, installed runtime and SD; not publicly released",
+  "public_version": "0.14.1",
+  "firmware": "MPC Sample1.3.0.12",
+  "native_tests": 431,
+  "optimized_realtime_motion_navigation_tests": 40,
+  "strict_clippy": "PASS",
+  "arm64_normal_qa_builds": "PASS",
+  "device": {
+    "screen_types": 16,
+    "independent_queued_button_presses": 124,
+    "drum_checks": [
+      "DRUM SOUND SHIFT+pad arms only recording, returns LOOP; no generated events; >64 USB MIDI events visible in later bar",
+      "GRID later-bar note index64 edited to velocity25 and Undo restored106; no first64 truncation",
+      "REPLACE blocks all old drum lanes; no-hit replacement is silent/empty; Undo restores complete original pattern",
+      "OVERDUB retains and audibly plays the previous pattern",
+      "Explicit DRUM PLAY B2 GENERATE edits a part without arming capture or starting transport",
+      "SOURCE PAD8 TURN loads original1.8s AHH into empty Audio; real USB scratch output is finite/audible",
+      "Re-entering TURN preserves existing source PCM"
+    ],
+    "replace_usb": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "flags": [],
+      "seconds": 0.37151927437641724
+    },
+    "overdub_usb": {
+      "peak": 0.1499282568693161,
+      "rms": 0.037816110998392105,
+      "flags": [],
+      "seconds": 0.37151927437641724
+    },
+    "original_scratch_usb": {
+      "peak": 0.3963029980659485,
+      "rms": 0.14260263741016388,
+      "flags": [],
+      "seconds": 1.1145578231292517
+    },
+    "navigation_and_cut_checks": [
+      "Synth GRID BACK restores previous OSC editor; BACK returns PLAY then LOOP without parameter edits",
+      "INPUT -> SETUP 2/2 -> TIMING 1/2 -> SOURCE -> LOOP with visible BACK",
+      "Project BACK closes overlay and retains underlying GRID",
+      "LOOP edit has BACK; MOVE remains SHIFT+B1; no destructive action on entry/exit",
+      "Drum performance BACK restores layer detail, then overview, then LOOP; note edit BACK is visible",
+      "CHOP BACK returns audio SOUND; SOUND B3 BACK returns LOOP without changing Replace/Overdub",
+      "CUT is source-only silence, release resumes moving head; release survives BACK and Project modal; STOP clears ownership"
+    ],
+    "cut_usb": [
+      {
+        "label": "before_cut",
+        "peak": 0.13670441508293152,
+        "rms": 0.09661537408828735,
+        "flags": []
+      },
+      {
+        "label": "cut",
+        "peak": 0.0,
+        "rms": 0.0,
+        "flags": []
+      },
+      {
+        "label": "after_release",
+        "peak": 0.13670441508293152,
+        "rms": 0.09671346843242645,
+        "flags": []
+      },
+      {
+        "label": "release_after_back",
+        "peak": 0.13670441508293152,
+        "rms": 0.0967448428273201,
+        "flags": []
+      }
+    ],
+    "background_during_cut": {
+      "label": "background_drums_while_scratch_cut",
+      "peak": 0.2223546802997589,
+      "rms": 0.09221518039703369,
+      "flags": []
+    },
+    "twenty_cut_cycles": "PASS",
+    "normal_usb_midi_peak": 0.01645495370030403,
+    "normal_usb_flags": [],
+    "final_qa_timing": {
+      "blocks": 7316,
+      "max_deadline_pct": 129.1978,
+      "overrun_blocks": 2,
+      "p99_deadline_pct_upper": 45.0,
+      "scope": "actual primary callback elapsed time, including scheduler interruptions; QA instrumentation only"
+    }
+  },
+  "artifacts": {
+    "qa_final_sha256": "92c23f395ccf788f77ac68b790cf329eba996f9e3af4377923376e33a70dc74d",
+    "normal_runtime_sd_sha256": "49666d327cd6a846828d3f79ebf68f189fb95ef37e8e5821105e84f6e8c5088f",
+    "all_page_probe_build": "initial0.14.2 BACK implementation; final affected TURN/Setup/edit captions rechecked on final QA image",
+    "initial_normal_runtime_sd_sha256": "654d82460fb94470f7ad446ef2f3ad9dd844e72e130763c513c19a3b48945bdd"
+  },
+  "installation": {
+    "persisted": true,
+    "files_readback_verified": 20,
+    "old_files_preserved": 20,
+    "owner16tracks_bpm_input_restored": true,
+    "owner_saved_for_testing": false,
+    "screen": "Owner empty unsaved Project-001 restored on normal LOOP, stopped; matching16tracks/BPM/preroll, no owner Save"
+  },
+  "limits": [
+    "Queued independent callbacks are not physical finger/pad/button acceptance.",
+    "Actual USB audio and active DRM; no new analog latency or power-cycle claim.",
+    "One final QA callback exceeded its deadline, including scheduler interruption; no unlimited CPU or long-session guarantee.",
+    "The 3ms CUT envelope is tested natively at8k/44.1k/48k; remote request latency is not a physical3ms measurement.",
+    "Current-bar Drum GRID exposes up to64events in that viewport, full clip occupancy is scanned; Synth/Audio legacy event-window limits remain.",
+    "No public release or website deployment in this validation pass."
+  ],
+  "initial_native_tests": 429,
+  "project_action_return": {
+    "cases": [
+      "Cancel preserves underlying GRID and issues no completion",
+      "01-new-to-loop",
+      "02-save-from-sound-to-loop",
+      "03-save-copy-from-grid-to-loop",
+      "04-open-from-mix-to-loop",
+      "Failed running Save retains menu and existing project",
+      "06-save-from-mute-to-normal-loop",
+      "07-save-from-edit-to-normal-loop"
+    ],
+    "qa_sha256": "61a22b8266eb99572549ff97cdf24230c2c43bda7b18bcaf61e74de90d83dc65",
+    "normal_sha256": "49666d327cd6a846828d3f79ebf68f189fb95ef37e8e5821105e84f6e8c5088f",
+    "owner_state": "Owner created a verified empty unsaved Project-001 while the prior saved baseline stayed on disk. Same empty New state recreated and compared after QA; no owner Save.",
+    "normal_result": {
+      "page": 0,
+      "projects_open": false,
+      "completed": 1
+    },
+    "sd_readbacks": 20,
+    "old_files_preserved": 20
+  }
+}
