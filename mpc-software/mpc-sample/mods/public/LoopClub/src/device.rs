@@ -67,6 +67,9 @@ fn hardware_button(event: ButtonEvent) -> Flow {
         }
         return Flow::Forward;
     }
+    if mpc_sample_sdk::loader::with_mod(|module| module.on_button(event)).is_some() {
+        return Flow::Consume;
+    }
     queue_control(HardwareControl::Button {
         code: event.code,
         value: event.value,
@@ -94,6 +97,13 @@ fn hardware_cc(event: CcEvent) -> Flow {
     if !runtime().is_some_and(|r| r.active.load(Ordering::Acquire)) {
         return Flow::Forward;
     }
+    if mpc_sample_sdk::loader::with_mod(|module| module.on_cc(event)).is_some() {
+        return if event.control == 19 {
+            Flow::Forward
+        } else {
+            Flow::Consume
+        };
+    }
     queue_control(HardwareControl::Cc {
         control: event.control,
         value: event.value,
@@ -118,6 +128,9 @@ fn hardware_encoder(event: EncoderEvent) -> Flow {
         return Flow::Forward;
     }
     crate::qa::encoder(event.delta, true);
+    if mpc_sample_sdk::loader::with_mod(|module| module.on_encoder(event)).is_some() {
+        return Flow::Consume;
+    }
     queue_control(HardwareControl::Encoder {
         delta: normalize_encoder(event.delta),
         shift: mpc_sample_sdk::shift(),
@@ -162,6 +175,21 @@ fn pad_input(event: PadEvent) -> PadResponse {
     } else if PAD_OWNED.fetch_and(!bit, Ordering::AcqRel) & bit == 0 {
         return PadResponse {
             flow: Flow::Forward,
+            token: 0,
+        };
+    }
+    // Only the SDK's nonblocking exclusive Mod dispatch may consume UI events.
+    // Busy/reentrant callbacks retain ownership and enqueue the exact edge below.
+    if mpc_sample_sdk::loader::with_mod(|module| {
+        module.on_pad(PadEvent {
+            pad: physical,
+            ..event
+        })
+    })
+    .is_some()
+    {
+        return PadResponse {
+            flow: Flow::Consume,
             token: 0,
         };
     }
@@ -444,8 +472,106 @@ pub struct LoopClub {
     button_timestamp: Option<Instant>,
     tap_epoch: Option<Instant>,
     tap: crate::tempo::TapTempo,
+    draining_inputs: bool,
 }
 impl LoopClub {
+    /// Consume fallback edges under the SDK's exclusive Mod lock. Input callbacks
+    /// and paint are serialized by that lock; never called by an audio worker.
+    fn drain_pending_inputs(&mut self) {
+        self.drain_pending_sources(CONTROL_EVENTS.get(), PAD_EVENTS.get());
+    }
+    fn drain_pending_sources(
+        &mut self,
+        controls: Option<&crate::queue::Queue<HardwareControl, 512>>,
+        pads: Option<&crate::queue::Queue<HardwarePad, 256>>,
+    ) {
+        if self.draining_inputs {
+            return;
+        }
+        self.draining_inputs = true;
+        if let Some(events) = controls {
+            for _ in 0..512 {
+                // SAFETY: serialized owning UI callbacks are the only consumer.
+                let Some(event) = (unsafe { events.pop_shared() }) else {
+                    break;
+                };
+                match event {
+                    HardwareControl::Button {
+                        code,
+                        value,
+                        pressed,
+                        shift,
+                        erase,
+                        timestamp,
+                    } => {
+                        self.button_timestamp = Some(timestamp);
+                        self.on_button(ButtonEvent {
+                            event: 0,
+                            bytes: [0; 16],
+                            code,
+                            value,
+                            pressed,
+                            shift,
+                            erase,
+                            surface: 0,
+                        });
+                    }
+                    HardwareControl::Cc {
+                        control,
+                        value,
+                        low,
+                        range,
+                        shift,
+                    } => {
+                        self.control_cc(
+                            CcEvent {
+                                event: 0,
+                                control,
+                                value,
+                                low,
+                                range,
+                            },
+                            shift,
+                        );
+                    }
+                    HardwareControl::Encoder { delta, shift } => {
+                        self.refresh();
+                        if self.browser.open {
+                            self.browser.encoder(delta);
+                        } else {
+                            self.ui.shift_view = shift;
+                            self.ui.encoder(delta, &self.snapshot, send);
+                        }
+                    }
+                }
+            }
+        }
+        if let Some(events) = pads {
+            for _ in 0..256 {
+                // SAFETY: exclusive SDK Mod callbacks are the only consumer.
+                let Some(event) = (unsafe { events.pop_shared() }) else {
+                    break;
+                };
+                if self.browser.open && event.on {
+                    continue;
+                }
+                let action = self.ui.pad(
+                    event.pad,
+                    event.on,
+                    event.velocity,
+                    event.shift,
+                    event.erase,
+                    &self.snapshot,
+                    send,
+                );
+                self.action(action);
+                if !self.ui.active {
+                    break;
+                }
+            }
+        }
+        self.draining_inputs = false;
+    }
     fn control_cc(&mut self, event: CcEvent, shift: bool) -> Flow {
         if event.control == u32::from(mpc_sample_sdk::event::cc::DATA) {
             return Flow::Forward;
@@ -698,6 +824,7 @@ impl Mod for LoopClub {
         }
     }
     fn on_button(&mut self, event: ButtonEvent) -> Flow {
+        self.drain_pending_inputs();
         crate::qa::button();
         let timestamp = self.button_timestamp.take().unwrap_or_else(Instant::now);
         if !self.ui.active {
@@ -973,6 +1100,7 @@ impl Mod for LoopClub {
         Flow::Consume
     }
     fn on_encoder(&mut self, event: EncoderEvent) -> Flow {
+        self.drain_pending_inputs();
         if !self.ui.active {
             return Flow::Forward;
         }
@@ -987,7 +1115,32 @@ impl Mod for LoopClub {
         self.ui.encoder(delta, &self.snapshot, send);
         Flow::Consume
     }
+    fn on_pad(&mut self, event: PadEvent) -> Flow {
+        self.drain_pending_inputs();
+        self.refresh();
+        if !(0..16).contains(&event.pad) {
+            return Flow::Forward;
+        }
+        let on = event.action == PadAction::Press;
+        if !self.ui.active {
+            return Flow::Consume;
+        }
+        if !(self.browser.open && on) {
+            let action = self.ui.pad(
+                event.pad as usize,
+                on,
+                (event.velocity.clamp(0., 1.) * 127.).round() as u8,
+                mpc_sample_sdk::shift(),
+                mpc_sample_sdk::erase(),
+                &self.snapshot,
+                send,
+            );
+            self.action(action);
+        }
+        Flow::Consume
+    }
     fn on_cc(&mut self, event: CcEvent) -> Flow {
+        self.drain_pending_inputs();
         self.control_cc(event, mpc_sample_sdk::shift())
     }
     fn on_paint(&mut self, graphics: &mut mpc_sample_sdk::draw::Graphics, event: PaintEvent) {
@@ -1010,63 +1163,7 @@ impl Mod for LoopClub {
         }
         self.refresh();
         self.ui.shift_view = mpc_sample_sdk::shift();
-        if let Some(events) = CONTROL_EVENTS.get() {
-            for _ in 0..512 {
-                // SAFETY: serialized owning UI callbacks are the only consumer.
-                let Some(event) = (unsafe { events.pop_shared() }) else {
-                    break;
-                };
-                match event {
-                    HardwareControl::Button {
-                        code,
-                        value,
-                        pressed,
-                        shift,
-                        erase,
-                        timestamp,
-                    } => {
-                        self.button_timestamp = Some(timestamp);
-                        self.on_button(ButtonEvent {
-                            event: 0,
-                            bytes: [0; 16],
-                            code,
-                            value,
-                            pressed,
-                            shift,
-                            erase,
-                            surface: 0,
-                        });
-                    }
-                    HardwareControl::Cc {
-                        control,
-                        value,
-                        low,
-                        range,
-                        shift,
-                    } => {
-                        self.control_cc(
-                            CcEvent {
-                                event: 0,
-                                control,
-                                value,
-                                low,
-                                range,
-                            },
-                            shift,
-                        );
-                    }
-                    HardwareControl::Encoder { delta, shift } => {
-                        self.refresh();
-                        if self.browser.open {
-                            self.browser.encoder(delta);
-                        } else {
-                            self.ui.shift_view = shift;
-                            self.ui.encoder(delta, &self.snapshot, send);
-                        }
-                    }
-                }
-            }
-        }
+        self.drain_pending_inputs();
         for _ in 0..64 {
             let Some(input) = crate::qa::pop() else {
                 break;
@@ -1143,32 +1240,10 @@ impl Mod for LoopClub {
                 }
             }
         }
+        self.drain_pending_inputs();
+        self.refresh();
         crate::qa::browser(self.browser.open, self.browser.row, self.browser.total());
         crate::qa::paint(&self.ui, &self.snapshot, self.browser.open);
-        if let Some(events) = PAD_EVENTS.get() {
-            for _ in 0..256 {
-                // SAFETY: only serialized on_paint callbacks consume this queue.
-                let Some(event) = (unsafe { events.pop_shared() }) else {
-                    break;
-                };
-                if self.browser.open && event.on {
-                    continue;
-                }
-                let action = self.ui.pad(
-                    event.pad,
-                    event.on,
-                    event.velocity,
-                    event.shift,
-                    event.erase,
-                    &self.snapshot,
-                    send,
-                );
-                self.action(action);
-                if !self.ui.active {
-                    break;
-                }
-            }
-        }
         if !self.ui.active {
             return;
         }
@@ -1180,6 +1255,9 @@ impl Mod for LoopClub {
         } else {
             view::render(&self.ui, &self.snapshot, &mut NativePainter(*graphics));
         }
+        // Inputs that arrived while native drawing owned the Mod must not wait
+        // through another complete paint before their audio command is sent.
+        self.drain_pending_inputs();
         // SAFETY: request the next asynchronous repaint only from this live paint
         // callback. No retained component pointer or background-thread repaint pump.
         unsafe { mpc_sample_sdk::draw::repaint_component(event.component) };
@@ -1222,6 +1300,111 @@ pub fn normalize_encoder(delta: i32) -> i32 {
 #[cfg(test)]
 mod regression_tests {
     use super::*;
+    #[test]
+    fn immediate_mod_input_handles_navigation_and_fx_edges_without_paint() {
+        let mut app = LoopClub::default();
+        app.ui.active = true;
+        app.ui.page = Page::Loop;
+        app.on_encoder(EncoderEvent {
+            surface: 0,
+            delta: 1,
+        });
+        assert_eq!(app.ui.selected, 1);
+        app.ui.page = Page::TrackFx;
+        let event = PadEvent {
+            action: PadAction::Press,
+            input: 0,
+            source: 0,
+            pad: 0,
+            properties: 0,
+            velocity: 0.75,
+        };
+        assert_eq!(app.on_pad(event), Flow::Consume);
+        assert!(app.ui.fx_held[0].is_some());
+        assert_eq!(
+            app.on_pad(PadEvent {
+                action: PadAction::Release,
+                velocity: 0.,
+                ..event
+            }),
+            Flow::Consume
+        );
+        assert!(app.ui.fx_held.iter().all(Option::is_none));
+    }
+    #[test]
+    fn fallback_controls_keep_order_and_are_consumed_once_without_a_paint() {
+        let controls = crate::queue::Queue::<HardwareControl, 512>::default();
+        let mut app = LoopClub::default();
+        app.ui.active = true;
+        app.ui.page = Page::Grid;
+        let now = Instant::now();
+        assert!(controls.push(HardwareControl::Button {
+            code: 6,
+            value: 127,
+            pressed: true,
+            shift: false,
+            erase: false,
+            timestamp: now,
+        }));
+        assert!(controls.push(HardwareControl::Encoder {
+            delta: 1,
+            shift: false
+        }));
+        assert!(controls.push(HardwareControl::Encoder {
+            delta: 1,
+            shift: false
+        }));
+        app.drain_pending_sources(Some(&controls), None);
+        assert_eq!(app.ui.page, Page::Loop);
+        assert_eq!(app.ui.selected, 2);
+        assert!(!app.draining_inputs);
+        app.drain_pending_sources(Some(&controls), None);
+        assert_eq!(app.ui.selected, 2);
+    }
+    #[test]
+    fn fallback_fx_release_cannot_be_lost_or_replayed_by_immediate_dispatch() {
+        let pads = crate::queue::Queue::<HardwarePad, 256>::default();
+        let mut app = LoopClub::default();
+        app.ui.active = true;
+        app.ui.page = Page::TrackFx;
+        assert!(pads.push(HardwarePad {
+            pad: 0,
+            on: true,
+            velocity: 84,
+            shift: false,
+            erase: false
+        }));
+        app.drain_pending_sources(None, Some(&pads));
+        assert!(app.ui.fx_held[0].is_some());
+        assert!(pads.push(HardwarePad {
+            pad: 0,
+            on: false,
+            velocity: 0,
+            shift: false,
+            erase: false
+        }));
+        app.drain_pending_sources(None, Some(&pads));
+        assert!(app.ui.fx_held.iter().all(Option::is_none));
+        assert!(!app.draining_inputs);
+        app.drain_pending_sources(None, Some(&pads));
+        assert!(app.ui.fx_held.iter().all(Option::is_none));
+    }
+    #[test]
+    fn reentrant_drain_leaves_events_for_the_exclusive_outer_consumer() {
+        let controls = crate::queue::Queue::<HardwareControl, 512>::default();
+        let mut app = LoopClub::default();
+        app.ui.active = true;
+        assert!(controls.push(HardwareControl::Encoder {
+            delta: 1,
+            shift: false
+        }));
+        app.draining_inputs = true;
+        app.drain_pending_sources(Some(&controls), None);
+        assert_eq!(app.ui.selected, 0);
+        app.draining_inputs = false;
+        app.drain_pending_sources(Some(&controls), None);
+        assert_eq!(app.ui.selected, 1);
+    }
     #[test]
     fn audio_sampler_recording_allows_sound_entry_but_unfinished_pcm_does_not() {
         for midi in [false, true] {

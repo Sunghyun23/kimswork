@@ -10,8 +10,8 @@ import numpy as np,sounddevice as sd
 from PIL import Image
 p=Path(__file__).resolve().parents[1];sys.path.insert(0,str(p/'tools'))
 from qa_device_matrix import QA,state,request
-out=p/'build/qa-device/latency-0.11.4';q=QA(out);initial=state();assert initial['version']=='0.11.4'and not initial['words'][4]&1 and initial['words'][9]==0
-report={'version':'0.11.4','pid':initial['pid'],'scope':'Host HTTP send to state/active-DRM/actual USB capture; includes remote transport and observation, not physical key-to-analog latency. No owner project save/restart.','before_audio_timing':initial['audio_timing']};stream=None
+initial=state();out=p/('build/qa-device/latency-'+initial['version']);q=QA(out);assert initial['version'] in ('0.11.4','0.11.5')and not initial['words'][4]&1 and initial['words'][9]==0
+report={'version':initial['version'],'pid':initial['pid'],'scope':'Host HTTP send to state/active-DRM/actual USB capture; includes remote transport and observation, not physical key-to-analog latency. No owner project save/restart.','before_audio_timing':initial['audio_timing']};stream=None
 
 def stats(a):return {'n':len(a),'min_ms':float(np.min(a)),'median_ms':float(np.median(a)),'p95_ms':float(np.percentile(a,95)),'max_ms':float(np.max(a))}
 def edge(code,on):return request('/input',{'kind':'transport_button','code':code,'on':on,'shift':False})

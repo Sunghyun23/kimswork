@@ -1,0 +1,27 @@
+{
+  "version": "0.11.5",
+  "native_full_debug_tests": 378,
+  "device_release_guard_tests": 15,
+  "strict_all_targets_clippy": "PASS",
+  "arm64_build": "PASS",
+  "package_launcher_cases": 8,
+  "zip_sha256": "8141db6e94f263fb30b98d628b0f9db169c1745b61f1e856c4a550537feecd33",
+  "installed_library_sha256": "844d37f0e537a573008a43e8b7cafd6b9af11233e5044b3edd05dd6d0c9dbbb7",
+  "public_release": "0.11.2",
+  "actual_evidence": "design/device-0.11.5",
+  "physical_key_latency": "NOT measured",
+  "audio_deadline_note": "One lifetime deadline crossing occurred before the latency windows; no additional crossings in either window. No worst-case CPU claim.",
+  "additional_direct_dispatch_debug_case": 1,
+  "distinct_debug_cases_passed": 379,
+  "sd_files_readback_verified": 20,
+  "old_boot_files_preserved": 20,
+  "device_installed": true,
+  "final_smoke": {
+    "owner16_unchanged": true,
+    "seq20_stays_grid": true,
+    "metro_toggle": true,
+    "preroll": 1,
+    "owner_project_saved": false,
+    "pid": 33376
+  }
+}
