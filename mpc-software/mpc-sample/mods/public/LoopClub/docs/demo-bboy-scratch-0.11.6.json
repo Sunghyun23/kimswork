@@ -1,0 +1,27 @@
+{
+  "seconds": 35.851609977324266,
+  "bytes": 1548865,
+  "sha256": "61e21bff48a1d42a575023670b84fb6a6f17c4f4861e53b4699be34aab6bf2c9",
+  "actual_frames": 215,
+  "audio_callback_flags": [],
+  "adc_clock_drift_ms": 1.4646744594202232,
+  "linear_gain": 4.315847467597589,
+  "decoded_peak": 0.8688812255859375,
+  "decode_errors": "",
+  "owner16_restored": true,
+  "sources": "Actual MPC Sample DRM + USB stereo; original drums and on-device synth resample. Fader is platter motion; track Level acts as the cut. Remote controls, no physical turntable or hand footage.",
+  "bpm": 100,
+  "drum_bars": 1,
+  "source_pcm_peak": 0.08300264924764633,
+  "drum_level": 0.5,
+  "scratch_level_up_to": 1.0,
+  "fader_range_beats": 2,
+  "output": "build/demos/bboy-scratch-0.11.6-20261124/bboy-break-scratch.mp4",
+  "publication": "Local video only; no release/site change requested",
+  "techniques": [
+    "Baby scratch: forward and reverse strokes",
+    "Forward-only cuts: silent return",
+    "Short stabs: level gates"
+  ],
+  "note": "The first silent-source take was rejected. Final original source is triggered from the device pads and cued inside its voiced region. Performance soundtrack is actual USB output; only constant gain applied."
+}
