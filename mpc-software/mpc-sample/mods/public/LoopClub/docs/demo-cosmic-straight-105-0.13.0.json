@@ -1,0 +1,115 @@
+{
+  "seconds": 24.241632653061224,
+  "video": "cosmic-straight-105-scratch.mp4",
+  "bytes": 1232121,
+  "sha256": "e4b32033fb3c2e4d5d842ee67ce5eb7f6580cff1a33549a456045992558d74c5",
+  "actual_frames": 225,
+  "max_screen_gap_seconds": 0.11348545851069503,
+  "audio_callback_flags": [],
+  "adc_clock_drift_ms": -0.10916630531809801,
+  "linear_gain": 1.8553070025880773,
+  "decoded_peak": 0.8483417630195618,
+  "decoded_rms": 0.14982996881008148,
+  "decoded_audio_seconds": 24.241632653061224,
+  "decode_errors": "",
+  "owner16_restored": true,
+  "scratch_source_pcm_peak": 0.4973632991,
+  "sources": "Actual MPC Sample DRM + USB stereo. Cosmic Vintage Drums private kit + personal Classic Ahhh from Studio Scratches / Beside, Change The Beat. Audio-clock programmed quantized7bit fader inputs + dedicated CUT; same Player as physical input. NOT human-hand performance or physical latency evidence. No host audio rendering.",
+  "stage_audio": [
+    {
+      "stage": "01 / COSMIC VINTAGE DRUMS",
+      "start": 0.09731295006349683,
+      "end": 3.004112575057661,
+      "rms": 0.06916600196102789,
+      "peak": 0.4466552734375
+    },
+    {
+      "stage": "02 / BABY SCRATCH",
+      "start": 3.004112575057661,
+      "end": 5.227889700065134,
+      "rms": 0.08839399859464435,
+      "peak": 0.4581298828125
+    },
+    {
+      "stage": "03 / SHORTER BABIES",
+      "start": 5.227889700065134,
+      "end": 7.540510867082048,
+      "rms": 0.09504405723505165,
+      "peak": 0.4466552734375
+    },
+    {
+      "stage": "04 / FORWARD CUTS",
+      "start": 7.540510867082048,
+      "end": 9.873846325062914,
+      "rms": 0.07966239514679592,
+      "peak": 0.4466552734375
+    },
+    {
+      "stage": "05 / SYNCOPATED CUTS",
+      "start": 9.873846325062914,
+      "end": 12.149875617062207,
+      "rms": 0.07511638161770133,
+      "peak": 0.4466552734375
+    },
+    {
+      "stage": "02 / BABY SCRATCH",
+      "start": 12.149875617062207,
+      "end": 14.399890409084037,
+      "rms": 0.09016612053589032,
+      "peak": 0.456878662109375
+    },
+    {
+      "stage": "03 / SHORTER BABIES",
+      "start": 14.399890409084037,
+      "end": 16.720611284079496,
+      "rms": 0.09532349310243411,
+      "peak": 0.4466552734375
+    },
+    {
+      "stage": "04 / FORWARD CUTS",
+      "start": 16.720611284079496,
+      "end": 18.96971582507831,
+      "rms": 0.07517276208793357,
+      "peak": 0.4466552734375
+    },
+    {
+      "stage": "05 / SYNCOPATED CUTS",
+      "start": 18.96971582507831,
+      "end": 21.295981159084477,
+      "rms": 0.0780124350887822,
+      "peak": 0.4466552734375
+    },
+    {
+      "stage": "06 / COSMIC BREAK OUT",
+      "start": 21.295981159084477,
+      "end": 24.241632653061224,
+      "rms": 0.06678371723650145,
+      "peak": 0.4466552734375
+    }
+  ],
+  "gesture_timing_ms": {
+    "max_audio_clock_ms": 0.0
+  },
+  "audio_clock_event_count": 1869,
+  "version": "0.13.0",
+  "bpm": 105,
+  "drum_bank": "Cosmic Vintage Drums Private",
+  "drum_kit": "Stand2gether E 105",
+  "swing_percent": 50,
+  "pattern_bars": 1,
+  "midi_events": 44,
+  "rhythm": "straight sixteenth hats, snare on2/4, kick0/.75/2/2.5; one open hat on3.5",
+  "schedule": {
+    "applied": 1869,
+    "busy": false,
+    "max_late_ticks": 0,
+    "ready": false,
+    "scope": "isolated QA sample-clock, quantized fader input; NOT physical hand performance"
+  },
+  "source_raw_bank_redistributed": false,
+  "public_release_or_site_changed": false,
+  "sd_changed": false,
+  "owner_project_saved": false,
+  "output": "build/demos/cosmic-straight-105-0.13.0-20261124/cosmic-straight-105-scratch.mp4",
+  "audio": "build/demos/cosmic-straight-105-0.13.0-20261124/cosmic-straight-105-audio.wav"
+}
