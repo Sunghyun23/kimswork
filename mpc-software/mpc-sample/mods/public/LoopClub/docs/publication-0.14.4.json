@@ -1,0 +1,100 @@
+{
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.14.4",
+  "release_id": 456926029,
+  "source_commit": "857a24caef2191e62b3cb59876c2f1d026682b16",
+  "tag": "loop-club/v0.14.4",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "loop-club-0.14.4-mpc-sample.zip",
+      "size": 824099,
+      "digest": "sha256:519223777d18cfcd2dba06d735a161939fe7a3b867d17401e1691224d825f0ff",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.14.4/loop-club-0.14.4-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.14.4-mpc-sample.zip.sha256",
+      "size": 98,
+      "digest": "sha256:403dfcd9438526a306a3f57942631835e8d56be1f13055826980f25aab83031e",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.14.4/loop-club-0.14.4-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "SHA256SUMS-0.14.4.txt",
+      "size": 185,
+      "digest": "sha256:43888b207e7b8c41fec915e24e796c87cae3c2c6aaa927da18dbb7c2f6b23361",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.14.4/SHA256SUMS-0.14.4.txt"
+    }
+  ],
+  "existing_video_assets_changed": false,
+  "anonymous_assets_verified": [
+    {
+      "name": "loop-club-0.14.4-mpc-sample.zip",
+      "bytes": 824099,
+      "sha256": "519223777d18cfcd2dba06d735a161939fe7a3b867d17401e1691224d825f0ff",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.14.4-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.14.4-mpc-sample.zip.sha256",
+      "bytes": 98,
+      "sha256": "403dfcd9438526a306a3f57942631835e8d56be1f13055826980f25aab83031e",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.14.4-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "SHA256SUMS-0.14.4.txt",
+      "bytes": 185,
+      "sha256": "43888b207e7b8c41fec915e24e796c87cae3c2c6aaa927da18dbb7c2f6b23361",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=SHA256SUMS-0.14.4.txt"
+    }
+  ],
+  "pages": {
+    "run_id": 45421320223,
+    "head_sha": "857a24caef2191e62b3cb59876c2f1d026682b16",
+    "conclusion": "success"
+  },
+  "live_site_checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 8829
+    },
+    {
+      "path": "/mods/loop-club/",
+      "status": 200,
+      "bytes": 18249
+    },
+    {
+      "path": "/mods/loop-club/manual/",
+      "status": 200,
+      "bytes": 65018
+    },
+    {
+      "path": "/mods/loop-club/public-install.txt",
+      "status": 200,
+      "bytes": 4025
+    },
+    {
+      "path": "/software/sample-mods/",
+      "status": 200,
+      "bytes": 3639
+    },
+    {
+      "path": "/images/loop-club-main-0.14.4.webp",
+      "status": 200,
+      "bytes": 9078
+    },
+    {
+      "path": "/images/loop-club-alignment-0.14.4.webp",
+      "status": 200,
+      "bytes": 9106
+    },
+    {
+      "path": "/images/loop-club-top-note-0.14.4.webp",
+      "status": 200,
+      "bytes": 9270
+    }
+  ],
+  "responsive_cases": 35,
+  "internal_links": 493
+}

@@ -33,5 +33,30 @@
     "maximum/long-session CPU"
   ],
   "responsive_cases": 35,
-  "internal_links": 493
+  "internal_links": 493,
+  "release_id": 456926029,
+  "source_commit": "857a24caef2191e62b3cb59876c2f1d026682b16",
+  "anonymous_assets_verified": [
+    {
+      "name": "loop-club-0.14.4-mpc-sample.zip",
+      "bytes": 824099,
+      "sha256": "519223777d18cfcd2dba06d735a161939fe7a3b867d17401e1691224d825f0ff",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.14.4-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.14.4-mpc-sample.zip.sha256",
+      "bytes": 98,
+      "sha256": "403dfcd9438526a306a3f57942631835e8d56be1f13055826980f25aab83031e",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.14.4-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "SHA256SUMS-0.14.4.txt",
+      "bytes": 185,
+      "sha256": "43888b207e7b8c41fec915e24e796c87cae3c2c6aaa927da18dbb7c2f6b23361",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=SHA256SUMS-0.14.4.txt"
+    }
+  ]
 }
