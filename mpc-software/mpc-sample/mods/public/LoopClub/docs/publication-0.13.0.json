@@ -1,0 +1,114 @@
+{
+  "release": "https://github.com/Sunghyun23/kimswork/releases/tag/loop-club/v0.13.0",
+  "release_id": 456275446,
+  "source_commit": "3565c26825096fd776371b0dc7c7b48b0f20a604",
+  "tag": "loop-club/v0.13.0",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "loop-club-0.13.0-mpc-sample.zip",
+      "size": 798946,
+      "digest": "sha256:1c42ca759aa67cdcf5ad4f556ebfd7a9553f3668374e20d7171171c5f3dcaa34",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.13.0/loop-club-0.13.0-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.13.0-mpc-sample.zip.sha256",
+      "size": 98,
+      "digest": "sha256:602ef322aab1114d2d68fe381e96ab1c771b4af1cc2f48dd1c6be1b243911e3e",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.13.0/loop-club-0.13.0-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "loop-club-cosmic-105-scratch-mpc.mp4",
+      "size": 1232121,
+      "digest": "sha256:e4b32033fb3c2e4d5d842ee67ce5eb7f6580cff1a33549a456045992558d74c5",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.13.0/loop-club-cosmic-105-scratch-mpc.mp4"
+    },
+    {
+      "name": "loop-club-drums-bass-scratch-105-mpc.mp4",
+      "size": 4654344,
+      "digest": "sha256:f61f9bd1275fd7383933f56dd26bbfeee5546a82f089dafa74f7905a53a1e51a",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.13.0/loop-club-drums-bass-scratch-105-mpc.mp4"
+    },
+    {
+      "name": "SHA256SUMS-0.13.0.txt",
+      "size": 308,
+      "digest": "sha256:bcab5e1f0f2547c2eb24038ebf531fbfcfdebbecdef28871f9695432847201da",
+      "url": "https://github.com/Sunghyun23/kimswork/releases/download/loop-club/v0.13.0/SHA256SUMS-0.13.0.txt"
+    }
+  ],
+  "existing_video_assets_changed": false,
+  "anonymous_assets": [
+    {
+      "name": "loop-club-0.13.0-mpc-sample.zip",
+      "bytes": 798946,
+      "sha256": "1c42ca759aa67cdcf5ad4f556ebfd7a9553f3668374e20d7171171c5f3dcaa34",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.13.0-mpc-sample.zip"
+    },
+    {
+      "name": "loop-club-0.13.0-mpc-sample.zip.sha256",
+      "bytes": 98,
+      "sha256": "602ef322aab1114d2d68fe381e96ab1c771b4af1cc2f48dd1c6be1b243911e3e",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-0.13.0-mpc-sample.zip.sha256"
+    },
+    {
+      "name": "loop-club-cosmic-105-scratch-mpc.mp4",
+      "bytes": 1232121,
+      "sha256": "e4b32033fb3c2e4d5d842ee67ce5eb7f6580cff1a33549a456045992558d74c5",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-cosmic-105-scratch-mpc.mp4"
+    },
+    {
+      "name": "loop-club-drums-bass-scratch-105-mpc.mp4",
+      "bytes": 4654344,
+      "sha256": "f61f9bd1275fd7383933f56dd26bbfeee5546a82f089dafa74f7905a53a1e51a",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=loop-club-drums-bass-scratch-105-mpc.mp4"
+    },
+    {
+      "name": "SHA256SUMS-0.13.0.txt",
+      "bytes": 308,
+      "sha256": "bcab5e1f0f2547c2eb24038ebf531fbfcfdebbecdef28871f9695432847201da",
+      "anonymous": true,
+      "content_disposition": "attachment; filename=SHA256SUMS-0.13.0.txt"
+    }
+  ],
+  "tag_source_verified": true,
+  "pages": {
+    "run_id": 45320808422,
+    "conclusion": "success",
+    "source_commit": "3565c26825096fd776371b0dc7c7b48b0f20a604",
+    "url": "https://kimswork.app/mods/loop-club/"
+  },
+  "live_site_checks": [
+    {
+      "path": "/mods/loop-club/",
+      "status": 200,
+      "bytes": 14751
+    },
+    {
+      "path": "/mods/loop-club/manual/",
+      "status": 200,
+      "bytes": 54821
+    },
+    {
+      "path": "/software/sample-mods/",
+      "status": 200,
+      "bytes": 3639
+    },
+    {
+      "path": "/images/loop-club-main-0.13.0.webp",
+      "status": 200,
+      "bytes": 13722
+    },
+    {
+      "path": "/images/loop-club-turntable-0.13.0.webp",
+      "status": 200,
+      "bytes": 16084
+    }
+  ],
+  "responsive_cases": 28,
+  "internal_link_checks": 489,
+  "new_video_download_buttons_added_to_site": false
+}
