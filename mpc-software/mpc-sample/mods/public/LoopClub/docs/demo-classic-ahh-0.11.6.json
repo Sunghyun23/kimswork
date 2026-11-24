@@ -1,0 +1,21 @@
+{
+  "seconds": 38.080725623582765,
+  "bytes": 1721041,
+  "sha256": "4f5b0615260058584640072b2f87ac87d9448594a3ff120f624775f23f62921a",
+  "actual_frames": 228,
+  "audio_callback_flags": [],
+  "adc_clock_drift_ms": 1.6614042036948717,
+  "linear_gain": 2.716629395633965,
+  "decoded_peak": 0.8366503715515137,
+  "decode_errors": "",
+  "owner16_restored": true,
+  "sources": "Actual MPC Sample DRM + USB stereo; original drums and classic Ahh vocal downloaded from Studio Scratches / Beside, Change The Beat. Recorded through USB input. Remote platter-fader and track-level cuts. Personal demonstration; not in public plugin assets.",
+  "bpm": 100,
+  "source_page": "https://studioscratches.com/classic-ahhh-and-fresh-samples-download/",
+  "source_pcm_peak": 0.49736329913139343,
+  "sample": "Classic Ahhh from Beside / Change The Beat, provided by Studio Scratches for scratching practice",
+  "source_storage": "Private working folder only; excluded from plugin/release/site assets",
+  "private_demo_project_saved": true,
+  "output": "build/demos/bboy-ahh-0.11.6-20261124/classic-ahh-break-scratch.mp4",
+  "public_release_or_site_changed": false
+}
