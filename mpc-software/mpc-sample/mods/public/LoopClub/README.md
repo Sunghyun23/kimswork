@@ -83,3 +83,5 @@ Local0.11.3 adds Drum/CHOP MIDI-lane Erase/Copy, explicit Done/toggle exit, tran
 Local0.11.4 adds physical Tap Tempo and SHIFT+Tap monitor metronome, explicit four-click count-in and non-printing monitor routing. Native/build and actual USB/display results are in docs/validation-0.11.4.json. Final normal binary is installed in runtime and verified SD autorun; public release remains0.11.2.
 
 Local0.11.5 optimizes nonblocking hardware input dispatch with lossless busy fallback. Actual30trial remote button-state median145→82ms/frame observation202→139ms; USB MIDI onset estimate remains about5ms. DATA remote observation unchanged. See [latency verification](docs/qa-0.11.5.md) for scope, lifetime startup overrun and physical measurement limits. Public0.11.2 unchanged.
+
+Local0.11.6 fixes browser±/Shift±leaking into background Setup/Undo/Redo, corrects DATA diagnostic attribution and audits16pages.390distinct Debug cases/11Release input-audit tests/actual all-page DRM and controller checks pass; final normal runtime and SD verified. [Detailed QA and limits](docs/qa-0.11.6.md). Public0.11.2 unchanged.

@@ -289,3 +289,7 @@ From LOOP, **SHIFT+DATA** opens SETUP1/2. **B1 METRONOME** toggles the monitor c
 Turntable fader travel is **relative to the current grab anchor**, not absolute sample start/end. Full travel moves the selected Range½/1/2beats and wraps at the source endpoint; on a short WAV it can cross the waveform multiple times. Lowest fader means maximum reverse displacement from that grab; highest means maximum forward displacement. PAD1 release resumes forward; moving the released fader prepares the next grab without seeking the source. The next press anchors at that new physical position, avoiding a jump.
 
 The display now shares the audio reader's exact endpoint wrapping. Tiny negative values that rem_euclid rounds up to source length display0, matching the read. The waveform cursor bins0..len−1 across the full310pixel strip. TURN entry resets a prior CHOP zoom viewport to the full source, retaining PCM/chop boundaries; an unselected track or CHOP editor is not reset. Native tests cover raw0/127 normalization, min/max displacement, wrap fractions, regrab anchoring and viewport restoration. Actual physical calibration still requires the hardware fader; injected input is reported separately.
+
+## Browser input priority — local0.11.6
+
+While a WAV/XPM/kit/sample browser is open, DATA and+/− move the list; SHIFT+/− moves six entries. These inputs do not change the Setup page, BPM, Undo or Redo behind the browser. Close it with B3 BACK before using global Undo/Redo. STOP and TAP/SHIFT+TAP retain their global transport/tempo/click roles.

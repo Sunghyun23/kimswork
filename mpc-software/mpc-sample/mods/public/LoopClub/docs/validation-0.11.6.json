@@ -1,0 +1,57 @@
+{
+  "version": "0.11.6",
+  "full_debug_suite_passed": 387,
+  "additional_overlay_tests_passed": 3,
+  "distinct_debug_tests_passed": 390,
+  "input_audit_tests_debug_and_release": 11,
+  "button_combinations": 4224,
+  "pad_modifier_combinations": 3072,
+  "synth_subpage_soft_button_combinations": 192,
+  "strict_clippy_all_targets": "PASS",
+  "arm64_qa_and_normal_builds": "PASS",
+  "package_launcher_cases": 8,
+  "independent_remote_button_presses_checked": 116,
+  "actual_page_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "qa_pid_stable": 34498,
+  "normal_final": {
+    "owner16_restored": true,
+    "owner_saved": false,
+    "normal_pid": 34753,
+    "normal_browser_priority": true,
+    "actual_usb_note_peaks": [
+      0.01948450319468975,
+      0.010995486751198769,
+      0.0125428456813097
+    ],
+    "portaudio_flags": [],
+    "normal_setup_controls": true
+  },
+  "sd_files_readback_verified": 20,
+  "old_boot_files_preserved": 20,
+  "library_sha256": "7f9cfe5a428990679745534d1968b9424a5ba32cab22a7b00b7309536592e20a",
+  "zip_sha256": "5a8bb1a8b26a880d6cf6d6bc3ba4504ab365ed60f38db2bcad8b59c24a7d6eb5",
+  "public_release_unchanged": "0.11.2",
+  "limits": [
+    "Remote independent callbacks/controllers are not physical finger certification.",
+    "No new power-cycle, mic/line audio or worst-case CPU certification.",
+    "UI QA does not prove absence of every possible bug."
+  ],
+  "browser_button_modifier_cases": 640
+}

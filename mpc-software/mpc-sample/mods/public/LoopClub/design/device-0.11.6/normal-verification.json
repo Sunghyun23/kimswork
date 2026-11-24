@@ -1,0 +1,13 @@
+{
+  "owner16_restored": true,
+  "owner_saved": false,
+  "normal_pid": 34753,
+  "normal_browser_priority": true,
+  "actual_usb_note_peaks": [
+    0.01948450319468975,
+    0.010995486751198769,
+    0.0125428456813097
+  ],
+  "portaudio_flags": [],
+  "normal_setup_controls": true
+}

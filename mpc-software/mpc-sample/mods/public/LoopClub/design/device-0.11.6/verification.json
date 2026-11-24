@@ -1,0 +1,620 @@
+{
+  "scope": "Actual Sample queued independent button callbacks/controller inputs + active DRM. Not physical finger transport certification.",
+  "cases": [
+    {
+      "button": 6,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 40,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 14,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 14,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 6,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 73,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 81,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 7,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 6,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 14,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 1,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 111,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 111,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 0,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 14,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 111,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 111,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 111,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 14,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 111,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 6,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 1,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 36,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 14,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 36,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 36,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 6,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 40,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 75,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 40,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 81,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 12,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 13,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 36,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 54,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 55,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 14,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 6,
+      "shift": true,
+      "callback_edges": 2
+    },
+    {
+      "button": 14,
+      "shift": false,
+      "callback_edges": 2
+    },
+    {
+      "button": 81,
+      "shift": false,
+      "callback_edges": 2
+    }
+  ],
+  "screens": {
+    "01-loop": 0,
+    "02-source": 9,
+    "03-synth-play": 1,
+    "synth-subpage-1": 1,
+    "synth-subpage-2": 1,
+    "synth-subpage-3": 1,
+    "synth-subpage-4": 1,
+    "synth-subpage-5": 1,
+    "synth-subpage-6": 1,
+    "04-perform": 15,
+    "05-midi-grid": 2,
+    "06-mix": 3,
+    "07-output": 11,
+    "08-track-fx": 5,
+    "09-master-texture": 13,
+    "10-sidechain": 12,
+    "11-master-inserts": 6,
+    "12-fx-settings": 14,
+    "13-drum-sound": 10,
+    "14-kit-mix": 4,
+    "15-chop": 8,
+    "16-setup-timing": 7,
+    "setup-project": 7
+  },
+  "record_finish_undo_redo_once": true,
+  "mute_chain_no_record_fallthrough": true,
+  "track14_master14_latch_fx_navigation_release_and_settings": true,
+  "kit_browser_modal_priority_plus_minus_and_shift": true,
+  "generated_xpm_bank_load": true,
+  "sample_browser_project_modal_input_selection_not_auto_committed": true,
+  "all16_pages_captured": true,
+  "same_pid": 34498,
+  "isolated_save_recall": true,
+  "saved_owner16_restored": true
+}

@@ -1,0 +1,27 @@
+   Compiling mpc-sample-sdk v0.7.3 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-0svst08r/sdk)
+   Compiling loop-club v0.11.5 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-0svst08r/project)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.13s
+     Running unittests src/lib.rs (build/target/debug/deps/loop_club-b007fe4a2f57cade)
+
+running 5 tests
+test device::input_audit_tests::browser_blocks_background_knobs_fader_and_pad_press_every_page ... ok
+test device::input_audit_tests::browser_owns_plus_minus_modifiers_without_background_commands_on_all_pages ... FAILED
+test device::input_audit_tests::data_raw_delta_is_one_logical_selection_and_never_a_second_press_action ... ok
+test device::input_audit_tests::every_page_button_press_has_no_duplicate_engine_command_and_release_is_inert ... ok
+test device::input_audit_tests::held_note_releases_exactly_once_after_every_navigation_destination ... ok
+
+failures:
+
+---- device::input_audit_tests::browser_owns_plus_minus_modifiers_without_background_commands_on_all_pages stdout ----
+
+thread 'device::input_audit_tests::browser_owns_plus_minus_modifiers_without_background_commands_on_all_pages' (2699800) panicked at src/device_input_tests.rs:43:3:
+browser leaked Loop/54/shifttrue: [Redo]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    device::input_audit_tests::browser_owns_plus_minus_modifiers_without_background_commands_on_all_pages
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 31 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

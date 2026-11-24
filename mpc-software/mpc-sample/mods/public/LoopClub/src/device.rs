@@ -215,7 +215,17 @@ static IO_STATUS: AtomicU8 = AtomicU8::new(0);
 fn runtime() -> Option<&'static Runtime> {
     RUNTIME.get().map(Box::as_ref)
 }
+#[cfg(test)]
+thread_local! {
+    static AUDIT_COMMANDS: std::cell::RefCell<Option<Vec<Command>>> = const { std::cell::RefCell::new(None) };
+}
 fn send(c: Command) {
+    #[cfg(test)]
+    AUDIT_COMMANDS.with(|commands| {
+        if let Some(commands) = commands.borrow_mut().as_mut() {
+            commands.push(c);
+        }
+    });
     if let Some(r) = runtime() {
         r.enqueue(c)
     }
@@ -863,6 +873,14 @@ impl Mod for LoopClub {
             }
             return Flow::Consume;
         }
+        if self.browser.open {
+            if event.code == 81 {
+                send(Command::Stop)
+            } else {
+                self.browser.button_with_shift(event.code, event.shift)
+            }
+            return Flow::Consume;
+        }
         if self.ui.page == Page::Setup
             && !self.ui.input_view
             && !event.shift
@@ -879,14 +897,6 @@ impl Mod for LoopClub {
                 Command::Redo
             });
             self.ui.notice = if event.code == 55 { "UNDO" } else { "REDO" };
-            return Flow::Consume;
-        }
-        if self.browser.open {
-            if event.code == 81 {
-                send(Command::Stop)
-            } else {
-                self.browser.button_with_shift(event.code, event.shift)
-            }
             return Flow::Consume;
         }
         if self.ui.page == Page::Setup && self.ui.input_view {
@@ -987,19 +997,8 @@ impl Mod for LoopClub {
                     self.ui.open_fx_settings(&self.snapshot);
                 } else if self.ui.page == Page::Loop && self.ui.loop_mode == 2 && !event.shift {
                     send(Command::ChainToggle);
-                } else if matches!(
-                    self.ui.page,
-                    Page::MasterFx | Page::Texture | Page::Sidechain
-                ) && !event.shift
-                {
-                    self.ui.navigate(
-                        match self.ui.page {
-                            Page::MasterFx => Page::Texture,
-                            Page::Texture => Page::Sidechain,
-                            _ => Page::MasterFx,
-                        },
-                        &self.snapshot,
-                    );
+                } else if self.ui.page == Page::Sidechain && !event.shift {
+                    self.ui.navigate(Page::MasterFx, &self.snapshot);
                 } else if self.ui.page == Page::Output && !event.shift {
                     self.ui.navigate(Page::Mix, &self.snapshot);
                 } else if self.ui.page == Page::Mix && !event.shift {
@@ -1105,7 +1104,6 @@ impl Mod for LoopClub {
             return Flow::Forward;
         }
         self.refresh();
-        crate::qa::encoder(event.delta, false);
         let delta = normalize_encoder(event.delta);
         if self.browser.open {
             self.browser.encoder(delta);
@@ -1221,6 +1219,7 @@ impl Mod for LoopClub {
                     );
                 }
                 crate::qa::Input::Encoder { delta } => {
+                    crate::qa::encoder(delta, false);
                     self.on_encoder(EncoderEvent { surface: 0, delta });
                 }
                 crate::qa::Input::Pad {
@@ -1606,3 +1605,7 @@ mod regression_tests {
         assert!(block.iter().all(|v| v.abs() < 1000));
     }
 }
+
+#[cfg(test)]
+#[path = "device_input_tests.rs"]
+mod input_audit_tests;

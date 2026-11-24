@@ -1,0 +1,20 @@
+   Compiling mpc-sample-sdk v0.7.3 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-gll9cte4/sdk)
+   Compiling loop-club v0.11.6 (/var/folders/3q/5563ydbs63ldgs7bknlm8dxh0000gn/T/loopclub-sdk-build-gll9cte4/project)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.99s
+     Running unittests src/lib.rs (build/target/debug/deps/loop_club-41bad238d7b099e3)
+
+running 11 tests
+test device::input_audit_tests::actual_button_chord_record_transport_and_navigation_are_mutually_exclusive ... ok
+test device::input_audit_tests::browser_blocks_background_knobs_fader_and_pad_press_every_page ... ok
+test device::input_audit_tests::browser_owns_plus_minus_modifiers_without_background_commands_on_all_pages ... ok
+test device::input_audit_tests::data_raw_delta_is_one_logical_selection_and_never_a_second_press_action ... ok
+test device::input_audit_tests::every_page_button_press_has_no_duplicate_engine_command_and_release_is_inert ... ok
+test device::input_audit_tests::every_page_pad_modifiers_emit_no_duplicate_command_and_repeat_release_is_inert ... ok
+test device::input_audit_tests::held_note_releases_exactly_once_after_every_navigation_destination ... ok
+test device::input_audit_tests::loop_mute_chain_and_edit_overlays_never_fall_through_to_record_or_generation ... ok
+test device::input_audit_tests::modulated_fx_settings_shape_sync_and_data_are_single_parameter_actions ... ok
+test device::input_audit_tests::note_edit_overlays_change_only_notes_and_releases_never_retrigger ... ok
+test device::input_audit_tests::synth_all_subpages_and_chord_modes_have_single_soft_action_and_inert_release ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 31 filtered out; finished in 0.02s
+
